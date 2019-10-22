@@ -1,0 +1,181 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Даша (generated)" id="1569408734666-1">
+        <createTable remarks="Перечень размещенных в СМИ и соцсетях материалов по проблематике национальной мобилизации и их описание"
+                     tableName="t_articles">
+            <column autoIncrement="true" name="article_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_articles_pkey"/>
+            </column>
+            <column name="movement_id" remarks="Идентификатор национального движения к описанию проблематики которого относится материал" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" remarks="Язык материала" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" remarks="Дата размещения материала" type="date"/>
+            <column name="title" remarks="Оригинальный заголовок материала" type="TEXT"/>
+            <column name="title_rus" remarks="Наименование материал на русском языке" type="TEXT"/>
+            <column name="author" remarks="Автор(ы) материала" type="_TEXT"/>
+            <column name="description" remarks="Краткое описание материала" type="TEXT"/>
+            <column name="url" remarks="Адрес (url) материала" type="TEXT"/>
+            <column name="url_links" remarks="Адреса (url) связанных статей. Как правило это та же статья на другом языке и/или размещенная на другом ресурсе. Сюда же иногда вносятся адреса материалов, ставших основой для описываемого материала." type="_TEXT"/>
+            <column name="hashtags" remarks="Хештеги, определяющие базовые смысловые части материала" type="_TEXT"/>
+            <column name="path" remarks="Путь к сохраненной копии файла на сервере." type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-2">
+        <createTable remarks="Коды стран согласно Общероссийскому классификатору стран мира (ОКСМ), который базируется на ISO 3166-3. Дополнительно введено техническое обозначение www, обозначающее весь мир - виртуальное пространство сети Интернет." tableName="t_countries">
+            <column name="country_id" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" remarks="альфа-3 код страны" type="CHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="Название страны" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-3">
+        <createTable remarks="Перечень событий, относящихся к национальной мобилизации, с описанием" tableName="t_events">
+            <column autoIncrement="true" name="event_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_events_pkey"/>
+            </column>
+            <column name="movement_id" remarks="Идентификатор национального движения к которому относится описываемое событие" type="SMALLINT"/>
+            <column name="date" remarks="Дата события (начала для длящихся событий) в формате YYYY-MM-DD (ISO 8601)" type="date"/>
+            <column name="country_id" remarks="Страна в которой произошло событие ( country_id из таблицы t_counries). Для событий в сети Интернет и тех, которые не могут быть однозначно отнесены к какой либо стране, используется значение 1 (WWW)" type="SMALLINT"/>
+            <column name="settlement" remarks="Название населенного пункта в котором произошло событие" type="TEXT"/>
+            <column name="location" remarks="Место, где произошло событие." type="TEXT"/>
+            <column name="type" remarks="Тип события" type="TEXT"/>
+            <column name="orgs" remarks="Базовые организации организаторы события и ключевые  участники. Массив." type="_TEXT"/>
+            <column name="actors" remarks="Участники (люди) события. Массив." type="_TEXT"/>
+            <column name="title" remarks="Краткий заголовок события." type="TEXT"/>
+            <column name="description" remarks="Описание события." type="TEXT"/>
+            <column name="url" remarks="Адрес(а) ссылок на материалы в сети Интернет с описанием события. Массив." type="_TEXT"/>
+            <column name="hashtags" type="_TEXT"/>
+            <column name="annex" remarks="Приложения к описанию события (заявление, обращение, картинка и т.д.). Двумерный массив {название документа, путь на сервере}" type="_TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-4">
+        <createTable remarks="Интернет-ресурсы, относящиеся к национальной мобилизации движений." tableName="t_isources">
+            <column autoIncrement="true" name="isource_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_isources_pkey"/>
+            </column>
+            <column name="movement_id" remarks="id национальных движений к которым относится ресурс. Массив." type="_INT2(5)"/>
+            <column name="title" remarks="Оригинальное название портала." type="TEXT"/>
+            <column name="title_rus" remarks="Название портала на русском." type="TEXT"/>
+            <column name="type" remarks="Тип интернет ресурса (site, blog, fb, vk, ok, inst, tw и т.д.)." type="TEXT"/>
+            <column name="subtype" remarks="Подтип ресурса" type="TEXT"/>
+            <column name="dl" remarks="Категория ресурса (уровень опасности): red - выраженно антироссийский, orange - антироссийский, yellow - нейтрально-антироссийский, blue - нейтральный, green - пророссийская." type="TEXT"/>
+            <column name="url" type="TEXT"/>
+            <column name="url_links" remarks="Адреса (url) связанных ресурсов." type="_TEXT"/>
+            <column name="lang" remarks="Язык(и) размещения информации на ресурсе. Массив альфа-3 кодов из таблицы t_languages." type="_TEXT"/>
+            <column name="country_id" remarks="id страны принадлежности ресурса." type="SMALLINT"/>
+            <column name="year_create" remarks="Год создания ресурса." type="SMALLINT"/>
+            <column name="year_update" remarks="Год последнего обновления." type="SMALLINT"/>
+            <column name="year_del" remarks="Год закрытия ресурса (если закрыт)." type="SMALLINT"/>
+            <column name="access" remarks="Доступность ресурса: доступен всем (full), доступ ограничен (res - restricted), удален (del), недоступен (una — unavailable), приостановлен (sus — suspended)" type="TEXT"/>
+            <column name="update" remarks="Обновляемость ресурса: не обновляется, редко, регулярно, постоянно." type="TEXT"/>
+            <column name="moderator" remarks="Модератор(ы) ресурса." type="_TEXT"/>
+            <column name="description" remarks="Краткое описание ресурса." type="TEXT"/>
+            <column name="hashtags" type="_TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-5">
+        <createTable remarks="Перечень кодов языков по стандарту  ISO 639-3 и ГОСТ 7.75-97." tableName="t_languages">
+            <column name="language_id" remarks="Числовой код языка по ГОСТ 7.75-97" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" remarks="Альфа-3 код страны по стандарту  ISO 639-3" type="CHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="Название языка" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-6">
+        <createTable remarks="Перечень кодов национальных движений" tableName="t_movements">
+            <column autoIncrement="true" name="movement_id" type="SMALLINT">
+                <constraints primaryKey="true" primaryKeyName="t_movements_pkey"/>
+            </column>
+            <column name="code" remarks="Alpha-3 код страны по стандарту ISO 3166-3. Непризнанным государствам Абхазия и Южная Осетия присвоены коды, принятые в России." type="CHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="Название движения" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-7">
+        <createTable remarks="Организации национальных движений" tableName="t_orgs">
+            <column autoIncrement="true" name="org_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_orgs_pkey"/>
+            </column>
+            <column name="movement_id" type="_INT2(5)"/>
+            <column name="country_id" type="SMALLINT"/>
+            <column name="settlement" type="TEXT"/>
+            <column name="name_rus" type="TEXT"/>
+            <column name="abbr_rus" type="TEXT"/>
+            <column name="name" remarks="Название организации на языке оригинала (если есть)." type="TEXT"/>
+            <column name="abbr" remarks="Сокращенное название  на языке оригинала (если есть)." type="TEXT"/>
+            <column name="name_eng" remarks="Название на английском (преимущественно необходимо для арабо и трецко - язычных названий)" type="TEXT"/>
+            <column name="abbr_eng" type="TEXT"/>
+            <column name="type" remarks="Тип организации" type="TEXT"/>
+            <column name="founded" remarks="Год основания" type="SMALLINT"/>
+            <column name="closed" remarks="Год закрытия" type="SMALLINT"/>
+            <column name="actors" remarks="Связанные лица (массив)." type="_TEXT"/>
+            <column name="url" remarks="Связанные ресурсы (массив)." type="_TEXT"/>
+            <column name="address" remarks="Адрес организации." type="TEXT"/>
+            <column name="description" remarks="Описание" type="TEXT"/>
+            <column name="logo_path" remarks="Путь к логотипу организации на сервере." type="_TEXT"/>
+            <column name="annex" remarks="Приложения к описанию организации (устав, презентации и т.д.). Двумерный массив {название документа, путь на сервере}" type="_TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-8">
+        <createTable remarks="Перечень научной литературы и архивных материалов, имеющих отношение к национальным движениям" tableName="t_scpapers">
+            <column autoIncrement="true" name="scpaper_id" type="SMALLINT">
+                <constraints primaryKey="true" primaryKeyName="t_scpapers_pkey"/>
+            </column>
+            <column name="movement_id" remarks="Идентификатор национального движения к которому относится материал" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_id" remarks="Страна издания" type="SMALLINT"/>
+            <column name="lang" remarks="Язык(и) материала. Массив альфа-3 кодов из таблицы t_languages" type="_BPCHAR(3)"/>
+            <column name="year" remarks="Год издания" type="SMALLINT"/>
+            <column name="type" remarks="Тип научного материала. До н.в. определены следующие: автореферат, архивный материал, диссертация, доклад, журнал, книга, раздел книги, монография, обзор, очерк, сборник, статья, учебник, энциклопедия" type="TEXT"/>
+            <column name="title" remarks="Оригинальное название" type="TEXT"/>
+            <column name="title_rus" remarks="Название на русском для иноязычных материалов" type="TEXT"/>
+            <column name="author" remarks="Автор(ы) материала. Массив в случае если автор не один" type="_TEXT"/>
+            <column name="masthead" remarks="Выходные данные статьи" type="TEXT"/>
+            <column name="abstract" remarks="Аннотация" type="TEXT"/>
+            <column name="url" remarks="Адрес(а) ссылок на материал в сети Интернет" type="_TEXT"/>
+            <column name="misc" remarks="Примечания" type="TEXT"/>
+            <column name="hashtags" remarks="Хештеги, характеризующие публикацию." type="_TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-9">
+        <addPrimaryKey columnNames="country_id" constraintName="t_counties_pkey" tableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-10">
+        <addPrimaryKey columnNames="language_id" constraintName="t_languages_pkey" tableName="t_languages"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-11">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="t_articles" constraintName="t_articles_language_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="NO ACTION" referencedColumnNames="language_id" referencedTableName="t_languages"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-12">
+        <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_articles" constraintName="t_articles_movement_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="NO ACTION" referencedColumnNames="movement_id" referencedTableName="t_movements"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-13">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_events" constraintName="t_events_country_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="country_id" referencedTableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-14">
+        <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_events" constraintName="t_events_movement_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="movement_id" referencedTableName="t_movements"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-15">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_isources" constraintName="t_isources_country_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="country_id" referencedTableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-16">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_orgs" constraintName="t_orgs_country_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="country_id" referencedTableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-17">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_scpapers" constraintName="t_scpapers_country_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="country_id" referencedTableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="1569408734666-18">
+        <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_scpapers" constraintName="t_scpapers_movement_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="movement_id" referencedTableName="t_movements"/>
+    </changeSet>
+</databaseChangeLog>
