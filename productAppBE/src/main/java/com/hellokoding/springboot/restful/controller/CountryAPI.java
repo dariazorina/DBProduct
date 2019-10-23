@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/countries")
+@RequestMapping("/api/v1/country")
 @Slf4j
 @RequiredArgsConstructor
 public class CountryAPI {

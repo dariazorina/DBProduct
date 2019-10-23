@@ -6,6 +6,6 @@
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000001_add_author_table.xml" relativeToChangelogFile="false"/>
-    <!--<include file="config/liquibase/changelog/my_file_bla_bla.xml" relativeToChangelogFile="false"/>-->
+    <include file="config/liquibase/changelog/00000000000002_add_hashtag_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

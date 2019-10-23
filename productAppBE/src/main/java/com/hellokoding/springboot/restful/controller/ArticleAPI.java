@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/articles")
+@RequestMapping("/api/v1/article")
 @Slf4j
 @RequiredArgsConstructor
 
@@ -29,6 +29,35 @@ public class ArticleAPI {
     public ResponseEntity create(@Valid @RequestBody Article article) {
         return ResponseEntity.ok(articleService.save(article));
     }
+//utils
+    @GetMapping("/fillAuthorTable")
+    public ResponseEntity fillAuthorTable() {
+        // localhost:8098/api/v1/article/fillAuthorTable   {get}  --
+        articleService.fillAuthorTable();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenAuthorAndArticle")
+    public ResponseEntity initializeReferenceBetweenAuthorAndArticle() {
+        //  localhost:8098/api/v1/article/initializeReferenceBetweenAuthorAndArticle
+        articleService.initializeReferenceBetweenAuthorAndArticle();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillHashTagTable")
+    public ResponseEntity fillHashTagTable() {
+        // localhost:8098/api/v1/article/fillHashTagTable   {get}  --
+        articleService.fillHashTagTable();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenHashTagAndArticle")
+    public ResponseEntity initializeReferenceBetweenHashTagAndArticle() {
+        //  localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
+        articleService.initializeReferenceBetweenHashTagAndArticle();
+        return ResponseEntity.ok().build();
+    }
+///// utils end
 
     @GetMapping("/{id}")
     public ResponseEntity<Article> findById(@PathVariable Long id) {
