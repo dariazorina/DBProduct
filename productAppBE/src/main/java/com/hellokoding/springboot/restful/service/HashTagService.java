@@ -12,18 +12,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HashTagService {
 
-    private final HashTagRepository authorRepository;
+    private final HashTagRepository hashTagRepository;
 
     public List<HashTag> findAll() {
-        return authorRepository.findAll();
+        return hashTagRepository.findAll();
     }
 
     public Optional<HashTag> findById(Long id) {
-        return authorRepository.findById(Math.toIntExact(id));
+        return hashTagRepository.findById(Math.toIntExact(id));
     }
 
     public HashTag save(HashTag stock) {
-        return authorRepository.save(stock);
+        return hashTagRepository.save(stock);
     }
 
     public void deleteById(Long id) {

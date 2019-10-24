@@ -1,42 +1,42 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="Даша" id="23102019-1">
-        <createTable remarks="Хештеги" tableName="t_hashtag">
-            <column autoIncrement="true" name="hashtag_id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="t_hashtag_pkey"/>
+    <changeSet author="Даша" id="24102019-1">
+        <createTable remarks="Ссылки" tableName="t_link">
+            <column autoIncrement="true" name="link_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_link_pkey"/>
             </column>
-            <column name="content" remarks="Значение хештега" type="TEXT"/>
+            <column name="content" remarks="Значение ссылки" type="TEXT"/>
         </createTable>
     </changeSet>
 
 
-    <changeSet author="Даша" id="23102019-2">
-        <createTable remarks="Таблица связка" tableName="art_hashtag">
-            <column name="hashtag_id" type="INT">
+    <changeSet author="Даша" id="24102019-2">
+        <createTable remarks="Таблица связка" tableName="art_link">
+            <column name="link_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="article_id" type="INT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="hashtag_id, article_id" tableName="art_hashtag"/>
+        <addPrimaryKey columnNames="link_id, article_id" tableName="art_link"/>
     </changeSet>
 
 
-    <changeSet author="Даша" id="23102019-3">
-        <addForeignKeyConstraint baseColumnNames="hashtag_id"
-                                 baseTableName="art_hashtag"
-                                 constraintName="t_hashtag_article_ref_id_fkey"
+    <changeSet author="Даша" id="24102019-3">
+        <addForeignKeyConstraint baseColumnNames="link_id"
+                                 baseTableName="art_link"
+                                 constraintName="t_link_article_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="hashtag_id"
-                                 referencedTableName="t_hashtag"/>
+                                 referencedColumnNames="link_id"
+                                 referencedTableName="t_link"/>
     </changeSet>
 
-    <changeSet author="Даша" id="23102019-4">
+    <changeSet author="Даша" id="24102019-4">
         <addForeignKeyConstraint baseColumnNames="article_id"
-                                 baseTableName="art_hashtag"
-                                 constraintName="t_article_hashtag_ref_id_fkey"
+                                 baseTableName="art_link"
+                                 constraintName="t_article_link_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="article_id"
                                  referencedTableName="t_articles"/>

@@ -32,7 +32,7 @@ public class ArticleAPI {
 //utils
     @GetMapping("/fillAuthorTable")
     public ResponseEntity fillAuthorTable() {
-        // localhost:8098/api/v1/article/fillAuthorTable   {get}  --
+        // localhost:8098/api/v1/article/fillAuthorTable   {get}
         articleService.fillAuthorTable();
         return ResponseEntity.ok().build();
     }
@@ -46,7 +46,7 @@ public class ArticleAPI {
 
     @GetMapping("/fillHashTagTable")
     public ResponseEntity fillHashTagTable() {
-        // localhost:8098/api/v1/article/fillHashTagTable   {get}  --
+        // localhost:8098/api/v1/article/fillHashTagTable
         articleService.fillHashTagTable();
         return ResponseEntity.ok().build();
     }
@@ -55,6 +55,20 @@ public class ArticleAPI {
     public ResponseEntity initializeReferenceBetweenHashTagAndArticle() {
         //  localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
         articleService.initializeReferenceBetweenHashTagAndArticle();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillLinkTable")
+    public ResponseEntity fillLinkTable() {
+        // localhost:8098/api/v1/article/fillLinkTable
+        articleService.fillLinkTable();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndArticle")
+    public ResponseEntity initializeReferenceBetweenLinkAndArticle() {
+        //  localhost:8098/api/v1/article/initializeReferenceBetweenLinkAndArticle
+        articleService.initializeReferenceBetweenLinkAndArticle();
         return ResponseEntity.ok().build();
     }
 ///// utils end

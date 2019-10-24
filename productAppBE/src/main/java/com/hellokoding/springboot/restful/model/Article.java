@@ -31,7 +31,16 @@ public class Article {
 
     private String description;
     private String url;
-    //   private String[] url_links;
+    private String url_links;       // TODO: исходные данные по url_links - массив строк)) Нужно удалить потом
+
+    @ManyToMany
+    @JoinTable(
+            name = "art_link",
+            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
+    private List<UrlLink> linkList;
+
+
     private String hashtags;         // TODO: исходные данные по hashtags - массив строк)) Нужно удалить потом
 
     @ManyToMany

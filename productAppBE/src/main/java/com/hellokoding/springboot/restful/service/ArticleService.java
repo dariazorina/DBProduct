@@ -3,9 +3,11 @@ package com.hellokoding.springboot.restful.service;
 import com.hellokoding.springboot.restful.dao.ArticleRepository;
 import com.hellokoding.springboot.restful.dao.AuthorRepository;
 import com.hellokoding.springboot.restful.dao.HashTagRepository;
+import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
 import com.hellokoding.springboot.restful.model.Article;
 import com.hellokoding.springboot.restful.model.Author;
 import com.hellokoding.springboot.restful.model.HashTag;
+import com.hellokoding.springboot.restful.model.UrlLink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final AuthorRepository authorRepository;
     private final HashTagRepository hashtagRepository;
+    private final UrlLinkRepository linkRepository;
 
 
     public List<Article> findAll() {
@@ -27,11 +30,9 @@ public class ArticleService {
         return all;
     }
 
-    public void fillAuthorTable() {
-
+    public void fillAuthorTable() {   ////step1: create table author
         List<Article> all = articleRepository.findAll();
 
-        //step1: create table author
         for (Article article : all) {
             String author = article.getAuthor();
             if (author != null) {
@@ -51,11 +52,9 @@ public class ArticleService {
         }
     }
 
-    public void initializeReferenceBetweenAuthorAndArticle() {
-
+    public void initializeReferenceBetweenAuthorAndArticle() {  //step2: create connecting table
         List<Article> all = articleRepository.findAll();
 
-        //step2: create connecting table
         for (Article article : all) {
             String author = article.getAuthor();
             if (author != null) {
@@ -74,11 +73,9 @@ public class ArticleService {
     }
 
 
-    public void fillHashTagTable() {
-
+    public void fillHashTagTable() {   ////step1: create hashtag table
         List<Article> all = articleRepository.findAll();
 
-        //step1: create hashtag table
         for (Article article : all) {
             String hashtag = article.getHashtags();
             if (hashtag != null) {
@@ -98,11 +95,10 @@ public class ArticleService {
         }
     }
 
-    public void initializeReferenceBetweenHashTagAndArticle() {
 
+    public void initializeReferenceBetweenHashTagAndArticle() { //step2: create connecting table
         List<Article> all = articleRepository.findAll();
 
-        //step2: create connecting table
         for (Article article : all) {
             String hashtag = article.getHashtags();
             if (hashtag != null) {
@@ -115,6 +111,48 @@ public class ArticleService {
                     hashtags.add(hashTagByContent);
                 }
                 article.setHashtagList(hashtags);
+                articleRepository.save(article);
+            }
+        }
+    }
+
+
+    public void fillLinkTable() {   //step1: create link table
+        List<Article> all = articleRepository.findAll();
+
+        for (Article article : all) {
+            String links = article.getUrl_links();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                for (String link : split) {
+                    UrlLink linkByContent = linkRepository.getUrlLinkByContent(link); //ищем link в БД
+                    if (linkByContent == null) {
+                        UrlLink s1 = new UrlLink();
+                        s1.setContent(link);
+                        linkRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenLinkAndArticle() {  //step2: create connecting table
+        List<Article> all = articleRepository.findAll();
+
+        for (Article article : all) {
+            String links = article.getUrl_links();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                List<UrlLink> linkList = new LinkedList<>();
+                for (String link : split) {
+                    UrlLink linkByContent = linkRepository.getUrlLinkByContent(link);
+                    linkList.add(linkByContent);
+                }
+                article.setLinkList(linkList);
                 articleRepository.save(article);
             }
         }
