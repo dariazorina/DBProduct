@@ -1,7 +1,7 @@
 package com.hellokoding.springboot.restful.controller;
 
-import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.service.ArticleService;
+import com.hellokoding.springboot.restful.model.Event;
+import com.hellokoding.springboot.restful.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,27 +12,27 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping("/api/v1/event")
 @Slf4j
 @RequiredArgsConstructor
 
-public class ArticleAPI {
+public class EventAPI {
 
-    private final ArticleService articleService;
+    private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<Article>> findAll() {
-        return ResponseEntity.ok(articleService.findAll());
+    public ResponseEntity<List<Event>> findAll() {
+        return ResponseEntity.ok(eventService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Article article) {
-        return ResponseEntity.ok(articleService.save(article));
+    public ResponseEntity create(@Valid @RequestBody Event article) {
+        return ResponseEntity.ok(eventService.save(article));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> findById(@PathVariable Long id) {
-        Optional<Article> stock = articleService.findById(id);
+    public ResponseEntity<Event> findById(@PathVariable Long id) {
+        Optional<Event> stock = eventService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -41,21 +41,21 @@ public class ArticleAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> update(@PathVariable Long id, @Valid @RequestBody Article article) {
-        if (!articleService.findById(id).isPresent()) {
+    public ResponseEntity<Event> update(@PathVariable Long id, @Valid @RequestBody Event article) {
+        if (!eventService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(articleService.save(article));
+        return ResponseEntity.ok(eventService.save(article));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        if (!articleService.findById(id).isPresent()) {
+        if (!eventService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
-        articleService.deleteById(id);
+        eventService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,0 +1,15 @@
+*********************articles***************************
+
+localhost:8098/api/v1/article/fillAuthorTable 
+localhost:8098/api/v1/article/initializeReferenceBetweenAuthorAndArticle
+
+
+localhost:8098/api/v1/article/fillHashTagTable
+localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
+
+localhost:8098/api/v1/article/fillLinkTable
+localhost:8098/api/v1/article/initializeReferenceBetweenLinkAndArticle
+
+delete authors, hashtags and url_links from articles
+
+******************events***************************

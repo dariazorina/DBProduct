@@ -28,4 +28,21 @@ public class HashTagAPI {
     public ResponseEntity create(@Valid @RequestBody HashTag article) {
         return ResponseEntity.ok(hashTagService.save(article));
     }
+
+    ////utils////
+    @GetMapping("/fillHashTagTable")
+    public ResponseEntity fillHashTagTable() {
+        // localhost:8098/api/v1/article/fillHashTagTable
+        hashTagService.fillHashTagTable();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenHashTagAndArticle")
+    public ResponseEntity initializeReferenceBetweenHashTagAndArticle() {
+        //  localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
+        hashTagService.initializeReferenceBetweenHashTagAndArticle();
+        return ResponseEntity.ok().build();
+    }
+   /////// ////
+
 }

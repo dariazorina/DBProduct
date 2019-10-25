@@ -27,4 +27,21 @@ public class UrlLinkAPI {
     public ResponseEntity create(@Valid @RequestBody UrlLink article) {
         return ResponseEntity.ok(urlLinkService.save(article));
     }
+
+
+    ////utils////
+    @GetMapping("/fillLinkTable")
+    public ResponseEntity fillLinkTable() {
+        // localhost:8098/api/v1/article/fillLinkTable
+        urlLinkService.fillLinkTable();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndArticle")
+    public ResponseEntity initializeReferenceBetweenLinkAndArticle() {
+        //  localhost:8098/api/v1/article/initializeReferenceBetweenLinkAndArticle
+        urlLinkService.initializeReferenceBetweenLinkAndArticle();
+        return ResponseEntity.ok().build();
+    }
+///// utils end
 }
