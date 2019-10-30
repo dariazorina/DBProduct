@@ -1,15 +1,21 @@
 *********************articles***************************
 
-localhost:8098/api/v1/article/fillAuthorTable 
-localhost:8098/api/v1/article/initializeReferenceBetweenAuthorAndArticle
+localhost:8098/api/v1/author/fillAuthorTable 
+localhost:8098/api/v1/author/initializeReferenceBetweenAuthorAndArticle
 
 
-localhost:8098/api/v1/article/fillHashTagTable
-localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
+localhost:8098/api/v1/hashtag/fillHashTagTableFromArticle
+localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndArticle
 
-localhost:8098/api/v1/article/fillLinkTable
-localhost:8098/api/v1/article/initializeReferenceBetweenLinkAndArticle
+localhost:8098/api/v1/link/fillLinkTableFromArticle
+localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndArticle
 
 delete authors, hashtags and url_links from articles
 
 ******************events***************************
+
+localhost:8098/api/v1/link/fillLinkTableFromEvent
+localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndEvent
+
+localhost:8098/api/v1/hashtag/fillHashTagTableFromEvent
+localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndEvent

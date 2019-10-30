@@ -23,21 +23,21 @@ public class AuthorAPI {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Author article) {
-        return ResponseEntity.ok(authorService.save(article));
+    public ResponseEntity create(@Valid @RequestBody Author author) {
+        return ResponseEntity.ok(authorService.save(author));
     }
 
     //utils
     @GetMapping("/fillAuthorTable")
     public ResponseEntity fillAuthorTable() {
-        // localhost:8098/api/v1/article/fillAuthorTable   {get}
+        // localhost:8098/api/v1/author/fillAuthorTable   {get}
         authorService.fillAuthorTable();
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/initializeReferenceBetweenAuthorAndArticle")
     public ResponseEntity initializeReferenceBetweenAuthorAndArticle() {
-        //  localhost:8098/api/v1/article/initializeReferenceBetweenAuthorAndArticle
+        //  localhost:8098/api/v1/author/initializeReferenceBetweenAuthorAndArticle
         authorService.initializeReferenceBetweenAuthorAndArticle();
         return ResponseEntity.ok().build();
     }

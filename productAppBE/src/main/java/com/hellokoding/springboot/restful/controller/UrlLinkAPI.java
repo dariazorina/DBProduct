@@ -29,18 +29,32 @@ public class UrlLinkAPI {
     }
 
 
-    ////utils////
-    @GetMapping("/fillLinkTable")
-    public ResponseEntity fillLinkTable() {
-        // localhost:8098/api/v1/article/fillLinkTable
-        urlLinkService.fillLinkTable();
+    //////////////////////////////////utils/////////////////////////////////////
+    @GetMapping("/fillLinkTableFromArticle")
+    public ResponseEntity fillLinkTableFromArticle() {
+        // localhost:8098/api/v1/link/fillLinkTableFromArticle
+        urlLinkService.fillLinkTableFromArticle();
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/initializeReferenceBetweenLinkAndArticle")
     public ResponseEntity initializeReferenceBetweenLinkAndArticle() {
-        //  localhost:8098/api/v1/article/initializeReferenceBetweenLinkAndArticle
+        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndArticle
         urlLinkService.initializeReferenceBetweenLinkAndArticle();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillLinkTableFromEvent")
+    public ResponseEntity fillLinkTableFromEvent() {
+        // localhost:8098/api/v1/link/fillLinkTableFromEvent
+        urlLinkService.fillLinkTableFromEvent();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndEvent")
+    public ResponseEntity initializeReferenceBetweenLinkAndEvent() {
+        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndEvent
+        urlLinkService.initializeReferenceBetweenLinkAndEvent();
         return ResponseEntity.ok().build();
     }
 ///// utils end

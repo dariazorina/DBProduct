@@ -31,7 +31,7 @@ public class AuthorService {
     }
 
     public void deleteById(Long id) {
-        //productRespository.deleteById(id);
+        authorRepository.deleteById(Math.toIntExact(id));
     }
 
     public void fillAuthorTable() {   ////step1: create table author

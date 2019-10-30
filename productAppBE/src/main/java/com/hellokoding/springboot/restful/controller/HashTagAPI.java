@@ -30,17 +30,31 @@ public class HashTagAPI {
     }
 
     ////utils////
-    @GetMapping("/fillHashTagTable")
-    public ResponseEntity fillHashTagTable() {
-        // localhost:8098/api/v1/article/fillHashTagTable
-        hashTagService.fillHashTagTable();
+    @GetMapping("/fillHashTagTableFromArticle")
+    public ResponseEntity fillHashTagTableFromArticle() {
+        // localhost:8098/api/v1/hashtag/fillHashTagTableFromArticle
+        hashTagService.fillHashTagTableFromArticle();
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/initializeReferenceBetweenHashTagAndArticle")
     public ResponseEntity initializeReferenceBetweenHashTagAndArticle() {
-        //  localhost:8098/api/v1/article/initializeReferenceBetweenHashTagAndArticle
+        //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndArticle
         hashTagService.initializeReferenceBetweenHashTagAndArticle();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillHashTagTableFromEvent")
+    public ResponseEntity fillHashTagTableFromEvent() {
+        // localhost:8098/api/v1/hashtag/fillHashTagTableFromEvent
+        hashTagService.fillHashTagTableFromEvent();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenHashTagAndEvent")
+    public ResponseEntity initializeReferenceBetweenHashTagAndEvent() {
+        //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndEvent
+        hashTagService.initializeReferenceBetweenHashTagAndEvent();
         return ResponseEntity.ok().build();
     }
    /////// ////

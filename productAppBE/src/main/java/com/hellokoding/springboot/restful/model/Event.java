@@ -22,20 +22,20 @@ public class Event {
     private String type;
     private String orgs;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_org",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
-    private List<Author> orgList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "event_org",
+//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+//            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
+//    private List<Org> orgList;
 
     private String actors;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
-    @ManyToMany
-    @JoinTable(
-            name = "event_actor",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id"))
-    private List<Author> actorList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "event_actor",
+//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+//            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id"))
+//    private List<Actor> actorList;
 
     private String title;
     private String description;
@@ -43,10 +43,11 @@ public class Event {
     private String url;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
-            name = "event_url",
+            name = "event_link",
             joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "url_id", referencedColumnName = "url_id"))
-    private List<Author> urlList;
+            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
+    private List<UrlLink> linkList;
+
 
     private String hashtags;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
     @ManyToMany
@@ -54,7 +55,7 @@ public class Event {
             name = "event_hashtag",
             joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-    private List<Author> authorList;
+    private List<HashTag> hashtagList;
 
 
     private String annex;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
@@ -63,5 +64,5 @@ public class Event {
             name = "event_annex",
             joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
-    private List<Author> annexList;
+    private List<Annex> annexList;
 }

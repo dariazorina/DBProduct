@@ -1,7 +1,6 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.EventRepository;
-import com.hellokoding.springboot.restful.model.Article;
 import com.hellokoding.springboot.restful.model.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
