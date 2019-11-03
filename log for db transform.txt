@@ -1,7 +1,7 @@
 *********************articles***************************
 
-localhost:8098/api/v1/author/fillAuthorTable 
-localhost:8098/api/v1/author/initializeReferenceBetweenAuthorAndArticle
+localhost:8098/api/v1/person/fillPersonTableFromArticle
+localhost:8098/api/v1/person/initializeReferenceBetweenAuthorAndArticle
 
 
 localhost:8098/api/v1/hashtag/fillHashTagTableFromArticle
@@ -19,3 +19,8 @@ localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndEvent
 
 localhost:8098/api/v1/hashtag/fillHashTagTableFromEvent
 localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndEvent
+
+localhost:8098/api/v1/person/fillPersonTableFromEvent
+localhost:8098/api/v1/person/initializeReferenceBetweenActorAndEvent
+
+

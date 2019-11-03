@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="31102019-10">
+        <createTable remarks="Таблица персоналий" tableName="t_person">
+
+            <column autoIncrement="true" name="person_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_person_pkey"/>
+            </column>
+
+            <column name="movement_id" remarks="Идентификатор национального движения" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" remarks="Фамилия на языке оригинала" type="TEXT"/>
+            <column name="name" remarks="Имя на языке оригинала" type="TEXT"/>
+            <column name="patronymic" remarks="Отчество на языке оригинала" type="TEXT"/>
+            <column name="surname_rus" remarks="Фамилия на русском для иностранцев" type="TEXT"/>
+            <column name="name_rus" remarks="Имя на русском для иностранцев" type="TEXT"/>
+            <column name="surname_eng" remarks="Фамилия на английском (особо актуально для арабов и турок)"
+                    type="TEXT"/>
+            <column name="name_eng" remarks="Имя на английском" type="TEXT"/>
+            <column name="country_id" remarks="Страна принадлежности" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="settlement" remarks="Город" type="TEXT"/>
+            <column name="occupation"
+                    remarks="Основной род деятельности (ученый, эксперт, политик, общественный деятель …)" type="TEXT"/>
+            <column name="description" remarks="Описание" type="TEXT"/>
+            <column name="photo" remarks="Фото" type="bytea"/>
+        </createTable>
+    </changeSet>
+
+<!--    <changeSet author="Даша (generated)" id="31102019-14">-->
+<!--        <addPrimaryKey columnNames="person_id" constraintName="t_person_pkey" tableName="t_person"/>-->
+<!--    </changeSet>-->
+
+    <changeSet author="Даша (generated)" id="31102019-11">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_person"
+                                 constraintName="t_person_country_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="country_id" referencedTableName="t_countries"/>
+    </changeSet>
+    <changeSet author="Даша (generated)" id="31102019-12">
+        <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_person"
+                                 constraintName="t_person_movement_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="movement_id" referencedTableName="t_movements"/>
+    </changeSet>
+</databaseChangeLog>

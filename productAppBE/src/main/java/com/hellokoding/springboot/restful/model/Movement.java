@@ -1,16 +1,18 @@
 package com.hellokoding.springboot.restful.model;
+
 import lombok.Data;
 import javax.persistence.*;
 
-@Table(name="t_actor")
 @Entity
+@Table(name = "t_movements")
 @Data
 
-/////todo to delete?
-public class Actor {
+public class Movement {
     @Id
-    @Column(name = "actor_id")
+    @Column(name="movement_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String code;
     private String name;
 }
+

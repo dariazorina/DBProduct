@@ -10,5 +10,9 @@
     <include file="config/liquibase/changelog/00000000000003_add_link_and_art_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000004_add_event_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000005_add_event_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000006_add_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000007_add_event_org_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000008_add_annex_and_event_annex_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000009_add_event_actor_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

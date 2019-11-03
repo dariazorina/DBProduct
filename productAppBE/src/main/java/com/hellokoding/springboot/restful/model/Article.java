@@ -26,8 +26,8 @@ public class Article {
     @JoinTable(
             name = "art_author",
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "author_id"))
-    private List<Author> authorList;
+            inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "person_id"))
+    private List<Person> authorList;
 
     private String description;
     private String url;
@@ -52,6 +52,4 @@ public class Article {
 
     private String path;
 
-    public Article() {
-    }
 }

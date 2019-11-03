@@ -22,20 +22,20 @@ public class Event {
     private String type;
     private String orgs;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "event_org",
-//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-//            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
-//    private List<Org> orgList;
+    @ManyToMany
+    @JoinTable(
+            name = "event_org",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
+    private List<Org> orgList;
 
     private String actors;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
-//    @ManyToMany
-//    @JoinTable(
-//            name = "event_actor",
-//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-//            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id"))
-//    private List<Actor> actorList;
+    @ManyToMany
+    @JoinTable(
+            name = "event_actor",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"))
+    private List<Person> actorList;
 
     private String title;
     private String description;

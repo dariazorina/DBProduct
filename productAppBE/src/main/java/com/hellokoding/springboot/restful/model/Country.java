@@ -15,8 +15,5 @@ public class Country {
     private String code;
     private String name;
 
-    public Country() {
-    }
-
 }
 

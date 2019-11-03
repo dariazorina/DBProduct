@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="31102019-13">
+        <createTable remarks="Файлы" tableName="t_annex">
+            <column autoIncrement="true" name="annex_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_annex_pkey"/>
+            </column>
+            <column name="filename" remarks="Имя файла" type="TEXT"/>
+            <column name="file" remarks="Файл" type="bytea"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Даша" id="31102019-7">
+        <createTable remarks="Таблица связка" tableName="event_annex">
+            <column name="annex_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="annex_id, event_id" tableName="event_annex"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="31102019-8">
+        <addForeignKeyConstraint baseColumnNames="annex_id"
+                                 baseTableName="event_annex"
+                                 constraintName="t_annex_event_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="annex_id"
+                                 referencedTableName="t_annex"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="31102019-9">
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="event_annex"
+                                 constraintName="t_event_annex_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="event_id"
+                                 referencedTableName="t_events"/>
+    </changeSet>
+</databaseChangeLog>

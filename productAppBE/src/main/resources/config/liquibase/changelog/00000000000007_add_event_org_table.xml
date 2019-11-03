@@ -4,32 +4,32 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="Даша" id="30102019-4">
-        <createTable remarks="Таблица связка" tableName="event_hashtag">
-            <column name="hashtag_id" type="INT">
+    <changeSet author="Даша" id="31102019-4">
+        <createTable remarks="Таблица связка" tableName="event_org">
+            <column name="org_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="event_id" type="INT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="hashtag_id, event_id" tableName="event_hashtag"/>
+        <addPrimaryKey columnNames="org_id, event_id" tableName="event_org"/>
     </changeSet>
 
 
-    <changeSet author="Даша" id="30102019-5">
-        <addForeignKeyConstraint baseColumnNames="hashtag_id"
-                                 baseTableName="event_hashtag"
-                                 constraintName="t_hashtag_event_ref_id_fkey"
+    <changeSet author="Даша" id="31102019-5">
+        <addForeignKeyConstraint baseColumnNames="org_id"
+                                 baseTableName="event_org"
+                                 constraintName="t_org_event_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="hashtag_id"
-                                 referencedTableName="t_hashtag"/>
+                                 referencedColumnNames="org_id"
+                                 referencedTableName="t_orgs"/>
     </changeSet>
 
-    <changeSet author="Даша" id="30102019-6">
+    <changeSet author="Даша" id="31102019-6">
         <addForeignKeyConstraint baseColumnNames="event_id"
-                                 baseTableName="event_hashtag"
-                                 constraintName="t_event_hashtag_ref_id_fkey"
+                                 baseTableName="event_org"
+                                 constraintName="t_event_org_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="event_id"
                                  referencedTableName="t_events"/>

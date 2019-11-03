@@ -2,6 +2,7 @@ package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.Annex;
+import com.hellokoding.springboot.restful.model.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class AnnexService {
 
     private final AnnexRepository annexRepository;
+    private final EventRepository eventRepository;
 
     public List<Annex> findAll() {
         return annexRepository.findAll();
@@ -33,7 +35,7 @@ public class AnnexService {
 
 
     public void fillAnnexTableFromEvent() {                 //// fill table annex
-        List<Annex> all = annexRepository.findAll();
+        List<Event> all = eventRepository.findAll();
 
 //        for (Article article : all) {
 //            String author = article.getAuthor();
