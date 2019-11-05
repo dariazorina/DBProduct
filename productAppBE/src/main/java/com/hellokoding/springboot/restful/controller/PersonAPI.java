@@ -29,7 +29,7 @@ public class PersonAPI {
         return ResponseEntity.ok(personService.save(person));
     }
 
-    //utils
+    //////////////////////utils/////////////////////////////////////////
     @GetMapping("/fillPersonTableFromArticle")
     public ResponseEntity fillPersonTableFromArticle() {
         // localhost:8098/api/v1/person/fillPersonTableFromArticle
@@ -51,7 +51,6 @@ public class PersonAPI {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping("/initializeReferenceBetweenActorAndEvent")
     public ResponseEntity initializeReferenceBetweenActorAndEvent() {
         //  localhost:8098/api/v1/person/initializeReferenceBetweenActorAndEvent
@@ -59,8 +58,47 @@ public class PersonAPI {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/fillPersonTableFromScpaper")
+    public ResponseEntity fillPersonTableFromScpaper() {
+        // localhost:8098/api/v1/person/fillPersonTableFromScpaper
+        personService.fillPersonTableFromScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenAuthorAndScpaper")
+    public ResponseEntity initializeReferenceBetweenAuthorAndScpaper() {
+        //  localhost:8098/api/v1/person/initializeReferenceBetweenAuthorAndScpaper
+        personService.initializeReferenceBetweenAuthorAndScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillPersonTableFromIsource")
+    public ResponseEntity fillPersonTableFromIsource() {
+        // localhost:8098/api/v1/person/fillPersonTableFromIsource
+        personService.fillPersonTableFromIsource();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenModeratorAndIsource")
+    public ResponseEntity initializeReferenceBetweenModeratorAndIsource() {
+        //  localhost:8098/api/v1/person/initializeReferenceBetweenModeratorAndIsource
+        personService.initializeReferenceBetweenModeratorAndIsource();
+        return ResponseEntity.ok().build();
+    }
 
 
+//    @GetMapping("/fillPersonTableFromOrg")
+//    public ResponseEntity fillPersonTableFromIsource() {
+//        // localhost:8098/api/v1/person/fillPersonTableFromIsource
+//        personService.fillPersonTableFromIsource();
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/initializeReferenceBetweenActorAndOrg")
+//    public ResponseEntity initializeReferenceBetweenModeratorAndIsource() {
+//        //  localhost:8098/api/v1/person/initializeReferenceBetweenModeratorAndIsource
+//        personService.initializeReferenceBetweenModeratorAndIsource();
+//        return ResponseEntity.ok().build();
+//    }
     ///////////////////////
-
 }

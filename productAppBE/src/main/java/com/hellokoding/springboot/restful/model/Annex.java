@@ -12,7 +12,8 @@ public class Annex {
     @Column(name = "annex_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    //private String title; //?
     private String filename;
-    @Column(name = "file")
-    private byte[] file;
+   // @Column(name = "file")
+    //private byte[] file;
 }

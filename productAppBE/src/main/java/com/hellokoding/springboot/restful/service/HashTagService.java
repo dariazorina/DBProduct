@@ -1,11 +1,7 @@
 package com.hellokoding.springboot.restful.service;
 
-import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.EventRepository;
-import com.hellokoding.springboot.restful.dao.HashTagRepository;
-import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.Event;
-import com.hellokoding.springboot.restful.model.HashTag;
+import com.hellokoding.springboot.restful.dao.*;
+import com.hellokoding.springboot.restful.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +16,9 @@ public class HashTagService {
     private final HashTagRepository hashTagRepository;
     private final ArticleRepository articleRepository;
     private final EventRepository eventRepository;
+    private final ScpaperRepository scpaperRepository;
+    private final IsourceRepository isourceRepository;
+
 
     public List<HashTag> findAll() {
         return hashTagRepository.findAll();
@@ -119,6 +118,92 @@ public class HashTagService {
 
                 event.setHashtagList(hashtags);
                 eventRepository.save(event);
+            }
+        }
+    }
+
+    public void fillHashTagTableFromScpaper() {  //fill hashtag table
+        List<Scpaper> all = scpaperRepository.findAll();
+
+        for (Scpaper scpaper : all) {
+            String hashtag = scpaper.getHashtags();
+            if (hashtag != null) {
+                hashtag = hashtag.substring(1, hashtag.length() - 1); //убираем { }
+                String[] split = hashtag.split(","); //разделяем по "," на массив строк
+
+                for (String hashTagWithSharp : split) {
+                    String pureHashtag = hashTagWithSharp.substring(1, hashTagWithSharp.length()); //del #
+                    HashTag hashTagByContent = hashTagRepository.getHashTagByContent(pureHashtag); //ищем хештег в БД
+                    if (hashTagByContent == null) {
+                        HashTag s1 = new HashTag();
+                        s1.setContent(pureHashtag);
+                        hashTagRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenHashTagAndScpaper() { //step2: create connecting table
+        List<Scpaper> all = scpaperRepository.findAll();
+
+        for (Scpaper scpaper : all) {
+            String hashtag = scpaper.getHashtags();
+            if (hashtag != null) {
+                hashtag = hashtag.substring(1, hashtag.length() - 1);
+                String[] split = hashtag.split(",");
+
+                List<HashTag> hashtags = new LinkedList<>();
+                for (String s : split) {
+                    String pureHashtag = s.substring(1, s.length());
+                    HashTag hashTagByContent = hashTagRepository.getHashTagByContent(pureHashtag);
+                    hashtags.add(hashTagByContent);
+                }
+                scpaper.setHashtagList(hashtags);
+                scpaperRepository.save(scpaper);
+            }
+        }
+    }
+
+    public void fillHashTagTableFromIsource() {  //fill hashtag table
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String hashtag = isource.getHashtags();
+            if (hashtag != null) {
+                hashtag = hashtag.substring(1, hashtag.length() - 1); //убираем { }
+                String[] split = hashtag.split(","); //разделяем по "," на массив строк
+
+                for (String hashTagWithSharp : split) {
+                    String pureHashtag = hashTagWithSharp.substring(1, hashTagWithSharp.length()); //del #
+                    HashTag hashTagByContent = hashTagRepository.getHashTagByContent(pureHashtag); //ищем хештег в БД
+                    if (hashTagByContent == null) {
+                        HashTag s1 = new HashTag();
+                        s1.setContent(pureHashtag);
+                        hashTagRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenHashTagAndIsource() { //step2: create connecting table
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String hashtag = isource.getHashtags();
+            if (hashtag != null) {
+                hashtag = hashtag.substring(1, hashtag.length() - 1);
+                String[] split = hashtag.split(",");
+
+                List<HashTag> hashtags = new LinkedList<>();
+                for (String s : split) {
+                    String pureHashtag = s.substring(1, s.length());
+                    HashTag hashTagByContent = hashTagRepository.getHashTagByContent(pureHashtag);
+                    hashtags.add(hashTagByContent);
+                }
+                isource.setHashtagList(hashtags);
+                isourceRepository.save(isource);
             }
         }
     }

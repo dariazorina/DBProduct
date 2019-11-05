@@ -12,6 +12,8 @@ localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndArticle
 
 delete authors, hashtags and url_links from articles
 
+
+
 ******************events***************************
 
 localhost:8098/api/v1/link/fillLinkTableFromEvent
@@ -22,5 +24,40 @@ localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndEvent
 
 localhost:8098/api/v1/person/fillPersonTableFromEvent
 localhost:8098/api/v1/person/initializeReferenceBetweenActorAndEvent
+
+
+
+
+
+******************scpaper********************************
+
+localhost:8098/api/v1/person/fillPersonTableFromScpaper
+localhost:8098/api/v1/person/initializeReferenceBetweenAuthorAndScpaper
+
+localhost:8098/api/v1/link/fillLinkTableFromScpaper
+localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndScpaper
+
+localhost:8098/api/v1/hashtag/fillHashTagTableFromScpaper
+localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndScpaper
+
+
+
+************************isource******************************
+
+localhost:8098/api/v1/person/fillPersonTableFromIsource
+localhost:8098/api/v1/person/initializeReferenceBetweenModeratorAndIsource
+
+localhost:8098/api/v1/link/fillLinkTableFromIsource
+localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndIsource
+
+localhost:8098/api/v1/hashtag/fillHashTagTableFromIsource
+localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndIsource
+
+localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndIsource
+
+localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
+
+
+
 
 

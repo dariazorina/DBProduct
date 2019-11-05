@@ -35,26 +35,25 @@ public class AnnexService {
 
 
     public void fillAnnexTableFromEvent() {                 //// fill table annex
-        List<Event> all = eventRepository.findAll();
-
-//        for (Article article : all) {
-//            String author = article.getAuthor();
-//            if (author != null) {
-//                author = author.substring(1, author.length() - 1); //убираем { }
-//                String[] split = author.split(","); //разделяем по "," на массив строк
+//        List<Event> all = eventRepository.findAll();
 //
-//                for (String authorNameWithQuotes : split) {
-//                    String authorName = authorNameWithQuotes.substring(1, authorNameWithQuotes.length() - 1);//del "
-//                    Author authorByName = authorRepository.getAuthorByName(authorName); //ищем автора в БД
-//                    if (authorByName == null) {
-//                        Author s1 = new Author();
-//                        s1.setName(authorName);
-//                        authorRepository.save(s1);
+//        for (Event event : all) {
+//            String annex = event.getAnnex();
+//            if (annex != null) {
+//                annex = annex.substring(1, annex.length() - 1); //убираем { }
+//                String[] split = annex.split(","); //разделяем по "," на массив строк
+//
+//                if (split.length > 1){                  //////{title, path}
+//                    Annex annexByName = annexRepository.getAnnexByFilename(split[1]);
+//                    if (annexByName == null) {
+//                        Annex s1 = new Annex();
+//                        s1.setFilename(split[1]);
 //                    }
 //                }
 //            }
 //        }
     }
+
     public void initializeReferenceBetweenAnnexAndEvent(){
 
     }

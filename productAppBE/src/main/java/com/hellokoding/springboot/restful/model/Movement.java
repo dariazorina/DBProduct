@@ -4,7 +4,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "t_movements")
+@Table(name = "t_movement")
 @Data
 
 public class Movement {

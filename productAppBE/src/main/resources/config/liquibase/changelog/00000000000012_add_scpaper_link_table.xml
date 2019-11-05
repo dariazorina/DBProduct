@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="041102019-4">
+        <createTable remarks="Таблица связка" tableName="scpaper_link">
+            <column name="link_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scpaper_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="link_id, scpaper_id" tableName="scpaper_link"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="041102019-5">
+        <addForeignKeyConstraint baseColumnNames="link_id"
+                                 baseTableName="scpaper_link"
+                                 constraintName="t_link_scpaper_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="link_id"
+                                 referencedTableName="t_link"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="041102019-6">
+        <addForeignKeyConstraint baseColumnNames="scpaper_id"
+                                 baseTableName="scpaper_link"
+                                 constraintName="t_scpaper_link_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="scpaper_id"
+                                 referencedTableName="t_scpaper"/>
+    </changeSet>
+</databaseChangeLog>

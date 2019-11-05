@@ -1,0 +1,72 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="postgres"
+               id="renameTable-1"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_article"
+                     oldTableName="t_articles"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-2"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_country"
+                     oldTableName="t_countries"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-3"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_event"
+                     oldTableName="t_events"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-4"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_isource"
+                     oldTableName="t_isources"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-5"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_language"
+                     oldTableName="t_languages"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-6"
+               objectQuotingStrategy="LEGACY">
+        <renameTable
+                newTableName="t_movement"
+                oldTableName="t_movements"
+                schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-7"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_org"
+                     oldTableName="t_orgs"
+                     schemaName="public"/>
+    </changeSet>
+
+    <changeSet author="postgres"
+               id="renameTable-8"
+               objectQuotingStrategy="LEGACY">
+        <renameTable newTableName="t_scpaper"
+                     oldTableName="t_scpapers"
+                     schemaName="public"/>
+    </changeSet>
+
+
+</databaseChangeLog>

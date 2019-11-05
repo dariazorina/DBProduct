@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "t_articles")
+@Table(name = "t_article")
 @Data
 public class Article {
 

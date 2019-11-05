@@ -14,5 +14,15 @@
     <include file="config/liquibase/changelog/00000000000007_add_event_org_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000008_add_annex_and_event_annex_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000009_add_event_actor_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000010_rename_original_tables.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000011_add_scpaper_author_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000012_add_scpaper_link_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000013_add_scpaper_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000014_change_lang_datatype_scpaper_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000015_add_isource_moderator_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000016_add_isource_link_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000017_add_isource_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000018_add_isource_movement_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000019_add_isource_language_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

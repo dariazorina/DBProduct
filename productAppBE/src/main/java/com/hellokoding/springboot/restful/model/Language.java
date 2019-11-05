@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "t_languages")
+@Table(name = "t_language")
 @Data
 
 public class Language {

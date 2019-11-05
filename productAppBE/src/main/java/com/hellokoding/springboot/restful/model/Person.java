@@ -39,15 +39,15 @@ public class Person {
     private List<Org> orgList;
 
     private String description;
-    @Column(name = "photo")
-    private byte[] photo;
+//    @Column(name = "photo")
+//    private byte[] photo;
 
-    @ManyToMany
-    @JoinTable(
-            name = "person_annex",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
-    private List<Annex> annexList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "person_annex",
+//            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+//            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
+//    private List<Annex> annexList;
 
 
     @ManyToMany

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="t_countries")
+@Table(name="t_country")
 @Data
 
 public class Country {

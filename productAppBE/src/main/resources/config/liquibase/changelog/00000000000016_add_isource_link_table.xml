@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="051102019-4">
+        <createTable remarks="Таблица связка" tableName="isource_link">
+            <column name="link_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="isource_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="link_id, isource_id" tableName="isource_link"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="051102019-5">
+        <addForeignKeyConstraint baseColumnNames="link_id"
+                                 baseTableName="isource_link"
+                                 constraintName="t_link_isource_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="link_id"
+                                 referencedTableName="t_link"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="051102019-6">
+        <addForeignKeyConstraint baseColumnNames="isource_id"
+                                 baseTableName="isource_link"
+                                 constraintName="t_isource_link_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="isource_id"
+                                 referencedTableName="t_isource"/>
+    </changeSet>
+</databaseChangeLog>

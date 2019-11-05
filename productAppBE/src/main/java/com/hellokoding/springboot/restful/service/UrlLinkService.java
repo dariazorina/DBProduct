@@ -1,11 +1,7 @@
 package com.hellokoding.springboot.restful.service;
 
-import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.EventRepository;
-import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
-import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.Event;
-import com.hellokoding.springboot.restful.model.UrlLink;
+import com.hellokoding.springboot.restful.dao.*;
+import com.hellokoding.springboot.restful.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +15,9 @@ public class UrlLinkService {
 
     private final UrlLinkRepository urlLinkRepository;
     private final ArticleRepository articleRepository;
-    private final EventRepository   eventRepository;
+    private final EventRepository eventRepository;
+    private final ScpaperRepository scpaperRepository;
+    private final IsourceRepository isourceRepository;
 
 
     public List<UrlLink> findAll() {
@@ -116,6 +114,88 @@ public class UrlLinkService {
                 }
                 event.setLinkList(linkList);
                 eventRepository.save(event);
+            }
+        }
+    }
+
+    public void fillLinkTableFromScpaper() {
+        List<Scpaper> all = scpaperRepository.findAll();
+
+        for (Scpaper scpaper : all) {
+            String links = scpaper.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link); //ищем link в БД
+                    if (linkByContent == null) {
+                        UrlLink s1 = new UrlLink();
+                        s1.setContent(link);
+                        urlLinkRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenLinkAndScpaper() {
+        List<Scpaper> all = scpaperRepository.findAll();
+
+        for (Scpaper scpaper : all) {
+            String links = scpaper.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                List<UrlLink> linkList = new LinkedList<>();
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link);
+                    linkList.add(linkByContent);
+                }
+                scpaper.setLinkList(linkList);
+                scpaperRepository.save(scpaper);
+            }
+        }
+    }
+
+    public void fillLinkTableFromIsource() {
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String links = isource.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link); //ищем link в БД
+                    if (linkByContent == null) {
+                        UrlLink s1 = new UrlLink();
+                        s1.setContent(link);
+                        urlLinkRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenLinkAndIsource() {
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String links = isource.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                List<UrlLink> linkList = new LinkedList<>();
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link);
+                    linkList.add(linkByContent);
+                }
+                isource.setLinkList(linkList);
+                isourceRepository.save(isource);
             }
         }
     }

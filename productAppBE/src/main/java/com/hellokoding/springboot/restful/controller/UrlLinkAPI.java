@@ -57,5 +57,48 @@ public class UrlLinkAPI {
         urlLinkService.initializeReferenceBetweenLinkAndEvent();
         return ResponseEntity.ok().build();
     }
+
+
+    @GetMapping("/fillLinkTableFromScpaper")
+    public ResponseEntity fillLinkTableFromScpaper() {
+        // localhost:8098/api/v1/link/fillLinkTableFromScpaper
+        urlLinkService.fillLinkTableFromScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndScpaper")
+    public ResponseEntity initializeReferenceBetweenLinkAndScpaper() {
+        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndScpaper
+        urlLinkService.initializeReferenceBetweenLinkAndScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillLinkTableFromIsource")
+    public ResponseEntity fillLinkTableFromIsource() {
+        // localhost:8098/api/v1/link/fillLinkTableFromIsource
+        urlLinkService.fillLinkTableFromIsource();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndIsource")
+    public ResponseEntity initializeReferenceBetweenLinkAndIsource() {
+        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndIsource
+        urlLinkService.initializeReferenceBetweenLinkAndIsource();
+        return ResponseEntity.ok().build();
+    }
+
+//    @GetMapping("/fillLinkTableFromOrg")
+//    public ResponseEntity fillLinkTableFromIsource() {
+//        // localhost:8098/api/v1/link/fillLinkTableFromIsource
+//        urlLinkService.fillLinkTableFromIsource();
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/initializeReferenceBetweenLinkAndOrg")
+//    public ResponseEntity initializeReferenceBetweenLinkAndIsource() {
+//        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndIsource
+//        urlLinkService.initializeReferenceBetweenLinkAndIsource();
+//        return ResponseEntity.ok().build();
+//    }
 ///// utils end
 }

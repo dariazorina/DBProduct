@@ -57,6 +57,34 @@ public class HashTagAPI {
         hashTagService.initializeReferenceBetweenHashTagAndEvent();
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/fillHashTagTableFromScpaper")
+    public ResponseEntity fillHashTagTableFromScpaper() {
+        // localhost:8098/api/v1/hashtag/fillHashTagTableFromScpaper
+        hashTagService.fillHashTagTableFromScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenHashTagAndScpaper")
+    public ResponseEntity initializeReferenceBetweenHashTagAndScpaper() {
+        //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndScpaper
+        hashTagService.initializeReferenceBetweenHashTagAndScpaper();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fillHashTagTableFromIsource")
+    public ResponseEntity fillHashTagTableFromIsource() {
+        // localhost:8098/api/v1/hashtag/fillHashTagTableFromIsource
+        hashTagService.fillHashTagTableFromIsource();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenHashTagAndIsource")
+    public ResponseEntity initializeReferenceBetweenHashTagAndIsource() {
+        //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndIsource
+        hashTagService.initializeReferenceBetweenHashTagAndIsource();
+        return ResponseEntity.ok().build();
+    }
    /////// ////
 
 }

@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="t_events")
+@Table(name="t_event")
 @Data
 public class Event {
     @Id
@@ -58,11 +58,11 @@ public class Event {
     private List<HashTag> hashtagList;
 
 
-    private String annex;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
-    @ManyToMany
-    @JoinTable(
-            name = "event_annex",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
-    private List<Annex> annexList;
+//    private String annex;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+//    @ManyToMany
+//    @JoinTable(
+//            name = "event_annex",
+//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+//            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
+//    private List<Annex> annexList;
 }

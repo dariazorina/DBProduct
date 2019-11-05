@@ -5,6 +5,10 @@ import com.hellokoding.springboot.restful.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.hellokoding.springboot.restful.model.Article;
+import com.hellokoding.springboot.restful.model.Event;
+import com.hellokoding.springboot.restful.model.Scpaper;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,7 @@ public class PersonService {
     private final EventRepository       eventRepository;
     private final OrgRepository         orgRepository;
     private final ScpaperRepository     scpaperRepository;
+    private final IsourceRepository     isourceRepository;
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -35,6 +40,8 @@ public class PersonService {
         personRepository.deleteById(Math.toIntExact(id));
     }
 
+
+    ////utils
     public void fillPersonTableFromArticle() {   ////step1: create table author
         List<Article> all = articleRepository.findAll();
 
@@ -165,29 +172,33 @@ public class PersonService {
         }
     }
 
-    public void fillPerosnTableFromScpaper() {   ////step1: create table author
+    public void fillPersonTableFromScpaper() {
+//        Optional<Scpaper> all = scpaperRepository.findById(10); //All();
         List<Scpaper> all = scpaperRepository.findAll();
 
-//        for (Article article : all) {
-//            String author = article.getAuthor();
-//            if (author != null) {
-//                author = author.substring(1, author.length() - 1); //убираем { }
-//                String[] split = author.split(","); //разделяем по "," на массив строк
-//
-//                for (String authorNameWithQuotes : split) {
-//                    String authorName = authorNameWithQuotes.substring(1, authorNameWithQuotes.length() - 1);//del "
-//                    Person authorByName = personRepository.getPersonByName(authorName); //ищем автора в БД
-//                    if (authorByName == null) {
-//                        Person s1 = new Person();
-//                        s1.setName(authorName);
-//                        personRepository.save(s1);
-//                    }
-//                }
-//            }
-//        }
+        for (Scpaper scpaper : all) {
+            String author = scpaper.getAuthor();
+            if (author != null) {
+                author = author.substring(1, author.length() - 1); //убираем { }
+                String[] split = author.split(","); //разделяем по "," на массив строк
+
+                for (String authorNameWithQuotes : split) {
+                    String authorName = authorNameWithQuotes.substring(1, authorNameWithQuotes.length() - 1);//del "
+                    Person authorByName = personRepository.getPersonByName(authorName); //ищем автора в БД
+                    if (authorByName == null) {
+                        Person s1 = new Person();
+                        s1.setName(authorName);
+                        s1.setMovement_id(1);
+                        s1.setCountry_id(1);
+                       // System.out.println(s1.getName());
+                        personRepository.save(s1);
+                    }
+                }
+            }
+        }
     }
 
-    public void initializeReferenceBetweenAuthorAndScpaper() {  //step2: create connecting table
+    public void initializeReferenceBetweenAuthorAndScpaper() {
         List<Scpaper> all = scpaperRepository.findAll();
 
         for (Scpaper scpaper : all) {
@@ -203,6 +214,49 @@ public class PersonService {
                 }
                 scpaper.setAuthorList(authors);
                 scpaperRepository.save(scpaper);
+            }
+        }
+    }
+
+
+    public void fillPersonTableFromIsource() {
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String moderator = isource.getModerator();
+            if (moderator != null) {
+                moderator = moderator.substring(1, moderator.length() - 1); //убираем { }
+                String[] split = moderator.split(","); //разделяем по "," на массив строк
+
+                for (String authorName : split) {
+                    Person authorByName = personRepository.getPersonByName(authorName); //ищем автора в БД
+                    if (authorByName == null) {
+                        Person s1 = new Person();
+                        s1.setName(authorName);
+                        s1.setMovement_id(1);
+                        s1.setCountry_id(1);
+                        personRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenModeratorAndIsource() {
+        List<Isource> all = isourceRepository.findAll();
+
+        for (Isource isource : all) {
+            String moderator = isource.getModerator();
+            if (moderator != null) {
+                moderator = moderator.substring(1, moderator.length() - 1); ///{ }
+                String[] split = moderator.split(",");
+                List<Person> moderators = new LinkedList<>();
+                for (String s : split) {
+                    Person authorByName = personRepository.getPersonByName(s);
+                    moderators.add(authorByName);
+                }
+                isource.setModeratorList(moderators);
+                isourceRepository.save(isource);
             }
         }
     }
