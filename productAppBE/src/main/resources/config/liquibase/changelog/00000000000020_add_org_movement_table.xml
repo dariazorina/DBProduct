@@ -4,34 +4,34 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="Даша" id="051102019-10">
-        <createTable remarks="Таблица связка" tableName="isource_movement">
+    <changeSet author="Даша" id="061102019-1">
+        <createTable remarks="Таблица связка" tableName="org_movement">
             <column name="movement_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="isource_id" type="INT">
+            <column name="org_id" type="INT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="movement_id, isource_id" tableName="isource_movement"/>
+        <addPrimaryKey columnNames="movement_id, org_id" tableName="org_movement"/>
     </changeSet>
 
 
-    <changeSet author="Даша" id="051102019-11">
+    <changeSet author="Даша" id="061102019-2">
         <addForeignKeyConstraint baseColumnNames="movement_id"
-                                 baseTableName="isource_movement"
-                                 constraintName="t_movement_isource_ref_id_fkey"
+                                 baseTableName="org_movement"
+                                 constraintName="t_movement_org_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="movement_id"
                                  referencedTableName="t_movement"/>
     </changeSet>
 
-    <changeSet author="Даша" id="051102019-12">
-        <addForeignKeyConstraint baseColumnNames="isource_id"
-                                 baseTableName="isource_movement"
-                                 constraintName="t_isource_movement_ref_id_fkey"
+    <changeSet author="Даша" id="061102019-3">
+        <addForeignKeyConstraint baseColumnNames="org_id"
+                                 baseTableName="org_movement"
+                                 constraintName="t_org_movement_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="isource_id"
-                                 referencedTableName="t_isource"/>
+                                 referencedColumnNames="org_id"
+                                 referencedTableName="t_org"/>
     </changeSet>
 </databaseChangeLog>

@@ -59,5 +59,19 @@ localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
 
 
 
+*************************org*****************************
+
+localhost:8098/api/v1/person/fillPersonTableFromOrg
+localhost:8098/api/v1/person/initializeReferenceBetweenActorAndOrg
+
+localhost:8098/api/v1/link/fillLinkTableFromOrg
+localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndOrg
+
+localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndOrg
+
+
+
+
+
 
 

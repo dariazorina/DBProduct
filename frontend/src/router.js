@@ -2,12 +2,15 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Service from '@/components/Service'
-import CountryList from '@/components/country/CountryList'
-import ArticlesList from '@/components/article/ArticlesList'
 import Bootstrap from '@/components/Bootstrap'
 import User from '@/components/User'
 import Login from '@/components/Login'
 import Protected from '@/components/Protected'
+
+import ArticlesList from '@/components/article/ArticleList'
+import EventList from '@/components/event/EventList'
+import OrgList from '@/components/org/OrgList'
+import CountryList from '@/components/country/CountryList'
 
 import store from './store'
 
@@ -28,8 +31,10 @@ const router = new Router({
                 requiresAuth: true
             }
         },
-        { path: '/countries', component: CountryList },
         { path: '/articles',  component: ArticlesList },
+        { path: '/events',  component: EventList },
+        { path: '/orgs',  component: OrgList },
+        { path: '/countries', component: CountryList },
 
         // otherwise redirect to home
         { path: '*', redirect: '/' }

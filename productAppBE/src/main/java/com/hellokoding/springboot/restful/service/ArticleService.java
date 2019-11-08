@@ -1,7 +1,6 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.AuthorRepository;
 import com.hellokoding.springboot.restful.dao.HashTagRepository;
 import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
 import com.hellokoding.springboot.restful.model.Article;

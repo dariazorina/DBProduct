@@ -58,4 +58,6 @@ public class EventAPI {
         eventService.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+
 }

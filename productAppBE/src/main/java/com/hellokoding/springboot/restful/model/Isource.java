@@ -22,7 +22,10 @@ public class Isource {
     private List<Movement> movementList;
 
     private String title;
-    private String title_rus;
+
+    @Column(name="title_rus")
+    private String titleRus;
+
     private String type;
     private String subtype;
     private String dl;
@@ -47,9 +50,16 @@ public class Isource {
     private List<Language> langList;
 
     private Integer country_id;
-    private Integer year_create;
-    private Integer year_update;
-    private Integer year_del;
+
+    @Column(name="year_create")
+    private Integer yearCreate;
+
+    @Column(name="year_update")
+    private Integer yearUpdate;
+
+    @Column(name="year_del")
+    private Integer yearDel;
+
     private String access;
     private String update;
 

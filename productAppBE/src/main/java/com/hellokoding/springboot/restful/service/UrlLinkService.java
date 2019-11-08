@@ -18,6 +18,7 @@ public class UrlLinkService {
     private final EventRepository eventRepository;
     private final ScpaperRepository scpaperRepository;
     private final IsourceRepository isourceRepository;
+    private final OrgRepository orgRepository;
 
 
     public List<UrlLink> findAll() {
@@ -199,4 +200,46 @@ public class UrlLinkService {
             }
         }
     }
+
+    public void fillLinkTableFromOrg() {
+        List<Org> all = orgRepository.findAll();
+
+        for (Org org : all) {
+            String links = org.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link); //ищем link в БД
+                    if (linkByContent == null) {
+                        UrlLink s1 = new UrlLink();
+                        s1.setContent(link);
+                        urlLinkRepository.save(s1);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initializeReferenceBetweenLinkAndOrg() {
+        List<Org> all = orgRepository.findAll();
+
+        for (Org org : all) {
+            String links = org.getUrl();
+            if (links != null) {
+                links = links.substring(1, links.length() - 1); //убираем { }
+                String[] split = links.split(","); //разделяем по "," на массив строк
+
+                List<UrlLink> linkList = new LinkedList<>();
+                for (String link : split) {
+                    UrlLink linkByContent = urlLinkRepository.getUrlLinkByContent(link);
+                    linkList.add(linkByContent);
+                }
+                org.setLinkList(linkList);
+                orgRepository.save(org);
+            }
+        }
+    }
+
 }

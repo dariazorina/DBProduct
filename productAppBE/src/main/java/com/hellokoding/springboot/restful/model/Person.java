@@ -1,6 +1,7 @@
 package com.hellokoding.springboot.restful.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,10 +17,20 @@ public class Person {
     private String surname;
     private String name;
     private String patronymic;
-    private String surname_rus;
-    private String name_rus;
-    private String surname_eng;
-    private String name_eng;
+
+
+    @Column(name = "surname_rus")
+    private String surnameRus;
+
+    @Column(name = "name_rus")
+    private String nameRus;
+
+    @Column(name = "surname_eng")
+    private String surnameEng;
+
+    @Column(name = "name_eng")
+    private String nameEng;
+
     private Integer country_id;
     private String settlement;
     private String occupation;
@@ -56,13 +67,6 @@ public class Person {
             joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
     private List<HashTag> hashtagList;
-
-
-
-
-
-
-
 
 
 }

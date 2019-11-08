@@ -22,8 +22,8 @@
                                  baseTableName="isource_language"
                                  constraintName="t_language_isource_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="person_id"
-                                 referencedTableName="t_person"/>
+                                 referencedColumnNames="language_id"
+                                 referencedTableName="t_language"/>
     </changeSet>
 
     <changeSet author="Даша" id="051102019-12">

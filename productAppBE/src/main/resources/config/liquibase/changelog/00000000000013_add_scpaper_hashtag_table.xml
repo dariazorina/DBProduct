@@ -22,8 +22,8 @@
                                  baseTableName="scpaper_hashtag"
                                  constraintName="t_hashtag_scpaper_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="person_id"
-                                 referencedTableName="t_person"/>
+                                 referencedColumnNames="hashtag_id"
+                                 referencedTableName="t_hashtag"/>
     </changeSet>
 
     <changeSet author="Даша" id="041102019-9">

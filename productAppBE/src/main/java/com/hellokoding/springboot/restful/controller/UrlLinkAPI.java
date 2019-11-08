@@ -87,18 +87,18 @@ public class UrlLinkAPI {
         return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/fillLinkTableFromOrg")
-//    public ResponseEntity fillLinkTableFromIsource() {
-//        // localhost:8098/api/v1/link/fillLinkTableFromIsource
-//        urlLinkService.fillLinkTableFromIsource();
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping("/initializeReferenceBetweenLinkAndOrg")
-//    public ResponseEntity initializeReferenceBetweenLinkAndIsource() {
-//        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndIsource
-//        urlLinkService.initializeReferenceBetweenLinkAndIsource();
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/fillLinkTableFromOrg")
+    public ResponseEntity fillLinkTableFromOrg() {
+        // localhost:8098/api/v1/link/fillLinkTableFromOrg
+        urlLinkService.fillLinkTableFromOrg();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenLinkAndOrg")
+    public ResponseEntity initializeReferenceBetweenLinkAndOrg() {
+        //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndOrg
+        urlLinkService.initializeReferenceBetweenLinkAndOrg();
+        return ResponseEntity.ok().build();
+    }
 ///// utils end
 }

@@ -87,18 +87,18 @@ public class PersonAPI {
     }
 
 
-//    @GetMapping("/fillPersonTableFromOrg")
-//    public ResponseEntity fillPersonTableFromIsource() {
-//        // localhost:8098/api/v1/person/fillPersonTableFromIsource
-//        personService.fillPersonTableFromIsource();
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping("/initializeReferenceBetweenActorAndOrg")
-//    public ResponseEntity initializeReferenceBetweenModeratorAndIsource() {
-//        //  localhost:8098/api/v1/person/initializeReferenceBetweenModeratorAndIsource
-//        personService.initializeReferenceBetweenModeratorAndIsource();
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/fillPersonTableFromOrg")
+    public ResponseEntity fillPersonTableFromOrg() {
+        // localhost:8098/api/v1/person/fillPersonTableFromOrg
+        personService.fillPersonTableFromOrg();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenActorAndOrg")
+    public ResponseEntity initializeReferenceBetweenActorAndOrg() {
+        //  localhost:8098/api/v1/person/initializeReferenceBetweenActorAndOrg
+        personService.initializeReferenceBetweenActorAndOrg();
+        return ResponseEntity.ok().build();
+    }
     ///////////////////////
 }

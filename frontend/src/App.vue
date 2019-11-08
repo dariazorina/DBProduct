@@ -7,8 +7,10 @@
       <router-link to="/user">User</router-link> |
       <router-link to="/login">Login</router-link> |
       <router-link to="/protected">Protected</router-link> |
-      <router-link to="/countries">Countries</router-link> |
-      <router-link to="/articles">Articles</router-link>
+      <router-link to="/articles">Article</router-link> |
+      <router-link to="/events">Event</router-link> |
+      <router-link to="/orgs">Organization</router-link> |
+      <router-link to="/countries">Country</router-link>
     </div>
     <router-view :hellomsg="msg"></router-view>
   </div>

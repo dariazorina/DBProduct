@@ -24,5 +24,11 @@
     <include file="config/liquibase/changelog/00000000000017_add_isource_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000018_add_isource_movement_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000019_add_isource_language_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000020_add_org_movement_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000021_add_org_actor_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000022_add_org_link_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000023_add_person_link_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000024_add_person_org_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000025_add_person_hashtag_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

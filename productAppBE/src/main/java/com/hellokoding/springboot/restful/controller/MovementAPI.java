@@ -2,7 +2,6 @@ package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Movement;
 import com.hellokoding.springboot.restful.service.MovementService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +65,13 @@ public class MovementAPI {
     public ResponseEntity initializeReferenceBetweenMovementAndIsource() {
         //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndIsource
         movementService.initializeReferenceBetweenMovementAndIsource();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/initializeReferenceBetweenMovementAndOrg")
+    public ResponseEntity initializeReferenceBetweenMovementAndOrg() {
+        //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndOrg
+        movementService.initializeReferenceBetweenMovementAndOrg();
         return ResponseEntity.ok().build();
     }
 }
