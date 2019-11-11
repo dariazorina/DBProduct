@@ -13,7 +13,6 @@ public class Isource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String movement_id; //todo delete
     @ManyToMany
     @JoinTable(
             name = "isource_movement",
@@ -31,8 +30,6 @@ public class Isource {
     private String dl;
     private String url;
 
-
-    private String url_links;       // TODO: исходные данные по url_links - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "isource_link",
@@ -40,8 +37,6 @@ public class Isource {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
-
-    private String lang;       // TODO: исходные данные по url_links - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "isource_language",
@@ -49,7 +44,9 @@ public class Isource {
             inverseJoinColumns = @JoinColumn(name = "language_id", referencedColumnName = "language_id"))
     private List<Language> langList;
 
-    private Integer country_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
 
     @Column(name="year_create")
     private Integer yearCreate;
@@ -64,7 +61,6 @@ public class Isource {
     private String update;
 
 
-    private String moderator;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "isource_moderator",
@@ -74,13 +70,11 @@ public class Isource {
 
     private String description;
 
-    private String hashtags;         // TODO: исходные данные по hashtags - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "isource_hashtag",
             joinColumns = @JoinColumn(name = "isource_id", referencedColumnName = "isource_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
     private List<HashTag> hashtagList;
-
 
 }

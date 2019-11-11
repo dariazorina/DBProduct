@@ -13,11 +13,14 @@ public class Person {
     @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer movement_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movement_id", nullable = false)
+    private Movement movement;
+
     private String surname;
     private String name;
     private String patronymic;
-
 
     @Column(name = "surname_rus")
     private String surnameRus;
@@ -31,7 +34,10 @@ public class Person {
     @Column(name = "name_eng")
     private String nameEng;
 
-    private Integer country_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
+
     private String settlement;
     private String occupation;
 
@@ -44,8 +50,8 @@ public class Person {
 
     @ManyToMany
     @JoinTable(
-            name = "person_org",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+            name = "org_actor",
+            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
     private List<Org> orgList;
 
@@ -67,6 +73,4 @@ public class Person {
             joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
     private List<HashTag> hashtagList;
-
-
 }

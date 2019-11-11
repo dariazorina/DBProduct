@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-1"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_article"
@@ -11,7 +11,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-2"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_country"
@@ -19,7 +19,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-3"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_event"
@@ -27,7 +27,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-4"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_isource"
@@ -35,7 +35,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-5"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_language"
@@ -43,7 +43,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-6"
                objectQuotingStrategy="LEGACY">
         <renameTable
@@ -52,7 +52,7 @@
                 schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-7"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_org"
@@ -60,7 +60,7 @@
                      schemaName="public"/>
     </changeSet>
 
-    <changeSet author="postgres"
+    <changeSet author="Даша"
                id="renameTable-8"
                objectQuotingStrategy="LEGACY">
         <renameTable newTableName="t_scpaper"

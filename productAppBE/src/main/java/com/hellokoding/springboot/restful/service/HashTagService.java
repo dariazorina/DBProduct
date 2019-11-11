@@ -36,7 +36,7 @@ public class HashTagService {
         hashTagRepository.deleteById(Math.toIntExact(id));
     }
 
-    public void fillHashTagTableFromArticle() {   ////step1: fill hashtag table
+/*    public void fillHashTagTableFromArticle() {   ////step1: fill hashtag table
         List<Article> all = articleRepository.findAll();
 
         for (Article article : all) {
@@ -56,9 +56,9 @@ public class HashTagService {
                 }
             }
         }
-    }
+    }*/
 
-    public void initializeReferenceBetweenHashTagAndArticle() { //step2: create connecting table
+/*    public void initializeReferenceBetweenHashTagAndArticle() { //step2: create connecting table
         List<Article> all = articleRepository.findAll();
 
         for (Article article : all) {
@@ -76,9 +76,9 @@ public class HashTagService {
                 articleRepository.save(article);
             }
         }
-    }
+    }*/
 
-    public void fillHashTagTableFromEvent() {  //fill hashtag table
+/*    public void fillHashTagTableFromEvent() {  //fill hashtag table
         List<Event> all = eventRepository.findAll();
 
         for (Event event : all) {
@@ -98,9 +98,9 @@ public class HashTagService {
                 }
             }
         }
-    }
+    }*/
 
-    public void initializeReferenceBetweenHashTagAndEvent() { //step2: create connecting table
+/*    public void initializeReferenceBetweenHashTagAndEvent() { //step2: create connecting table
         List<Event> all = eventRepository.findAll();
 
         for (Event event : all) {
@@ -120,9 +120,9 @@ public class HashTagService {
                 eventRepository.save(event);
             }
         }
-    }
+    }*/
 
-    public void fillHashTagTableFromScpaper() {  //fill hashtag table
+/*    public void fillHashTagTableFromScpaper() {  //fill hashtag table
         List<Scpaper> all = scpaperRepository.findAll();
 
         for (Scpaper scpaper : all) {
@@ -142,9 +142,9 @@ public class HashTagService {
                 }
             }
         }
-    }
+    }*/
 
-    public void initializeReferenceBetweenHashTagAndScpaper() { //step2: create connecting table
+/*    public void initializeReferenceBetweenHashTagAndScpaper() { //step2: create connecting table
         List<Scpaper> all = scpaperRepository.findAll();
 
         for (Scpaper scpaper : all) {
@@ -163,9 +163,9 @@ public class HashTagService {
                 scpaperRepository.save(scpaper);
             }
         }
-    }
+    }*/
 
-    public void fillHashTagTableFromIsource() {  //fill hashtag table
+/*    public void fillHashTagTableFromIsource() {  //fill hashtag table
         List<Isource> all = isourceRepository.findAll();
 
         for (Isource isource : all) {
@@ -206,5 +206,5 @@ public class HashTagService {
                 isourceRepository.save(isource);
             }
         }
-    }
+    }*/
 }

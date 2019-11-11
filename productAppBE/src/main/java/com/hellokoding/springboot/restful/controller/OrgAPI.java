@@ -59,26 +59,26 @@ public class OrgAPI {
     }
 
 
-    ////////utils////
-    @GetMapping("/addOrgFromEventTableToOrgTable")
-    public ResponseEntity addOrgFromEventTableToOrgTable() {
-        //  localhost:8098/api/v1/org/addOrgFromEventTableToOrgTable
-        orgService.addOrgFromEventTableToOrgTable();
-        return ResponseEntity.ok().build();
-    }
+//    ////////utils////
+//    @GetMapping("/addOrgFromEventTableToOrgTable")
+//    public ResponseEntity addOrgFromEventTableToOrgTable() {
+//        //  localhost:8098/api/v1/org/addOrgFromEventTableToOrgTable
+//        orgService.addOrgFromEventTableToOrgTable();
+//        return ResponseEntity.ok().build();
+//    }
 
-    @GetMapping("/changeOrgTitleToOrgId")
-    public ResponseEntity changeOrgTitleToOrgId() {
-        //  localhost:8098/api/v1/org/changeOrgTitleToOrgId
-        orgService.changeOrgTitleToOrgId();
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/initializeReferenceBetweenOrgAndEvent")
-    public ResponseEntity initializeReferenceBetweenOrgAndEvent() {
-        //  localhost:8098/api/v1/org/initializeReferenceBetweenOrgAndEvent
-        orgService.initializeReferenceBetweenOrgAndEvent();
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/changeOrgTitleToOrgId")
+//    public ResponseEntity changeOrgTitleToOrgId() {
+//        //  localhost:8098/api/v1/org/changeOrgTitleToOrgId
+//        orgService.changeOrgTitleToOrgId();
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/initializeReferenceBetweenOrgAndEvent")
+//    public ResponseEntity initializeReferenceBetweenOrgAndEvent() {
+//        //  localhost:8098/api/v1/org/initializeReferenceBetweenOrgAndEvent
+//        orgService.initializeReferenceBetweenOrgAndEvent();
+//        return ResponseEntity.ok().build();
+//    }
 
 }

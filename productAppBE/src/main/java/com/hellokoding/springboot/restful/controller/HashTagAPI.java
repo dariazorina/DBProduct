@@ -30,7 +30,7 @@ public class HashTagAPI {
     }
 
     ////utils////
-    @GetMapping("/fillHashTagTableFromArticle")
+/*    @GetMapping("/fillHashTagTableFromArticle")
     public ResponseEntity fillHashTagTableFromArticle() {
         // localhost:8098/api/v1/hashtag/fillHashTagTableFromArticle
         hashTagService.fillHashTagTableFromArticle();
@@ -84,7 +84,7 @@ public class HashTagAPI {
         //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndIsource
         hashTagService.initializeReferenceBetweenHashTagAndIsource();
         return ResponseEntity.ok().build();
-    }
+    }*/
    /////// ////
 
 }

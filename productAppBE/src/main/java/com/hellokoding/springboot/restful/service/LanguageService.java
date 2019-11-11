@@ -40,7 +40,7 @@ public class LanguageService {
 
 
 
-    public void initializeReferenceBetweenLanguageAndIsource() {
+/*    public void initializeReferenceBetweenLanguageAndIsource() {
         List<Isource> all = isourceRepository.findAll();
 
         for (Isource isource : all) {
@@ -58,5 +58,5 @@ public class LanguageService {
                 isourceRepository.save(isource);
             }
         }
-    }
+    }*/
 }

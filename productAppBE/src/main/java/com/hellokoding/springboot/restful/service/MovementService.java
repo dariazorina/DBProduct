@@ -3,13 +3,10 @@ package com.hellokoding.springboot.restful.service;
 import com.hellokoding.springboot.restful.dao.IsourceRepository;
 import com.hellokoding.springboot.restful.dao.MovementRepository;
 import com.hellokoding.springboot.restful.dao.OrgRepository;
-import com.hellokoding.springboot.restful.model.Isource;
 import com.hellokoding.springboot.restful.model.Movement;
-import com.hellokoding.springboot.restful.model.Org;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +36,7 @@ public class MovementService {
         movementRepository.deleteById(Math.toIntExact(id));
     }
 
-    public void initializeReferenceBetweenMovementAndIsource() {
+/*    public void initializeReferenceBetweenMovementAndIsource() {
         List<Isource> all = isourceRepository.findAll();
 
         for (Isource isource : all) {
@@ -77,6 +74,6 @@ public class MovementService {
                 orgRepository.save(org);
             }
         }
-    }
+    }*/
 
 }

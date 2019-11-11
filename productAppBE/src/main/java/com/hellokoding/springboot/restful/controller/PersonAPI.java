@@ -30,7 +30,7 @@ public class PersonAPI {
     }
 
     //////////////////////utils/////////////////////////////////////////
-    @GetMapping("/fillPersonTableFromArticle")
+/*    @GetMapping("/fillPersonTableFromArticle")
     public ResponseEntity fillPersonTableFromArticle() {
         // localhost:8098/api/v1/person/fillPersonTableFromArticle
         personService.fillPersonTableFromArticle();
@@ -99,6 +99,6 @@ public class PersonAPI {
         //  localhost:8098/api/v1/person/initializeReferenceBetweenActorAndOrg
         personService.initializeReferenceBetweenActorAndOrg();
         return ResponseEntity.ok().build();
-    }
+    }*/
     ///////////////////////
 }

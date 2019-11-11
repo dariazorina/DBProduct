@@ -39,7 +39,7 @@ public class PersonService {
 
 
     ////utils
-    public void fillPersonTableFromArticle() {   ////step1: create table author
+/*    public void fillPersonTableFromArticle() {   ////step1: create table author
         List<Article> all = articleRepository.findAll();
 
         for (Article article : all) {
@@ -61,9 +61,9 @@ public class PersonService {
                 }
             }
         }
-    }
+    }*/
 
-    public void initializeReferenceBetweenAuthorAndArticle() {  //step2: create connecting table
+/*    public void initializeReferenceBetweenAuthorAndArticle() {  //step2: create connecting table
         List<Article> all = articleRepository.findAll();
 
         for (Article article : all) {
@@ -125,9 +125,9 @@ public class PersonService {
                 eventRepository.save(event);
             }
         }
-    }
+    }*/
 
-    public void fillPersonTableFromScpaper() {
+/*    public void fillPersonTableFromScpaper() {
 //        Optional<Scpaper> all = scpaperRepository.findById(10); //All();
         List<Scpaper> all = scpaperRepository.findAll();
 
@@ -195,9 +195,9 @@ public class PersonService {
                 }
             }
         }
-    }
+    }*/
 
-    public void initializeReferenceBetweenModeratorAndIsource() {
+/*    public void initializeReferenceBetweenModeratorAndIsource() {
         List<Isource> all = isourceRepository.findAll();
 
         for (Isource isource : all) {
@@ -258,5 +258,5 @@ public class PersonService {
                 orgRepository.save(org);
             }
         }
-    }
+    }*/
 }

@@ -37,7 +37,7 @@ public class UrlLinkService {
         urlLinkRepository.deleteById(Math.toIntExact(id));
     }
 
-    public void fillLinkTableFromArticle() {   //step1: create link table
+   /* public void fillLinkTableFromArticle() {   //step1: create link table
         List<Article> all = articleRepository.findAll();
 
         for (Article article : all) {
@@ -241,5 +241,5 @@ public class UrlLinkService {
             }
         }
     }
-
+*/
 }

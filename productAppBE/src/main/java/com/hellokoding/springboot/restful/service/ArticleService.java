@@ -1,16 +1,10 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.HashTagRepository;
-import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
 import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.Author;
-import com.hellokoding.springboot.restful.model.HashTag;
-import com.hellokoding.springboot.restful.model.UrlLink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 

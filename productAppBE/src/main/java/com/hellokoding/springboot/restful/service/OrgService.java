@@ -7,7 +7,6 @@ import com.hellokoding.springboot.restful.model.Org;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +35,8 @@ public class OrgService {
         orgRepository.deleteById(Math.toIntExact(id));
     }
 
-    public void addOrgFromEventTableToOrgTable() {  //todo Прояснить. Добавила в табл.Оганизаций названия организаций из табл.Событий
-        List<Event> all = eventRepository.findAll();
+//    public void addOrgFromEventTableToOrgTable() {  //todo Прояснить. Добавила в табл.Оганизаций названия организаций из табл.Событий
+//        List<Event> all = eventRepository.findAll();
 
        /* for (Event event : all) {
             String orgs = event.getOrgs();
@@ -65,10 +64,10 @@ public class OrgService {
                 }
             }
         }*/
-    }
+//    }
 
     //todo перезаписать вместо названий организаций их айдишки (добавленые только что в табл.Организаций)
-    public void changeOrgTitleToOrgId() {
+/*    public void changeOrgTitleToOrgId() {
         List<Event> all = eventRepository.findAll();
 
         for (Event event : all) {
@@ -91,10 +90,10 @@ public class OrgService {
                 }
             }
         }
-    }
+    }*/
 
 
-    public void initializeReferenceBetweenOrgAndEvent() {
+/*    public void initializeReferenceBetweenOrgAndEvent() {
         List<Event> all = eventRepository.findAll();
 
         for (Event event : all) {
@@ -112,6 +111,6 @@ public class OrgService {
                 eventRepository.save(event);
             }
         }
-    }
+    }*/
 
 }

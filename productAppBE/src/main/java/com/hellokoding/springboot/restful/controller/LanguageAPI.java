@@ -57,12 +57,12 @@ public class LanguageAPI {
         return ResponseEntity.ok().build();
     }
 
-    //////////////////////utils/////////////////////////////////////////
-    @GetMapping("/initializeReferenceBetweenLanguageAndIsource")
-    public ResponseEntity initializeReferenceBetweenLanguageAndIsource() {
-        //  localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
-        languageService.initializeReferenceBetweenLanguageAndIsource();
-        return ResponseEntity.ok().build();
-    }
+//    //////////////////////utils/////////////////////////////////////////
+//    @GetMapping("/initializeReferenceBetweenLanguageAndIsource")
+//    public ResponseEntity initializeReferenceBetweenLanguageAndIsource() {
+//        //  localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
+//        languageService.initializeReferenceBetweenLanguageAndIsource();
+//        return ResponseEntity.ok().build();
+//    }
 
 }

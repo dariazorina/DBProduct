@@ -5,20 +5,20 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/00000000000001_add_author_and_art_author_table.xml" relativeToChangelogFile="false"/>
+
     <include file="config/liquibase/changelog/00000000000002_add_hashtag_and_art_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000003_add_link_and_art_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000004_add_event_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000005_add_event_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000006_add_person_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000007_add_event_org_table.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/00000000000008_add_annex_and_event_annex_table.xml" relativeToChangelogFile="false"/>
+<!--    <include file="config/liquibase/changelog/00000000000008_add_annex_and_event_annex_table.xml" relativeToChangelogFile="false"/>-->
     <include file="config/liquibase/changelog/00000000000009_add_event_actor_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000010_rename_original_tables.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000011_add_scpaper_author_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000012_add_scpaper_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000013_add_scpaper_hashtag_table.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/00000000000014_change_lang_datatype_scpaper_table.xml" relativeToChangelogFile="false"/>
+
     <include file="config/liquibase/changelog/00000000000015_add_isource_moderator_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000016_add_isource_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000017_add_isource_hashtag_table.xml" relativeToChangelogFile="false"/>
@@ -28,7 +28,8 @@
     <include file="config/liquibase/changelog/00000000000021_add_org_actor_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000022_add_org_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000023_add_person_link_table.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/00000000000024_add_person_org_table.xml" relativeToChangelogFile="false"/>
+
     <include file="config/liquibase/changelog/00000000000025_add_person_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000026_add_art_actor_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

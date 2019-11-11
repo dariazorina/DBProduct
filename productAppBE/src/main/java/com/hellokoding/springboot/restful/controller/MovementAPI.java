@@ -60,7 +60,7 @@ public class MovementAPI {
         return ResponseEntity.ok().build();
     }
 
-    //////////////////////utils/////////////////////////////////////////
+/*    //////////////////////utils/////////////////////////////////////////
     @GetMapping("/initializeReferenceBetweenMovementAndIsource")
     public ResponseEntity initializeReferenceBetweenMovementAndIsource() {
         //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndIsource
@@ -73,5 +73,5 @@ public class MovementAPI {
         //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndOrg
         movementService.initializeReferenceBetweenMovementAndOrg();
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

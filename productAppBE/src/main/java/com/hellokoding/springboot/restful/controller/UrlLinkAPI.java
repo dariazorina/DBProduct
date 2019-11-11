@@ -28,7 +28,7 @@ public class UrlLinkAPI {
         return ResponseEntity.ok(urlLinkService.save(article));
     }
 
-
+/*
     //////////////////////////////////utils/////////////////////////////////////
     @GetMapping("/fillLinkTableFromArticle")
     public ResponseEntity fillLinkTableFromArticle() {
@@ -99,6 +99,6 @@ public class UrlLinkAPI {
         //  localhost:8098/api/v1/link/initializeReferenceBetweenLinkAndOrg
         urlLinkService.initializeReferenceBetweenLinkAndOrg();
         return ResponseEntity.ok().build();
-    }
+    }*/
 ///// utils end
 }

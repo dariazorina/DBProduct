@@ -15,12 +15,21 @@ public class Article {
     @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer movement_id;
-    private Integer language_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movement_id", nullable = false)
+    private Movement movement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language_id", nullable = false)
+    private Language language;
+
     private Date date;
     private String title;
-    private String title_rus;
-    private String author;          // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
+    @Column(name = "title_rus")
+    private String titleRus;
+
 
     @ManyToMany
     @JoinTable(
@@ -31,7 +40,6 @@ public class Article {
 
     private String description;
     private String url;
-    private String url_links;       // TODO: исходные данные по url_links - массив строк)) Нужно удалить потом
 
     @ManyToMany
     @JoinTable(
@@ -39,9 +47,6 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
-
-
-    private String hashtags;         // TODO: исходные данные по hashtags - массив строк)) Нужно удалить потом
 
     @ManyToMany
     @JoinTable(

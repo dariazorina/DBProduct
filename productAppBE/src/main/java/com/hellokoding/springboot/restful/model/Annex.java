@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Table(name="t_annex")
 @Entity
 @Data
+//File
 public class Annex {
     @Id
     @Column(name = "annex_id")
