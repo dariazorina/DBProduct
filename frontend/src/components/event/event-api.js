@@ -8,7 +8,7 @@ const AXIOS = axios.create({
 
 export default {
     getAll() {
-        return AXIOS.get(`/events`);//  /api/hello
+        return AXIOS.get(`/event`);//  /api/hello
     }
 }
 

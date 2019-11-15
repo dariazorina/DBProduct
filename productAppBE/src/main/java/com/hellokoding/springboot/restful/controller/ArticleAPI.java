@@ -22,7 +22,14 @@ public class ArticleAPI {
 
     @GetMapping
     public ResponseEntity<List<Article>> findAll() {
-        return ResponseEntity.ok(articleService.findAll());
+        List<Article> all = articleService.findAll();
+        for (Article article : all) {
+            System.out.println("article = " + article);
+
+        }
+
+
+        return ResponseEntity.ok(all);
     }
 
     @PostMapping

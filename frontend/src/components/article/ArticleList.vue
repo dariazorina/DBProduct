@@ -5,35 +5,38 @@
                 <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
             </div>
         </div>
-        <table class="table" style="width:100%">
-            <thead width="400px">
+        <table class="table">
+            <thead>
             <tr>
                 <th>Id</th>
                 <th>Language</th>
                 <th>Movement</th>
-                <th>Title</th>
-                <th>Title_rus</th>
-                <th>Author</th>
-                <th style="width:80%">Description</th>
+                <th style="width:20%">Title</th>
+                <th style="width:20%">Title, russian</th>
+<!--                <th>Author</th>-->
+                <th style="width:25%">Description</th>
                 <th>URL</th>
+                <th>path</th>
 
                 <th class="col-sm-2">Actions</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr v-for="article in filteredArticles">
+            <tr v-for="article in articles">
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
                 <td> {{article.id }}</td>
-                <td>{{article.movement_id}}</td>
-                <td>{{article.language_id}}</td>
+                <td>{{article.language.name}}</td>
+                <td>{{article.movement.name}}</td>
                 <td>{{article.title }}</td>
-                <td>{{article.title_rus }}</td>
-                <td>{{article.authors.length() }}</td>
+                <td>{{article.titleRus }}</td>
                 <td>{{article.description }}</td>
+<!--                <td>{{article.authors.length() }}</td>-->
+<!--                <td></td>-->
                 <td>{{article.url }}</td>
+                <td>{{article.path }}</td>
 
                 <!--                <td>-->
                 <!--                    <a>-->
@@ -42,22 +45,27 @@
                 <!--                    </a>-->
                 <!--                </td>-->
 
-                <td>
-                    <a class="btn btn-warning btn-xs">
-                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
-                        </router-link>
-                    </a>
-                    <a class="btn btn-danger btn-xs">
-                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
-                        </router-link>
-                    </a>
-                </td>
+
+<!--                <td>-->
+<!--                    <a class="btn btn-warning btn-xs">-->
+<!--                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit-->
+<!--                        </router-link>-->
+<!--                    </a>-->
+<!--                    <a class="btn btn-danger btn-xs">-->
+<!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
+<!--                        </router-link>-->
+<!--                    </a>-->
+<!--                </td>-->
             </tr>
 
             </tbody>
         </table>
     </div>
 </template>
+
+<style lang="scss">
+    @import '../dbnm.css';
+</style>
 
 <script>
     import api from "./article-api";
@@ -79,8 +87,8 @@
             filteredArticles() {
                 return this.articles.filter((article) => {
                     return article.title.indexOf(this.searchKey) > -1
-                        || article.id.indexOf(this.searchKey) > -1
-                        || article.url.indexOf(this.searchKey) > -1
+                        || article.date.indexOf(this.searchKey) > -1
+                        || article.description.indexOf(this.searchKey) > -1
                 })
             }
         },
@@ -107,5 +115,5 @@
     }
 </script>
 
-<style scoped>
-</style>
+<!--<style scoped>-->
+<!--</style>-->

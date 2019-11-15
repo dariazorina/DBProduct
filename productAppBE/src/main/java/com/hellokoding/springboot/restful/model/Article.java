@@ -1,6 +1,7 @@
 package com.hellokoding.springboot.restful.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "t_article")
 @Data
+@ToString
 public class Article {
 
     @Id
@@ -31,10 +33,10 @@ public class Article {
     private String titleRus;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "art_author",
-            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
+            joinColumns = @JoinColumn(name = "art_id", referencedColumnName = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "person_id"))
     private List<Person> authorList;
 

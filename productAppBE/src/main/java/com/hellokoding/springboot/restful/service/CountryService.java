@@ -4,6 +4,7 @@ import com.hellokoding.springboot.restful.dao.CountryRepository;
 import com.hellokoding.springboot.restful.model.Country;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 
 @RequiredArgsConstructor
+@Transactional
 public class CountryService {
     private final CountryRepository countryRespository;
 
@@ -22,11 +24,14 @@ public class CountryService {
         return countryRespository.findById(Math.toIntExact(id));
     }
 
-    public Country save(Country stock) {
-        return countryRespository.save(stock);
+    public Country save(Country country) {
+        Country save = countryRespository.save(country);
+        return save;
     }
 
     public void deleteById(Long id) {
-        //productRespository.deleteById(id);
+
+        Integer r = Math.toIntExact(id);
+        countryRespository.deleteById(r);
     }
 }

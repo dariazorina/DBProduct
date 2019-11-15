@@ -10,7 +10,7 @@
       <router-link to="/articles">Article</router-link> |
       <router-link to="/events">Event</router-link> |
       <router-link to="/orgs">Organization</router-link> |
-      <router-link to="/countries">Country</router-link>
+      <router-link to="/country">Country</router-link>
     </div>
     <router-view :hellomsg="msg"></router-view>
   </div>

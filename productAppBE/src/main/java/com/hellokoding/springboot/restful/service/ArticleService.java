@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.service;
 import com.hellokoding.springboot.restful.dao.ArticleRepository;
 import com.hellokoding.springboot.restful.model.Article;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

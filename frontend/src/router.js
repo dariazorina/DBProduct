@@ -7,10 +7,14 @@ import User from '@/components/User'
 import Login from '@/components/Login'
 import Protected from '@/components/Protected'
 
-import ArticlesList from '@/components/article/ArticleList'
+import ArticleList from '@/components/article/ArticleList'
 import EventList from '@/components/event/EventList'
 import OrgList from '@/components/org/OrgList'
+
+
 import CountryList from '@/components/country/CountryList'
+import CountryEdit from '@/components/country/CountryEdit'
+import CountryDelete from '@/components/country/CountryDelete'
 
 import store from './store'
 
@@ -31,10 +35,12 @@ const router = new Router({
                 requiresAuth: true
             }
         },
-        { path: '/articles',  component: ArticlesList },
+        { path: '/articles',  component: ArticleList },
         { path: '/events',  component: EventList },
         { path: '/orgs',  component: OrgList },
-        { path: '/countries', component: CountryList },
+        { path: '/country', component: CountryList },
+        { path: '/country/:country_id/edit', component: CountryEdit,name :'country-edit'  },
+        { path: '/country/:country_id/delete', component: CountryDelete,name :'country-delete'  },
 
         // otherwise redirect to home
         { path: '*', redirect: '/' }

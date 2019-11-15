@@ -1,8 +1,6 @@
-<template id="countries">
+<template id="country">
     <div>
-
-
-<!--        <link href="../dbnm.css" rel="stylesheet"/>-->
+        <!--        <link href="../dbnm.css" rel="stylesheet"/>-->
         <!--<div class="actions">-->
         <!--<a class="btn btn-default">-->
         <!--<router-link :to="{path: '/add-product'}">-->
@@ -42,11 +40,11 @@
 
                 <td>{{ country.code }}</td>
 
-                <td>
-                    <a>
-                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}
-                        </router-link>
-                    </a>
+                <td> {{ country.name }}
+                    <!--                    <a>-->
+                    <!--                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}-->
+                    <!--                        </router-link>-->
+                    <!--                    </a>-->
                 </td>
 
                 <td>
@@ -54,8 +52,7 @@
                         <router-link :to="{name: 'country-edit', params: {country_id: country.id}}">Edit</router-link>
                     </a>
                     <a class="btn btn-danger btn-xs">
-                        <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete
-                        </router-link>
+                        <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>
                     </a>
                 </td>
             </tr>
@@ -71,9 +68,10 @@
 
 <script>
     import api from "./country-api";
+    // import api from "../article/article-api";
 
     export default {
-        name: 'countries',
+        name: 'country',
         data() {
             return {
                 countries: [],
@@ -94,15 +92,15 @@
             }
         },
         methods: {
-            loadCountries() {
-                api.getAll().then(response => {
-                    this.countries = response.data;
-                    console.log(response.data)
-                })
-                    .catch(error => {
-                        this.errors.push(error)
-                    })
-            }
+            // loadCountries() {
+            //     api.getAll().then(response => {
+            //         this.countries = response.data;
+            //         console.log(response.data)
+            //     })
+            //         .catch(error => {
+            //             this.errors.push(error)
+            //         })
+            // }
         },
         mounted() {
             api.getAll().then(response => {
@@ -112,7 +110,19 @@
                 .catch(error => {
                     this.errors.push(error)
                 })
-        }
+        },
+
+        // name: 'country-edit',
+        // data() {
+        //     return {
+        //         country: findCountry(this.$route.params.country_id)
+        //     };
+        // },
+        // methods: {
+        //     updateProduct: function () {
+        //         countryService.update(this.country.id, this.country, r => router.push('/'))
+        //     }
+        // }
     }
 
     // var List = Vue.extend({

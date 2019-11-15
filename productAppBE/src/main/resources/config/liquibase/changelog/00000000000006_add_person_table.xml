@@ -28,7 +28,6 @@
             <column name="occupation"
                     remarks="Основной род деятельности (ученый, эксперт, политик, общественный деятель …)" type="TEXT"/>
             <column name="description" remarks="Описание" type="TEXT"/>
-            <column name="photo" remarks="Фото" type="bytea"/>
         </createTable>
     </changeSet>
 
