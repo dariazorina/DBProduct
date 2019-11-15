@@ -39,12 +39,12 @@
         <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="t_person"
                                  constraintName="t_person_country_fkey" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="country_id" referencedTableName="t_countries"/>
+                                 referencedColumnNames="country_id" referencedTableName="t_country"/>
     </changeSet>
     <changeSet author="Даша (generated)" id="31102019-12">
         <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_person"
                                  constraintName="t_person_movement_id_fkey" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="movement_id" referencedTableName="t_movements"/>
+                                 referencedColumnNames="movement_id" referencedTableName="t_movement"/>
     </changeSet>
 </databaseChangeLog>

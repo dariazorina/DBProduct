@@ -16,7 +16,6 @@
 <!--                <th>Author</th>-->
                 <th style="width:25%">Description</th>
                 <th>URL</th>
-                <th>path</th>
 
                 <th class="col-sm-2">Actions</th>
             </tr>
@@ -36,7 +35,6 @@
 <!--                <td>{{article.authors.length() }}</td>-->
 <!--                <td></td>-->
                 <td>{{article.url }}</td>
-                <td>{{article.path }}</td>
 
                 <!--                <td>-->
                 <!--                    <a>-->

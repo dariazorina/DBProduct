@@ -42,6 +42,6 @@
                                  constraintName="t_event_annex_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="event_id"
-                                 referencedTableName="t_events"/>
+                                 referencedTableName="t_event"/>
     </changeSet>
 </databaseChangeLog>
