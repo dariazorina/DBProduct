@@ -1,4 +1,4 @@
-<template id="country-delete">
+<template id="article-delete">
     <div>
         <h4>Delete country <i> {{ country.name }} </i></h4>
         <p>The action cannot be undone</p>
@@ -10,11 +10,11 @@
 </template>
 
 <script>
-    import api from "./country-api";
+    import api from "./article-api";
     import router from "./../../router";
 
     export default {
-        name: 'country-delete',
+        name: 'article-delete',
         data() {
             return {
                 country: {}

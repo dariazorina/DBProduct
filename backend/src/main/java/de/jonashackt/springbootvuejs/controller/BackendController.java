@@ -38,7 +38,7 @@ public class BackendController {
     }
 
     @GetMapping(path = "/user/{id}")
-    public @ResponseBody User getUserById(@PathVariable("id") long id) {
+    public @ResponseBody User getUserById(@PathVariable("id") Integer id) {
 
         return userRepository.findById(id).map(user -> {
             LOG.info("Reading user with id " + id + " from database.");

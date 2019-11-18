@@ -7,7 +7,10 @@ import User from '@/components/User'
 import Login from '@/components/Login'
 import Protected from '@/components/Protected'
 
-import ArticleList from '@/components/article/ArticleList'
+import ArticleList from './components/article/ArticleList'
+import ArticleEdit from "./components/article/ArticleEdit";
+import ArticleDelete from "./components/article/ArticleDelete";
+
 import EventList from '@/components/event/EventList'
 import OrgList from '@/components/org/OrgList'
 
@@ -17,6 +20,7 @@ import CountryEdit from '@/components/country/CountryEdit'
 import CountryDelete from '@/components/country/CountryDelete'
 
 import store from './store'
+
 
 Vue.use(Router);
 
@@ -35,9 +39,13 @@ const router = new Router({
                 requiresAuth: true
             }
         },
-        { path: '/articles',  component: ArticleList },
+        { path: '/article',  component: ArticleList },
+        { path: '/article/:article_id/edit', component: ArticleEdit,name :'article-edit'  },
+        { path: '/article/:article_id/delete', component: ArticleDelete,name :'article-delete'},
+
         { path: '/events',  component: EventList },
         { path: '/orgs',  component: OrgList },
+
         { path: '/country', component: CountryList },
         { path: '/country/:country_id/edit', component: CountryEdit,name :'country-edit'  },
         { path: '/country/:country_id/delete', component: CountryDelete,name :'country-delete'  },

@@ -4,7 +4,8 @@
         <div class="unprotected" v-if="errorFlag">
             <h5>Error: {{errors}}</h5>
         </div>
-        <form @submit="checkForm" action="/country" method="put">
+        <form  >
+            <!--        <form @submit="checkForm" action="/country" method="put">-->
             <div class="form-group">
                 <label for="edit-name">Name</label>
                 <input class="form-control" id="edit-name" v-model="country.name" required/>
@@ -13,7 +14,7 @@
                 <label for="edit-code">Code</label>
                 <input type="number" class="form-control" id="edit-code" v-model="country.code" required/>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button"  @click="checkForm" class="btn btn-primary">Save</button>
             <a class="btn btn-default">
                 <router-link to="/country">Cancel</router-link>
             </a>
@@ -23,11 +24,12 @@
 
 <script>
     import api from "./country-api";
+    import router  from "./../../router";
 
     export default {
         name: 'country-edit',
         data() {
-            // console.log(this.$route.params.country_id);
+
             return {
                 errorFlag: false,
                 errors: [],
@@ -39,6 +41,7 @@
 
         methods: {
             checkForm: function (e) {
+                console.log('checkForm');
                 this.errors = [];
                 this.errorFlag = false;
 
@@ -76,8 +79,14 @@
                 // return (re.test(code)&&this.code.length()==3);
             },
 
+
+
+
             updateCountry() {
-                api.update(this.country.id, this.country)//, r => router.push('/countries'))
+                api.update(this.country.id, this.country, r => {
+                    // console.log(r);
+                    router.push('/country');
+                });
             }
 
             // findCountry(countryId) {
@@ -94,6 +103,7 @@
         },
 
         mounted() {
+            console.log('mounted');
             api.findById(this.$route.params.country_id, r => {
                 this.country = r.data
             });

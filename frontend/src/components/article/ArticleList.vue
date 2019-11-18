@@ -44,16 +44,14 @@
                 <!--                </td>-->
 
 
-<!--                <td>-->
-<!--                    <a class="btn btn-warning btn-xs">-->
-<!--                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit-->
-<!--                        </router-link>-->
-<!--                    </a>-->
-<!--                    <a class="btn btn-danger btn-xs">-->
-<!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
-<!--                        </router-link>-->
-<!--                    </a>-->
-<!--                </td>-->
+                <td>
+                    <a class="btn btn-warning btn-xs">
+                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit</router-link>
+                    </a>
+                    <a class="btn btn-danger btn-xs">
+                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete</router-link>
+                    </a>
+                </td>
             </tr>
 
             </tbody>

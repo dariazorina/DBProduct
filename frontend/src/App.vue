@@ -7,7 +7,7 @@
       <router-link to="/user">User</router-link> |
       <router-link to="/login">Login</router-link> |
       <router-link to="/protected">Protected</router-link> |
-      <router-link to="/articles">Article</router-link> |
+      <router-link to="/article">Article</router-link> |
       <router-link to="/events">Event</router-link> |
       <router-link to="/orgs">Organization</router-link> |
       <router-link to="/country">Country</router-link>

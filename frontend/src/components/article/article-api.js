@@ -9,6 +9,27 @@ const AXIOS = axios.create({
 export default {
     getAll() {
         return AXIOS.get(`/article`);//  /api/hello
+    },
+
+    findById(id, fn) {
+        AXIOS
+            .get(`/article/` + id)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
+    update(id, country, fn) {
+        AXIOS
+            .put('/article/' + id, country)
+            .then(response => fn(response)) //todo
+            .catch(error => console.log(error))
+    },
+
+    delete(id, fn) {
+        AXIOS
+            .delete('/article/' + id)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
     }
 }
 
