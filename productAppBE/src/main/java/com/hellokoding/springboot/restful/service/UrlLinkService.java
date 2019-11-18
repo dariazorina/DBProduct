@@ -25,16 +25,16 @@ public class UrlLinkService {
         return urlLinkRepository.findAll();
     }
 
-    public Optional<UrlLink> findById(Long id) {
-        return urlLinkRepository.findById(Math.toIntExact(id));
+    public Optional<UrlLink> findById(Integer id) {
+        return urlLinkRepository.findById(id);
     }
 
     public UrlLink save(UrlLink stock) {
         return urlLinkRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        urlLinkRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        urlLinkRepository.deleteById(id);
     }
 
    /* public void fillLinkTableFromArticle() {   //step1: create link table

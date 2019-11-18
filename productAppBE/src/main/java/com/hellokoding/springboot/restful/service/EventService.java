@@ -19,8 +19,8 @@ public class EventService {
         return all;
     }
 
-    public Optional<Event> findById(Long id) {
-        Optional<Event> byId = eventRepository.findById(Math.toIntExact(id));
+    public Optional<Event> findById(Integer id) {
+        Optional<Event> byId = eventRepository.findById(id);
         return byId;
     }
 
@@ -28,7 +28,7 @@ public class EventService {
         return eventRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        eventRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        eventRepository.deleteById(id);
     }
 }

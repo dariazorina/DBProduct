@@ -23,12 +23,6 @@ public class ArticleAPI {
     @GetMapping
     public ResponseEntity<List<Article>> findAll() {
         List<Article> all = articleService.findAll();
-        for (Article article : all) {
-            System.out.println("article = " + article);
-
-        }
-
-
         return ResponseEntity.ok(all);
     }
 
@@ -38,7 +32,7 @@ public class ArticleAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> findById(@PathVariable Long id) {
+    public ResponseEntity<Article> findById(@PathVariable Integer id) {
         Optional<Article> stock = articleService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -48,7 +42,8 @@ public class ArticleAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> update(@PathVariable Long id, @Valid @RequestBody Article article) {
+    public ResponseEntity<Article> update(@PathVariable Integer id, @Valid @RequestBody Article article) {
+        article.setId(id);
         if (!articleService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -57,7 +52,7 @@ public class ArticleAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!articleService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

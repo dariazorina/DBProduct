@@ -20,15 +20,15 @@ public class IsourceService {
         return all;
     }
 
-    public Optional<Isource> findById(Long id) {
-        return isourceRepository.findById(Math.toIntExact(id));
+    public Optional<Isource> findById(Integer id) {
+        return isourceRepository.findById(id);
     }
 
     public Isource save(Isource stock) {
         return isourceRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        isourceRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        isourceRepository.deleteById(id);
     }
 }

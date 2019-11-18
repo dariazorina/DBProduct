@@ -32,7 +32,7 @@ public class CountryAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> findById(@PathVariable Long id) {
+    public ResponseEntity<Country> findById(@PathVariable Integer id) {
         Optional<Country> stock = countryService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -43,7 +43,7 @@ public class CountryAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Country> update(@PathVariable Long id, @Valid @RequestBody Country country) {
+    public ResponseEntity<Country> update(@PathVariable Integer id, @Valid @RequestBody Country country) {
         if (!countryService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -53,7 +53,7 @@ public class CountryAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!countryService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

@@ -21,16 +21,16 @@ public class AnnexService {
         return annexRepository.findAll();
     }
 
-    public Optional<Annex> findById(Long id) {
-        return annexRepository.findById(Math.toIntExact(id));
+    public Optional<Annex> findById(Integer id) {
+        return annexRepository.findById(id);
     }
 
     public Annex save(Annex stock) {
         return annexRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        annexRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        annexRepository.deleteById(id);
     }
 
 

@@ -20,8 +20,8 @@ public class CountryService {
         return countryRespository.findAll();
     }
 
-    public Optional<Country> findById(Long id) {
-        return countryRespository.findById(Math.toIntExact(id));
+    public Optional<Country> findById(Integer id) {
+        return countryRespository.findById(id);
     }
 
     public Country save(Country country) {
@@ -29,9 +29,7 @@ public class CountryService {
         return save;
     }
 
-    public void deleteById(Long id) {
-
-        Integer r = Math.toIntExact(id);
-        countryRespository.deleteById(r);
+    public void deleteById(Integer id) {
+        countryRespository.deleteById(id);
     }
 }

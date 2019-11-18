@@ -31,7 +31,7 @@ public class EventAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> findById(@PathVariable Long id) {
+    public ResponseEntity<Event> findById(@PathVariable Integer id) {
         Optional<Event> stock = eventService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -41,7 +41,7 @@ public class EventAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> update(@PathVariable Long id, @Valid @RequestBody Event article) {
+    public ResponseEntity<Event> update(@PathVariable Integer id, @Valid @RequestBody Event article) {
         if (!eventService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -50,7 +50,7 @@ public class EventAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!eventService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

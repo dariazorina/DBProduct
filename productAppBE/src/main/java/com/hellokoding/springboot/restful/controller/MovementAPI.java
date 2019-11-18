@@ -32,7 +32,7 @@ public class MovementAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movement> findById(@PathVariable Long id) {
+    public ResponseEntity<Movement> findById(@PathVariable Integer id) {
         Optional<Movement> stock = movementService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -42,7 +42,7 @@ public class MovementAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movement> update(@PathVariable Long id, @Valid @RequestBody Movement movement) {
+    public ResponseEntity<Movement> update(@PathVariable Integer id, @Valid @RequestBody Movement movement) {
         if (!movementService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -51,7 +51,7 @@ public class MovementAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!movementService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

@@ -23,8 +23,8 @@ public class MovementService {
         return all;
     }
 
-    public Optional<Movement> findById(Long id) {
-        Optional<Movement> byId = movementRepository.findById(Math.toIntExact(id));
+    public Optional<Movement> findById(Integer id) {
+        Optional<Movement> byId = movementRepository.findById(id);
         return byId;
     }
 
@@ -32,8 +32,8 @@ public class MovementService {
         return movementRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        movementRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        movementRepository.deleteById(id);
     }
 
 /*    public void initializeReferenceBetweenMovementAndIsource() {

@@ -19,15 +19,15 @@ public class ScpaperService {
         return all;
     }
 
-    public Optional<Scpaper> findById(Long id) {
-        return scpaperRepository.findById(Math.toIntExact(id));
+    public Optional<Scpaper> findById(Integer id) {
+        return scpaperRepository.findById(id);
     }
 
     public Scpaper save(Scpaper stock) {
         return scpaperRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        scpaperRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        scpaperRepository.deleteById(id);
     }
 }

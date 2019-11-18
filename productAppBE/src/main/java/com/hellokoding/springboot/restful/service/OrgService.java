@@ -23,16 +23,16 @@ public class OrgService {
         return all;
     }
 
-    public Optional<Org> findById(Long id) {
-        return orgRepository.findById(Math.toIntExact(id));
+    public Optional<Org> findById(Integer id) {
+        return orgRepository.findById(id);
     }
 
     public Org save(Org stock) {
         return orgRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        orgRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        orgRepository.deleteById(id);
     }
 
 //    public void addOrgFromEventTableToOrgTable() {  //todo Прояснить. Добавила в табл.Оганизаций названия организаций из табл.Событий

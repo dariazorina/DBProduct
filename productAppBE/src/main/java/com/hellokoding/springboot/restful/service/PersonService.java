@@ -25,16 +25,16 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public Optional<Person> findById(Long id) {
-        return personRepository.findById(Math.toIntExact(id));
+    public Optional<Person> findById(Integer id) {
+        return personRepository.findById(id);
     }
 
     public Person save(Person stock) {
         return personRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        personRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        personRepository.deleteById(id);
     }
 
 

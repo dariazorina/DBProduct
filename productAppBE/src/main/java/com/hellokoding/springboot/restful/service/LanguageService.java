@@ -25,8 +25,8 @@ public class LanguageService {
         return all;
     }
 
-    public Optional<Language> findById(Long id) {
-        Optional<Language> byId = languageRepository.findById(Math.toIntExact(id));
+    public Optional<Language> findById(Integer id) {
+        Optional<Language> byId = languageRepository.findById(id);
         return byId;
     }
 
@@ -34,8 +34,8 @@ public class LanguageService {
         return languageRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        languageRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        languageRepository.deleteById(id);
     }
 
 

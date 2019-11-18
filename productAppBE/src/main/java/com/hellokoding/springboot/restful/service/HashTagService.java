@@ -1,11 +1,10 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.*;
-import com.hellokoding.springboot.restful.model.*;
+import com.hellokoding.springboot.restful.model.HashTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,16 +23,16 @@ public class HashTagService {
         return hashTagRepository.findAll();
     }
 
-    public Optional<HashTag> findById(Long id) {
-        return hashTagRepository.findById(Math.toIntExact(id));
+    public Optional<HashTag> findById(Integer id) {
+        return hashTagRepository.findById(id);
     }
 
     public HashTag save(HashTag stock) {
         return hashTagRepository.save(stock);
     }
 
-    public void deleteById(Long id) {
-        hashTagRepository.deleteById(Math.toIntExact(id));
+    public void deleteById(Integer id) {
+        hashTagRepository.deleteById(id);
     }
 
 /*    public void fillHashTagTableFromArticle() {   ////step1: fill hashtag table

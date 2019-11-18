@@ -29,7 +29,7 @@ public class LanguageAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Language> findById(@PathVariable Long id) {
+    public ResponseEntity<Language> findById(@PathVariable Integer id) {
         Optional<Language> stock = languageService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -39,7 +39,7 @@ public class LanguageAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Language> update(@PathVariable Long id, @Valid @RequestBody Language language) {
+    public ResponseEntity<Language> update(@PathVariable Integer id, @Valid @RequestBody Language language) {
         if (!languageService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -48,7 +48,7 @@ public class LanguageAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!languageService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
