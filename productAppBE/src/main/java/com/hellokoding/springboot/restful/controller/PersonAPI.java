@@ -1,11 +1,13 @@
 package com.hellokoding.springboot.restful.controller;
 
 
+import com.hellokoding.springboot.restful.model.HashTag;
 import com.hellokoding.springboot.restful.model.Person;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,9 +21,18 @@ public class PersonAPI {
     private final PersonService personService;
 
     @GetMapping
-    public ResponseEntity<List<Person>> findAll() {
-        return ResponseEntity.ok(personService.findAll());
+    public ResponseEntity<List<Person>> findAll(@RequestParam(name = "q", required = false) String q) {
+        if (!StringUtils.isEmpty(q)){
+            List<Person> search = personService.search(q);
+            return ResponseEntity.ok(search);
+
+        } else {
+            return ResponseEntity.ok(personService.findAll());
+
+        }
+
     }
+
 
     @PostMapping
     public ResponseEntity

@@ -7,17 +7,18 @@ import User from '@/components/User'
 import Login from '@/components/Login'
 import Protected from '@/components/Protected'
 
-import ArticleList from './components/article/ArticleList'
-import ArticleEdit from "./components/article/ArticleEdit";
-import ArticleDelete from "./components/article/ArticleDelete";
+import ArticleList from     '@/components/article/ArticleList'
+import ArticleEdit from     '@/components/article/ArticleEdit'
+import ArticleDelete from   '@/components/article/ArticleDelete'
 
 import EventList from '@/components/event/EventList'
 import OrgList from '@/components/org/OrgList'
 
 
-import CountryList from '@/components/country/CountryList'
-import CountryEdit from '@/components/country/CountryEdit'
-import CountryDelete from '@/components/country/CountryDelete'
+import CountryList from     '@/components/country/CountryList'
+import CountryEdit from     '@/components/country/CountryEdit'
+import CountryDelete from   '@/components/country/CountryDelete'
+import CountryAdd from      '@/components/country/CountryAdd'
 
 import store from './store'
 
@@ -40,15 +41,16 @@ const router = new Router({
             }
         },
         { path: '/article',  component: ArticleList },
-        { path: '/article/:article_id/edit', component: ArticleEdit,name :'article-edit'  },
-        { path: '/article/:article_id/delete', component: ArticleDelete,name :'article-delete'},
+        { path: '/article/:article_id/edit', component: ArticleEdit, name :'article-edit' },
+        { path: '/article/:article_id/delete', component: ArticleDelete, name :'article-delete' },
 
         { path: '/events',  component: EventList },
         { path: '/orgs',  component: OrgList },
 
         { path: '/country', component: CountryList },
-        { path: '/country/:country_id/edit', component: CountryEdit,name :'country-edit'  },
-        { path: '/country/:country_id/delete', component: CountryDelete,name :'country-delete'  },
+        { path: '/country/0/add', component: CountryAdd, name :'country-add' },
+        { path: '/country/:country_id/edit', component: CountryEdit, name :'country-edit' },
+        { path: '/country/:country_id/delete', component: CountryDelete, name :'country-delete' },
 
         // otherwise redirect to home
         { path: '*', redirect: '/' }

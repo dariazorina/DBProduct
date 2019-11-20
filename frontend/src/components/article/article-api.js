@@ -18,10 +18,10 @@ export default {
             .catch(error => console.log(error))
     },
 
-    update(id, country, fn) {
+    update(id, article, fn) {
         AXIOS
-            .put('/article/' + id, country)
-            .then(response => fn(response)) //todo
+            .put('/article/' + id, article)
+            .then(response => fn(response))
             .catch(error => console.log(error))
     },
 

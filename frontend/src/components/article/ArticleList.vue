@@ -1,4 +1,4 @@
-<template id="articles">
+<template id="article">
     <div>
         <div class="filters row">
             <div class="form-group col-sm-3">
@@ -67,7 +67,7 @@
     import api from "./article-api";
 
     export default {
-        name: 'articles',
+        name: 'article',
         data() {
             return {
                 articles: [],

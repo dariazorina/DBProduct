@@ -5,6 +5,7 @@ import com.hellokoding.springboot.restful.service.HashTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,8 +21,15 @@ public class HashTagAPI {
     private final HashTagService hashTagService;
 
     @GetMapping
-    public ResponseEntity<List<HashTag>> findAll() {
-        return ResponseEntity.ok(hashTagService.findAll());
+    public ResponseEntity<List<HashTag>> findAll(@RequestParam(name = "q", required = false) String q) {
+        if (!StringUtils.isEmpty(q)){
+            return ResponseEntity.ok(hashTagService.search(q));
+
+        } else {
+            return ResponseEntity.ok(hashTagService.findAll());
+
+        }
+
     }
 
     @PostMapping

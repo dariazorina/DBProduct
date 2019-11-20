@@ -7,30 +7,53 @@
         <form>
 
 
+            <!--            <div class="col-md-2">-->
+            <!--                <h5>Хэштэги</h5>-->
+            <!--                <input type="text" v-model="hashTag"  autocomplete="off" name="hashTag" value=""  @input="loadData()">-->
+
+            <!--                <ul class="list-group">-->
+            <!--                    <li v-for="hashtag in hashTags"-->
+            <!--                        class="list-group-item d-flex justify-content-between align-items-center">-->
+            <!--                        {{ hashtag.content }}-->
+            <!--                        <span class="close" @click="deleteHashTag">&times;</span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
             <div class="col-md-2">
-                <h5>Хэштэги</h5>
-                <ul class="list-group">
-                    <li v-for="hashtag in article.hashtagList" li
-                        class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ hashtag.content }}
-                        <span class="close" @click="deleteHashTag">&times;</span>
-                    </li>
-                </ul>
+                <div>
+                    <h5>Хэштэги</h5>
+                    <input-tag v-model="tags"></input-tag>
+
+                </div>
+
+                <div>
+                    <h5>Авторы</h5>
+                    <autocomplete :items="customers"
+                                  :data-producer="searchAuthor"
+                                  filterby="surname"
+                                  @change="onChange"
+                                  title="Look for a customer"
+                                  @selected="customerSelected"/>
+                </div>
+
+
             </div>
-<!--            <div class="row col-md-6">-->
-<!--                <div class="col-md-6 mb-3">-->
-<!--                    <label for="firstName">First name</label>-->
-<!--                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
-<!--                    <span class="text-danger" v-if="validationErrors.firstName"-->
-<!--                          v-text="validationErrors.firstName"></span>-->
-<!--                </div>-->
-<!--                <div class="col-md-6 mb-3">-->
-<!--                    <label for="lastName">Last name</label>-->
-<!--                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
-<!--                    <span class="text-danger" v-if="validationErrors.lastName"-->
-<!--                          v-text="validationErrors.lastName"></span>-->
-<!--                </div>-->
-<!--            </div>-->
+
+
+            <!--            <div class="row col-md-6">-->
+            <!--                <div class="col-md-6 mb-3">-->
+            <!--                    <label for="firstName">First name</label>-->
+            <!--                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
+            <!--                    <span class="text-danger" v-if="validationErrors.firstName"-->
+            <!--                          v-text="validationErrors.firstName"></span>-->
+            <!--                </div>-->
+            <!--                <div class="col-md-6 mb-3">-->
+            <!--                    <label for="lastName">Last name</label>-->
+            <!--                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
+            <!--                    <span class="text-danger" v-if="validationErrors.lastName"-->
+            <!--                          v-text="validationErrors.lastName"></span>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
 
             <!--        <form @submit="checkForm" action="/country" method="put">-->
@@ -48,7 +71,7 @@
 
             <button type="button" @click="checkForm" class="btn btn-primary">Save</button>
             <a class="btn btn-default">
-                <router-link to="/country">Cancel</router-link>
+                <router-link to="/article">Cancel</router-link>
             </a>
         </form>
     </div>
@@ -56,29 +79,62 @@
 
 <script>
     import api from "./article-api";
+    import hashTagApi from "./hash-tag-api";
+    import personApi from "./person-api";
+    import InputTag from 'vue-input-tag';
     import router from "./../../router";
+    import customers from './../../assets/customers';
+    import Autocomplete from './Autocomplete';
+
+    import Vue from 'vue';
     // import VoerroTagsInput from '@voerro/vue-tagsinput';
-    // import Vue from 'vue'
     //
     // Vue.component('tags-input', VoerroTagsInput);
 
+    Vue.component('input-tag', InputTag);
 
     export default {
         name: 'article-edit',
         data() {
 
             return {
+
                 errorFlag: false,
                 errors: [],
                 selectedTags: "",
-                firstName: "",
+                hashTag: "",
                 lastName: "",
                 validationErrors: {},
-                article: {}//{}
+                article: {},
+                hashTags: [],
+                tags: [],
+                customers: []
             }
         },
-
+        components: {
+            Autocomplete
+        },
         methods: {
+            customerSelected: function () {
+
+            },
+
+            searchAuthor: function (q, fn) {
+                  personApi.search(q, fn);
+            },
+
+            onChange: function () {
+
+            },
+
+            loadData: function () {
+                if (this.hashTag && this.hashTag.length > 3) {
+                    hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
+
+                    console.log("qqqqqqqqqqqq");
+                }
+            },
+
             deleteHashTag: function () {
                 console.log("ddd");
             },
@@ -133,6 +189,7 @@
         },
 
         mounted() {
+            this.customers = customers;
             console.log('mounted');
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data

@@ -5,6 +5,7 @@ import com.hellokoding.springboot.restful.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PersonService {
 
     private final ArticleRepository articleRepository;
@@ -35,6 +37,10 @@ public class PersonService {
 
     public void deleteById(Integer id) {
         personRepository.deleteById(id);
+    }
+
+    public List<Person> search(String q) {
+        return  personRepository.findBySurnameStartsWithOrderBySurnameDesc(q);
     }
 
 

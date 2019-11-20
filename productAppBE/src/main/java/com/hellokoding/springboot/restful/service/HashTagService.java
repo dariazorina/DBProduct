@@ -35,6 +35,10 @@ public class HashTagService {
         hashTagRepository.deleteById(id);
     }
 
+    public List<HashTag> search(String q) {
+        return hashTagRepository.findByContentStartsWithOrderByContentDesc(q);
+    }
+
 /*    public void fillHashTagTableFromArticle() {   ////step1: fill hashtag table
         List<Article> all = articleRepository.findAll();
 

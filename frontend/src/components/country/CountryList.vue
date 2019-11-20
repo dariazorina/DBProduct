@@ -1,14 +1,17 @@
 <template id="country">
     <div>
-        <!--        <link href="../dbnm.css" rel="stylesheet"/>-->
-        <!--<div class="actions">-->
-        <!--<a class="btn btn-default">-->
-        <!--<router-link :to="{path: '/add-product'}">-->
-        <!--<span class="glyphicon glyphicon-plus"></span>-->
-        <!--Add product-->
-        <!--</router-link>-->
-        <!--</a>-->
-        <!--</div>-->
+        <h2>Countries list</h2>
+
+        <link href="../dbnm.css" rel="stylesheet"/>
+        <div class="actions">
+            <a class="btn btn-default">
+                <router-link :to="{name: 'country-add'}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add country
+                </router-link>
+            </a>
+        </div>
+
         <div class="filters row">
             <div class="form-group col-sm-3">
                 <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
