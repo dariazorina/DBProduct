@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/v1/api/isource/")
+@RequestMapping("/v1/api/isource")
 @Data
 @Slf4j
 public class IsourceAPI {

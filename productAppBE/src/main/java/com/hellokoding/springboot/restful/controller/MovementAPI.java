@@ -15,7 +15,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/movement/")
+@RequestMapping("/api/v1/movement")
 
 public class MovementAPI {
 

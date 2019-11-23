@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/language/")
+@RequestMapping("/api/v1/language")
 @Data
 @Slf4j
 public class LanguageAPI {

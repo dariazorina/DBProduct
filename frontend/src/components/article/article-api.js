@@ -8,7 +8,22 @@ const AXIOS = axios.create({
 
 export default {
     getAll() {
-        return AXIOS.get(`/article`);//  /api/hello
+        return AXIOS.get(`/article`);
+    },
+
+    getAllLanguages() {
+        return AXIOS.get(`/language`);
+    },
+
+    getAllMovements() {
+        return AXIOS.get(`/movement`);
+    },
+
+    create(article, fn) {
+        AXIOS
+            .post('/article', article)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
     },
 
     findById(id, fn) {

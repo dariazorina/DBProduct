@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/org/")
+@RequestMapping("/api/v1/org")
 @Data
 @Slf4j
 public class OrgAPI {

@@ -1,5 +1,13 @@
 <template id="article">
     <div>
+        <link href="../dbnm.css" rel="stylesheet"/>
+        <div class="actions">
+            <a class="btn btn-default">
+                <router-link :to="{name: 'article-add'}"><span class="glyphicon glyphicon-plus"></span>Add article
+                </router-link>
+            </a>
+        </div>
+
         <div class="filters row">
             <div class="form-group col-sm-3">
                 <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
@@ -13,7 +21,8 @@
                 <th>Movement</th>
                 <th style="width:20%">Title</th>
                 <th style="width:20%">Title, russian</th>
-<!--                <th>Author</th>-->
+                <!--                <th style="speak-date: dmy">Date</th>-->
+                <th data-field="createdAt" data-formatter="dateFormat">Created At</th>
                 <th style="width:25%">Description</th>
                 <th>URL</th>
 
@@ -31,9 +40,8 @@
                 <td>{{article.movement.name}}</td>
                 <td>{{article.title }}</td>
                 <td>{{article.titleRus }}</td>
+                <td>{{article.date }}</td>
                 <td>{{article.description }}</td>
-<!--                <td>{{article.authors.length() }}</td>-->
-<!--                <td></td>-->
                 <td>{{article.url }}</td>
 
                 <!--                <td>-->
@@ -49,11 +57,11 @@
                         <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit</router-link>
                     </a>
                     <a class="btn btn-danger btn-xs">
-                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete</router-link>
+                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
+                        </router-link>
                     </a>
                 </td>
             </tr>
-
             </tbody>
         </table>
     </div>
@@ -65,6 +73,7 @@
 
 <script>
     import api from "./article-api";
+    import moment from "moment";
 
     export default {
         name: 'article',
@@ -107,6 +116,11 @@
                 .catch(error => {
                     this.errors.push(error)
                 })
+        },
+        dateFormat(value, row, index) {  //todo
+            moment(this.article.date).format('DD/MM/YYYY').then(response => {
+                this.article.date = response.data;
+            })
         }
     }
 </script>

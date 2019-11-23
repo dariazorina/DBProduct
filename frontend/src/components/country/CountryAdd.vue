@@ -14,9 +14,7 @@
                 <input type="number" class="form-control" id="add-code" v-model="country.code"/>
             </div>
             <button type="button" @click="checkForm" class="btn btn-primary">Save</button>
-            <a class="btn btn-default">
-                <router-link to="/country">Cancel</router-link>
-            </a>
+            <a class="btn btn-default"><router-link to="/country">Cancel</router-link></a>
         </form>
     </div>
 </template>
