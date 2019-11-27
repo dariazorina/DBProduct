@@ -12,6 +12,8 @@
                    @keydown.down="down"
                    @keydown.enter="selectItem"
                    placeholder="Start Typing...">
+
+
             <div class="options" ref="optionsList">
                 <ul>
                     <li v-for="(match, index) in providedItems"

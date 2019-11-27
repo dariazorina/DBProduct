@@ -1,6 +1,6 @@
 <template id="article-delete">
     <div>
-        <h4>Delete article ==  <i> {{ article.title}} </i></h4>
+        <h4>Delete article <i> "{{ article.title}}"</i>?</h4>
         <p>The action cannot be undone</p>
         <button type="button" @click="deleteArticle" class="btn btn-danger">Delete</button>
         <a class="btn btn-default">
@@ -26,7 +26,7 @@
             }
         },
         mounted() {
-            api.findById(this.$route.params.article, r => {
+            api.findById(this.$route.params.article_id, r => {
                 console.log("MESSAGE");
                 console.log(this.article);
                 this.article = r.data

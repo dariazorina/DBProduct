@@ -40,7 +40,7 @@
                 <td>{{article.movement.name}}</td>
                 <td>{{article.title }}</td>
                 <td>{{article.titleRus }}</td>
-                <td>{{article.date }}</td>
+                <td>{{  formatDate(article.date) }}  </td>
                 <td>{{article.description }}</td>
                 <td>{{article.url }}</td>
 
@@ -53,7 +53,7 @@
 
 
                 <td>
-                    <a class="btn btn-warning btn-xs">
+                    <a class="btn btn-warning btn-xs mr-2">
                         <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit</router-link>
                     </a>
                     <a class="btn btn-danger btn-xs">
@@ -106,7 +106,12 @@
                     .catch(error => {
                         this.errors.push(error)
                     })
+            },
+
+            formatDate(date){
+                return moment(date).format('DD/MM/YYYY');
             }
+
         },
         mounted() {
             api.getAll().then(response => {
