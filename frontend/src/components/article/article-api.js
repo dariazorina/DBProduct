@@ -19,6 +19,10 @@ export default {
         return AXIOS.get(`/movement`);
     },
 
+    getAllAuthors() {
+        return AXIOS.get(`/person`);
+    },
+
     create(article, fn) {
         AXIOS
             .post('/article', article)

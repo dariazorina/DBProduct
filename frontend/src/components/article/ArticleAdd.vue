@@ -10,7 +10,7 @@
 
         <form>
             <div class="form-group row">
-                <label for="add-title" class="col-2 col-form-label">Author</label>
+                <label class="col-2 col-form-label">Author</label>
                 <div class="col-10">
                     <ul class="list-group" order="1">
                         <li v-for="author in this.article.authorList"
@@ -23,68 +23,27 @@
             </div>
 
             <div>
-                <autocomplete class="mb-3" order="0"
-                              url="../api/v1/person"
-                              placeholder="Type author name.."
+
+
+                <!--                anchor = "this.authorListForAutocomplete"-->
+                <!--                label = "this.authorListForAutocomplete"-->
+
+                <!--                filterByAnchor (Boolean: true)???-->
+
+                <!--                              v-model="test"-->
+
+                <autocomplete class="mb-3" order="0" id="autocomplete-author"
                               anchor="surname"
                               label="writer"
-                              :min="2"
+                              url="../api/v1/person"
+                              placeholder="Type author name.."
+                              :min="3"
+                              :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"
                               :on-select="addAuthor">
                 </autocomplete>
+
             </div>
         </form>
-
-        <!--        <form>-->
-        <!--        <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="validationServer01">First name</label>
-                        <input type="text" class="form-control  is-invalid" id="validationServer01" placeholder="First name"
-                               value="Mark" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                        <div class="invalid-feedback">
-                            Looks not good!
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="validationServer02">Last name</label>
-                        <input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name"
-                               value="Otto" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="validationServerUsername">Username</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroupPrepend3">@</span>
-                            </div>
-                            <input type="text" class="form-control is-invalid" id="validationServerUsername"
-                                   placeholder="Username" aria-describedby="inputGroupPrepend3" required>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-
-        <!--            <div class="form-group">-->
-        <!--                <div class="form-check">-->
-        <!--                    <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" required>-->
-        <!--                    <label class="form-check-label" for="invalidCheck3">-->
-        <!--                        Agree to terms and conditions-->
-        <!--                    </label>-->
-        <!--                    <div class="invalid-feedback">-->
-        <!--                        You must agree before submitting.-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <button class="btn btn-primary" type="submit">Submit form</button>-->
-        <!--        </form>-->
-
-
         <form>
 
             <!--            <div class="col-md-2">-->
@@ -233,13 +192,13 @@
                 errorFlag: false,
                 errors: [],
                 validationErrors: {},
+                hasError: false,
 
                 selectedTags: "",
                 hashTag: "",
 
                 hashTags: [],
                 tags: [],
-
                 customers: [],
 
                 allLanguages: [],
@@ -248,10 +207,9 @@
                 linkList: [],
                 hashtagList: [],
                 article: {authorList: []},
+                authorListForAutocomplete: [],
 
-                // theme: 'is-valid',
-                // theme: 'is-invalid',
-                hasError: false,
+                test: "",
             }
         },
         components: {
@@ -259,7 +217,30 @@
         },
         methods: {
             addAuthor(obj) {
-                this.article.authorList.push(obj);
+
+                var i = 0;
+                // var INDEX = this.article.authorList.indexOf(obj);
+                // console.log("INDEX =====");
+                // console.log(INDEX);
+
+                //if (this.article.authorList.indexOf(obj) === -1)
+                //   this.article.authorList.push(obj);
+
+                // this.article.authorList.push(obj);
+
+                for (i = 0; i < this.article.authorList.length; i++) { //to exclude double values
+                    if (this.article.authorList[i].id === obj.id) {
+                        break;
+                    }
+                }
+                // console.log(i);
+
+                if (i === this.article.authorList.length) {
+                    this.article.authorList.push(obj);
+                    // console.log("ADDED");
+                }
+
+                document.getElementById("autocomplete-author").value = "SET VALUE"; //todo! не работает
             },
             deleteAuthor(author) {
                 for (let i = 0; i < this.article.authorList.length; i++) {
@@ -268,18 +249,15 @@
                     }
                 }
             },
-
             loadData: function () {
                 if (this.hashTag && this.hashTag.length > 3) {
                     hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
                     console.log("qqqqqqqqqqqq");
                 }
             },
-
             deleteHashTag: function () {
                 console.log("ddd");
             },
-
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -291,21 +269,11 @@
                 }
                 this.hasError = this.hasError || hasError;
             },
-
             validDate: function (code) {
                 var re = /([12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$/; ///digit format "inside", see it while debugging
                 // var re = /((0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[0-2])[.][12][0-9]{3})$/;
-                var r1 = re.test(code);
-
-                // if (r1)
-                //     return true;
-                // else
-                //     return false;
-
-
-                 return re.test(code);
+                return re.test(code);
             },
-
             formValidate() {
                 this.addStatus('add-title', (!this.article.title));
                 if (this.hasError) {
@@ -320,6 +288,14 @@
                             if (this.hasError) {
                             } else {
                                 this.addStatus('movement-selection', (!this.selectedM));
+                                if (this.hasError) {
+                                } else {
+                                    this.addStatus('add-descr', (!this.article.description));
+                                    if (this.hasError) {
+                                    } else {
+                                        this.addStatus('add-url', (!this.article.url));
+                                    }
+                                }
                             }
                         }
                     }
@@ -343,8 +319,7 @@
                         router.push('/article');
                     });
                 }
-            }
-            ,
+            },
         },
         mounted() {
             this.customers = customers;
@@ -354,22 +329,24 @@
             //     this.article = r.data
             // });
 
+
+            // api.getAllAuthors().then(response => {
+            //     this.authorListForAutocomplete = response.data;
+            //     console.log(response.data);
+            // });
+
             api.getAllLanguages().then(response => {
                 this.allLanguages = response.data;
                 console.log(response.data)
-            }),
-                // .catch(error => {
-                //     this.errors.push(error)
-                // }),  //todo? is it nesessary?
+            });
 
-
-                api.getAllMovements().then(response => {
-                    this.allMovements = response.data;
-                    console.log(response.data)
-                }).catch(error => {
-                    //this.errors.push(error)
-                    console.log(error);
-                })
+            api.getAllMovements().then(response => {
+                this.allMovements = response.data;
+                console.log(response.data)
+            }).catch(error => {
+                //this.errors.push(error)
+                console.log(error);
+            })
         },
     }
 </script>
