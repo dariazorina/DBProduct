@@ -1,6 +1,7 @@
 package com.hellokoding.springboot.restful.controller;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hellokoding.springboot.restful.model.HashTag;
 import com.hellokoding.springboot.restful.model.Person;
 import com.hellokoding.springboot.restful.service.PersonService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@JsonSerialize
 @RestController
 @RequestMapping("/api/v1/person")
 @Slf4j
@@ -24,7 +26,9 @@ public class PersonAPI {
     public ResponseEntity<List<Person>> findAll(@RequestParam(name = "q", required = false) String q) {
         if (!StringUtils.isEmpty(q)){
             List<Person> search = personService.search(q);
-            return ResponseEntity.ok(search);
+
+            ResponseEntity rrr = ResponseEntity.ok(search);
+            return rrr; //ResponseEntity.ok(search);
 
         } else {
             return ResponseEntity.ok(personService.findAll());
