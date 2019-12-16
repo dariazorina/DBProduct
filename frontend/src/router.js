@@ -7,13 +7,19 @@ import User from '@/components/User'
 import Login from '@/components/Login'
 import Protected from '@/components/Protected'
 
+import PersonList from     '@/components/person/PersonList'
+import PersonAdd from      '@/components/person/PersonAdd'
+import PersonEdit from     '@/components/person/PersonEdit'
+import PersonDelete from   '@/components/person/PersonDelete'
+
+
 import ArticleList from     '@/components/article/ArticleList'
 import ArticleEdit from     '@/components/article/ArticleEdit'
 import ArticleDelete from   '@/components/article/ArticleDelete'
 import ArticleAdd from      '@/components/article/ArticleAdd'
 
-import EventList from '@/components/event/EventList'
-import OrgList from '@/components/org/OrgList'
+import EventList from   '@/components/event/EventList'
+import OrgList from     '@/components/org/OrgList'
 
 
 import CountryList from     '@/components/country/CountryList'
@@ -23,31 +29,38 @@ import CountryAdd from      '@/components/country/CountryAdd'
 
 import store from './store'
 
-
 Vue.use(Router);
 
 const router = new Router({
     mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
     routes: [
         { path: '/', component: Hello },
-        { path: '/callservice', component: Service },
-        { path: '/bootstrap', component: Bootstrap },
-        { path: '/user', component: User },
-        { path: '/login', component: Login },
-        {
-            path: '/protected',
-            component: Protected,
-            meta: {
-                requiresAuth: true
-            }
-        },
+        // { path: '/callservice', component: Service },
+        // { path: '/bootstrap', component: Bootstrap },
+        // { path: '/user', component: User },
+        // { path: '/login', component: Login },
+        // // {
+        //     path: '/protected',
+        //     component: Protected,
+        //     meta: {
+        //         requiresAuth: true
+        //     }
+        // },
+
+
+        { path: '/person',  component: PersonList },
+        { path: '/person/add', component: PersonAdd, name :'person-add' },
+        { path: '/person/:person_id/edit', component: PersonEdit, name :'person-edit' },
+        { path: '/person/:person_id/delete', component: PersonDelete, name :'person-delete' },
+
+
         { path: '/article',  component: ArticleList },
         { path: '/article/add', component: ArticleAdd, name :'article-add' },
         { path: '/article/:article_id/edit', component: ArticleEdit, name :'article-edit' },
         { path: '/article/:article_id/delete', component: ArticleDelete, name :'article-delete' },
 
-        { path: '/events',  component: EventList },
-        { path: '/orgs',  component: OrgList },
+        { path: '/event',  component: EventList },
+        { path: '/org',  component: OrgList },
 
         { path: '/country', component: CountryList },
         { path: '/country/add', component: CountryAdd, name :'country-add' },

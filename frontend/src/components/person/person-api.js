@@ -8,53 +8,41 @@ const AXIOS = axios.create({
 
 export default {
     getAll() {
-        return AXIOS.get(`/article`);
+        return AXIOS.get(`/person`);
     },
 
-    getAllLanguages() {
-        return AXIOS.get(`/language`);
+    getAllCountries() {
+        return AXIOS.get(`/country`);
     },
 
     getAllMovements() {
         return AXIOS.get(`/movement`);
     },
 
-    getAllAuthors() {
-        return AXIOS.get(`/person`);
-    },
-
-    getAuthorById(id, fn) {
+    create(person, fn) {
         AXIOS
-            .get(`/person/` + id)
-            .then(response => fn(response))
-            .catch(error => console.log(error))
-        // return AXIOS.get(`/person/`+ id);
-    },
-
-    create(article, fn) {
-        AXIOS
-            .post('/article', article)
+            .post('/person', person)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
     findById(id, fn) {
         AXIOS
-            .get(`/article/` + id)
+            .get(`/person/` + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    update(id, article, fn) {
+    update(id, person, fn) {
         AXIOS
-            .put('/article/' + id, article)
+            .put('/person/' + id, person)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
     delete(id, fn) {
         AXIOS
-            .delete('/article/' + id)
+            .delete('/person/' + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
     }

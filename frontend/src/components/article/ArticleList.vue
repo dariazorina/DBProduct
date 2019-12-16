@@ -13,36 +13,67 @@
                 <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
             </div>
         </div>
+
+        <!--        <vue-scroll-table>-->
+        <!--            <template slot="thead">-->
+        <!--                <table class="table">-->
+
+        <!--        <table id="dtHorizontalExample" class="table table-striped table-bordered table-sm" cellspacing="0"-->
+        <!--               width="100%">-->
+
+        <!--            <div class="scrollable">-->
+
+        <!--        <v-layout column style="height: 90vh"> <-&#45;&#45; added height-->
+        <!--            <v-flex md6 style="overflow: auto"> <-&#45;&#45; added overflow-->
+        <!--                <v-data-table-->
+        <!--                        :headers="headers"-->
+        <!--                        :items="desserts"-->
+        <!--                        hide-actions-->
+        <!--                        class="elevation-1"-->
+        <!--                >-->
+
+
         <table class="table">
             <thead>
+            <!--                <template slot="thead">-->
             <tr>
                 <th>Id</th>
+                <th>Authors</th>
                 <th>Language</th>
                 <th>Movement</th>
-                <th style="width:20%">Title</th>
-                <th style="width:20%">Title, russian</th>
-                <!--                <th style="speak-date: dmy">Date</th>-->
+                <th style="width:15%">Title</th>
+                <th style="width:15%">Title, russian</th>
                 <th data-field="createdAt" data-formatter="dateFormat">Created At</th>
-                <th style="width:25%">Description</th>
+                <th>Description</th>
                 <th>URL</th>
+<!--                <th style="width:10%">Links</th>-->
+                <th>Hashtags</th>
 
-                <th class="col-sm-2">Actions</th>
+                <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
             </thead>
-
             <tbody>
             <tr v-for="article in articles">
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <td> {{article.id }}</td>
+                <td>{{article.id }}</td>
+                <td>
+                    <div v-for="author in article.authorList">{{author.surname}}</div>
+                </td>
                 <td>{{article.language.name}}</td>
                 <td>{{article.movement.name}}</td>
                 <td>{{article.title }}</td>
                 <td>{{article.titleRus }}</td>
-                <td>{{  formatDate(article.date) }}  </td>
+                <td>{{ formatDate(article.date) }}</td>
                 <td>{{article.description }}</td>
                 <td>{{article.url }}</td>
+<!--                <td>-->
+<!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
+<!--                </td>-->
+                <td>
+                    <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
+                </td>
 
                 <!--                <td>-->
                 <!--                    <a>-->
@@ -54,7 +85,8 @@
 
                 <td>
                     <a class="btn btn-warning btn-xs mr-2">
-                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit</router-link>
+                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
+                        </router-link>
                     </a>
                     <a class="btn btn-danger btn-xs">
                         <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
@@ -75,17 +107,19 @@
     import api from "./article-api";
     import moment from "moment";
 
+    import "vue-scroll-table";
+
     export default {
         name: 'article',
         data() {
             return {
                 articles: [],
+                article: {authorList: []},
+                authors: [],
                 searchKey: '',
                 response: [],
                 errors: [],
                 showResponse: false,
-                retrievedUser: {},
-                showRetrievedUser: false
             }
         },
         computed: {
@@ -108,7 +142,17 @@
                     })
             },
 
-            formatDate(date){
+            formatAuthor(article) {
+                let surname = '';
+
+                for (let i = 0; i < article.authorList.length; i++) {
+                    surname = surname + article.authorList[i].surname;
+                    surname = surname + '\\10';
+                }
+                return surname;
+            },
+
+            formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
             }
 

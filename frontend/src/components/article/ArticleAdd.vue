@@ -454,7 +454,7 @@
                         }
 
                         // Items have already been loaded
-                        if (this.items.length > 0) return;
+                      //  if (this.items.length > 0) return;
 
                         // Items have already been requested
                         if (this.isLoading) return;
@@ -463,7 +463,7 @@
 
                         // Lazily load input items
                         //  fetch('https://api.publicapis.org/entries')
-                        fetch('../api/v1/person')
+                        fetch('../api/v1/person?q=' + encodeURIComponent(val))
                             .then(res => res.json())
                             .then(res => {
                                 this.entries = res;

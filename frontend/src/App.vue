@@ -2,14 +2,15 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Hello</router-link> |
-      <router-link to="/callservice">Service</router-link> |
-      <router-link to="/bootstrap">Bootstrap</router-link> |
-      <router-link to="/user">User</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/protected">Protected</router-link> |
+<!--      <router-link to="/callservice">Service</router-link> |-->
+<!--      <router-link to="/bootstrap">Bootstrap</router-link> |-->
+<!--      <router-link to="/user">User</router-link> |-->
+<!--      <router-link to="/login">Login</router-link> |-->
+<!--      <router-link to="/protected">Protected</router-link> |-->
+      <router-link to="/person">Person</router-link> |
       <router-link to="/article">Article</router-link> |
-      <router-link to="/events">Event</router-link> |
-      <router-link to="/orgs">Organization</router-link> |
+      <router-link to="/event">Event</router-link> |
+      <router-link to="/org">Organization</router-link> |
       <router-link to="/country">Country</router-link>
     </div>
     <router-view :hellomsg="msg"></router-view>

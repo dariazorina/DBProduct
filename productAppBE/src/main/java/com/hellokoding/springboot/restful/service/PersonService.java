@@ -1,13 +1,11 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.*;
-import com.hellokoding.springboot.restful.model.*;
+import com.hellokoding.springboot.restful.model.Person;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +38,8 @@ public class PersonService {
     }
 
     public List<Person> search(String q) {
-        return  personRepository.findBySurnameStartsWithOrderBySurnameDesc(q);
+        //todo add ignore case
+        return personRepository.findBySurnameStartsWithOrderBySurnameDesc(q);
     }
 
 

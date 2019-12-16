@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @JsonSerialize
 @RestController
@@ -26,22 +27,47 @@ public class PersonAPI {
     public ResponseEntity<List<Person>> findAll(@RequestParam(name = "q", required = false) String q) {
         if (!StringUtils.isEmpty(q)){
             List<Person> search = personService.search(q);
-
-            ResponseEntity rrr = ResponseEntity.ok(search);
-            return rrr; //ResponseEntity.ok(search);
+            return ResponseEntity.ok(search);
 
         } else {
             return ResponseEntity.ok(personService.findAll());
-
         }
-
     }
-
 
     @PostMapping
     public ResponseEntity
     create(@Valid @RequestBody Person person) {
         return ResponseEntity.ok(personService.save(person));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Person> findById(@PathVariable Integer id) {
+        Optional<Person> stock = personService.findById(id);
+        if (!stock.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(stock.get());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody Person person) {
+        person.setId(id);
+        if (!personService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(personService.save(person));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Integer id) {
+        if (!personService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        personService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     //////////////////////utils/////////////////////////////////////////

@@ -4,21 +4,21 @@
     <h1>{{ hellomsg }}</h1>
     <h2>See the sources here: </h2>
     <ul>
-      <li><a href="https://github.com/jonashackt/spring-boot-vuejs" target="_blank">github.com/jonashackt/spring-boot-vuejs</a></li>
+      <li><a href="https://github.com/dariazorina/DBProduct/commits/vuejsFramework" target="_blank">https://github.com/dariazorina/DBProduct/commits/vuejsFramework</a></li>
     </ul>
-    <h3>This site contains more stuff :)</h3>
-    <ul>
-        <li>HowTo call REST-Services:</li>
-        <li><router-link to="/callservice">/callservice</router-link></li>
-        <li>HowTo to play around with Bootstrap UI components:</li>
-        <li><router-link to="/bootstrap">/bootstrap</router-link></li>
-        <li>HowTo to interact with the Spring Boot database backend:</li>
-        <li><router-link to="/user">/user</router-link></li>
-        <li>Login to the secured part of the application</li>
-        <li><router-link to="/login">/login</router-link></li>
-        <li>A secured part of this application:</li>
-        <li><router-link to="/protected">/protected</router-link></li>
-    </ul>
+    <h3>First Version :)</h3>
+<!--    <ul>-->
+<!--        <li>HowTo call REST-Services:</li>-->
+<!--        <li><router-link to="/callservice">/callservice</router-link></li>-->
+<!--        <li>HowTo to play around with Bootstrap UI components:</li>-->
+<!--        <li><router-link to="/bootstrap">/bootstrap</router-link></li>-->
+<!--        <li>HowTo to interact with the Spring Boot database backend:</li>-->
+<!--        <li><router-link to="/user">/user</router-link></li>-->
+<!--        <li>Login to the secured part of the application</li>-->
+<!--        <li><router-link to="/login">/login</router-link></li>-->
+<!--        <li>A secured part of this application:</li>-->
+<!--        <li><router-link to="/protected">/protected</router-link></li>-->
+<!--    </ul>-->
   </div>
 </template>
 
