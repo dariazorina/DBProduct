@@ -13,10 +13,11 @@ import PersonEdit from     '@/components/person/PersonEdit'
 import PersonDelete from   '@/components/person/PersonDelete'
 
 
-import ArticleList from     '@/components/article/ArticleList'
-import ArticleEdit from     '@/components/article/ArticleEdit'
-import ArticleDelete from   '@/components/article/ArticleDelete'
-import ArticleAdd from      '@/components/article/ArticleAdd'
+import ArticleList from         '@/components/article/ArticleList'
+import ArticleDetails from      '@/components/article/ArticleDetails'
+import ArticleEdit from         '@/components/article/ArticleEdit'
+import ArticleDelete from       '@/components/article/ArticleDelete'
+import ArticleAdd from          '@/components/article/ArticleAdd'
 
 import EventList from   '@/components/event/EventList'
 import OrgList from     '@/components/org/OrgList'
@@ -55,6 +56,7 @@ const router = new Router({
 
 
         { path: '/article',  component: ArticleList },
+        { path: '/article/:article_id/details',  component: ArticleDetails, name :'article-details' },
         { path: '/article/add', component: ArticleAdd, name :'article-add' },
         { path: '/article/:article_id/edit', component: ArticleEdit, name :'article-edit' },
         { path: '/article/:article_id/delete', component: ArticleDelete, name :'article-delete' },

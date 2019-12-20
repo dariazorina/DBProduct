@@ -61,10 +61,10 @@
 
 
                 <td>
-                    <a class="btn btn-warning btn-xs mr-2">
+                    <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'person-edit', params: {person_id: person.id}}">Edit</router-link>
                     </a>
-                    <a class="btn btn-danger btn-xs">
+                    <a class="btn btn-danger btn-sm">
                         <router-link :to="{name: 'person-delete', params: {person_id: person.id}}">Delete</router-link>
                     </a>
                 </td>

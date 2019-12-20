@@ -46,7 +46,7 @@
                 <th data-field="createdAt" data-formatter="dateFormat">Created At</th>
                 <th>Description</th>
                 <th>URL</th>
-<!--                <th style="width:10%">Links</th>-->
+                <!--                <th style="width:10%">Links</th>-->
                 <th>Hashtags</th>
 
                 <th style="width:10%" class="col-sm-2">Actions</th>
@@ -63,36 +63,77 @@
                 </td>
                 <td>{{article.language.name}}</td>
                 <td>{{article.movement.name}}</td>
-                <td>{{article.title }}</td>
+                <td><a>
+                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}
+                    </router-link>
+                </a></td>
                 <td>{{article.titleRus }}</td>
                 <td>{{ formatDate(article.date) }}</td>
                 <td>{{article.description }}</td>
                 <td>{{article.url }}</td>
-<!--                <td>-->
-<!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
-<!--                </td>-->
+                <!--                <td>-->
+                <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
+                <!--                </td>-->
                 <td>
                     <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
                 </td>
 
-                <!--                <td>-->
-                <!--                    <a>-->
-                <!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
-                <!--                        </router-link>-->
-                <!--                    </a>-->
-                <!--                </td>-->
+<!--                <td>-->
+<!--                    <a>-->
+<!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
+<!--                        </router-link>-->
+<!--                    </a>-->
+<!--                </td>-->
 
 
                 <td>
-                    <a class="btn btn-warning btn-xs mr-2">
+                    <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
                         </router-link>
                     </a>
-                    <a class="btn btn-danger btn-xs">
+                    <a class="btn btn-danger btn-sm">
                         <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
                         </router-link>
                     </a>
+
+                    <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
+                    <!--                           light small right bottom fab-->
+                    <!--                           class="pink" slot="action">-->
+
+                    <!--                        <v-icon right dark >cloud_upload</v-icon>-->
+                    <!--&lt;!&ndash;                        <v-icon small class="mr-2">smiley-neutral-outline</v-icon>&ndash;&gt;-->
+                    <!--&lt;!&ndash;                        <v-icon>mdi-watch</v-icon>&ndash;&gt;-->
+                    <!--                    </v-btn>-->
+
+
                 </td>
+
+
+                <!--                <v-btn color="error" fab small dark-->
+                <!--                       @click="yoursFunc()">-->
+                <!--                    <v-icon>list</v-icon>-->
+                <!--                </v-btn>-->
+
+                <!--                <v-btn to="/panda">Kung Fu</v-btn>-->
+
+
+                <!--                <template v-slot:item.action="{ item }">-->
+                <!--                    <v-icon-->
+                <!--                            small-->
+                <!--                            class="mr-2"-->
+                <!--                            @click="editItem(item)"-->
+                <!--                    >-->
+                <!--                        edit-->
+                <!--                    </v-icon>-->
+                <!--                    <v-icon-->
+                <!--                            small-->
+                <!--                            @click="deleteItem(item)"-->
+                <!--                    >-->
+                <!--                        delete-->
+                <!--                    </v-icon>-->
+                <!--                </template>-->
+
+
             </tr>
             </tbody>
         </table>
@@ -158,6 +199,11 @@
 
         },
         mounted() {
+
+            // const routes = [
+            //     { path: '/panda', component: Panda }
+            // ];
+
             api.getAll().then(response => {
                 this.articles = response.data;
                 console.log(response.data)

@@ -28,7 +28,14 @@ public class HashTagService {
     }
 
     public HashTag save(HashTag stock) {
-        return hashTagRepository.save(stock);
+
+        //todo is it ok?
+        HashTag hashTagByContent = hashTagRepository.getHashTagByContent(stock.getContent()); //ищем хештег в БД
+        if (hashTagByContent == null) {
+            return hashTagRepository.save(stock);
+        } else {
+            return null;
+        }
     }
 
     public void deleteById(Integer id) {

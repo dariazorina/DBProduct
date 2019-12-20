@@ -1,7 +1,7 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
-            <h3 class="mb-5">Add New Article</h3>
+            <h3 class="mb-5">Add new article</h3>
             <div class="unprotected" v-if="errorFlag">
                 <h5>Error: {{errors}}</h5>
             </div>
@@ -73,46 +73,55 @@
             </div>
 
             <form>
+                <div class="form-group row">
 
-                <!--            <div class="col-md-2">-->
-                <!--                <h5>Хэштэги</h5>-->
-                <!--                <input type="text" v-model="hashTag"  autocomplete="off" name="hashTag" value=""  @input="loadData()">-->
+                    <!--                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>-->
+                    <!--                    <div class="col-10">-->
 
-                <!--                <ul class="list-group">-->
-                <!--                    <li v-for="hashtag in hashTags"-->
-                <!--                        class="list-group-item d-flex justify-content-between align-items-center">-->
-                <!--                        {{ hashtag.content }}-->
-                <!--                        <span class="close" @click="deleteHashTag">&times;</span>-->
-                <!--                    </li>-->
-                <!--                </ul>-->
-                <!--            </div>-->
-                <div class="col-md-2">
-                    <div>
-                        <h5>Хэштэги</h5>
-                        <input-tag v-model="tags"></input-tag>
+                    <!--                        <input type="text" id="add-hashtag" v-model="hashTag" autocomplete="off" name="hashTag" value=""-->
+                    <!--                               @input="loadData()">-->
 
-                    </div>
-                    <div>
-                        <h5>Линки))</h5>
-                        <input-tag v-model="tags"></input-tag>
+                    <!--                        <ul class="list-group">-->
+                    <!--                            <li v-for="hashtag in hashTags"-->
+                    <!--                                class="list-group-item d-flex justify-content-between align-items-center">-->
+                    <!--                                {{ hashtag.content }}-->
+                    <!--                                <span class="close" @click="deleteHashTag">&times;</span>-->
+                    <!--                            </li>-->
+                    <!--                        </ul>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
 
+
+                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="add-hashtag" v-model="tags"></input-tag>
+
+                        </div>
                     </div>
                 </div>
 
-                <!--            <div class="row col-md-6">-->
-                <!--                <div class="col-md-6 mb-3">-->
-                <!--                    <label for="firstName">First name</label>-->
-                <!--                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
-                <!--                    <span class="text-danger" v-if="validationErrors.firstName"-->
-                <!--                          v-text="validationErrors.firstName"></span>-->
+                <!--                                    <div>-->
+                <!--                        <h5>Линки))</h5>-->
+                <!--                        <input-tag v-model="tags"></input-tag>-->
+
+                <!--                    </div>-->
                 <!--                </div>-->
-                <!--                <div class="col-md-6 mb-3">-->
-                <!--                    <label for="lastName">Last name</label>-->
-                <!--                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
-                <!--                    <span class="text-danger" v-if="validationErrors.lastName"-->
-                <!--                          v-text="validationErrors.lastName"></span>-->
-                <!--                </div>-->
-                <!--            </div>-->
+
+                <!--                            <div class="row col-md-6">-->
+                <!--                                <div class="col-md-6 mb-3">-->
+                <!--                                    <label for="firstName">First name</label>-->
+                <!--                                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
+                <!--                                    <span class="text-danger" v-if="validationErrors.firstName"-->
+                <!--                                          v-text="validationErrors.firstName"></span>-->
+                <!--                                </div>-->
+                <!--                                <div class="col-md-6 mb-3">-->
+                <!--                                    <label for="lastName">Last name</label>-->
+                <!--                                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
+                <!--                                    <span class="text-danger" v-if="validationErrors.lastName"-->
+                <!--                                          v-text="validationErrors.lastName"></span>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
 
 
                 <div class="form-group row">
@@ -170,16 +179,11 @@
                     </div>
                 </div>
 
-                <!--            <ul id="example-1">-->
-                <!--                <li v-for="hashtag in article.hashtagList">-->
-                <!--                    {{ hashtag.content }}-->
-                <!--                </li>-->
-                <!--            </ul>-->
-
                 <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
                 <a class="btn btn-default">
                     <router-link to="/article">Cancel</router-link>
                 </a>
+
             </form>
         </div>
     </v-app>
@@ -188,7 +192,7 @@
 <script>
     //  require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
     import api from "./article-api";
-    import hashTagApi from "./hash-tag-api";
+    // import hashTagApi from "./hash-tag-api";
     import InputTag from 'vue-input-tag';
     import router from "./../../router";
     import customers from './../../assets/customers';
@@ -234,8 +238,7 @@
             allMovements: [],
 
             linkList: [],
-            hashtagList: [],
-            article: {authorList: []},
+            article: {authorList: [], hashtagList: []},
             // authorListForAutocomplete: [],
 
             selected: [''],
@@ -342,6 +345,13 @@
                 };
 
                 this.hasError = false;
+
+                // this.article.hashtagList = this.tags;
+                for (let i = 0; i < this.tags.length; i++) {
+                    this.article.hashtagList[i] = {
+                        "content": this.tags[i]
+                    };
+                }
 
                 if (this.formValidate()) {
                     api.create(this.article, r => {
@@ -454,7 +464,7 @@
                         }
 
                         // Items have already been loaded
-                      //  if (this.items.length > 0) return;
+                        //  if (this.items.length > 0) return;
 
                         // Items have already been requested
                         if (this.isLoading) return;

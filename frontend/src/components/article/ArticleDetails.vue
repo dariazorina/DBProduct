@@ -1,0 +1,204 @@
+<template id="article-details">
+    <div>
+        <link href="../dbnm.css" rel="stylesheet"/>
+
+        <h5>Article Details</h5>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightcyan;">
+                <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                    <span class="float-left">Title</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavenderblush;">
+                <span class="float-left"> {{article.title}}</span></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightgrey;">
+                <div class="cellTitle">
+                    <span class="float-left">Authors</span>
+                </div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
+                <div v-for="author in article.authorList">{{author.surname}}</div>
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightcyan;">
+                <div class="cellTitle">
+                    <span class="float-left">Title, rus</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.titleRus}}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightgrey;">
+                <div class="cellTitle"><span class="float-left">Date</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{ formatDate(article.date) }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightcyan;">
+                <div class="cellTitle"><span class="float-left">Description</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.description}}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightgrey;">
+                <div class="cellTitle"><span class="float-left">URL</span></div>
+            </div>
+
+
+            <!--            <input type="button" onclick="location.href='http://google.com'" value="${article.url}" />-->
+            <!--            <input type="button" onclick="location.href='http://google.com'" value="Go to Google" />-->
+
+            <div class="col-sm-10" style="background-color:lavender;"> <span class="float-left">
+                <button class="btn btn-link" @click="goURL(article.url)">{{article.url}}</button> </span>
+            </div>
+        </div>
+
+        <!--        <div class="form-group row">-->
+        <!--            <label for="date-input" class="col-2 col-form-label">Date</label>-->
+        <!--            <div class="col-10">-->
+        <!--                <input class="form-control" type="date" id="date-input" v-model="article.date">-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightcyan;">
+                <div class="cellTitle"><span class="float-left">Hashtags</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
+                <div v-for="ht in article.hashtagList">{{ht.content}}</div></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightgrey;">
+                <div class="cellTitle"><span class="float-left">Movement</span></div>
+            </div>
+
+            <div class="col-sm-10" style="background-color:lavender;"><span
+                    class="float-left">{{article.movement.name}} </span></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightcyan;">
+                <div class="cellTitle"><span class="float-left">Language</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.language.name}} </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2" style="background-color:lightgrey;">
+                <div class="cellTitle"><span class="float-left">Links</span></div>
+            </div>
+            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> In another component, Canvas, which is located in
+                src/components/Canvas.vue, you can import that Pixel component by importing it inside the script tag of
+                the Vue Single File Component:
+            </span></div>
+        </div>
+
+        <div class="my-md-4">
+            <a class="btn btn-outline-info btn-sm mr-2">
+                <router-link to="/article">Cancel</router-link>
+            </a>
+        </div>
+    </div>
+</template>
+
+<style lang="scss">
+    @import '../dbnm.css';
+</style>
+
+<script>
+    import api from "./article-api";
+    import moment from "moment";
+
+    import "vue-scroll-table";
+
+    export default {
+        name: 'article-details',
+        data() {
+            return {
+                articles: [],
+                article: {authorList: [], language: {}, movement: {}, hashtagList:[]},
+                authors: [],
+                searchKey: '',
+                response: [],
+                errors: [],
+                showResponse: false,
+            }
+        },
+        // computed: {
+        //     filteredArticles() {
+        //         return this.articles.filter((article) => {
+        //             return article.title.indexOf(this.searchKey) > -1
+        //                 || article.date.indexOf(this.searchKey) > -1
+        //                 || article.description.indexOf(this.searchKey) > -1
+        //         })
+        //     }
+        // },
+        methods: {
+            // loadArticles() {
+            //     api.getAll().then(response => {
+            //         this.articles = response.data;
+            //         console.log(response.data)
+            //     })
+            //         .catch(error => {
+            //             this.errors.push(error)
+            //         })
+            // },
+
+            // formatAuthor(article) {
+            //     let surname = '';
+            //
+            //     for (let i = 0; i < article.authorList.length; i++) {
+            //         surname = surname + article.authorList[i].surname;
+            //         surname = surname + '\\10';
+            //     }
+            //     return surname;
+            // },
+
+            formatDate(date) {
+                return moment(date).format('DD/MM/YYYY');
+            },
+
+            goURL(url) {
+                location.href = url;
+                // console.log("123");
+            },
+
+        },
+        mounted() {
+            api.findById(this.$route.params.article_id, r => {
+                this.article = r.data;
+                // console.log(r.data);
+                this.article.date = this.formatDate(this.article.date);
+            });
+
+            // document.addEventListener("DOMContentLoaded", function (event) {
+            //     // this.addLink("URL", "http://facebook.com")
+            //
+            //     let element = document.getElementById("URL");
+            //     element.href = "http://facebook.com";
+            // });
+
+        },
+
+        dateFormat(value, row, index) {  //todo
+            moment(this.article.date).format('DD/MM/YYYY').then(response => {
+                this.article.date = response.data;
+            })
+        }
+    }
+</script>

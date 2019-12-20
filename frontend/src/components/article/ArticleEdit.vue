@@ -61,7 +61,6 @@
                                 v-model="selected"
 
                                 @change="addAuthor(selected)"
-                                @focus="testFocus(selected)"
                                 item-text="surname"
                                 item-value="id"
                                 placeholder="Start typing to find Author"
@@ -374,6 +373,15 @@
             });
         },
 
+        computed: {
+            items() {
+                return this.entries.map(entry => {
+                    const surname = entry.surname;
+                    return Object.assign({}, entry, {surname})
+                });
+            },
+        },
+
         watch: {
             search(val) {
                 console.log("SEARCH ACTIVATED");
@@ -412,6 +420,7 @@
                 if (val !== null)
                     if (val.length > 2) {
                         console.log("SEARCH STARTED");
+                        console.log(val);
 
                         if (typeof this.selected !== 'undefined') {
                             console.log("SELECTED IN WATCH");
@@ -426,7 +435,7 @@
                         this.isLoading = true;
 
                         // Lazily load input items
-                        fetch('../api/v1/person?q=' + encodeURIComponent(val))
+                        fetch('/api/v1/person?q=' + encodeURIComponent(val))
                             .then(res => res.json())
                             .then(res => {
                                 this.entries = res;
