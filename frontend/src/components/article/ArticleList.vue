@@ -177,6 +177,7 @@
                 })
             }
         },
+
         methods: {
             loadArticles() {
                 api.getAll().then(response => {
