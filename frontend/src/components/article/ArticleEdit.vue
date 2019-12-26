@@ -73,45 +73,22 @@
 
             <form>
 
-                <!--            <div class="col-md-2">-->
-                <!--                <h5>Хэштэги</h5>-->
-                <!--                <input type="text" v-model="hashTag"  autocomplete="off" name="hashTag" value=""  @input="loadData()">-->
-
-                <!--                <ul class="list-group">-->
-                <!--                    <li v-for="hashtag in hashTags"-->
-                <!--                        class="list-group-item d-flex justify-content-between align-items-center">-->
-                <!--                        {{ hashtag.content }}-->
-                <!--                        <span class="close" @click="deleteHashTag">&times;</span>-->
-                <!--                    </li>-->
-                <!--                </ul>-->
-                <!--            </div>-->
-                <div class="col-md-2">
-                    <div>
-                        <h5>Хэштэги</h5>
-                        <input-tag v-model="tags"></input-tag>
-
+                <div class="form-group row">
+                    <label for="edit-hashtag" class="col-2 col-form-label">Hashtag</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="edit-hashtag" :add-tag-on-keys="addTagOnKeys" v-model="tags"></input-tag>
+                        </div>
                     </div>
-                    <div>
-                        <h5>Линки))</h5>
-                        <input-tag v-model="tags"></input-tag>
 
+                    <label for="edit-link" class="col-2 col-form-label">Link</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="edit-link" :add-tag-on-keys="addTagOnKeys" v-model="links"></input-tag>
+                        </div>
                     </div>
+
                 </div>
-
-                <!--            <div class="row col-md-6">-->
-                <!--                <div class="col-md-6 mb-3">-->
-                <!--                    <label for="firstName">First name</label>-->
-                <!--                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
-                <!--                    <span class="text-danger" v-if="validationErrors.firstName"-->
-                <!--                          v-text="validationErrors.firstName"></span>-->
-                <!--                </div>-->
-                <!--                <div class="col-md-6 mb-3">-->
-                <!--                    <label for="lastName">Last name</label>-->
-                <!--                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
-                <!--                    <span class="text-danger" v-if="validationErrors.lastName"-->
-                <!--                          v-text="validationErrors.lastName"></span>-->
-                <!--                </div>-->
-                <!--            </div>-->
 
 
                 <div class="form-group row">
@@ -156,7 +133,7 @@
                 <div class="form-group row">
                     <label for="add-descr" class="col-2 col-form-label">Description</label>
                     <div class="col-10">
-                        <input class="form-control" id="add-descr" type = "text" v-model="article.description" required/>
+                        <input class="form-control" id="add-descr" type="text" v-model="article.description" required/>
                     </div>
                 </div>
 
@@ -171,6 +148,20 @@
                 <a class="btn btn-default">
                     <router-link to="/article">Cancel</router-link>
                 </a>
+
+
+                <!--                <div class="my-md-4">-->
+                <!--                    <a class="btn btn-outline-info btn-sm mr-2">-->
+                <!--                    <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>-->
+
+                <!--                    </a>-->
+                <!--                    <a class="btn btn-outline-info btn-sm mr-2">-->
+                <!--                        <a class="btn btn-default">-->
+                <!--                            <router-link to="/article">Cancel</router-link>-->
+                <!--                        </a>-->
+                <!--                    </a>-->
+                <!--                </div>-->
+
             </form>
         </div>
     </v-app>
@@ -178,10 +169,8 @@
 
 <script>
     import api from "./article-api";
-    import hashTagApi from "./hash-tag-api";
     import InputTag from 'vue-input-tag';
     import router from "./../../router";
-    import customers from './../../assets/customers';
     import Autocomplete from './Autocomplete';
 
     import moment from "moment";
@@ -197,6 +186,7 @@
         data() {
 
             return {
+                addTagOnKeys: [13, 9],
                 errorFlag: false,
                 errors: [],
                 selectedTags: "",
@@ -221,9 +211,12 @@
                 allLanguages: [],
                 allMovements: [],
 
+                tags: [],
+                links: [],
                 linkList: [],
                 hashtagList: [],
-                article: {authorList: [], movement: {}},
+                // article: {authorList: [], movement: {}},
+                article: {authorList: [], movement: {}, hashtagList: [], linkList: []},
 
                 selected: [''],
             }
@@ -232,21 +225,21 @@
             Autocomplete
         },
         methods: {
-            customerSelected: function () {
+            // customerSelected: function () {
+            //
+            // },
+            //
+            // loadData: function () {
+            //     if (this.hashTag && this.hashTag.length > 3) {
+            //         hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
+            //
+            //         console.log("qqqqqqqqqqqq");
+            //     }
+            // },
 
-            },
-
-            loadData: function () {
-                if (this.hashTag && this.hashTag.length > 3) {
-                    hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
-
-                    console.log("qqqqqqqqqqqq");
-                }
-            },
-
-            deleteHashTag: function () {
-                console.log("ddd");
-            },
+            // deleteHashTag: function () {
+            //     console.log("ddd");
+            // },
 
             addAuthor(obj) {
                 console.log("GET CHANGED");
@@ -329,6 +322,13 @@
             },
 
             updateArticle() {
+
+                // console.log("updateArticle");
+                // console.log(this.tags);
+
+                // console.log(document.getElementById("edit-hashtag").value);
+
+
                 this.article.movement = {
                     "id": this.selectedM
                 };
@@ -338,6 +338,21 @@
 
                 this.hasError = false;
 
+                this.article.linkList = [];
+                for (let i = 0; i < this.links.length; i++) {
+                    this.article.linkList[i] = {
+                        "content": this.links[i]
+                    };
+                }
+
+                this.article.hashtagList = [];
+                for (let i = 0; i < this.tags.length; i++) {
+                    this.article.hashtagList[i] = {
+                        "content": this.tags[i]
+                    };
+                }
+
+
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
                         router.push('/article');
@@ -346,32 +361,40 @@
             },
         },
 
-        mounted: function () {
-            this.customers = customers;
-            console.log('mounted');
+        mounted:
+            function () {
+                // this.customers = customers;
+                console.log('mounted');
 
-            api.getAllLanguages().then(response => {
-                this.allLanguages = response.data;
-                // console.log(response.data)
-            });
+                api.getAllLanguages().then(response => {
+                    this.allLanguages = response.data;
+                    // console.log(response.data)
+                });
 
-            api.getAllMovements().then(response => {
-                this.allMovements = response.data;
-                // console.log(response.data)
-            }).catch(error => {
-                console.log(error);
-            })
+                api.getAllMovements().then(response => {
+                    this.allMovements = response.data;
+                    // console.log(response.data)
+                }).catch(error => {
+                    console.log(error);
+                })
 
-            api.findById(this.$route.params.article_id, r => {
-                this.article = r.data;
-                // console.log(r.data);
+                api.findById(this.$route.params.article_id, r => {
+                    this.article = r.data;
 
-                this.selectedM = this.article.movement.id; //to select necessary value from article
-                this.selectedL = this.article.language.id;
-                this.article.date = this.formatDate(this.article.date);
-                // console.log(this.article.movement.id);
-            });
-        },
+                    this.selectedM = this.article.movement.id; //to select necessary value from article
+                    this.selectedL = this.article.language.id;
+                    this.article.date = this.formatDate(this.article.date);
+
+                    // this.tags = this.article.hashtagList;
+                    for (let i = 0; i < this.article.hashtagList.length; i++) {
+                        this.tags.push(this.article.hashtagList[i].content);
+                    }
+
+                    for (let i = 0; i < this.article.linkList.length; i++) {
+                        this.links.push(this.article.linkList[i].content);
+                    }
+                });
+            },
 
         computed: {
             items() {
@@ -385,37 +408,6 @@
         watch: {
             search(val) {
                 console.log("SEARCH ACTIVATED");
-
-//                 // Get the input field
-//                 var input = document.getElementById("author-autocomplete");
-//                 // let input1 = document.querySelector("#author-autocomplete");
-//
-//                   // Execute a function when the user releases a key on the keyboard
-//                 input.addEventListener("keyup", function (event) {
-//
-//                     console.log("SOMETHING WAS PRESSED!");
-//
-//                     // Number 13 is the "Enter" key on the keyboard
-//                     if (event.keyCode === 13) {
-//
-//                         console.log("ENTER PRESSED!");
-//                         console.log(event);
-//
-//
-//                         if (typeof this.selected !== 'undefined') {
-//                             console.log("SELECTED IN WATCH");
-//                             console.log(this.selected);
-//                             this.selected = "";
-//                         }
-//
-//
-//                         // Cancel the default action, if needed
-// //                        event.preventDefault();
-//                         // Trigger the button element with a click
-//  //                       function foo() { alert('Hi!'); }
-//                     }
-//                 });
-
 
                 if (val !== null)
                     if (val.length > 2) {

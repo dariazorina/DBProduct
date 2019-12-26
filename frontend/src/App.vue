@@ -9,8 +9,8 @@
 <!--      <router-link to="/protected">Protected</router-link> |-->
       <router-link to="/person">Person</router-link> |
       <router-link to="/article">Article</router-link> |
-      <router-link to="/event">Event</router-link> |
-      <router-link to="/org">Organization</router-link> |
+<!--      <router-link to="/event">Event</router-link> |-->
+<!--      <router-link to="/org">Organization</router-link> |-->
       <router-link to="/country">Country</router-link>
     </div>
     <router-view :hellomsg="msg"></router-view>

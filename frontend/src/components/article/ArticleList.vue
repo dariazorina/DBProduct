@@ -53,7 +53,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="article in articles">
+
+            <!--            <tr v-for="country in filteredCountries">-->
+            <!--            <tr v-for="article in articles">-->
+
+            <tr v-for="article in filteredArticles">
+
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
@@ -78,12 +83,12 @@
                     <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
                 </td>
 
-<!--                <td>-->
-<!--                    <a>-->
-<!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
-<!--                        </router-link>-->
-<!--                    </a>-->
-<!--                </td>-->
+                <!--                <td>-->
+                <!--                    <a>-->
+                <!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
+                <!--                        </router-link>-->
+                <!--                    </a>-->
+                <!--                </td>-->
 
 
                 <td>
@@ -167,8 +172,8 @@
             filteredArticles() {
                 return this.articles.filter((article) => {
                     return article.title.indexOf(this.searchKey) > -1
-                        || article.date.indexOf(this.searchKey) > -1
-                        || article.description.indexOf(this.searchKey) > -1
+                    // || article.date.indexOf(this.searchKey) > -1
+                    // || article.description.indexOf(this.searchKey) > -1
                 })
             }
         },
@@ -183,7 +188,7 @@
                     })
             },
 
-            formatAuthor(article) {
+            formatAuthor(article) {   //to delete?
                 let surname = '';
 
                 for (let i = 0; i < article.authorList.length; i++) {

@@ -30,13 +30,12 @@
                 <th>Occupation</th>
                 <th style="width:35%">Description</th>
 
-                <th  style="width:10%" class="col-sm-2">Actions</th>
+                <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr v-for="person in persons">
-                <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
+            <tr v-for="person in filteredPersons">
 
                 <td>{{person.id }}</td>
                 <td>{{person.surname }}</td>
@@ -93,11 +92,9 @@
             }
         },
         computed: {
-            filteredArticles() {
-                return this.articles.filter((article) => {
-                    return article.title.indexOf(this.searchKey) > -1
-                        || article.date.indexOf(this.searchKey) > -1
-                        || article.description.indexOf(this.searchKey) > -1
+            filteredPersons() {
+                return this.persons.filter((person) => {
+                    return person.surname.indexOf(this.searchKey) > -1
                 })
             }
         },

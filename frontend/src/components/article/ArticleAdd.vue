@@ -95,18 +95,25 @@
                     <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>
                     <div class="col-10">
                         <div>
-                            <input-tag id="add-hashtag" v-model="tags"></input-tag>
-
+                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys" placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
                         </div>
                     </div>
+
+                    <label for="add-link" class="col-2 col-form-label">Link</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys" placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!--                                    <div>-->
-                <!--                        <h5>Линки))</h5>-->
-                <!--                        <input-tag v-model="tags"></input-tag>-->
+<!--                <div>-->
+<!--                    <h5>Линки))</h5>-->
+<!--                    <input-tag v-model="tags"></input-tag>-->
 
-                <!--                    </div>-->
-                <!--                </div>-->
+<!--                </div>-->
+<!--        </div>-->
 
                 <!--                            <div class="row col-md-6">-->
                 <!--                                <div class="col-md-6 mb-3">-->
@@ -211,6 +218,7 @@
 
         //data(){
         data: () => ({
+            addTagOnKeys: [13, 9],
             descriptionLimit: 60,
             entries: [],
             isLoading: false,
@@ -228,17 +236,17 @@
             hasError: false,
 
             selectedTags: "",
-            hashTag: "",
+            // hashTag: "",
 
-            hashTags: [],
+            // hashTags: [],
             tags: [],
-            customers: [],
+            links: [],
+            // customers: [],
 
             allLanguages: [],
             allMovements: [],
 
-            linkList: [],
-            article: {authorList: [], hashtagList: []},
+            article: {authorList: [], hashtagList: [], linkList: []},
             // authorListForAutocomplete: [],
 
             selected: [''],
@@ -281,15 +289,15 @@
                     }
                 }
             },
-            loadData: function () {
-                if (this.hashTag && this.hashTag.length > 3) {
-                    hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
-                    console.log("qqqqqqqqqqqq");
-                }
-            },
-            deleteHashTag: function () {
-                console.log("ddd");
-            },
+            // loadData: function () {
+            //     if (this.hashTag && this.hashTag.length > 3) {
+            //         hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
+            //         console.log("qqqqqqqqqqqq");
+            //     }
+            // },
+            // deleteHashTag: function () {
+            //     console.log("ddd");
+            // },
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -347,6 +355,13 @@
                 this.hasError = false;
 
                 // this.article.hashtagList = this.tags;
+
+                for (let i = 0; i < this.links.length; i++) {
+                    this.article.linkList[i] = {
+                        "content": this.links[i]
+                    };
+                }
+
                 for (let i = 0; i < this.tags.length; i++) {
                     this.article.hashtagList[i] = {
                         "content": this.tags[i]

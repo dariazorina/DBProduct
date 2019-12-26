@@ -102,10 +102,9 @@
             <div class="col-sm-2" style="background-color:lightgrey;">
                 <div class="cellTitle"><span class="float-left">Links</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> In another component, Canvas, which is located in
-                src/components/Canvas.vue, you can import that Pixel component by importing it inside the script tag of
-                the Vue Single File Component:
-            </span></div>
+            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
+                <div v-for="link in article.linkList">{{link.content}}</div></span>
+            </div>
         </div>
 
         <div class="my-md-4">
@@ -131,7 +130,7 @@
         data() {
             return {
                 articles: [],
-                article: {authorList: [], language: {}, movement: {}, hashtagList:[]},
+                article: {authorList: [], language: {}, movement: {}, hashtagList:[], linkList:[]},
                 authors: [],
                 searchKey: '',
                 response: [],
