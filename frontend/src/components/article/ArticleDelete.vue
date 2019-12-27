@@ -17,7 +17,7 @@
         name: 'article-delete',
         data() {
             return {
-                article: []//{}
+                article: []
             }
         },
         methods: {

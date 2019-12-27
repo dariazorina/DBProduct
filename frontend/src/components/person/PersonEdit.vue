@@ -1,6 +1,6 @@
-<!--<template id="person-edit">-->
-<!--    <div>-->
-<!--        <h4>Edit Person</h4>-->
+<template id="person-edit">
+    <div>
+        <h4>In development stage :) <br> Coming soon...</h4>
 <!--        <div class="unprotected" v-if="errorFlag">-->
 <!--            <h5>Error: {{errors}}</h5>-->
 <!--        </div>-->
@@ -74,8 +74,8 @@
 <!--                <router-link to="/article">Cancel</router-link>-->
 <!--            </a>-->
 <!--        </form>-->
-<!--    </div>-->
-<!--</template>-->
+    </div>
+</template>
 
 <!--<script>-->
 <!--    import api from "./article-api";-->

@@ -59,8 +59,8 @@
             <!--            <input type="button" onclick="location.href='http://google.com'" value="${article.url}" />-->
             <!--            <input type="button" onclick="location.href='http://google.com'" value="Go to Google" />-->
 
-            <div class="col-sm-10" style="background-color:lavender;"> <span class="float-left">
-                <button class="btn btn-link" @click="goURL(article.url)">{{article.url}}</button> </span>
+            <div class="col-sm-10" style="background-color:lavender;"> <span class="float-left"><div class ="linkButton"><span class="float-left">
+                <button class="btn btn-link" @click="goURL(article.url)">{{article.url}}</button> </span></div></span>
             </div>
         </div>
 
@@ -77,7 +77,8 @@
                 <div class="cellTitle"><span class="float-left">Hashtags</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
-                <div v-for="ht in article.hashtagList">{{ht.content}}</div></span>
+                <div class="leftAlignForDetails" v-for="ht in article.hashtagList">{{ht.content}}</div></span>
+<!--                <div class="leftAlignForDetails" v-for="ht in article.hashtagList"><span class="linkButton">{{ht.content}}</span></div></span>-->
             </div>
         </div>
 
@@ -102,14 +103,15 @@
             <div class="col-sm-2" style="background-color:lightgrey;">
                 <div class="cellTitle"><span class="float-left">Links</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
-                <div v-for="link in article.linkList">{{link.content}}</div></span>
+            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
+                <div class ="linkButton" v-for="link in article.linkList"><span class="float-left"><button class="btn btn-link"
+                                                                                       @click="goURL(link.content)">{{link.content}}</button></span></div></span>
             </div>
         </div>
 
         <div class="my-md-4">
             <a class="btn btn-outline-info btn-sm mr-2">
-                <router-link to="/article">Cancel</router-link>
+                <router-link to="/article">Back To Article List</router-link>
             </a>
         </div>
     </div>
@@ -130,7 +132,7 @@
         data() {
             return {
                 articles: [],
-                article: {authorList: [], language: {}, movement: {}, hashtagList:[], linkList:[]},
+                article: {authorList: [], language: {}, movement: {}, hashtagList: [], linkList: []},
                 authors: [],
                 searchKey: '',
                 response: [],

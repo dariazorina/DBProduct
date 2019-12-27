@@ -97,6 +97,37 @@
                 </div>
             </div>
 
+            <form>
+                <div class="form-group row">
+
+                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
+                                       placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+                        </div>
+                    </div>
+
+                    <label for="add-link" class="col-2 col-form-label">Link</label>
+                    <div class="col-10">
+                        <div>
+                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
+                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+
+            <div class="form-group row">
+                <label for="add-org" class="col-2 col-form-label">Organization</label>
+                <div class="col-10">
+                    <input class="form-control" id="add-org"
+                           placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи" disabled="disabled">
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label for="add-description" class="col-2 col-form-label">Description</label>
                 <div class="col-10">
@@ -124,6 +155,7 @@
         vuetify: new Vuetify(),
 
         data: () => ({
+            addTagOnKeys: [13, 9],
             descriptionLimit: 60,
             entries: [],
             isLoading: false,
@@ -132,18 +164,13 @@
 
             selectedM: null,
             selectedC: null,
+            tags: [],
+            links: [],
 
             errorFlag: false,
             errors: [],
             validationErrors: {},
             hasError: false,
-
-            selectedTags: "",
-            hashTag: "",
-
-            hashTags: [],
-            tags: [],
-            customers: [],
 
             allCountries: [],
             allMovements: [],
@@ -151,16 +178,11 @@
             linkList: [],
             hashtagList: [],
             orgList: [],
-            person: {},
-
-            // person: {authorList: []},
-            // authorListForAutocomplete: [],
-
+            person: {hashtagList: [], linkList: []},
             selected: [''],
         }),
 
         methods: {
-
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -232,6 +254,24 @@
                     "id": this.selectedC
                 };
 
+                for (let i = 0; i < this.links.length; i++) {
+                    this.person.linkList[i] = {
+                        "content": this.links[i]
+                    };
+                }
+
+                for (let i = 0; i < this.tags.length; i++) {
+                    this.person.hashtagList[i] = {
+                        "content": this.tags[i]
+                    };
+                }
+
+                // for (let i = 0; i < this.tags.length; i++) {
+                //     this.article.orgList[i] = {
+                //         "content": this.tags[i]
+                //     };
+                // }
+
                 this.hasError = false;
 
                 if (this.formValidate()) {
@@ -245,7 +285,6 @@
             //     const index = this.friends.indexOf(item.name)
             //     if (index >= 0) this.friends.splice(index, 1)
             // },
-
         },
         mounted() {
             console.log('mounted');

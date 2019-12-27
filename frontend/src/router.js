@@ -10,8 +10,8 @@ import Protected from '@/components/Protected'
 import PersonList from     '@/components/person/PersonList'
 import PersonAdd from      '@/components/person/PersonAdd'
 import PersonEdit from     '@/components/person/PersonEdit'
+import PersonDetails from  '@/components/person/PersonDetails'
 import PersonDelete from   '@/components/person/PersonDelete'
-
 
 import ArticleList from         '@/components/article/ArticleList'
 import ArticleDetails from      '@/components/article/ArticleDetails'
@@ -29,6 +29,7 @@ import CountryDelete from   '@/components/country/CountryDelete'
 import CountryAdd from      '@/components/country/CountryAdd'
 
 import store from './store'
+// import PersonDetails from "./components/person/PersonDetails";
 
 Vue.use(Router);
 
@@ -53,6 +54,7 @@ const router = new Router({
         { path: '/person/add', component: PersonAdd, name :'person-add' },
         { path: '/person/:person_id/edit', component: PersonEdit, name :'person-edit' },
         { path: '/person/:person_id/delete', component: PersonDelete, name :'person-delete' },
+        { path: '/person/:person_id/details', component: PersonDetails, name :'person-details' },
 
 
         { path: '/article',  component: ArticleList },

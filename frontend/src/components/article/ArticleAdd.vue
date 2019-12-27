@@ -108,13 +108,6 @@
 
                 </div>
 
-<!--                <div>-->
-<!--                    <h5>Линки))</h5>-->
-<!--                    <input-tag v-model="tags"></input-tag>-->
-
-<!--                </div>-->
-<!--        </div>-->
-
                 <!--                            <div class="row col-md-6">-->
                 <!--                                <div class="col-md-6 mb-3">-->
                 <!--                                    <label for="firstName">First name</label>-->
@@ -235,7 +228,7 @@
             validationErrors: {},
             hasError: false,
 
-            selectedTags: "",
+           // selectedTags: "",
             // hashTag: "",
 
             // hashTags: [],
@@ -289,6 +282,7 @@
                     }
                 }
             },
+
             // loadData: function () {
             //     if (this.hashTag && this.hashTag.length > 3) {
             //         hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
@@ -298,6 +292,7 @@
             // deleteHashTag: function () {
             //     console.log("ddd");
             // },
+
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -309,11 +304,13 @@
                 }
                 this.hasError = this.hasError || hasError;
             },
+
             validDate: function (code) {
                 var re = /([12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$/; ///digit format "inside", see it while debugging
                 // var re = /((0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[0-2])[.][12][0-9]{3})$/;
                 return re.test(code);
             },
+
             formValidate() {
                 this.addStatus('add-title', (!this.article.title));
                 if (this.hasError) {

@@ -4,7 +4,7 @@
         <p>The action cannot be undone</p>
         <button type="button" @click="deletePerson" class="btn btn-danger">Delete</button>
         <a class="btn btn-default">
-            <router-link to="/article">Cancel</router-link>
+            <router-link to="/person">Cancel</router-link>
         </a>
     </div>
 </template>

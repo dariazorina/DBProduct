@@ -37,17 +37,17 @@
             <thead>
             <!--                <template slot="thead">-->
             <tr>
-                <th>Id</th>
-                <th>Authors</th>
-                <th>Language</th>
-                <th>Movement</th>
-                <th style="width:15%">Title</th>
-                <th style="width:15%">Title, russian</th>
-                <th data-field="createdAt" data-formatter="dateFormat">Created At</th>
-                <th>Description</th>
-                <th>URL</th>
+                <th class='tdAlignLeft'>Id</th>
+                <th class='tdAlignLeft'>Authors</th>
+                <th class='tdAlignLeft'>Language</th>
+                <th class='tdAlignLeft'>Movement</th>
+                <th  class='tdAlignLeft' style="width:15%">Title</th>
+                <th  class='tdAlignLeft' style="width:15%">Title, russian</th>
+                <th class='tdAlignLeft' data-field="createdAt" data-formatter="dateFormat">Created At</th>
+                <th class='tdAlignLeft'>Description</th>
+                <th class='tdAlignLeft'>URL</th>
                 <!--                <th style="width:10%">Links</th>-->
-                <th>Hashtags</th>
+                <th class='tdAlignLeft'>Hashtags</th>
 
                 <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
@@ -62,24 +62,24 @@
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <td>{{article.id }}</td>
-                <td>
+                <td class='tdAlignLeft'>{{article.id }}</td>
+                <td class='tdAlignLeft'>
                     <div v-for="author in article.authorList">{{author.surname}}</div>
                 </td>
-                <td>{{article.language.name}}</td>
-                <td>{{article.movement.name}}</td>
-                <td><a>
+                <td class='tdAlignLeft'>{{article.language.name}}</td>
+                <td class='tdAlignLeft'>{{article.movement.name}}</td>
+                <td class='tdAlignLeft'><a>
                     <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}
                     </router-link>
                 </a></td>
-                <td>{{article.titleRus }}</td>
-                <td>{{ formatDate(article.date) }}</td>
-                <td>{{article.description }}</td>
-                <td>{{article.url }}</td>
+                <td class='tdAlignLeft'>{{article.titleRus }}</td>
+                <td class='tdAlignLeft'>{{ formatDate(article.date) }}</td>
+                <td class='tdAlignLeft'>{{article.description }}</td>
+                <td class='tdAlignLeft'>{{article.url }}</td>
                 <!--                <td>-->
                 <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
                 <!--                </td>-->
-                <td>
+                <td class='tdAlignLeft'>
                     <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
                 </td>
 

@@ -20,3 +20,26 @@
 
     padding: 0px;
 }
+
+.td {
+    vertical-align: top;
+    align: left;
+}
+
+.tdAlignLeft { text-align: left; }
+
+.leftAlignForDetails {
+    /*margin-bottom: 0px;*/
+    /*margin-top: 0px;*/
+    /*margin-left: 15px;*/
+    /*margin-right: 0px;*/
+
+    /*padding: 0px;*/
+    text-align: left;
+}
+
+.linkButton {
+    /*border: 3px solid #666; !* Параметры рамки *!*/
+    /*padding: -15px; !* Поля вокруг текста *!*/
+    margin-left: -15px; /* Отступы вокруг */
+}

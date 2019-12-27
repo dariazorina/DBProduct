@@ -16,19 +16,19 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Surname</th>
-                <th>Name</th>
-                <th>Patronymic</th>
-                <th>Фамилия</th>
-                <th>Имя</th>
-                <th>Surname</th>
-                <th>Name</th>
-                <th>Movement</th>
-                <th>Country</th>
-                <th>Settlement</th>
-                <th>Occupation</th>
-                <th style="width:35%">Description</th>
+                <th class='tdAlignLeft'>Id</th>
+                <th class='tdAlignLeft'>Surname</th>
+                <th class='tdAlignLeft'>Name</th>
+                <th class='tdAlignLeft'>Patronymic</th>
+                <th class='tdAlignLeft'>Фамилия</th>
+                <th class='tdAlignLeft'>Имя</th>
+                <th class='tdAlignLeft'>Surname</th>
+                <th class='tdAlignLeft'>Name</th>
+                <th class='tdAlignLeft'>Movement</th>
+                <th class='tdAlignLeft'>Country</th>
+                <th class='tdAlignLeft'>Settlement</th>
+                <th class='tdAlignLeft'>Occupation</th>
+                <th class='tdAlignLeft' style="width:35%">Description</th>
 
                 <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
@@ -38,18 +38,25 @@
             <tr v-for="person in filteredPersons">
 
                 <td>{{person.id }}</td>
-                <td>{{person.surname }}</td>
-                <td>{{person.name}}</td>
-                <td>{{person.patronymic }}</td>
-                <td>{{person.surnameRus }}</td>
-                <td>{{person.nameRus }}</td>
-                <td>{{person.surnameEng }}</td>
-                <td>{{person.nameEng }}</td>
-                <td>{{person.movement.name}}</td>
-                <td>{{person.country.name}}</td>
-                <td>{{person.settlement }}</td>
-                <td>{{person.occupation }}</td>
-                <td>{{person.description }}</td>
+
+                <td><a>
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">{{ person.surname }}
+                    </router-link>
+                </a></td>
+
+
+<!--                <td>{{person.surname }}</td>-->
+                <td class='tdAlignLeft'>{{person.name}}</td>
+                <td class='tdAlignLeft'>{{person.patronymic }}</td>
+                <td class='tdAlignLeft'>{{person.surnameRus }}</td>
+                <td class='tdAlignLeft'>{{person.nameRus }}</td>
+                <td class='tdAlignLeft'>{{person.surnameEng }}</td>
+                <td class='tdAlignLeft'>{{person.nameEng }}</td>
+                <td class='tdAlignLeft'>{{person.movement.name}}</td>
+                <td class='tdAlignLeft'>{{person.country.name}}</td>
+                <td class='tdAlignLeft'>{{person.settlement }}</td>
+                <td class='tdAlignLeft'>{{person.occupation }}</td>
+                <td class='tdAlignLeft'>{{person.description }}</td>
 
                 <!--                <td>-->
                 <!--                    <a>-->
@@ -63,9 +70,9 @@
                     <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'person-edit', params: {person_id: person.id}}">Edit</router-link>
                     </a>
-                    <a class="btn btn-danger btn-sm">
-                        <router-link :to="{name: 'person-delete', params: {person_id: person.id}}">Delete</router-link>
-                    </a>
+<!--                    <a class="btn btn-danger btn-sm">-->
+<!--                        <router-link :to="{name: 'person-delete', params: {person_id: person.id}}">Delete</router-link>-->
+<!--                    </a>-->
                 </td>
             </tr>
             </tbody>

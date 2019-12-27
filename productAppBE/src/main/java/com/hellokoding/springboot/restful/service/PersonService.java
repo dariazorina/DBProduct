@@ -1,11 +1,14 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.dao.*;
+import com.hellokoding.springboot.restful.model.HashTag;
 import com.hellokoding.springboot.restful.model.Person;
+import com.hellokoding.springboot.restful.model.UrlLink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class PersonService {
     private final OrgRepository orgRepository;
     private final ScpaperRepository scpaperRepository;
     private final IsourceRepository isourceRepository;
+    private final HashTagRepository hashTagRepository;
+    private final UrlLinkRepository linkRepository;
+
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -29,9 +35,9 @@ public class PersonService {
         return personRepository.findById(id);
     }
 
-    public Person save(Person stock) {
-        return personRepository.save(stock);
-    }
+//    public Person save(Person stock) {
+//        return personRepository.save(stock);
+//    }
 
     public void deleteById(Integer id) {
         personRepository.deleteById(id);
@@ -42,6 +48,51 @@ public class PersonService {
         return personRepository.findBySurnameStartsWithOrderBySurnameDesc(q);
     }
 
+    public Person save(Person stock) {
+
+        HashTag hashTagByContent;
+        HashTag hashTagWithID;
+        List<HashTag> hashTagList = stock.getHashtagList();
+        List<HashTag> hashTagListWithID = new ArrayList<>();
+
+
+        UrlLink linkByContent;
+        UrlLink linkWithID;
+        List <UrlLink> linkList = stock.getLinkList();
+        List<UrlLink> linkListWithID = new ArrayList<>();
+
+
+        for (HashTag hashtag : hashTagList) {
+            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
+            if (hashTagByContent == null) {
+                hashTagRepository.save(hashtag);
+
+                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
+                hashTagListWithID.add(hashTagWithID);
+
+            } else {
+                hashTagListWithID.add(hashTagByContent);
+            }
+        }
+
+        for (UrlLink link : linkList) {
+            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
+            if (linkByContent == null) {
+                linkRepository.save(link);
+
+                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
+                linkListWithID.add(linkWithID);
+
+            } else {
+                linkListWithID.add(linkByContent);
+            }
+        }
+
+        stock.setHashtagList(hashTagListWithID);
+        stock.setLinkList(linkListWithID);
+
+        return personRepository.save(stock);
+    }
 
     ////utils
 /*    public void fillPersonTableFromArticle() {   ////step1: create table author
