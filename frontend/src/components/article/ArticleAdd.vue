@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="add-title-rus" class="col-2 col-form-label">Title Russian</label>
+                    <label for="add-title-rus" class="col-2 col-form-label">Заголовок статьи</label>
                     <div class="col-10">
                         <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
                     </div>

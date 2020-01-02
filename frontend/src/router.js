@@ -28,6 +28,13 @@ import CountryEdit from     '@/components/country/CountryEdit'
 import CountryDelete from   '@/components/country/CountryDelete'
 import CountryAdd from      '@/components/country/CountryAdd'
 
+
+import MovementList from     '@/components/movement/MovementList'
+import MovementAdd from      '@/components/movement/MovementAdd'
+
+import LanguageList from     '@/components/language/LanguageList';
+import LanguageAdd from      '@/components/language/LanguageAdd';
+
 import store from './store'
 // import PersonDetails from "./components/person/PersonDetails";
 
@@ -70,6 +77,14 @@ const router = new Router({
         { path: '/country/add', component: CountryAdd, name :'country-add' },
         { path: '/country/:country_id/edit', component: CountryEdit, name :'country-edit' },
         { path: '/country/:country_id/delete', component: CountryDelete, name :'country-delete' },
+
+        { path: '/movement', component: MovementList },
+        { path: '/movement/add', component: MovementAdd, name :'movement-add' },
+
+
+        { path: '/language', component: LanguageList },
+        { path: '/language/add', component: LanguageAdd, name :'language-add' },
+
 
         // otherwise redirect to home
         { path: '*', redirect: '/' }

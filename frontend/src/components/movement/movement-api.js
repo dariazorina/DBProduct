@@ -8,39 +8,36 @@ const AXIOS = axios.create({
 
 export default {
     getAll() {
-        return AXIOS.get(`/country`);//  /api/hello
+        return AXIOS.get(`/movement`);
     },
 
-    findById(id, fn) {
+    create(movement, fn) {
         AXIOS
-            .get(`/country/` + id)
+            .post('/movement', movement)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    create(country, fn, fnError) {
+    findById(id, fn) {
         AXIOS
-            .post('/country', country)
+            .get(`/movement/` + id)
             .then(response => fn(response))
-            .catch( error =>fnError(error.response.data))
-            // .catch(response => console.log('hhhh' + response))
+            .catch(error => console.log(error))
     },
 
-    update(id, country, fn) {
+    update(id, article, fn) {
         AXIOS
-            .put('/country/' + id, country)
+            .put('/movement/' + id, article)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
     delete(id, fn) {
         AXIOS
-            .delete('/country/' + id)
+            .delete('/movement/' + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
     }
-
-
 }
 
 

@@ -2,8 +2,13 @@
     <div>
         <h4>Add New Country</h4>
         <div class="unprotected" v-if="errorFlag">
-            <h5>Error: {{errors}}</h5>
+
+            <div class="col-sm-2">
+                <div class="cellTitle"><span class="float-center"><div v-for="err in errors" ><p style="color:red">{{err}}</p></div></span></div>
+            </div>
+
         </div>
+
         <form>
             <div class="form-group">
                 <label for="add-name">Name</label>
@@ -14,7 +19,9 @@
                 <input type="number" class="form-control" id="add-code" v-model="country.code"/>
             </div>
             <button type="button" @click="checkForm" class="btn btn-primary">Save</button>
-            <a class="btn btn-default"><router-link to="/country">Cancel</router-link></a>
+            <a class="btn btn-default">
+                <router-link to="/country">Cancel</router-link>
+            </a>
         </form>
     </div>
 </template>
@@ -74,8 +81,20 @@
                 // return (re.test(code)&&this.code.length()==3);
             },
             createCountry() {
-                api.create(this.country, r => {router.push('/country');});
-            }
+                api.create(this.country, r => {
+                    router.push('/country')
+                }, r => {
+                    this.errorFlag = true;
+                    this.errors.push(r);
+                    console.log(r);
+                });
+            },
+
+            // handleError:function (error) {
+            //     console.log(error);
+            //
+            // }
+
         },
     }
 </script>

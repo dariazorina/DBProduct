@@ -35,14 +35,14 @@
             <!--            </div>-->
 
             <div class="form-group row">
-                <label for="add-surname-rus" class="col-2 col-form-label">Surname, russian</label>
+                <label for="add-surname-rus" class="col-2 col-form-label">Фамилия</label>
                 <div class="col-10">
                     <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="add-name-rus" class="col-2 col-form-label">Name, russian</label>
+                <label for="add-name-rus" class="col-2 col-form-label">Имя</label>
                 <div class="col-10">
                     <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
                 </div>

@@ -5,16 +5,16 @@
         <h5>Article Details</h5>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
                     <span class="float-left">Title</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;">
+            <div class="col-sm-10" >
                 <span class="float-left"> {{article.title}}</span></div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle">
                     <span class="float-left">Authors</span>
                 </div>
@@ -26,16 +26,16 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle">
-                    <span class="float-left">Title, rus</span></div>
+                    <span class="float-left">Заголовок статьи</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.titleRus}}</span>
+            <div class="col-sm-10" ><span class="float-left"> {{article.titleRus}}</span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Date</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{ formatDate(article.date) }}</span>
@@ -43,15 +43,15 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle"><span class="float-left">Description</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.description}}</span>
+            <div class="col-sm-10" ><span class="float-left"> {{article.description}}</span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">URL</span></div>
             </div>
 
@@ -73,17 +73,17 @@
 
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle"><span class="float-left">Hashtags</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
+            <div class="col-sm-10" ><span class="float-left">
                 <div class="leftAlignForDetails" v-for="ht in article.hashtagList">{{ht.content}}</div></span>
 <!--                <div class="leftAlignForDetails" v-for="ht in article.hashtagList"><span class="linkButton">{{ht.content}}</span></div></span>-->
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Movement</span></div>
             </div>
 
@@ -92,15 +92,15 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle"><span class="float-left">Language</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{article.language.name}} </span>
+            <div class="col-sm-10" ><span class="float-left"> {{article.language.name}} </span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Links</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">

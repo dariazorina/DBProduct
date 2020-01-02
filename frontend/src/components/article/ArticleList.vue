@@ -42,7 +42,7 @@
                 <th class='tdAlignLeft'>Language</th>
                 <th class='tdAlignLeft'>Movement</th>
                 <th  class='tdAlignLeft' style="width:15%">Title</th>
-                <th  class='tdAlignLeft' style="width:15%">Title, russian</th>
+                <th  class='tdAlignLeft' style="width:15%">Заголовок</th>
                 <th class='tdAlignLeft' data-field="createdAt" data-formatter="dateFormat">Created At</th>
                 <th class='tdAlignLeft'>Description</th>
                 <th class='tdAlignLeft'>URL</th>
@@ -179,15 +179,15 @@
         },
 
         methods: {
-            loadArticles() {
-                api.getAll().then(response => {
-                    this.articles = response.data;
-                    console.log(response.data)
-                })
-                    .catch(error => {
-                        this.errors.push(error)
-                    })
-            },
+            // loadArticles() {
+            //     api.getAll().then(response => {
+            //         this.articles = response.data;
+            //         console.log(response.data)
+            //     })
+            //         .catch(error => {
+            //             this.errors.push(error)
+            //         })
+            // },
 
             formatAuthor(article) {   //to delete?
                 let surname = '';

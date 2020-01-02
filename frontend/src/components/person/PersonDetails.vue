@@ -5,16 +5,16 @@
         <h5>Person Details</h5>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
                     <span class="float-left">Surname, original</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;">
+            <div class="col-sm-10" >
                 <span class="float-left"> {{person.surname}}</span></div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle">
                     <span class="float-left">Name, original</span>
                 </div>
@@ -26,16 +26,16 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2">
                 <div class="cellTitle">
                     <span class="float-left">Patronymic</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{person.patronymic}}</span>
+            <div class="col-sm-10"><span class="float-left"> {{person.patronymic}}</span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Фамилия</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavender;"><span
@@ -44,16 +44,16 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2">
                 <div class="cellTitle"><span class="float-left">Имя</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span
+            <div class="col-sm-10"><span
                     class="float-left"> {{person.nameRus}}</span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Surname, eng</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavender;"><span
@@ -62,16 +62,16 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle"><span class="float-left">Name, eng</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span
+            <div class="col-sm-10" ><span
                     class="float-left"> {{person.nameEng}}</span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Occupation</span></div>
             </div>
 
@@ -81,16 +81,16 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2">
                 <div class="cellTitle"><span class="float-left">Hashtags</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left">
+            <div class="col-sm-10"><span class="float-left">
                 <div class="leftAlignForDetails" v-for="ht in person.hashtagList">{{ht.content}}</div></span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Movement</span></div>
             </div>
 
@@ -99,15 +99,15 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightcyan;">
+            <div class="col-sm-2" >
                 <div class="cellTitle"><span class="float-left">Country</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavenderblush;"><span class="float-left"> {{person.country.name}} </span>
+            <div class="col-sm-10"><span class="float-left"> {{person.country.name}} </span>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lightgrey;">
+            <div class="col-sm-2" style="background-color:lavender;">
                 <div class="cellTitle"><span class="float-left">Links</span></div>
             </div>
             <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
