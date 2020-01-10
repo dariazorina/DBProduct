@@ -2,7 +2,11 @@
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
 
-        <h5>Person Details</h5>
+        <div class="form-group row">
+            <div class="col-2 col-form-label">
+                <p class="pageDetailsTitle">Person Details</p>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-sm-2" >

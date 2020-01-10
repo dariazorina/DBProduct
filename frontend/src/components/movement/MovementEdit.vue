@@ -1,14 +1,11 @@
-<template id="movement-add">
+<template id="movement-edit">
     <v-app id="inspire">
         <div>
             <div class="form-group row">
                 <div class="col-2 col-form-label">
-                    <p class="pageCreateTitle">Add New Movement</p>
+                    <p class="pageEditTitle">Edit Movement</p>
                 </div>
             </div>
-            <!--            <div class="unprotected" v-if="errorFlag">-->
-            <!--                <h5>Error: {{errors}}</h5>-->
-            <!--            </div>-->
 
             <!--       url="http://localhost:8080/api/v1/person"-->
             <!--            http://localhost:8081/article/add-->
@@ -24,25 +21,23 @@
 
             <form>
 
-                <div class="form-group row  align-items-center">
+                <div class="form-group row align-items-center">
                     <label for="add-code" class="col-1 col-form-label labelInCreation">Code</label>
                     <div class="col-4">
                         <input type="number" class="form-control" id="add-code" v-model="movement.code"/>
                     </div>
                 </div>
 
-                <div class="form-group row  align-items-center">
+                <div class="form-group row align-items-center">
                     <label for="add-name" class="col-1 col-form-label labelInCreation">Name</label>
                     <div class="col-4">
                         <input class="form-control" id="add-name" v-model="movement.name" required/>
                     </div>
                 </div>
 
-
                 <div class="form-group row">
                     <div class="offset-sm-2 col-sm-3">
-
-                        <button type="button" @click="createMovement" class="btn btn-primary">Create</button>
+                        <button type="button" @click="createMovement" class="btn btn-primary">Save</button>
                         <a class="btn btn-default">
                             <router-link to="/movement">Cancel</router-link>
                         </a>
@@ -62,7 +57,7 @@
     import 'vuetify/dist/vuetify.min.css';
 
     export default {
-        name: 'movement-add',
+        name: 'movement-edit',
         vuetify: new Vuetify(),
 
         data: () => ({
@@ -130,6 +125,12 @@
                     });
                 }
             },
+        },
+        mounted() {
+            console.log('mounted');
+            api.findById(this.$route.params.movement_id, r => {
+                this.movement = r.data
+            });
         },
     }
 </script>

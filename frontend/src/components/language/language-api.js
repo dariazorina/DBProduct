@@ -11,11 +11,12 @@ export default {
         return AXIOS.get(`/language`);
     },
 
-    create(language, fn) {
+    create(language, fn, fnError) {
         AXIOS
             .post('/language', language)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => fnError(error.response.data))
+            // .catch(error => console.log(error))
     },
 
     findById(id, fn) {
@@ -25,11 +26,12 @@ export default {
             .catch(error => console.log(error))
     },
 
-    update(id, article, fn) {
+    update(id, article, fn, fnError) {
         AXIOS
             .put('/language/' + id, article)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => fnError(error.response.data))
+            // .catch(error => console.log(error))
     },
 
     delete(id, fn) {

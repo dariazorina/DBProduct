@@ -1,18 +1,29 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
-            <h3 class="mb-5">Add new article</h3>
-            <div class="unprotected" v-if="errorFlag">
-                <h5>Error: {{errors}}</h5>
+
+            <div class="form-group row">
+                <div class="col-2 col-form-label">
+                    <p class="pageCreateTitle">Add New Article</p>
+                </div>
+
+                <div class="unprotected" v-if="errorFlag">
+                    <h5>Error: {{errors}}</h5>
+                </div>
             </div>
+
+            <!--            <h3 class="mb-5">Add new article</h3>-->
+            <!--            <div class="unprotected" v-if="errorFlag">-->
+            <!--                <h5>Error: {{errors}}</h5>-->
+            <!--            </div>-->
 
             <!--       url="http://localhost:8080/api/v1/person"-->
             <!--            http://localhost:8081/article/add-->
 
             <!--            <form>-->
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Author</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label class="col-1 col-form-label labelInCreation">Author</label>
+                <div class="col-4">
                     <ul class="list-group" order="1">
                         <li v-for="author in this.article.authorList"
                             class="list-group-item d-flex justify-content-between align-items-center">
@@ -42,9 +53,9 @@
             </div>
             <!--            </form>-->
 
-            <div class="form-group row">
-                <label for="author-autocomplete" class="col-2 col-form-label"> </label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="author-autocomplete" class="col-1 col-form-label labelInCreation"> </label>
+                <div class="col-4">
                     <v-card-text>
                         <v-autocomplete
 
@@ -73,10 +84,10 @@
             </div>
 
             <form>
-                <div class="form-group row">
+                <div class="form-group row align-items-center">
 
-                    <!--                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>-->
-                    <!--                    <div class="col-10">-->
+                    <!--                    <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>-->
+                    <!--                    <div class="col-4">-->
 
                     <!--                        <input type="text" id="add-hashtag" v-model="hashTag" autocomplete="off" name="hashTag" value=""-->
                     <!--                               @input="loadData()">-->
@@ -92,17 +103,21 @@
                     <!--                </div>-->
 
 
-                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>
-                    <div class="col-10">
+                    <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>
+                    <div class="col-4">
                         <div>
-                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys" placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
+                                       placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
                         </div>
                     </div>
+                </div>
+                <div class="form-group row align-items-center">
 
-                    <label for="add-link" class="col-2 col-form-label">Link</label>
-                    <div class="col-10">
+                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>
+                    <div class="col-4">
                         <div>
-                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys" placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
+                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
+                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
                         </div>
                     </div>
 
@@ -124,30 +139,30 @@
                 <!--                            </div>-->
 
 
-                <div class="form-group row">
-                    <label for="add-title" class="col-2 col-form-label">Title</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="add-title" class="col-1 col-form-label labelInCreation">Title</label>
+                    <div class="col-4">
                         <input class="form-control" id="add-title" v-model="article.title"/>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="add-title-rus" class="col-2 col-form-label">Заголовок статьи</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="add-title-rus" class="col-1 col-form-label labelInCreation">Заголовок статьи</label>
+                    <div class="col-4">
                         <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="date-input" class="col-2 col-form-label">Date</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="date-input" class="col-1 col-form-label labelInCreation">Date</label>
+                    <div class="col-4">
                         <input class="form-control" type="date" id="date-input" v-model="article.date">
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-2 col-form-label">Language</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label class="col-1 col-form-label labelInCreation">Language</label>
+                    <div class="col-4">
                         <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
                             <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
                         </b-form-select>
@@ -155,9 +170,9 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-2 col-form-label">Movement</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label class="col-1 col-form-label labelInCreation">Movement</label>
+                    <div class="col-4">
                         <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">
                             <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>
                         </b-form-select>
@@ -165,24 +180,29 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="add-descr" class="col-2 col-form-label">Description</label>
-                    <div class="col-10">
-                        <input class="form-control" id="add-descr" v-model="article.description" required/>
+                <div class="form-group row align-items-center">
+                    <label for="add-descr" class="col-1 col-form-label labelInCreation">Description</label>
+                    <div class="col-4">
+                        <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="add-url" class="col-2 col-form-label">URL</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="add-url" class="col-1 col-form-label labelInCreation">URL</label>
+                    <div class="col-4">
                         <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
                     </div>
                 </div>
 
-                <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
-                <a class="btn btn-default">
-                    <router-link to="/article">Cancel</router-link>
-                </a>
+                <div class="form-group row">
+                    <div class="offset-sm-2 col-sm-3">
+
+                        <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
+                        <a class="btn btn-default">
+                            <router-link to="/article">Cancel</router-link>
+                        </a>
+                    </div>
+                </div>
 
             </form>
         </div>
@@ -228,7 +248,7 @@
             validationErrors: {},
             hasError: false,
 
-           // selectedTags: "",
+            // selectedTags: "",
             // hashTag: "",
 
             // hashTags: [],
@@ -485,7 +505,7 @@
 
                         // Lazily load input items
                         //  fetch('https://api.publicapis.org/entries')
-                        fetch('../api/v1/person?q=' + encodeURIComponent(val))
+                        fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
                             .then(res => res.json())
                             .then(res => {
                                 this.entries = res;

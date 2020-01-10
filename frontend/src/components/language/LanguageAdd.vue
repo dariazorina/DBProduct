@@ -1,35 +1,45 @@
 <template id="language-add">
     <v-app id="inspire">
         <div>
-            <h3 class="mb-5">Add new language</h3>
-<!--            <div class="unprotected" v-if="errorFlag">-->
-<!--                <h5>Error: {{errors}}</h5>-->
-<!--            </div>-->
+            <div class="form-group row">
+                <div class="col-2 col-form-label">
+                    <p class="pageCreateTitle">Add New Language</p>
+                </div>
+            </div>
 
-            <!--       url="http://localhost:8080/api/v1/person"-->
-            <!--            http://localhost:8081/article/add-->
+            <div class="unprotected" v-if="errorFlag">
+                <div class="col-sm-3">
+                    <div class="cellTitle"><span class="float-center">
+                        <div v-for="err in errors"><p style="color:red">DB message: {{err}}</p></div></span>
+                    </div>
+                </div>
+            </div>
 
             <form>
-
-                <div class="form-group row">
-                    <label for="add-code" class="col-2 col-form-label">Language Code</label>
-                    <div class="col-10">
-                        <input class="form-control" placeholder="Код должен быть уникальным и состоять из трех цифр. В данной версии уникальность кода - ответственность пользователя) " id="add-code" v-model="language.code"/>
+                <div class="form-group row  align-items-center">
+                    <label for="add-code" class="col-1 col-form-label labelInCreation">Code</label>
+                    <div class="col-4">
+                        <input type="number" class="form-control" id="add-code" v-model="language.code"/>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="add-name" class="col-2 col-form-label">Language Name</label>
-                    <div class="col-10">
+                <div class="form-group row  align-items-center">
+                    <label for="add-name" class="col-1 col-form-label labelInCreation">Language Name</label>
+                    <div class="col-4">
                         <input class="form-control" id="add-name" v-model="language.name" required/>
                     </div>
                 </div>
 
 
-                <button type="button" @click="createLanguage" class="btn btn-primary">Save</button>
-                <a class="btn btn-default">
-                    <router-link to="/language">Cancel</router-link>
-                </a>
+                <div class="form-group row">
+                    <div class="offset-sm-2 col-sm-3">
+
+                        <button type="button" @click="createLanguage" class="btn btn-primary">Create</button>
+                        <a class="btn btn-default">
+                            <router-link to="/language">Cancel</router-link>
+                        </a>
+                    </div>
+                </div>
 
             </form>
         </div>
@@ -48,19 +58,15 @@
         vuetify: new Vuetify(),
 
         data: () => ({
-            // entries: [],
-            // isLoading: false,
-            // model: null,
             search: null,
 
-            // errorFlag: false,
-            // errors: [],
+            errorFlag: false,
+            errors: [],
             validationErrors: {},
             hasError: false,
 
             language: {},
             languages: [],
-            selected: [''],
         }),
 
         methods: {
@@ -108,7 +114,11 @@
 
                 if (this.formValidate()) {
                     api.create(this.language, r => {
-                        router.push('/language');
+                        router.push('/language')
+                    }, r => {
+                        this.errorFlag = true;
+                        this.errors.push(r);
+                        console.log(r);
                     });
                 }
             },

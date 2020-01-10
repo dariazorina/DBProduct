@@ -22,7 +22,7 @@
                 <th class='tdAlignLeft'>Code</th>
                 <th class='tdAlignLeft'>Name</th>
 
-<!--                <th style="width:10%" class="col-sm-2">Actions</th>-->
+                <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -34,18 +34,18 @@
                 <td class='tdAlignLeft'>{{language.code}}</td>
                 <td class='tdAlignLeft'>{{language.name}}</td>
 
-<!--                <td>-->
-<!--                    <a class="btn btn-warning btn-sm mr-2">-->
-<!--                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit-->
-<!--                        </router-link>-->
-<!--                    </a>-->
+                <td>
+                    <a class="btn btn-warning btn-sm mr-2">
+                        <router-link :to="{name: 'language-edit', params: {language_id: language.id}}">Edit
+                        </router-link>
+                    </a>
 <!--                    <a class="btn btn-danger btn-sm">-->
 <!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
 <!--                        </router-link>-->
 <!--                    </a>-->
 
 
-<!--                </td>-->
+                </td>
 
 
             </tr>

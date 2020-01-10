@@ -43,3 +43,42 @@
     /*padding: -15px; !* Поля вокруг текста *!*/
     margin-left: -15px; /* Отступы вокруг */
 }
+
+.form-horizontal .control-label .text-left{
+    text-align: left;
+    margin-left: 25px;
+}
+
+.labelInCreation{
+    vertical-align: text-bottom;
+    text-align: left;
+    margin-left: 110px;
+}
+
+.pageCreateTitle{
+    text-align: left;
+    /*margin-left: 55px;*/
+    padding-left: 110px;
+    background-color: orange;
+}
+
+.pageEditTitle{
+    text-align: left;
+    /*margin-left: 55px;*/
+    padding-left: 110px;
+    background-color: aquamarine;
+}
+
+.pageDeleteTitle{
+    text-align: left;
+    /*margin-left: 55px;*/
+    padding-left: 110px;
+    background-color: darksalmon;
+}
+
+.pageDetailsTitle{
+    text-align: left;
+    /*margin-left: 55px;*/
+    padding-left: 110px;
+    background-color: pink;
+}

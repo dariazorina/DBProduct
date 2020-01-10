@@ -26,11 +26,12 @@ export default {
             // .catch(response => console.log('hhhh' + response))
     },
 
-    update(id, country, fn) {
+    update(id, country, fn, fnError) {
         AXIOS
             .put('/country/' + id, country)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => fnError(error.response.data))
+            // .catch(error => console.log(error))
     },
 
     delete(id, fn) {

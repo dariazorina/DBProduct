@@ -20,6 +20,7 @@ import java.util.Optional;
 public class MovementAPI {
 
     private final MovementService movementService;
+    public static final String MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE = "Movement code or name is not unique.";
 
     @GetMapping
     public ResponseEntity<List<Movement>> findAll() {
@@ -28,7 +29,11 @@ public class MovementAPI {
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody Movement movement) {
-        return ResponseEntity.ok(movementService.save(movement));
+        try {
+            return ResponseEntity.ok(movementService.save(movement));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @GetMapping("/{id}")
@@ -42,12 +47,16 @@ public class MovementAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movement> update(@PathVariable Integer id, @Valid @RequestBody Movement movement) {
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Movement movement) {
         if (!movementService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(movementService.save(movement));
+        try {
+            return ResponseEntity.ok(movementService.save(movement));
+        } catch (UniqueConstraintViolationException ex){
+            return ResponseEntity.badRequest().body(MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @DeleteMapping("/{id}")

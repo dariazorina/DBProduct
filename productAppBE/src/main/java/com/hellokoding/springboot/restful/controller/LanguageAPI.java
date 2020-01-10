@@ -17,6 +17,7 @@ import java.util.Optional;
 public class LanguageAPI {
 
     private final LanguageService languageService;
+    public static final String LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE = "Language code or name is not unique.";
 
     @GetMapping
     public ResponseEntity<List<Language>> findAll() {
@@ -25,7 +26,11 @@ public class LanguageAPI {
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody Language language) {
-        return ResponseEntity.ok(languageService.save(language));
+        try {
+            return ResponseEntity.ok(languageService.save(language));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @GetMapping("/{id}")
@@ -39,12 +44,16 @@ public class LanguageAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Language> update(@PathVariable Integer id, @Valid @RequestBody Language language) {
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Language language) {
         if (!languageService.findById(id).isPresent()) {
-            log.error("Id " + id + " is not existed");
+            log.error("Id {} is not existed", id);
             ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(languageService.save(language));
+        try {
+            return ResponseEntity.ok(languageService.save(language));
+        } catch (UniqueConstraintViolationException ex){
+            return ResponseEntity.badRequest().body(LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @DeleteMapping("/{id}")

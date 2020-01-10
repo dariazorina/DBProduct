@@ -31,9 +31,11 @@ import CountryAdd from      '@/components/country/CountryAdd'
 
 import MovementList from     '@/components/movement/MovementList'
 import MovementAdd from      '@/components/movement/MovementAdd'
+import MovementEdit from     '@/components/movement/MovementEdit'
 
 import LanguageList from     '@/components/language/LanguageList';
 import LanguageAdd from      '@/components/language/LanguageAdd';
+import LanguageEdit from     '@/components/language/LanguageEdit';
 
 import store from './store'
 // import PersonDetails from "./components/person/PersonDetails";
@@ -80,10 +82,11 @@ const router = new Router({
 
         { path: '/movement', component: MovementList },
         { path: '/movement/add', component: MovementAdd, name :'movement-add' },
-
+        { path: '/movement/:movement_id/edit', component: MovementEdit, name :'movement-edit' },
 
         { path: '/language', component: LanguageList },
         { path: '/language/add', component: LanguageAdd, name :'language-add' },
+        { path: '/language/:language_id/edit', component: LanguageEdit, name :'language-edit' },
 
 
         // otherwise redirect to home

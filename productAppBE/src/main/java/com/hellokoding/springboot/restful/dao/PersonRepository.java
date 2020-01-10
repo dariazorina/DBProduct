@@ -8,5 +8,9 @@ import java.util.List;
 public interface PersonRepository extends JpaRepository <Person, Integer> {
     Person getPersonByName(String name);
 
-    List<Person> findBySurnameStartsWithOrderBySurnameDesc(String surname);
+    List<Person> findBySurnameStartsWith(String surname);
+    List<Person> findBySurnameEngStartsWith(String surname);
+    List<Person> findBySurnameRusStartsWith(String surname);
+ //   List<Person> findBySurnameStartsWithAndSurnameEngStarsWithAndSurnameRusStartsWithOrde
+
 }

@@ -1,27 +1,43 @@
 <template id="country-add">
     <div>
-        <h4>Add New Country</h4>
-        <div class="unprotected" v-if="errorFlag">
 
-            <div class="col-sm-2">
-                <div class="cellTitle"><span class="float-center"><div v-for="err in errors" ><p style="color:red">{{err}}</p></div></span></div>
+        <div class="form-group row">
+            <div class="col-2 col-form-label">
+                <p class="pageCreateTitle">Add New Country</p>
             </div>
-
         </div>
 
+        <div class="unprotected" v-if="errorFlag">
+            <div class="col-sm-3">
+                <div class="cellTitle"><span class="float-center"><div v-for="err in errors"><p style="color:red">DB message: {{err}}</p></div></span>
+                </div>
+            </div>
+        </div>
+
+
         <form>
-            <div class="form-group">
-                <label for="add-name">Name</label>
-                <input type="text" class="form-control" id="add-name" v-model="country.name"/>
+            <div class="form-group row  align-items-center">
+                <label for="add-code" class="col-1 col-form-label labelInCreation">Code</label>
+                <div class="col-4">
+                    <input type="number" class="form-control" id="add-code" v-model="country.code"/>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="add-code">Code</label>
-                <input type="number" class="form-control" id="add-code" v-model="country.code"/>
+
+            <div class="form-group row  align-items-center">
+                <label for="add-name" class="col-1 col-form-label labelInCreation">Name</label>
+                <div class="col-4">
+                    <input class="form-control" id="add-name" v-model="country.name" required/>
+                </div>
             </div>
-            <button type="button" @click="checkForm" class="btn btn-primary">Save</button>
-            <a class="btn btn-default">
-                <router-link to="/country">Cancel</router-link>
-            </a>
+
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-3">
+                    <button type="button" @click="checkForm" class="btn btn-primary">Create</button>
+                    <a class="btn btn-default">
+                        <router-link to="/language">Cancel</router-link>
+                    </a>
+                </div>
+            </div>
         </form>
     </div>
 </template>

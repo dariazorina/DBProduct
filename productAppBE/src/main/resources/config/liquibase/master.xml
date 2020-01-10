@@ -31,5 +31,7 @@
     <include file="config/liquibase/changelog/00000000000025_add_person_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000026_add_art_author_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000027_add_unique_constr_country_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000028_add_unique_constr_movement_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000029_add_unique_constr_language_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

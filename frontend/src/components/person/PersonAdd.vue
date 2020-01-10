@@ -1,71 +1,76 @@
 <template id="person-add">
     <v-app id="inspire">
         <div>
-            <h3 class="mb-5">Add New Person</h3>
-            <div class="unprotected" v-if="errorFlag">
-                <h5>Error: {{errors}}</h5>
+            <div class="form-group row">
+                <div class="col-2 col-form-label">
+                    <p class="pageCreateTitle">Add New Person</p>
+                </div>
+
+                <div class="unprotected" v-if="errorFlag">
+                    <h5>Error: {{errors}}</h5>
+                </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-surname" class="col-2 col-form-label">Surname</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-surname" class="col-1 col-form-label labelInCreation">Surname</label>
+                <div class="col-4">
                     <input class="form-control" id="add-surname" v-model="person.surname"/>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-name" class="col-2 col-form-label">Name</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-name" class="col-1 col-form-label labelInCreation">Name</label>
+                <div class="col-4">
                     <input class="form-control" id="add-name" v-model="person.name"/>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-patronymic" class="col-2 col-form-label">Patronymic</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-patronymic" class="col-1 col-form-label labelInCreation">Patronymic</label>
+                <div class="col-4">
                     <input class="form-control" id="add-patronymic" v-model="person.patronymic">
                 </div>
             </div>
 
             <!--            <div class="form-group row">-->
-            <!--                <label for="add-" class="col-2 col-form-label"></label>-->
+            <!--                <label for="add-" class="col-1 col-form-label"></label>-->
             <!--                <div class="col-10">-->
             <!--                    <input class="form-control" id="add-" v-model="person.">-->
             <!--                </div>-->
             <!--            </div>-->
 
-            <div class="form-group row">
-                <label for="add-surname-rus" class="col-2 col-form-label">Фамилия</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-surname-rus" class="col-1 col-form-label labelInCreation">Фамилия</label>
+                <div class="col-4">
                     <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-name-rus" class="col-2 col-form-label">Имя</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-name-rus" class="col-1 col-form-label labelInCreation">Имя</label>
+                <div class="col-4">
                     <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-surname-eng" class="col-2 col-form-label">Surname, english</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-surname-eng" class="col-1 col-form-label labelInCreation">Surname, english</label>
+                <div class="col-4">
                     <input class="form-control" id="add-surname-eng" v-model="person.surnameEng"/>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-name-eng" class="col-2 col-form-label">Name, english</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-name-eng" class="col-1 col-form-label labelInCreation">Name, english</label>
+                <div class="col-4">
                     <input class="form-control" id="add-name-eng" v-model="person.nameEng"/>
                 </div>
             </div>
 
 
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Country</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label class="col-1 col-form-label labelInCreation">Country</label>
+                <div class="col-4">
                     <b-form-select v-model="selectedC" class="mb-3" id="country-selection">
                         <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>
                     </b-form-select>
@@ -73,9 +78,9 @@
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Movement</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label class="col-1 col-form-label labelInCreation">Movement</label>
+                <div class="col-4">
                     <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">
                         <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>
                     </b-form-select>
@@ -83,33 +88,34 @@
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-settlement" class="col-2 col-form-label">Settlement</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-settlement" class="col-1 col-form-label labelInCreation">Settlement</label>
+                <div class="col-4">
                     <input class="form-control" id="add-settlement" v-model="person.settlement">
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="add-occupation" class="col-2 col-form-label">Occupation</label>
-                <div class="col-10">
-                    <input class="form-control" id="add-occupation" v-model="person.occupation">
+            <div class="form-group row align-items-center">
+                <label for="add-occupation" class="col-1 col-form-label labelInCreation">Occupation</label>
+                <div class="col-4">
+                    <textarea class="form-control" id="add-occupation" rows="4" v-model="person.occupation"/>
                 </div>
             </div>
 
             <form>
-                <div class="form-group row">
-
-                    <label for="add-hashtag" class="col-2 col-form-label">Hashtag</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>
+                    <div class="col-4">
                         <div>
                             <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
                                        placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
                         </div>
                     </div>
+                </div>
 
-                    <label for="add-link" class="col-2 col-form-label">Link</label>
-                    <div class="col-10">
+                <div class="form-group row align-items-center">
+                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>
+                    <div class="col-4">
                         <div>
                             <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
                                        placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
@@ -118,27 +124,31 @@
 
                 </div>
             </form>
-
-
-            <div class="form-group row">
-                <label for="add-org" class="col-2 col-form-label">Organization</label>
-                <div class="col-10">
+            <div class="form-group row align-items-center">
+                <label for="add-org" class="col-1 col-form-label labelInCreation">Organization</label>
+                <div class="col-4">
                     <input class="form-control" id="add-org"
-                           placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи" disabled="disabled">
+                           placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи"
+                           disabled="disabled">
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="add-description" class="col-1 col-form-label labelInCreation">Description</label>
+                <div class="col-4">
+                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="add-description" class="col-2 col-form-label">Description</label>
-                <div class="col-10">
-                    <input class="form-control" id="add-description" v-model="person.description">
+                <div class="offset-sm-2 col-sm-3">
+
+                    <button type="button" @click="createPerson" class="btn btn-primary">Save</button>
+                    <a class="btn btn-default">
+                        <router-link to="/person">Cancel</router-link>
+                    </a>
                 </div>
             </div>
-
-            <button type="button" @click="createPerson" class="btn btn-primary">Save</button>
-            <a class="btn btn-default">
-                <router-link to="/person">Cancel</router-link>
-            </a>
         </div>
     </v-app>
 </template>

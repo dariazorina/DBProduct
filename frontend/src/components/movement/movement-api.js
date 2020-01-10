@@ -11,11 +11,11 @@ export default {
         return AXIOS.get(`/movement`);
     },
 
-    create(movement, fn) {
+    create(movement, fn, fnError) {
         AXIOS
             .post('/movement', movement)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => fnError(error.response.data))
     },
 
     findById(id, fn) {
@@ -25,11 +25,11 @@ export default {
             .catch(error => console.log(error))
     },
 
-    update(id, article, fn) {
+    update(id, article, fn, fnError) {
         AXIOS
             .put('/movement/' + id, article)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => fnError(error.response.data))
     },
 
     delete(id, fn) {

@@ -1,6 +1,5 @@
 <template id="country">
     <div>
-        <h2>Countries list</h2>
 
         <link href="../dbnm.css" rel="stylesheet"/>
         <div class="actions">
@@ -22,28 +21,20 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Code</th>
-                <th>Name</th>
+                <th class='tdAlignLeft'>Id</th>
+                <th class='tdAlignLeft'>Code</th>
+                <th class='tdAlignLeft'>Name</th>
 
-                <th class="col-sm-2">Actions</th>
+                <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>
             </thead>
             <tbody>
 
 
             <tr v-for="country in filteredCountries">
-                <!-- tr v-for="product in products" -->
-                <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
-
-                <td>
-                    {{ country.id }}
-                    <!--<span class="glyphicon glyphicon-euro" aria-hidden="true"></span>-->
-                </td>
-
-                <td>{{ country.code }}</td>
-
-                <td> {{ country.name }}
+                <td class='tdAlignLeft'> {{ country.id }} </td>
+                <td class='tdAlignLeft'> {{ country.code }}</td>
+                <td class='tdAlignLeft'> {{ country.name }}
                     <!--                    <a>-->
                     <!--                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}-->
                     <!--                        </router-link>-->
@@ -51,12 +42,12 @@
                 </td>
 
                 <td>
-                    <a class="btn btn-warning btn-xs">
+                    <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'country-edit', params: {country_id: country.id}}">Edit</router-link>
                     </a>
-<!--                    <a class="btn btn-danger btn-xs">-->
-<!--                        <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>-->
-<!--                    </a>-->
+                                        <a class="btn btn-danger btn-xs">
+                                            <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>
+                                        </a>
                 </td>
             </tr>
 
