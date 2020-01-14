@@ -48,29 +48,38 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonDto> search(String q) {
-        //todo add ignore case
 
-        List<Person> surnameSearchList = personRepository.findBySurnameStartsWith(q);
-        List<Person> surnameRusSearchList = personRepository.findBySurnameRusStartsWith(q);
-        List<Person> surnameEngSearchList = personRepository.findBySurnameEngStartsWith(q);
+        List<Person> surnameSearchList = personRepository.findBySurnameStartsWithIgnoreCase(q);
+        List<Person> surnameRusSearchList = personRepository.findBySurnameRusStartsWithIgnoreCase(q);
+        List<Person> surnameEngSearchList = personRepository.findBySurnameEngStartsWithIgnoreCase(q);
 
         Set<PersonDto> fooSet = new TreeSet<>();
+        String dtoName;
 
         for (Person person : surnameSearchList) {
-
-            String dtoName = person.getSurname();
+            dtoName = person.getSurname();
             if (person.getName() != null) {
                 dtoName += " " + person.getName();
             }
             PersonDto personDto = new PersonDto(person.getId(), dtoName);
             fooSet.add(personDto);
         }
+
         for (Person person : surnameRusSearchList) {
-            PersonDto personDto = new PersonDto(person.getId(), person.getSurnameRus() + " " + person.getNameRus());
+            dtoName = person.getSurnameRus();
+            if (person.getNameRus() != null) {
+                dtoName += " " + person.getNameRus();
+            }
+            PersonDto personDto = new PersonDto(person.getId(), dtoName);
             fooSet.add(personDto);
         }
+
         for (Person person : surnameEngSearchList) {
-            PersonDto personDto = new PersonDto(person.getId(), person.getSurnameEng() + " " + person.getNameEng());
+            dtoName = person.getSurnameEng();
+            if (person.getNameEng() != null) {
+                dtoName += " " + person.getNameEng();
+            }
+            PersonDto personDto = new PersonDto(person.getId(), dtoName);
             fooSet.add(personDto);
         }
 

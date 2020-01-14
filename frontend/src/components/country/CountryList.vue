@@ -45,9 +45,9 @@
                     <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'country-edit', params: {country_id: country.id}}">Edit</router-link>
                     </a>
-                                        <a class="btn btn-danger btn-xs">
-                                            <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>
-                                        </a>
+<!--                                        <a class="btn btn-danger btn-xs">-->
+<!--                                            <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>-->
+<!--                                        </a>-->
                 </td>
             </tr>
 

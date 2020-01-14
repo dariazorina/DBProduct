@@ -1,33 +1,16 @@
 package com.hellokoding.springboot.restful.service;
 
-import com.hellokoding.springboot.restful.dao.ScpaperRepository;
 import com.hellokoding.springboot.restful.model.Scpaper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class ScpaperService {
+public interface ScpaperService {
+    List<Scpaper> findAll();
 
-    private final ScpaperRepository scpaperRepository;
+    Optional<Scpaper> findById(Integer id);
 
-    public List<Scpaper> findAll() {
-        List<Scpaper> all = scpaperRepository.findAll();
-        return all;
-    }
+    Scpaper save(Scpaper stock);
 
-    public Optional<Scpaper> findById(Integer id) {
-        return scpaperRepository.findById(id);
-    }
-
-    public Scpaper save(Scpaper stock) {
-        return scpaperRepository.save(stock);
-    }
-
-    public void deleteById(Integer id) {
-        scpaperRepository.deleteById(id);
-    }
+    void deleteById(Integer id);
 }
