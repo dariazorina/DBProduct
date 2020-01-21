@@ -1,24 +1,53 @@
 <template>
-    <div class="unprotected" v-if="loginError">
-        <h1>
-            <b-badge variant="danger">You don't have rights here, mate :D</b-badge>
-        </h1>
-        <h5>Seams that you don't have access rights... </h5>
-    </div>
-    <div class="unprotected" v-else>
-        <h1>
-            <b-badge variant="info">Please login to get access!</b-badge>
-        </h1>
-        <h5>You're not logged in - so you don't see much here. Try to log in:</h5>
+    <div>
+        <div class="unprotected" v-if="loginError">
+            <div class="form-group row">
+                <div class="col-2 col-form-label">
+                    <p class="pageLoginErrorTitle">Authentication error, try again</p>
+                </div>
+            </div>
+        </div>
+        <div class="unprotected" v-else>
+            <div class="form-group row">
+                <div class="col-2 col-form-label">
+                    <p class="pageLoginTitle">Please login to get access</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <form class="pageLoginForm" @submit.prevent="callLogin()">
 
-        <form @submit.prevent="callLogin()">
-            <input type="text" placeholder="username" v-model="user">
-            <input type="password" placeholder="password" v-model="password">
-            <b-btn variant="success" type="submit">Login</b-btn>
-            <p v-if="error" class="error">Bad login information</p>
-        </form>
-    </div>
+                <div class="form-group row align-items-center">
+                    <label for="add-login" class="col-1 col-form-label labelInCreation">Login</label>
+                    <div class="col-3">
+                        <input type="text" placeholder="username" class="form-control" id="add-login" v-model="user"/>
+                    </div>
+                </div>
 
+                <div class="form-group row align-items-center">
+                    <label for="add-pass" class="col-1 col-form-label labelInCreation">Password</label>
+                    <div class="col-3">
+                        <input type="password" placeholder="password" class="form-control" id="add-pass"
+                               v-model="password"/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="offset-sm-3 col-sm-3">
+                        <b-btn size="sm" variant="btn btn-outline-info" type="submit">Login</b-btn>
+                        <!--                    <p v-if="error" class="error">Bad login information</p>-->
+                    </div>
+                </div>
+
+
+                <!--        <form class="pageLoginForm" @submit.prevent="callLogin()">-->
+                <!--            <input type="text" placeholder="username" v-model="user">-->
+                <!--            <input type="password" placeholder="password" v-model="password">-->
+                <!--            <b-btn size="sm" variant="btn btn-outline-success" type="submit">Login</b-btn>-->
+                <!--            <p v-if="error" class="error">Bad login information</p>-->
+            </form>
+        </div>
+    </div>
 </template>
 
 <script>

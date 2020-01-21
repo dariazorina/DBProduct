@@ -2,21 +2,32 @@
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
 
-        <div class="logoutTitle">wellcome, {{loggedName}}!
-            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>
-            <!-- Modal Component -->
-            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout">
-                <!--                    <form @submit.stop.prevent="logout">-->
-                <!--                        <b-form-input type="text" placeholder="Enter your name" v-model="name"></b-form-input>-->
-                <!--                    </form>-->
-            </b-modal>
+
+
+        <div class="form-group row">
+            <div class="col-2 col-form-label">
+                <p class="greetingsTitle">Wellcome, {{loggedName}}!
+                <b-btn v-if="loggedInFlag" size="sm" variant="btn btn-link"  v-b-modal.modal1>Logout</b-btn>
+                </p>
+                <!-- Modal Component -->
+                <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
+            </div>
         </div>
 
-        <div class="actions">
+
+
+
+<!--        <div class="logoutNameAndButton">wellcome, {{loggedName}}!-->
+<!--            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>-->
+<!--            &lt;!&ndash; Modal Component &ndash;&gt;-->
+<!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
+<!--        </div>-->
+
+<!--        <div class="actions">-->
             <a class="btn btn-default">
                 <router-link :to="{name: 'article-add'}">Add article</router-link>
             </a>
-        </div>
+<!--        </div>-->
 
         <div class="filters row">
             <div class="form-group col-sm-3">
