@@ -1,10 +1,20 @@
 <template id="article">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
+
+        <div class="logoutTitle">wellcome, {{loggedName}}!
+            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>
+            <!-- Modal Component -->
+            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout">
+                <!--                    <form @submit.stop.prevent="logout">-->
+                <!--                        <b-form-input type="text" placeholder="Enter your name" v-model="name"></b-form-input>-->
+                <!--                    </form>-->
+            </b-modal>
+        </div>
+
         <div class="actions">
             <a class="btn btn-default">
-                <router-link :to="{name: 'article-add'}"><span class="glyphicon glyphicon-plus"></span>Add article
-                </router-link>
+                <router-link :to="{name: 'article-add'}">Add article</router-link>
             </a>
         </div>
 
@@ -41,8 +51,8 @@
                 <th class='tdAlignLeft'>Authors</th>
                 <th class='tdAlignLeft'>Language</th>
                 <th class='tdAlignLeft'>Movement</th>
-                <th  class='tdAlignLeft' style="width:15%">Title</th>
-                <th  class='tdAlignLeft' style="width:15%">Заголовок</th>
+                <th class='tdAlignLeft' style="width:15%">Title</th>
+                <th class='tdAlignLeft' style="width:15%">Заголовок</th>
                 <th class='tdAlignLeft' data-field="createdAt" data-formatter="dateFormat">Created At</th>
                 <th class='tdAlignLeft'>Description</th>
                 <th class='tdAlignLeft'>URL</th>
@@ -54,8 +64,6 @@
             </thead>
             <tbody>
 
-            <!--            <tr v-for="country in filteredCountries">-->
-            <!--            <tr v-for="article in articles">-->
 
             <tr v-for="article in filteredArticles">
 
@@ -150,9 +158,10 @@
 </style>
 
 <script>
+
     import api from "./article-api";
     import moment from "moment";
-
+    import router from "./../../router";
     import "vue-scroll-table";
 
     export default {
@@ -166,28 +175,30 @@
                 response: [],
                 errors: [],
                 showResponse: false,
+                loggedInFlag: false,
+                loggedName: null,
             }
         },
         computed: {
             filteredArticles() {
                 return this.articles.filter((article) => {
                     return article.title.indexOf(this.searchKey) > -1
-                    // || article.date.indexOf(this.searchKey) > -1
-                    // || article.description.indexOf(this.searchKey) > -1
+// || article.date.indexOf(this.searchKey) > -1
+// || article.description.indexOf(this.searchKey) > -1
                 })
             }
         },
 
         methods: {
-            // loadArticles() {
-            //     api.getAll().then(response => {
-            //         this.articles = response.data;
-            //         console.log(response.data)
-            //     })
-            //         .catch(error => {
-            //             this.errors.push(error)
-            //         })
-            // },
+// loadArticles() {
+//     api.getAll().then(response => {
+//         this.articles = response.data;
+//         console.log(response.data)
+//     })
+//         .catch(error => {
+//             this.errors.push(error)
+//         })
+// },
 
             formatAuthor(article) {   //to delete?
                 let surname = '';
@@ -201,14 +212,25 @@
 
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
-            }
+            },
 
+            logout() {
+                this.$store.dispatch("logout", {}).then(result => {
+                    router.push('/login');
+                });
+            },
+
+            getLoggedIn() {
+                this.loggedInFlag = this.$store.getters.isLoggedIn;
+                this.loggedName = this.$store.getters.getUserName;
+            },
         },
         mounted() {
+            this.getLoggedIn();
 
-            // const routes = [
-            //     { path: '/panda', component: Panda }
-            // ];
+// const routes = [
+//     { path: '/panda', component: Panda }
+// ];
 
             api.getAll().then(response => {
                 this.articles = response.data;
@@ -225,6 +247,3 @@
         }
     }
 </script>
-
-<!--<style scoped>-->
-<!--</style>-->

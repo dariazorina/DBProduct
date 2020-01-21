@@ -33,5 +33,6 @@
     <include file="config/liquibase/changelog/00000000000027_add_unique_constr_country_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000028_add_unique_constr_movement_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000029_add_unique_constr_language_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000030_init_security.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
