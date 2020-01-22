@@ -1,33 +1,26 @@
 <template id="article">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-
-
-
         <div class="form-group row">
             <div class="col-2 col-form-label">
-                <p class="greetingsTitle">Wellcome, {{loggedName}}!
-                <b-btn v-if="loggedInFlag" size="sm" variant="btn btn-link"  v-b-modal.modal1>Logout</b-btn>
+                <p class="greetingsTitle">Welcome, {{loggedName}}!
+                    <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
+                    </button>
+                    <!--                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>-->
                 </p>
                 <!-- Modal Component -->
                 <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
             </div>
         </div>
+        <!--        <div class="logoutNameAndButton">welcome, {{loggedName}}!-->
+        <!--            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>-->
+        <!--            &lt;!&ndash; Modal Component &ndash;&gt;-->
+        <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
+        <!--        </div>-->
 
-
-
-
-<!--        <div class="logoutNameAndButton">wellcome, {{loggedName}}!-->
-<!--            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>-->
-<!--            &lt;!&ndash; Modal Component &ndash;&gt;-->
-<!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
-<!--        </div>-->
-
-<!--        <div class="actions">-->
-            <a class="btn btn-default">
-                <router-link :to="{name: 'article-add'}">Add article</router-link>
-            </a>
-<!--        </div>-->
+        <a class="btn btn-default">
+            <router-link :to="{name: 'article-add'}">Add article</router-link>
+        </a>
 
         <div class="filters row">
             <div class="form-group col-sm-3">
@@ -163,6 +156,8 @@
         </table>
     </div>
 </template>
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
 
 <style lang="scss">
     @import '../dbnm.css';
