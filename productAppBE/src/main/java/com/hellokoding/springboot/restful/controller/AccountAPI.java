@@ -33,8 +33,8 @@ import java.util.Optional;
  * REST controller for managing the current user's account.
  */
 @RestController
-@RequestMapping("/api")
-public class AccountResource {
+@RequestMapping("/api/v1/")
+public class AccountAPI {
 
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
@@ -42,7 +42,7 @@ public class AccountResource {
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+    private final Logger log = LoggerFactory.getLogger(AccountAPI.class);
 
     private final UserRepository userRepository;
 
@@ -52,7 +52,7 @@ public class AccountResource {
 
     private final PersistentTokenRepository persistentTokenRepository;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, PersistentTokenRepository persistentTokenRepository) {
+    public AccountAPI(UserRepository userRepository, UserService userService, MailService mailService, PersistentTokenRepository persistentTokenRepository) {
 
         this.userRepository = userRepository;
         this.userService = userService;

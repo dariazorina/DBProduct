@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="23012020-01">
+        <addColumn schemaName="public"
+                   tableName="t_article">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_country">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_event">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_hashtag">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_isource">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_language">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_link">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_movement">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_org">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_person">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+        <addColumn schemaName="public"
+                   tableName="t_scpaper">
+            <column name="miscellany" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

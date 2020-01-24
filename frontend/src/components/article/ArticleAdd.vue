@@ -1,7 +1,6 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
-
             <div class="form-group row">
                 <div class="col-2 col-form-label">
                     <p class="pageCreateTitle">Add New Article</p>
@@ -16,11 +15,34 @@
             <!--            <div class="unprotected" v-if="errorFlag">-->
             <!--                <h5>Error: {{errors}}</h5>-->
             <!--            </div>-->
-
             <!--       url="http://localhost:8080/api/v1/person"-->
             <!--            http://localhost:8081/article/add-->
-
             <!--            <form>-->
+
+            <div class="form-group row align-items-center">
+                <label for="add-url" class="col-1 col-form-label labelInCreation">URL</label>
+                <div class="col-4">
+                    <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label class="col-1 col-form-label labelInCreation">Language</label>
+                <div class="col-4">
+                    <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
+                        <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
+                    </b-form-select>
+                    <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="date-input" class="col-1 col-form-label labelInCreation">Date</label>
+                <div class="col-4">
+                    <input class="form-control" type="date" id="date-input" v-model="article.date">
+                </div>
+            </div>
+
             <div class="form-group row align-items-center">
                 <label class="col-1 col-form-label labelInCreation">Author</label>
                 <div class="col-4">
@@ -83,128 +105,79 @@
                 </div>
             </div>
 
-            <form>
+            <div class="form-group row align-items-center">
+                <label for="add-title" class="col-1 col-form-label labelInCreation">Title</label>
+                <div class="col-4">
+                    <input class="form-control" id="add-title" v-model="article.title"/>
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="add-title-rus" class="col-1 col-form-label labelInCreation">Заголовок статьи</label>
+                <div class="col-4">
+                    <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="add-descr" class="col-1 col-form-label labelInCreation">Description</label>
+                <div class="col-4">
+                    <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>
+                <div class="col-4">
+                    <div>
+                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
+                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+                    </div>
+                </div>
+            </div>
+
+            <!--                    <div class="form-group purple-border"> purple body always wish purple shadow, mi-mi-mi-->
+            <div class="form-group green-border-focus">
                 <div class="form-group row align-items-center">
-
-                    <!--                    <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>-->
-                    <!--                    <div class="col-4">-->
-
-                    <!--                        <input type="text" id="add-hashtag" v-model="hashTag" autocomplete="off" name="hashTag" value=""-->
-                    <!--                               @input="loadData()">-->
-
-                    <!--                        <ul class="list-group">-->
-                    <!--                            <li v-for="hashtag in hashTags"-->
-                    <!--                                class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--                                {{ hashtag.content }}-->
-                    <!--                                <span class="close" @click="deleteHashTag">&times;</span>-->
-                    <!--                            </li>-->
-                    <!--                        </ul>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
-
-
-                    <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>
+                    <label for="add-misc" class="col-1 col-form-label labelInCreation">Miscellany</label>
                     <div class="col-4">
-                        <div>
-                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
-                                       placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
-                        </div>
+                        <textarea class="form-control" id="add-misc" rows="6" v-model="article.miscellany"
+                                  background-color="palegreen" required/>
                     </div>
                 </div>
-                <div class="form-group row align-items-center">
+            </div>
 
-                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>
-                    <div class="col-4">
-                        <div>
-                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
-                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
-                        </div>
-                    </div>
 
+            <!--                <div class="form-group row align-items-center">-->
+            <!--                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>-->
+            <!--                    <div class="col-4">-->
+            <!--                        <div>-->
+            <!--                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"-->
+            <!--                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+
+            <div class="form-group row align-items-center">
+                <label class="col-1 col-form-label labelInCreation">Movement</label>
+                <div class="col-4">
+                    <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">
+                        <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>
+                    </b-form-select>
+                    <!--                    <div class="mb-3">SelEcted: <strong>{{ selectedM }}</strong></div>-->
                 </div>
-
-                <!--                            <div class="row col-md-6">-->
-                <!--                                <div class="col-md-6 mb-3">-->
-                <!--                                    <label for="firstName">First name</label>-->
-                <!--                                    <input type="text" class="form-control" name="firstName" placeholder="" value="" required>-->
-                <!--                                    <span class="text-danger" v-if="validationErrors.firstName"-->
-                <!--                                          v-text="validationErrors.firstName"></span>-->
-                <!--                                </div>-->
-                <!--                                <div class="col-md-6 mb-3">-->
-                <!--                                    <label for="lastName">Last name</label>-->
-                <!--                                    <input type="text" class="form-control" name="lastName" placeholder="" value="" required>-->
-                <!--                                    <span class="text-danger" v-if="validationErrors.lastName"-->
-                <!--                                          v-text="validationErrors.lastName"></span>-->
-                <!--                                </div>-->
-                <!--                            </div>-->
+            </div>
 
 
-                <div class="form-group row align-items-center">
-                    <label for="add-title" class="col-1 col-form-label labelInCreation">Title</label>
-                    <div class="col-4">
-                        <input class="form-control" id="add-title" v-model="article.title"/>
-                    </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-3">
+                    <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
+                    <a class="btn btn-default">
+                        <router-link to="/article">Cancel</router-link>
+                    </a>
                 </div>
-
-                <div class="form-group row align-items-center">
-                    <label for="add-title-rus" class="col-1 col-form-label labelInCreation">Заголовок статьи</label>
-                    <div class="col-4">
-                        <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
-                    </div>
-                </div>
-
-                <div class="form-group row align-items-center">
-                    <label for="date-input" class="col-1 col-form-label labelInCreation">Date</label>
-                    <div class="col-4">
-                        <input class="form-control" type="date" id="date-input" v-model="article.date">
-                    </div>
-                </div>
-
-                <div class="form-group row align-items-center">
-                    <label class="col-1 col-form-label labelInCreation">Language</label>
-                    <div class="col-4">
-                        <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
-                            <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
-                        </b-form-select>
-                        <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
-                    </div>
-                </div>
-
-                <div class="form-group row align-items-center">
-                    <label class="col-1 col-form-label labelInCreation">Movement</label>
-                    <div class="col-4">
-                        <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">
-                            <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>
-                        </b-form-select>
-                        <!--                    <div class="mb-3">SelEcted: <strong>{{ selectedM }}</strong></div>-->
-                    </div>
-                </div>
-
-                <div class="form-group row align-items-center">
-                    <label for="add-descr" class="col-1 col-form-label labelInCreation">Description</label>
-                    <div class="col-4">
-                        <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
-                    </div>
-                </div>
-
-                <div class="form-group row align-items-center">
-                    <label for="add-url" class="col-1 col-form-label labelInCreation">URL</label>
-                    <div class="col-4">
-                        <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="offset-sm-2 col-sm-3">
-
-                        <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
-                        <a class="btn btn-default">
-                            <router-link to="/article">Cancel</router-link>
-                        </a>
-                    </div>
-                </div>
-
-            </form>
+            </div>
+            <!--            </form>-->
         </div>
     </v-app>
 </template>
@@ -331,40 +304,59 @@
                 return re.test(code);
             },
 
+            // formValidate() {  //all fields are required
+            //     this.addStatus('add-title', (!this.article.title));
+            //     if (this.hasError) {
+            //     } else {
+            //         this.addStatus('add-title-rus', (!this.article.titleRus));
+            //         if (this.hasError) {
+            //         } else {
+            //             this.addStatus('date-input', (!(this.validDate(this.article.date))));
+            //             if (this.hasError) {
+            //             } else {
+            //                 this.addStatus('language-selection', (!this.selectedL));
+            //                 if (this.hasError) {
+            //                 } else {
+            //                     this.addStatus('movement-selection', (!this.selectedM));
+            //                     if (this.hasError) {
+            //                     } else {
+            //                         this.addStatus('add-descr', (!this.article.description));
+            //                         if (this.hasError) {
+            //                         } else {
+            //                             this.addStatus('add-url', (!this.article.url));
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     if (this.hasError) console.log('ERROROROR----------------------------');
+            //     return !this.hasError;
+            // },
+
             formValidate() {
-                this.addStatus('add-title', (!this.article.title));
+                this.addStatus('add-url', (!this.article.url));
                 if (this.hasError) {
                 } else {
-                    this.addStatus('add-title-rus', (!this.article.titleRus));
+                    this.addStatus('language-selection', (!this.selectedL));
                     if (this.hasError) {
                     } else {
                         this.addStatus('date-input', (!(this.validDate(this.article.date))));
-                        if (this.hasError) {
-                        } else {
-                            this.addStatus('language-selection', (!this.selectedL));
-                            if (this.hasError) {
-                            } else {
-                                this.addStatus('movement-selection', (!this.selectedM));
-                                if (this.hasError) {
-                                } else {
-                                    this.addStatus('add-descr', (!this.article.description));
-                                    if (this.hasError) {
-                                    } else {
-                                        this.addStatus('add-url', (!this.article.url));
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
-                if (this.hasError) console.log('ERROROROR----------------------------');
+                if (this.hasError)
+                    console.log('ERROROROR----------------------------');
                 return !this.hasError;
             },
 
             createArticle() {
+                // this.article.movement = {
+                //     "id": this.selectedM
+                // };
                 this.article.movement = {
-                    "id": this.selectedM
+                    "id": 1
                 };
+
                 this.article.language = {
                     "id": this.selectedL
                 };
@@ -373,11 +365,11 @@
 
                 // this.article.hashtagList = this.tags;
 
-                for (let i = 0; i < this.links.length; i++) {
-                    this.article.linkList[i] = {
-                        "content": this.links[i]
-                    };
-                }
+                // for (let i = 0; i < this.links.length; i++) {
+                //     this.article.linkList[i] = {
+                //         "content": this.links[i]
+                //     };
+                // }
 
                 for (let i = 0; i < this.tags.length; i++) {
                     this.article.hashtagList[i] = {

@@ -47,59 +47,61 @@
         <!--                >-->
 
 
-        <table class="table">
+        <table class="table tablePadding">
             <thead>
             <!--                <template slot="thead">-->
             <tr>
-                <th class='tdAlignLeft'>Id</th>
-                <th class='tdAlignLeft'>Authors</th>
-                <th class='tdAlignLeft'>Language</th>
-                <th class='tdAlignLeft'>Movement</th>
-                <th class='tdAlignLeft' style="width:15%">Title</th>
-                <th class='tdAlignLeft' style="width:15%">Заголовок</th>
-                <th class='tdAlignLeft' data-field="createdAt" data-formatter="dateFormat">Created At</th>
-                <th class='tdAlignLeft'>Description</th>
-                <th class='tdAlignLeft'>URL</th>
-                <!--                <th style="width:10%">Links</th>-->
-                <th class='tdAlignLeft'>Hashtags</th>
+                <th class='tdAlignCenter'>Id</th>
+                <th class='tdAlignCenter' data-field="createdAt" data-formatter="dateFormat">Created At</th>
+                <th class='tdAlignCenter'>Language</th>
+                <th class='tdAlignCenter'>Hashtags</th>
+                <th class='tdAlignCenter'>Authors</th>
 
-                <th style="width:10%" class="col-sm-2">Actions</th>
+<!--                <th class='tdAlignLeft'>Movement</th>-->
+                <th class='tdAlignCenter' style="width:15%">Заголовок</th>
+<!--                <th class='tdAlignLeft' style="width:15%">Title</th>-->
+                <th class='tdAlignCenter'>URL</th>
+
+                <th class='tdAlignCenter'>Description</th>
+                <th class='tdAlignLeft'>Miscellany</th>
+
+                <!--                <th style="width:10%">Links</th>-->
+
+
+                <th style="width:10%" class="tdAlignCenter">Actions</th>
             </tr>
             </thead>
             <tbody>
 
 
-            <tr v-for="article in filteredArticles">
+            <tr v-for="article in articles">
+<!--            <tr v-for="article in filteredArticles">-->
 
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <td class='tdAlignLeft'>{{article.id }}</td>
-                <td class='tdAlignLeft'>
-                    <div v-for="author in article.authorList">{{author.surname}}</div>
-                </td>
-                <td class='tdAlignLeft'>{{article.language.name}}</td>
-                <td class='tdAlignLeft'>{{article.movement.name}}</td>
-                <td class='tdAlignLeft'><a>
-                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}
-                    </router-link>
-                </a></td>
-                <td class='tdAlignLeft'>{{article.titleRus }}</td>
+                <td class='tdAlignCenter'>{{article.id }}</td>
                 <td class='tdAlignLeft'>{{ formatDate(article.date) }}</td>
-                <td class='tdAlignLeft'>{{article.description }}</td>
-                <td class='tdAlignLeft'>{{article.url }}</td>
-                <!--                <td>-->
-                <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
-                <!--                </td>-->
-                <td class='tdAlignLeft'>
+                <td class='tdAlignLeft'>{{article.language.name}}</td>
+                <td  style="padding-left:15px" class='tdAlignLeft'>
                     <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
                 </td>
+                <td style="padding-left:15px" class='tdAlignLeft'>
+                    <div v-for="author in article.authorList">{{author.surname}}</div>
+                </td>
+
+<!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
+<!--                <td class='tdAlignLeft'><a>-->
+<!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
+<!--                    </router-link>-->
+<!--                </a></td>-->
+                <td class='tdAlignLeft'>{{article.titleRus }}</td>
+                <td class='tdAlignLeft'>{{article.url }}</td>
+                <td class='tdAlignLeft'>{{article.description }}</td>
+                <td class='tdAlignLeft'>{{article.miscellany }}</td>
 
                 <!--                <td>-->
-                <!--                    <a>-->
-                <!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
-                <!--                        </router-link>-->
-                <!--                    </a>-->
+                <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
                 <!--                </td>-->
 
 
@@ -124,33 +126,6 @@
 
 
                 </td>
-
-
-                <!--                <v-btn color="error" fab small dark-->
-                <!--                       @click="yoursFunc()">-->
-                <!--                    <v-icon>list</v-icon>-->
-                <!--                </v-btn>-->
-
-                <!--                <v-btn to="/panda">Kung Fu</v-btn>-->
-
-
-                <!--                <template v-slot:item.action="{ item }">-->
-                <!--                    <v-icon-->
-                <!--                            small-->
-                <!--                            class="mr-2"-->
-                <!--                            @click="editItem(item)"-->
-                <!--                    >-->
-                <!--                        edit-->
-                <!--                    </v-icon>-->
-                <!--                    <v-icon-->
-                <!--                            small-->
-                <!--                            @click="deleteItem(item)"-->
-                <!--                    >-->
-                <!--                        delete-->
-                <!--                    </v-icon>-->
-                <!--                </template>-->
-
-
             </tr>
             </tbody>
         </table>
@@ -186,13 +161,14 @@
             }
         },
         computed: {
-            filteredArticles() {
-                return this.articles.filter((article) => {
-                    return article.title.indexOf(this.searchKey) > -1
+           // filteredArticles() {
+                //return this.articles.filter((article) => {
+                   // return article.title.indexOf(this.searchKey) > -1
+
 // || article.date.indexOf(this.searchKey) > -1
 // || article.description.indexOf(this.searchKey) > -1
-                })
-            }
+               // })
+           // }
         },
 
         methods: {
@@ -206,15 +182,15 @@
 //         })
 // },
 
-            formatAuthor(article) {   //to delete?
-                let surname = '';
-
-                for (let i = 0; i < article.authorList.length; i++) {
-                    surname = surname + article.authorList[i].surname;
-                    surname = surname + '\\10';
-                }
-                return surname;
-            },
+            // formatAuthor(article) {   //to delete?
+            //     let surname = '';
+            //
+            //     for (let i = 0; i < article.authorList.length; i++) {
+            //         surname = surname + article.authorList[i].surname;
+            //         surname = surname + '\\10';
+            //     }
+            //     return surname;
+            // },
 
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');

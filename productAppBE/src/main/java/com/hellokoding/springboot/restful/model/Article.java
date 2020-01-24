@@ -57,4 +57,5 @@ public class Article {
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
     private List<HashTag> hashtagList;
 
+    private String miscellany;
 }

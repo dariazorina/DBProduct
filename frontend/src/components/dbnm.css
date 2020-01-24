@@ -26,7 +26,23 @@
     align: left;
 }
 
-.tdAlignLeft { text-align: left; }
+.tablePadding {
+    padding: 50px 50px 50px 50px;
+}
+
+.tdAlignLeft {
+    text-align: left;
+    font-size: smaller;
+    /*padding: 50px 50px 50px 50px;*/
+    /*padding: 30px;*/
+    padding-left: 30px;
+    /*margin-left: 20p  x;*/
+}
+
+.tdAlignCenter {
+    text-align: center;
+    font-size: smaller;
+}
 
 .leftAlignForDetails {
     /*margin-bottom: 0px;*/
@@ -136,3 +152,19 @@
     line-height: .5;
     border-radius: .2rem;
 }
+
+/***********************/
+.purple-border textarea {
+    border: 1px solid #ba68c8;
+}
+.purple-border .form-control:focus {
+    border: 1px solid #ba68c8;
+    box-shadow: 0 0 0 0.2rem rgba(186, 104, 200, .25);
+}
+
+.green-border-focus .form-control:focus {
+    border: 1px solid #8bc34a;
+    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, .25);
+}
+/***********************`
+*/
