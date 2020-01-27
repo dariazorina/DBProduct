@@ -27,21 +27,25 @@
 }
 
 .tablePadding {
-    padding: 50px 50px 50px 50px;
+    /*background-color: #F6C6CE;*/
 }
 
-.tdAlignLeft {
+.tdAlignCell {
     text-align: left;
     font-size: smaller;
     /*padding: 50px 50px 50px 50px;*/
     /*padding: 30px;*/
-    padding-left: 30px;
+    /*padding-left: 30px;*/
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+
     /*margin-left: 20p  x;*/
 }
 
-.tdAlignCenter {
-    text-align: center;
+.tdTitle {
+    text-align: left;
     font-size: smaller;
+    padding-left: 10px;
 }
 
 .leftAlignForDetails {
@@ -168,3 +172,59 @@
 }
 /***********************`
 */
+
+
+table.redTable {
+    border: 1px solid #1C6EA4;
+    background-color: #EEEEEE;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+table.redTable td, table.redTable th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+    max-height: 50px;
+}
+table.redTable tbody td {
+    font-size: 13px;
+    max-height: 50px;
+}
+table.redTable tr:nth-child(even) {
+    background: #D0E4F5;
+    max-height: 50px;
+}
+table.redTable thead {
+    background: #0074D9;
+    /*background: #1C6EA4;*/
+}
+table.redTable thead th {
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    border-left: 2px solid #D0E4F5;
+}
+table.redTable thead th:first-child {
+    border-left: none;
+}
+
+table.redTable tfoot {
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background: #D0E4F5;
+}
+table.redTable tfoot td {
+    font-size: 14px;
+}
+table.redTable tfoot .links {
+    text-align: right;
+}
+table.redTable tfoot .links a{
+    display: inline-block;
+    background: #1C6EA4;
+    color: #FFFFFF;
+    padding: 2px 8px;
+    border-radius: 5px;
+}

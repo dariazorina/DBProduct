@@ -47,58 +47,75 @@
         <!--                >-->
 
 
-        <table class="table tablePadding">
+        <table class="redTable">
+            <!--        <table class="table">-->
             <thead>
             <!--                <template slot="thead">-->
             <tr>
-                <th class='tdAlignCenter'>Id</th>
-                <th class='tdAlignCenter' data-field="createdAt" data-formatter="dateFormat">Created At</th>
-                <th class='tdAlignCenter'>Language</th>
-                <th class='tdAlignCenter'>Hashtags</th>
-                <th class='tdAlignCenter'>Authors</th>
+                <th class='tdTitle'>Id</th>
+                <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Date</th>
+                <th class='tdTitle'>Language</th>
+                <th class='tdTitle'>Hashtags</th>
+                <th class='tdTitle'>Authors</th>
 
-<!--                <th class='tdAlignLeft'>Movement</th>-->
-                <th class='tdAlignCenter' style="width:15%">Заголовок</th>
-<!--                <th class='tdAlignLeft' style="width:15%">Title</th>-->
-                <th class='tdAlignCenter'>URL</th>
+                <!--                <th class='tdAlignCell'>Movement</th>-->
+                <th class='tdTitle' style="width:15%">Заголовок</th>
+                <!--                <th class='tdAlignCell' style="width:15%">Title</th>-->
+                <th class='tdTitle'>URL</th>
 
-                <th class='tdAlignCenter'>Description</th>
-                <th class='tdAlignLeft'>Miscellany</th>
-
+                <th class='tdTitle'>Description</th>
+                <th class='tdTitle'>Miscellany</th>
                 <!--                <th style="width:10%">Links</th>-->
 
-
-                <th style="width:10%" class="tdAlignCenter">Actions</th>
+                <th style="width:10%" class="tdTitle">Actions</th>
             </tr>
             </thead>
             <tbody>
 
 
             <tr v-for="article in articles">
-<!--            <tr v-for="article in filteredArticles">-->
+                <!--            <tr v-for="article in filteredArticles">-->
 
                 <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <td class='tdAlignCenter'>{{article.id }}</td>
-                <td class='tdAlignLeft'>{{ formatDate(article.date) }}</td>
-                <td class='tdAlignLeft'>{{article.language.name}}</td>
-                <td  style="padding-left:15px" class='tdAlignLeft'>
-                    <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
+                <td>
+                    <div class="ListCellStyleHot"><span id=t>{{article.id }}</span></div>
                 </td>
-                <td style="padding-left:15px" class='tdAlignLeft'>
-                    <div v-for="author in article.authorList">{{author.surname}}</div>
+                <td>
+                    <div class="ListCellStyle">{{ formatDate(article.date) }}</div>
+                </td>
+                <td>
+                    <div class="ListCellStyleHot">{{article.language.name}}</div>
+                </td>
+                <td>
+                    <div class="ListCellStyle"> <!--bgcolor="#7fffd4"-->
+                        <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ListCellStyleHot">
+                        <div v-for="author in article.authorList">{{author.surname}}</div>
+                    </div>
                 </td>
 
-<!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
-<!--                <td class='tdAlignLeft'><a>-->
-<!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
-<!--                    </router-link>-->
-<!--                </a></td>-->
-                <td class='tdAlignLeft'>{{article.titleRus }}</td>
-                <td class='tdAlignLeft'>{{article.url }}</td>
-                <td class='tdAlignLeft'>{{article.description }}</td>
-                <td class='tdAlignLeft'>{{article.miscellany }}</td>
+                <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
+                <!--                <td class='tdAlignLeft'><a>-->
+                <!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
+                <!--                    </router-link>-->
+                <!--                </a></td>-->
+                <td>
+                    <div class="ListCellStyle">{{article.titleRus }}</div>
+                </td>
+                <td>
+                    <div class="ListCellStyleHot">{{article.url }}</div>
+                </td>
+                <td>
+                    <div class="ListCellStyle"> {{article.description }}</div>
+                </td> <!--todo dots? if cut-->
+                <td>
+                    <div class="ListCellStyleHot">{{article.miscellany }}</div>
+                </td>
 
                 <!--                <td>-->
                 <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
@@ -106,6 +123,7 @@
 
 
                 <td>
+                    <!--                    <div class="ListCellStyleForButton">-->
                     <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
                         </router-link>
@@ -114,6 +132,7 @@
                         <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
                         </router-link>
                     </a>
+                    <!--                    </div>-->
 
                     <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
                     <!--                           light small right bottom fab-->
@@ -136,6 +155,51 @@
 
 <style lang="scss">
     @import '../dbnm.css';
+</style>
+
+<style>
+
+    .ListCellStyle {
+        /*padding: 5px; !* Поля вокруг текста *!*/
+        text-align: left;
+        font-size: small;
+        /*height: 25px;*/
+        max-height: 85px;
+        overflow: hidden;
+        /*border: solid 1px;*/
+        /*border-color: #eceaea;*/
+        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/
+
+    }
+
+    .ListCellStyleHot {
+        /*padding: 5px; !* Поля вокруг текста *!*/
+        text-align: left;
+        font-size: small;
+        max-height: 85px;
+        /*height: 25px;*/
+        overflow: hidden;
+        /*border: solid 1px;*/
+        /*border-color: #eceaea;*/
+        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/
+        /*background-color: #eceaea;*/
+
+    }
+
+    .ListCellStyleForButton {
+        border: solid 1px;
+        border-color: #eceaea;
+        /*height: 85px;*/
+        overflow: hidden;
+
+    }
+
+    /*.layer12 {*/
+    /*    background: #fc3; !* Цвет фона *!*/
+    /*    border: 2px solid black; !* Параметры рамки *!*/
+    /*    padding: 5px; !* Поля вокруг текста *!*/
+    /*}*/
+
 </style>
 
 <script>
