@@ -24,7 +24,8 @@
 
         <div class="filters row">
             <div class="form-group col-sm-3">
-                <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
+                <input placeholder="Search disable temporarily" v-model="searchKey" class="form-control"
+                       id="search-element" requred/>
             </div>
         </div>
 
@@ -60,8 +61,8 @@
 
                 <!--                <th class='tdAlignCell'>Movement</th>-->
                 <th class='tdTitle' style="width:15%">Заголовок</th>
-                <!--                <th class='tdAlignCell' style="width:15%">Title</th>-->
-                <th class='tdTitle'>URL</th>
+                <th class='tdAlignCell' style="width:15%">Title</th>
+                <!--                <th class='tdTitle'>URL</th>-->
 
                 <th class='tdTitle'>Description</th>
                 <th class='tdTitle'>Miscellany</th>
@@ -108,7 +109,7 @@
                     <div class="ListCellStyle">{{article.titleRus }}</div>
                 </td>
                 <td>
-                    <div class="ListCellStyleHot">{{article.url }}</div>
+                    <div class="ListCellStyleHot">{{article.title }}</div>
                 </td>
                 <td>
                     <div class="ListCellStyle"> {{article.description }}</div>
@@ -225,14 +226,14 @@
             }
         },
         computed: {
-           // filteredArticles() {
-                //return this.articles.filter((article) => {
-                   // return article.title.indexOf(this.searchKey) > -1
+            // filteredArticles() {
+            //return this.articles.filter((article) => {
+            // return article.title.indexOf(this.searchKey) > -1
 
 // || article.date.indexOf(this.searchKey) > -1
 // || article.description.indexOf(this.searchKey) > -1
-               // })
-           // }
+            // })
+            // }
         },
 
         methods: {

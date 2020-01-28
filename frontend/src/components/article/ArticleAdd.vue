@@ -19,166 +19,152 @@
             <!--            http://localhost:8081/article/add-->
             <!--            <form>-->
 
-            <div class="form-group row align-items-center">
-                <label for="add-url" class="col-1 col-form-label labelInCreation">URL</label>
-                <div class="col-4">
-                    <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
+            <form class="formCreation">
+                <div class="row align-items-center">
+                    <label for="add-url" class="col-1 col-form-label"><b>URL*</b></label>
+                    <div class="col-4">
+                        <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row align-items-center">
-                <label class="col-1 col-form-label labelInCreation">Language</label>
-                <div class="col-4">
-                    <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
-                        <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
-                    </b-form-select>
-                    <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                <div class="row align-items-center">
+                    <label class="col-1 col-form-label"><b>Language*</b></label>
+                    <div class="col-4">
+                        <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
+                            <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
+                        </b-form-select>
+                        <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label for="date-input" class="col-1 col-form-label labelInCreation">Date</label>
-                <div class="col-4">
-                    <input class="form-control" type="date" id="date-input" v-model="article.date">
+                <div class="row align-items-center">
+                    <label for="date-input" class="col-1 col-form-label"><b>Date*</b></label>
+                    <div class="col-4">
+                        <input class="form-control" type="date" id="date-input" v-model="article.date">
+                    </div>
                 </div>
-            </div>
+            </form>
 
-            <div class="form-group row align-items-center">
-                <label class="col-1 col-form-label labelInCreation">Author</label>
-                <div class="col-4">
-                    <ul class="list-group" order="1">
+            <form class="authorsFormCreation">
+                <div class="row align-items-center authorsPadding">
+                    <label for="author-autocomplete" class="col-1 col-form-label"> </label>
+                    <div class="col-4">
+                        <v-card-text>
+                            <v-autocomplete
+
+                                    id="author-autocomplete"
+                                    label="Authors"
+
+                                    :items="items"
+                                    :loading="isLoading"
+                                    :search-input.sync="search"
+                                    color="green"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selected"
+
+                                    @change="addAuthor(selected)"
+                                    @focus="testFocus(selected)"
+                                    item-text="surname"
+                                    item-value="id"
+                                    placeholder="Start typing to find Author"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+
+                    <!--                    <label class="col-1 col-form-label labelInCreation">Author</label>-->
+                    <!--                    <div class="">-->
+                    <ul class="list-group col-sm-5" order="1">
                         <li v-for="author in this.article.authorList"
                             class="list-group-item d-flex justify-content-between align-items-center">
                             {{ author.surname }}
                             <span class="close" @click="deleteAuthor(author)">&times;</span>
                         </li>
                     </ul>
+                    <!--                    </div>-->
+
+
                 </div>
-            </div>
-            <div>
-
-                <!--                anchor = "this.authorListForAutocomplete"-->
-                <!--                label = "this.authorListForAutocomplete"-->
-
-                <!--                filterByAnchor (Boolean: true)???-->
-
-                <!--                <autocomplete class="mb-3" order="0" id="autocomplete-author"-->
-                <!--                              anchor="surname"-->
-                <!--                              label="writer"-->
-                <!--                              url="../api/v1/person"-->
-                <!--                              placeholder="Type author name.."-->
-                <!--                              :min="3"-->
-                <!--                              :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"-->
-                <!--                              :on-select="addAuthor">-->
-                <!--                </autocomplete>-->
-
-            </div>
-            <!--            </form>-->
-
-            <div class="form-group row align-items-center">
-                <label for="author-autocomplete" class="col-1 col-form-label labelInCreation"> </label>
-                <div class="col-4">
-                    <v-card-text>
-                        <v-autocomplete
-
-                                id="author-autocomplete"
-                                label="Authors"
-
-                                :items="items"
-                                :loading="isLoading"
-                                :search-input.sync="search"
-                                color="green"
-                                hide-no-data
-                                hide-selected
-
-                                v-model="selected"
-
-                                @change="addAuthor(selected)"
-                                @focus="testFocus(selected)"
-                                item-text="surname"
-                                item-value="id"
-                                placeholder="Start typing to find Author"
-                                prepend-icon="mdi-database-search"
-                                return-object
-                        ></v-autocomplete>
-                    </v-card-text>
-                </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label for="add-title" class="col-1 col-form-label labelInCreation">Title</label>
-                <div class="col-4">
-                    <input class="form-control" id="add-title" v-model="article.title"/>
-                </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label for="add-title-rus" class="col-1 col-form-label labelInCreation">Заголовок статьи</label>
-                <div class="col-4">
-                    <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
-                </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label for="add-descr" class="col-1 col-form-label labelInCreation">Description</label>
-                <div class="col-4">
-                    <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
-                </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label for="add-hashtag" class="col-1 col-form-label labelInCreation">Hashtag</label>
-                <div class="col-4">
-                    <div>
-                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
-                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+            </form>
+            <form class="formCreation">
+                <div class="row align-items-center">
+                    <label for="add-title" class="col-1 col-form-label">Title</label>
+                    <div class="col-4">
+                        <input class="form-control" id="add-title" v-model="article.title"/>
                     </div>
                 </div>
-            </div>
 
-            <!--                    <div class="form-group purple-border"> purple body always wish purple shadow, mi-mi-mi-->
-            <div class="form-group green-border-focus">
-                <div class="form-group row align-items-center">
-                    <label for="add-misc" class="col-1 col-form-label labelInCreation">Miscellany</label>
+                <div class="row align-items-center">
+                    <label for="add-title-rus" class="col-1 col-form-label">Заголовок статьи</label>
                     <div class="col-4">
+                        <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <label for="add-descr" class="col-1 col-form-label">Description</label>
+                    <div class="col-4">
+                        <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <label for="add-hashtag" class="col-1 col-form-label">Hashtag</label>
+                    <div class="col-4">
+                        <div>
+                            <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
+                                       placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                    <div class="form-group purple-border"> purple body always wish purple shadow, mi-mi-mi-->
+                <div class="form-group green-border-focus">
+                    <div class="row align-items-center">
+                        <label for="add-misc" class="col-1 col-form-label">Miscellany</label>
+                        <div class="col-4">
                         <textarea class="form-control" id="add-misc" rows="6" v-model="article.miscellany"
                                   background-color="palegreen" required/>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <!--                <div class="form-group row align-items-center">-->
-            <!--                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>-->
-            <!--                    <div class="col-4">-->
-            <!--                        <div>-->
-            <!--                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"-->
-            <!--                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
+                <!--                <div class="form-group row align-items-center">-->
+                <!--                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>-->
+                <!--                    <div class="col-4">-->
+                <!--                        <div>-->
+                <!--                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"-->
+                <!--                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
-            <div class="form-group row align-items-center">
-                <label class="col-1 col-form-label labelInCreation">Movement</label>
-                <div class="col-4">
-                    <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">
-                        <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>
-                    </b-form-select>
-                    <!--                    <div class="mb-3">SelEcted: <strong>{{ selectedM }}</strong></div>-->
+
+                <!--                <div class="form-group row align-items-center">-->
+                <!--                    <label class="col-1 col-form-label labelInCreation">Movement</label>-->
+                <!--                    <div class="col-4">-->
+                <!--                        <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">-->
+                <!--                            <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>-->
+                <!--                        </b-form-select>-->
+                <!--                        &lt;!&ndash;                    <div class="mb-3">SelEcted: <strong>{{ selectedM }}</strong></div>&ndash;&gt;-->
+                <!--                    </div>-->
+                <!--                </div>-->
+
+
+                <div class="form-group row">
+                    <div class="offset-sm-3 col-sm-3">
+                        <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
+                        <a class="btn btn-default">
+                            <router-link to="/article">Cancel</router-link>
+                        </a>
+                    </div>
                 </div>
+            </form>
             </div>
-
-
-            <div class="form-group row">
-                <div class="offset-sm-2 col-sm-3">
-                    <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
-                    <a class="btn btn-default">
-                        <router-link to="/article">Cancel</router-link>
-                    </a>
-                </div>
-            </div>
-            <!--            </form>-->
-        </div>
     </v-app>
 </template>
 
@@ -352,7 +338,8 @@
             createArticle() {
                 // this.article.movement = {
                 //     "id": this.selectedM
-                // };
+                // };todo
+
                 this.article.movement = {
                     "id": 1
                 };
@@ -408,13 +395,13 @@
                 console.log(response.data)
             });
 
-            api.getAllMovements().then(response => {
-                this.allMovements = response.data;
-                console.log(response.data)
-            }).catch(error => {
-                //this.errors.push(error)
-                console.log(error);
-            })
+            // api.getAllMovements().then(response => {
+            //     this.allMovements = response.data;
+            //     console.log(response.data)
+            // }).catch(error => {
+            //     //this.errors.push(error)
+            //     console.log(error);
+            // })
         },
         computed: {
             // fields() {

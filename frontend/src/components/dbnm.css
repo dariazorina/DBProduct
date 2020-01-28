@@ -69,10 +69,19 @@
     margin-left: 25px;
 }
 
-.labelInCreation{
+.formCreation{
     vertical-align: text-bottom;
     text-align: left;
-    margin-left: 110px;
+    margin-left: 70px;
+    /*margin-right: 40px;*/
+    font-size: small;
+}
+
+.authorsFormCreation{
+    padding-left: 20px;
+    padding-top: 0px;
+    /*margin-left: 0px;*/
+    font-size: small;
 }
 
 /*Titles in pages of different content*/

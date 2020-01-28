@@ -8,6 +8,7 @@
             </div>
         </div>
 
+<!--        ///////////////////////////////////////////////////////////-->
         <div class="row">
             <div class="col-sm-2" >
                 <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
@@ -16,34 +17,34 @@
             <div class="col-sm-10" >
                 <span class="float-left"> {{person.surname}}</span></div>
         </div>
-
         <div class="row">
-            <div class="col-sm-2" style="background-color:lavender;">
+            <div class="col-sm-2 back1">
+                <div class="cellTitle"><span class="float-left">Фамилия</span></div>
+            </div>
+            <div class="col-sm-10 back1"><span
+                    class="float-left"> {{ person.surnameRus }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="cellTitle"><span class="float-left">Surname, eng</span></div>
+            </div>
+            <div class="col-sm-10"><span
+                    class="float-left"> {{person.surnameEng}}</span>
+            </div>
+        </div>
+
+
+<!--//////////////////////////////////////////////////////////////////-->
+        <div class="row">
+            <div class="col-sm-2 back1">
                 <div class="cellTitle">
                     <span class="float-left">Name, original</span>
                 </div>
             </div>
-            <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
+            <div class="col-sm-10 back1"><span class="float-left">
                 {{person.name}}
                 </span>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-2">
-                <div class="cellTitle">
-                    <span class="float-left">Patronymic</span></div>
-            </div>
-            <div class="col-sm-10"><span class="float-left"> {{person.patronymic}}</span>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-2" style="background-color:lavender;">
-                <div class="cellTitle"><span class="float-left">Фамилия</span></div>
-            </div>
-            <div class="col-sm-10" style="background-color:lavender;"><span
-                    class="float-left"> {{ person.surnameRus }}</span>
             </div>
         </div>
 
@@ -57,30 +58,73 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-2" style="background-color:lavender;">
-                <div class="cellTitle"><span class="float-left">Surname, eng</span></div>
+            <div class="col-sm-2 back1">
+                <div class="cellTitle"><span class="float-left">Name, eng</span></div>
             </div>
-            <div class="col-sm-10" style="background-color:lavender;"><span
-                    class="float-left"> {{person.surnameEng}}</span>
+            <div class="col-sm-10 back1"><span
+                    class="float-left"> {{person.nameEng}}</span>
+            </div>
+        </div>
+
+<!--        //////////////////////////////////////////////////////////////////////-->
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="cellTitle">
+                    <span class="float-left">Patronymic</span></div>
+            </div>
+            <div class="col-sm-10"><span class="float-left"> {{person.patronymic}}</span>
+            </div>
+        </div>
+
+
+<!--/////////////////////////////////////////////////////////////////////////////////////////////-->
+
+        <div class="row">
+            <div class="col-sm-2 back1">
+                <div class="cellTitle"><span class="float-left">Country</span></div>
+            </div>
+            <div class="col-sm-10 back1"><span class="float-left"> {{person.country.name}} </span>
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-2" >
-                <div class="cellTitle"><span class="float-left">Name, eng</span></div>
+                <div class="cellTitle"><span class="float-left">Settlement</span></div>
             </div>
-            <div class="col-sm-10" ><span
-                    class="float-left"> {{person.nameEng}}</span>
+            <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>
             </div>
         </div>
 
+<!--        ///////////////////////////////////////////////////////////////////-->
+
+
         <div class="row">
-            <div class="col-sm-2" style="background-color:lavender;">
+            <div class="col-sm-2 back1">
                 <div class="cellTitle"><span class="float-left">Occupation</span></div>
             </div>
 
-            <div class="col-sm-10" style="background-color:lavender;"> <span class="float-left">
+            <div class="col-sm-10 back1"> <span class="float-left">
                 {{person.occupation}} </span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-2" >
+                <div class="cellTitle"><span class="float-left">Organisation</span></div>
+            </div>
+            <div class="col-sm-10"><span class="float-left"> {{person.country.name}} </span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-2 back1">
+                <div class="cellTitle"><span class="float-left">Description</span></div>
+            </div>
+
+            <div class="col-sm-10 back1"> <span class="float-left">
+                {{person.description}} </span>
             </div>
         </div>
 
@@ -93,22 +137,16 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-2" style="background-color:lavender;">
-                <div class="cellTitle"><span class="float-left">Movement</span></div>
-            </div>
+<!--        <div class="row">-->
+<!--            <div class="col-sm-2" style="background-color:lavender;">-->
+<!--                <div class="cellTitle"><span class="float-left">Movement</span></div>-->
+<!--            </div>-->
 
-            <div class="col-sm-10" style="background-color:lavender;"><span
-                    class="float-left">{{person.movement.name}} </span></div>
-        </div>
+<!--            <div class="col-sm-10" style="background-color:lavender;"><span-->
+<!--                    class="float-left">{{person.movement.name}} </span></div>-->
+<!--        </div>-->
 
-        <div class="row">
-            <div class="col-sm-2" >
-                <div class="cellTitle"><span class="float-left">Country</span></div>
-            </div>
-            <div class="col-sm-10"><span class="float-left"> {{person.country.name}} </span>
-            </div>
-        </div>
+
 
         <div class="row">
             <div class="col-sm-2" style="background-color:lavender;">
@@ -132,6 +170,19 @@
 
 <style lang="scss">
     @import '../dbnm.css';
+</style>
+<style>
+
+    .back1{
+        background-color:lavender;
+    }
+
+    .back2{
+        background-color:pink;
+    }
+
+
+
 </style>
 
 <script>

@@ -10,11 +10,11 @@
 
         <div class="filters row">
             <div class="form-group col-sm-3">
-                <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
+                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element" requred/>
             </div>
         </div>
 
-        <table class="table">
+        <table class="redTable">
             <thead>
             <!--                <template slot="thead">-->
             <tr>
