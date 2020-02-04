@@ -22,14 +22,14 @@
             <form>
 
                 <div class="form-group row align-items-center">
-                    <label for="add-code" class="col-1 col-form-label labelInCreation">Code</label>
+                    <label for="add-code" class="col-1 col-form-label labelInCreation">Код</label>
                     <div class="col-4">
                         <input type="number" class="form-control" id="add-code" v-model="movement.code"/>
                     </div>
                 </div>
 
                 <div class="form-group row align-items-center">
-                    <label for="add-name" class="col-1 col-form-label labelInCreation">Name</label>
+                    <label for="add-name" class="col-1 col-form-label labelInCreation">Название</label>
                     <div class="col-4">
                         <input class="form-control" id="add-name" v-model="movement.name" required/>
                     </div>

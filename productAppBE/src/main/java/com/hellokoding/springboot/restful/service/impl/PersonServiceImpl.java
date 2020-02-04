@@ -112,17 +112,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person save(Person stock) {
+    public Person save(Person person) {
 
         HashTag hashTagByContent;
         HashTag hashTagWithID;
-        List<HashTag> hashTagList = stock.getHashtagList();
+        List<HashTag> hashTagList = person.getHashtagList();
         List<HashTag> hashTagListWithID = new ArrayList<>();
 
 
         UrlLink linkByContent;
         UrlLink linkWithID;
-        List<UrlLink> linkList = stock.getLinkList();
+        List<UrlLink> linkList = person.getLinkList();
         List<UrlLink> linkListWithID = new ArrayList<>();
 
 
@@ -152,10 +152,10 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
-        stock.setHashtagList(hashTagListWithID);
-        stock.setLinkList(linkListWithID);
+        person.setHashtagList(hashTagListWithID);
+        person.setLinkList(linkListWithID);
 
-        return personRepository.save(stock);
+        return personRepository.save(person);
     }
 
     ////utils

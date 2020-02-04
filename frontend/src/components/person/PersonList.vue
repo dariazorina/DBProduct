@@ -10,7 +10,8 @@
 
         <div class="filters row">
             <div class="form-group col-sm-3">
-                <input placeholder="Search by Surname" v-model="searchKey" class="form-control" id="search-element" requred/>
+                <input placeholder="Поиск по фамилии" v-model="searchKey" class="form-control" id="search-element"
+                       requred/>
             </div>
         </div>
         <table class="redTable">
@@ -18,22 +19,22 @@
             <thead>
             <tr>
                 <th class='tdAlignLeft'>Id</th>
-                <th class='tdAlignLeft'>Surname</th>
-                <th class='tdAlignLeft'>Name</th>
                 <th class='tdAlignLeft'>Фамилия</th>
                 <th class='tdAlignLeft'>Имя</th>
+                <th class='tdAlignLeft'>Фамилия на русском</th>
+                <th class='tdAlignLeft'>Имя на русском</th>
                 <!--                <th class='tdAlignLeft'>Patronymic</th>-->
                 <!--                <th class='tdAlignLeft'>Surname</th>-->
                 <!--                <th class='tdAlignLeft'>Name</th>-->
                 <!--                <th class='tdAlignLeft'>Movement</th>-->
-                <th class='tdAlignLeft'>Country</th>
-                <th class='tdAlignLeft'>Settlement</th>
-                <th class='tdAlignLeft'>Occupation</th>
-                <th class='tdAlignLeft'>Organization</th>
-                <th class='tdAlignLeft'>Hash</th>
+                <th class='tdAlignLeft'>Страна</th>
+                <th class='tdAlignLeft'>Город</th>
+                <th class='tdAlignLeft'>Должность</th>
+                <th class='tdAlignLeft'>Организация</th>
+                <th class='tdAlignLeft'>Хештеги</th>
                 <!--                <th class='tdAlignLeft' style="width:35%">Description</th>-->
 
-                <th style="width:10%" class="col-sm-2">Actions</th>
+                <th style="width:10%" class="col-sm-2"></th>
             </tr>
             </thead>
             <tbody>
@@ -44,12 +45,10 @@
                     </router-link>
                 </a></td>
 
-
-                <!--                <td>{{person.surname }}</td>-->
                 <td class='tdAlignLeft'>{{person.name}}</td>
-                <td class='tdAlignLeft'>{{person.patronymic }}</td>
                 <td class='tdAlignLeft'>{{person.surnameRus }}</td>
                 <td class='tdAlignLeft'>{{person.nameRus }}</td>
+                <td class='tdAlignLeft'>{{showCountry(person.country)}}</td>
                 <!--                <td class='tdAlignLeft'>{{person.surnameEng }}</td>-->
                 <!--                <td class='tdAlignLeft'>{{person.nameEng }}</td>-->
                 <!--                <td class='tdAlignLeft'>{{person.movement.name}}</td>-->
@@ -123,6 +122,15 @@
                         this.errors.push(error)
                     })
             },
+
+            showCountry(country) {
+                if (country) {
+                    // console.log("COUNTRY " + country.name);
+                    return country.name;
+                }
+                // console.log("COUNTRY NULL")
+                return "";
+            }
 
 
         },

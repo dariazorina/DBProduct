@@ -18,41 +18,41 @@
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-surname"><b>Surname*</b></label>
+                            <label for="add-surname"><b>Фамилия*</b></label>
                             <input class="form-control" id="add-surname" v-model="person.surname"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-surname-rus">Фамилия</label>
+                            <label for="add-surname-rus">Фамилия на русском</label>
                             <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-surname-eng">Surname, english</label>
+                            <label for="add-surname-eng">Фамилия на английском</label>
                             <input class="form-control" id="add-surname-eng" v-model="person.surnameEng"/>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-name"><b>Name*</b></label>
+                            <label for="add-name"><b>Имя*</b></label>
                             <input class="form-control" id="add-name" v-model="person.name"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-name-rus">Имя</label>
+                            <label for="add-name-rus">Имя на русском</label>
                             <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-name-eng">Name, english</label>
+                            <label for="add-name-eng">Имя на английском</label>
                             <input class="form-control" id="add-name-eng" v-model="person.nameEng"/>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-patronymic">Patronymic</label>
+                            <label for="add-patronymic">Отчество</label>
                             <input class="form-control" id="add-patronymic" v-model="person.patronymic">
                         </div>
                     </div>
@@ -68,7 +68,7 @@
 <!--            //////////////////////////////////////////////////////////////////////////////////////////////-->
             <div class="form-row">
                 <div class="col-md-3">
-                    <label><b>Country*</b></label>
+                    <label>Страна</label>
                     <b-form-select v-model="selectedC" class="mb-3" id="country-selection">
                         <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>
                     </b-form-select>
@@ -76,14 +76,14 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label for="add-settlement">Settlement</label>
+                    <label for="add-settlement">Город</label>
                     <input class="form-control" id="add-settlement" v-model="person.settlement">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-occupation">Occupation</label>
+                    <label for="add-occupation">Должность</label>
                     <textarea class="form-control" id="add-occupation" rows="4" v-model="person.occupation"/>
                 </div>
             </div>
@@ -91,7 +91,7 @@
 
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-org">Organization</label>
+                    <label for="add-org">Организации</label>
                     <input class="form-control" id="add-org"
                            placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи"
                            disabled="disabled">
@@ -100,13 +100,13 @@
 
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-description">Description</label>
+                    <label for="add-description">Описание</label>
                     <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-hashtag">Hashtag</label>
+                    <label for="add-hashtag">Хештеги</label>
                     <div>
                         <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
                                    placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
@@ -181,7 +181,7 @@
             hasError: false,
 
             allCountries: [],
-            allMovements: [],
+            // allMovements: [],
 
             linkList: [],
             hashtagList: [],
@@ -255,10 +255,10 @@
                 if (this.hasError) {
                 } else {
                     this.addStatus('add-name', (!this.person.name));
-                    if (this.hasError) {
-                    } else {
-                        this.addStatus('country-selection', (!this.selectedC));
-                    }
+                    // if (this.hasError) {
+                    // } else {
+                    //     this.addStatus('country-selection', (!this.selectedC));
+                    // }
                 }
 
                 if (this.hasError)
@@ -271,12 +271,15 @@
                 //     "id": this.selectedM
                 // }; todo
 
-                this.person.movement = {
-                    "id": 1
-                };
-                this.person.country = {
-                    "id": this.selectedC
-                };
+                // this.person.movement = {
+                //     "id": 1
+                // };
+
+                if (this.selectedC) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
+                    this.person.country = {
+                        "id": this.selectedC
+                    };
+                }
 
                 for (let i = 0; i < this.links.length; i++) {
                     this.person.linkList[i] = {

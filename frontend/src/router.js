@@ -100,7 +100,7 @@ router.beforeEach((to, from, next) => {
     // }
 
 
-    if (!to.matched.some(record => record.meta.isLoginPage)) { //todo?
+    if (!to.matched.some(record => record.meta.isLoginPage)) { 
 
 
         // this route requires auth, check if logged in

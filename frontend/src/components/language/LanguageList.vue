@@ -19,8 +19,8 @@
             <!--                <template slot="thead">-->
             <tr>
                 <th class='tdAlignLeft'>Id</th>
-                <th class='tdAlignLeft'>Code</th>
-                <th class='tdAlignLeft'>Name</th>
+                <th class='tdAlignLeft'>Код</th>
+                <th class='tdAlignLeft'>Язык</th>
 
                 <th style="width:10%" class="col-sm-2">Actions</th>
             </tr>

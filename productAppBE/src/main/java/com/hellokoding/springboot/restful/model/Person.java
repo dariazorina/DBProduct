@@ -14,9 +14,9 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movement_id", nullable = false)
-    private Movement movement;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "movement_id", nullable = false)
+//    private Movement movement;
 
     private String surname;
     private String name;
@@ -35,7 +35,8 @@ public class Person {
     private String nameEng;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
+    @JoinColumn(name = "country_id")//, insertable = false, updatable = false)
+//    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
     private String settlement;

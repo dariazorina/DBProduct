@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <div class="offset-sm-3 col-sm-3">
+                    <div class="offset-sm-1 col-sm-3">
                         <b-btn size="sm" variant="btn btn-outline-info" type="submit">Login</b-btn>
                         <!--                    <p v-if="error" class="error">Bad login information</p>-->
                     </div>

@@ -30,7 +30,7 @@
     /*background-color: #F6C6CE;*/
 }
 
-.tdAlignCell {
+.details {
     text-align: left;
     font-size: smaller;
     /*padding: 50px 50px 50px 50px;*/
@@ -193,11 +193,16 @@ table.redTable {
 table.redTable td, table.redTable th {
     border: 1px solid #AAAAAA;
     padding: 3px 2px;
-    max-height: 50px;
+    max-height: 20px;
+    height: 20px;
+    overflow: hidden;
+    /*background-color: #8bc34a;*/
 }
 table.redTable tbody td {
     font-size: 13px;
-    max-height: 50px;
+    max-height: 20px;
+    height: 20px;
+    overflow: hidden;
 }
 table.redTable tr:nth-child(even) {
     background: #D0E4F5;

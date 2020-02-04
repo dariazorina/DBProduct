@@ -25,14 +25,14 @@
 
             <form>
                 <div class="form-group row  align-items-center">
-                    <label for="edit-code" class="col-1 col-form-label labelInCreation">Code</label>
+                    <label for="edit-code" class="col-1 col-form-label labelInCreation">Код</label>
                     <div class="col-4">
                         <input type="number" class="form-control" id="edit-code" v-model="language.code"/>
                     </div>
                 </div>
 
                 <div class="form-group row  align-items-center">
-                    <label for="edit-name" class="col-1 col-form-label labelInCreation">Name</label>
+                    <label for="edit-name" class="col-1 col-form-label labelInCreation">Язык</label>
                     <div class="col-4">
                         <input class="form-control" id="edit-name" v-model="language.name" required/>
                     </div>

@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="row align-items-center">
-                    <label class="col-1 col-form-label"><b>Language*</b></label>
+                    <label class="col-1 col-form-label"><b>Язык*</b></label>
                     <div class="col-4">
                         <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
                             <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="row align-items-center">
-                    <label for="date-input" class="col-1 col-form-label"><b>Date*</b></label>
+                    <label for="date-input" class="col-1 col-form-label"><b>Дата*</b></label>
                     <div class="col-4">
                         <input class="form-control" type="date" id="date-input" v-model="article.date">
                     </div>
@@ -52,7 +52,7 @@
                             <v-autocomplete
 
                                     id="author-autocomplete"
-                                    label="Authors"
+                                    label="Авторы"
 
                                     :items="items"
                                     :loading="isLoading"
@@ -67,7 +67,7 @@
                                     @focus="testFocus(selected)"
                                     item-text="surname"
                                     item-value="id"
-                                    placeholder="Start typing to find Author"
+                                    placeholder="Начните печатать, чтобы найти автора"
                                     prepend-icon="mdi-database-search"
                                     return-object
                             ></v-autocomplete>
@@ -91,28 +91,28 @@
             </form>
             <form class="formCreation">
                 <div class="row align-items-center">
-                    <label for="add-title" class="col-1 col-form-label">Title</label>
+                    <label for="add-title" class="col-1 col-form-label">Заголовок</label>
                     <div class="col-4">
                         <input class="form-control" id="add-title" v-model="article.title"/>
                     </div>
                 </div>
 
                 <div class="row align-items-center">
-                    <label for="add-title-rus" class="col-1 col-form-label">Заголовок статьи</label>
+                    <label for="add-title-rus" class="col-1 col-form-label">Заголовок на русском</label>
                     <div class="col-4">
                         <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
                     </div>
                 </div>
 
                 <div class="row align-items-center">
-                    <label for="add-descr" class="col-1 col-form-label">Description</label>
+                    <label for="add-descr" class="col-1 col-form-label">Описание</label>
                     <div class="col-4">
                         <textarea class="form-control" id="add-descr" rows="6" v-model="article.description" required/>
                     </div>
                 </div>
 
                 <div class="row align-items-center">
-                    <label for="add-hashtag" class="col-1 col-form-label">Hashtag</label>
+                    <label for="add-hashtag" class="col-1 col-form-label">Хештеги</label>
                     <div class="col-4">
                         <div>
                             <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
@@ -124,7 +124,7 @@
                 <!--                    <div class="form-group purple-border"> purple body always wish purple shadow, mi-mi-mi-->
                 <div class="form-group green-border-focus">
                     <div class="row align-items-center">
-                        <label for="add-misc" class="col-1 col-form-label">Miscellany</label>
+                        <label for="add-misc" class="col-1 col-form-label">Комментарии</label>
                         <div class="col-4">
                         <textarea class="form-control" id="add-misc" rows="6" v-model="article.miscellany"
                                   background-color="palegreen" required/>

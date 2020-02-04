@@ -35,5 +35,8 @@
     <include file="config/liquibase/changelog/00000000000029_add_unique_constr_language_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000030_init_security.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000031_add_miscellany_field_all_tables.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000032_remove_movement_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000033_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
+
 
 </databaseChangeLog>
