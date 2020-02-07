@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +79,128 @@ public class ArticleServiceImpl implements ArticleService {
 
         return articleRepository.save(stock);
     }
+    @Override
+    public List<Article> search(String q) {
+
+        List<Article> titleSearchList = articleRepository.findByTitleStartsWithIgnoreCase(q);
+//        List<Article> titleSearchList = articleRepository.findByTitleAndTitleRusStartsWith(q, q);
+
+//        List<Article> hashSearchList = articleRepository.findByHashtagListStartsWithIgnoreCase(q);
+//        List<Article> titleSearchList = articleRepository.findByTitleAndTitleRusContains(q);//IgnoreCase(q);
+
+//                findByTitleStartsWithIgnoreCase(q);
+//        List<Article> surnameRusSearchList = personRepository.findBySurnameRusStartsWithIgnoreCase(q);
+//        List<> surnameEngSearchList = personRepository.findBySurnameEngStartsWithIgnoreCase(q);
+
+        Set<Article> fooSet = new TreeSet<>();
+        String dtoName;
+
+//        for (Person person : surnameSearchList) {
+//            dtoName = person.getSurname();
+//            if (person.getName() != null) {
+//                dtoName += " " + person.getName();
+//            }
+//            PersonDto personDto = new PersonDto(person.getId(), dtoName);
+//            fooSet.add(personDto);
+//        }
+//
+//        for (Person person : surnameRusSearchList) {
+//            dtoName = person.getSurnameRus();
+//            if (person.getNameRus() != null) {
+//                dtoName += " " + person.getNameRus();
+//            }
+//            PersonDto personDto = new PersonDto(person.getId(), dtoName);
+//            fooSet.add(personDto);
+//        }
+//
+//        for (Person person : surnameEngSearchList) {
+//            dtoName = person.getSurnameEng();
+//            if (person.getNameEng() != null) {
+//                dtoName += " " + person.getNameEng();
+//            }
+//            PersonDto personDto = new PersonDto(person.getId(), dtoName);
+//            fooSet.add(personDto);
+//        }
+
+
+//        if (surnameSearchList.size() > 0) {
+//            fooSet =
+//
+//            if (surnameRusSearchList.size() > 0) {
+//                fooSet.addAll(surnameRusSearchList);
+//
+//                if (surnameEngSearchList.size() > 0){
+//                    fooSet.addAll(surnameEngSearchList);
+//                }
+//            }
+//        } else {
+//            if (surnameRusSearchList.size() > 0) {
+//                fooSet = new LinkedHashSet<>(surnameRusSearchList);
+//
+//                if (surnameEngSearchList.size() > 0) {
+//                    fooSet.addAll(surnameEngSearchList);
+//                }
+//            } else {
+//                fooSet = new LinkedHashSet<>(surnameEngSearchList);
+//            }
+//        }
+
+
+//        List<Article> finalList = new ArrayList<Article>(fooSet);
+//        return finalList;
+
+        return titleSearchList;
+//        return hashSearchList;
+    }
+
+
+
+
+//    public LmUserSearchResult getLmUsers(LmUserSearchFilterDto filter) {
+//        BooleanBuilder builder = new BooleanBuilder();
+//        if (filter.getUserId() != null) {
+//            builder.and(lmUserEntity.userId.likeIgnoreCase("%" + filter.getUserId() + "%"));
+//        }
+//        if (filter.getFirstName() != null) {
+//            builder.and(lmUserEntity.firstName.likeIgnoreCase("%" + filter.getFirstName() + "%"));
+//        }
+//        if (filter.getLastName() != null) {
+//            builder.and(lmUserEntity.lastName.likeIgnoreCase("%" + filter.getLastName() + "%"));
+//        }
+//        if (filter.getIsInvalid() != null) {
+//            if (filter.getIsInvalid()) {
+//                builder.and(lmUserEntity.invalidDate.isNotNull())
+//                        .and(lmUserEntity.invalidDate.loe(LocalDate.now()));
+//            } else {
+//                builder.andAnyOf(lmUserEntity.invalidDate.isNull(),
+//                        lmUserEntity.invalidDate.gt(LocalDate.now())
+//                );
+//            }
+//        }
+//
+//        //default ordering
+//        OrderSpecifier order = lmUserEntity.userId.asc();
+//
+//        LmUserSearchResultBuilder resultBuilder = LmUserSearchResult.builder();
+//
+//        //add pagination and perform query
+//        if (filter.getPage() != null && filter.getPageSize() != null) {
+//            resultBuilder.result(Lists.newArrayList(lmUserRepository
+//                    .findAll(builder.getValue(),
+//                            new QPageRequest(filter.getPage() - 1, filter.getPageSize(), order))));
+//            resultBuilder.count(lmUserRepository.count(builder.getValue()));
+//        } else {
+//            Collection<LmUserEntity> queryResult = Lists
+//                    .newArrayList(lmUserRepository.findAll(builder.getValue(), order));
+//            resultBuilder.result(queryResult);
+//            resultBuilder.count(Long.valueOf(queryResult.size()));
+//        }
+//
+//        return resultBuilder.build();
+//    }
+
+
+
 
     @Override
     public void deleteById(Integer id) {

@@ -91,16 +91,16 @@
             </form>
             <form class="formCreation">
                 <div class="row align-items-center">
-                    <label for="add-title" class="col-1 col-form-label">Заголовок</label>
+                    <label for="add-title" class="col-1 col-form-label"><b>Заголовок</b></label>
                     <div class="col-4">
-                        <input class="form-control" id="add-title" v-model="article.title"/>
+                        <input class="form-control" id="add-title" placeholder="Должно быть заполнено одно из полей заголовка" v-model="article.title"/>
                     </div>
                 </div>
 
                 <div class="row align-items-center">
-                    <label for="add-title-rus" class="col-1 col-form-label">Заголовок на русском</label>
+                    <label for="add-title-rus" class="col-1 col-form-label"><b>Заголовок на русском</b></label>
                     <div class="col-4">
-                        <input class="form-control" id="add-title-rus" v-model="article.titleRus" required/>
+                        <input class="form-control" id="add-title-rus" placeholder="Должно быть заполнено одно из полей заголовка" v-model="article.titleRus" required/>
                     </div>
                 </div>
 
@@ -328,8 +328,18 @@
                     if (this.hasError) {
                     } else {
                         this.addStatus('date-input', (!(this.validDate(this.article.date))));
+                        if (this.hasError) {
+                        } else {
+                        this.addStatus('add-title', (!(this.article.title||this.article.titleRus)));
+                            if (this.hasError){
+                                this.addStatus('add-title-rus', true);
+                            } else {
+                                this.addStatus('add-title-rus', false);
+                            }
+                        }
                     }
                 }
+
                 if (this.hasError)
                     console.log('ERROROROR----------------------------');
                 return !this.hasError;

@@ -108,10 +108,20 @@
         computed: {
             filteredPersons() {
                 return this.persons.filter((person) => {
-                    return person.surname.indexOf(this.searchKey) > -1
+                    if (person.surname && person.surnameRus) {
+                        return person.surname.indexOf(this.searchKey) > -1
+                            || person.surnameRus.indexOf(this.searchKey) > -1
+
+                    } else if (person.surname) {
+                        return person.surname.indexOf(this.searchKey) > -1
+
+                    } else if (person.surnameRus) {
+                        return person.surnameRus.indexOf(this.searchKey) > -1
+                    }
                 })
             }
         },
+
         methods: {
             loadPersons() {
                 api.getAll().then(response => {
@@ -121,7 +131,8 @@
                     .catch(error => {
                         this.errors.push(error)
                     })
-            },
+            }
+            ,
 
             showCountry(country) {
                 if (country) {
@@ -133,7 +144,8 @@
             }
 
 
-        },
+        }
+        ,
         mounted() {
             api.getAll().then(response => {
                 this.persons = response.data;

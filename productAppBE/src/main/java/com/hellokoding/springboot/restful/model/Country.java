@@ -1,7 +1,7 @@
 package com.hellokoding.springboot.restful.model;
 
-import javax.persistence.*;
 import lombok.Data;
+import javax.persistence.*;
 
 @Entity
 @Table(name="t_country")

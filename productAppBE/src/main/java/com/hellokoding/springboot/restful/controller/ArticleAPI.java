@@ -20,6 +20,12 @@ public class ArticleAPI {
 
     private final ArticleService articleService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Article>> search(@RequestParam(name = "t", required = false) String q) {
+        List<Article> search = articleService.search(q);
+        return ResponseEntity.ok(search);
+    }
+
     @GetMapping
     public ResponseEntity<List<Article>> findAll() {
         List<Article> all = articleService.findAll();

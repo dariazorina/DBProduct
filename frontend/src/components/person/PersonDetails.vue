@@ -132,7 +132,7 @@
                     <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                 </div>
                 <div class="col-sm-10"><span class="float-left">
-                <div class="leftAlignForDetails" v-for="ht in person.hashtagList">{{ht.content}}</div></span>
+                <div style="text-align: left" v-for="ht in person.hashtagList">{{ht.content}}</div></span>
                 </div>
             </div>
 
@@ -150,11 +150,15 @@
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Links</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-                <div class="linkButton" v-for="link in person.linkList"> <span class="float-left">
-                    <button class="btn btn-link" @click="goURL(link.content)">{{link.content}}</button></span>
-                </div>
-            </span>
+
+                <div class="col-sm-10" style="background-color:lavender;">
+                    <span class="float-left">
+                        <div class="linkButton" v-for="link in person.linkList">
+                            <span class="float-left">
+                                <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">{{link.content}}</button>
+                            </span>
+                        </div>
+                    </span>
                 </div>
             </div>
 
@@ -174,6 +178,7 @@
     .back1 {
         background-color: lavender;
     }
+
     .back2 {
         background-color: pink;
     }

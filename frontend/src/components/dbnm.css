@@ -34,12 +34,12 @@
     text-align: left;
     font-size: smaller;
     /*padding: 50px 50px 50px 50px;*/
-    /*padding: 30px;*/
+    /*padding: 0px;*/
     /*padding-left: 30px;*/
     /*padding-top: 10px;*/
     /*padding-bottom: 10px;*/
 
-    /*margin-left: 20p  x;*/
+    /*margin: -10px;*/
 }
 
 .tdTitle {
@@ -62,6 +62,9 @@
     /*border: 3px solid #666; !* Параметры рамки *!*/
     /*padding: -15px; !* Поля вокруг текста *!*/
     margin-left: -15px; /* Отступы вокруг */
+    margin-bottom: -10px;
+    margin-top: -15px;
+
 }
 
 .form-horizontal .control-label .text-left{

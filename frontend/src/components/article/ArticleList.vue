@@ -18,133 +18,174 @@
         <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
         <!--        </div>-->
 
-    <a class="btn btn-default">
-        <router-link :to="{name: 'article-add'}">Add article</router-link>
-    </a>
+        <a class="btn btn-default">
+            <router-link :to="{name: 'article-add'}">Add article</router-link>
+        </a>
 
-    <div class="filters row">
-        <div class="form-group col-sm-3">
-            <input placeholder="Search disable temporarily" v-model="searchKey" class="form-control"
-                   id="search-element" requred/>
+
+        <!--        ////////////////////////////////////////search//////////////////////////////////-->
+        <div class="row col-10">
+            <label class="col-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
+            <div class="col-2">
+                <b-form-select v-model="selected" class="mb-3" id="search-selection">
+                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
+
+                </b-form-select>
+            </div>
+
+
+            <div class="col-sm-3">
+                <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
+                       id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
+                <span class="close" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">&times;</span>
+                <!--                todo-->
+            </div>
+
+
+            <div style="padding-top: 11px">
+                <button type="button" @click="search" class="btn btn-primary">Search</button>
+            </div>
         </div>
-    </div>
-
-    <!--        <vue-scroll-table>-->
-    <!--            <template slot="thead">-->
-    <!--                <table class="table">-->
-
-    <!--        <table id="dtHorizontalExample" class="table table-striped table-bordered table-sm" cellspacing="0"-->
-    <!--               width="100%">-->
-
-    <!--            <div class="scrollable">-->
-
-    <!--        <v-layout column style="height: 90vh"> <-&#45;&#45; added height-->
-    <!--            <v-flex md6 style="overflow: auto"> <-&#45;&#45; added overflow-->
-    <!--                <v-data-table-->
-    <!--                        :headers="headers"-->
-    <!--                        :items="desserts"-->
-    <!--                        hide-actions-->
-    <!--                        class="elevation-1"-->
-    <!--                >-->
 
 
-    <table class="redTable">
-        <!--        <table class="table">-->
-        <thead>
-        <!--                <template slot="thead">-->
-        <tr>
-            <th class='tdTitle'>Id</th>
-            <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
-            <th class='tdTitle'>Язык</th>
-            <th class='tdTitle'>Хештеги</th>
-            <th class='tdTitle'>Авторы</th>
+        <!--        <vue-scroll-table>-->
+        <!--            <template slot="thead">-->
+        <!--                <table class="table">-->
 
-            <!--                <th class='tdAlignCell'>Movement</th>-->
-            <th class='tdTitle'>Заголовок</th>
-<!--            <th class='tdAlignCell' style="width:15%">Оригинальный заголовок</th>-->
-            <th class='tdTitle' style="width:15%">Оригинальный заголовок</th>
-            <!--                <th class='tdTitle'>URL</th>-->
+        <!--        <table id="dtHorizontalExample" class="table table-striped table-bordered table-sm" cellspacing="0"-->
+        <!--               width="100%">-->
 
-            <th class='tdTitle'>Описание</th>
-            <th class='tdTitle'>Комментарии</th>
-            <!--                <th style="width:10%">Links</th>-->
+        <!--            <div class="scrollable">-->
 
-            <th style="width:10%" class="tdTitle"></th>
-        </tr>
-        </thead>
-        <tbody>
+        <!--        <v-layout column style="height: 90vh"> <-&#45;&#45; added height-->
+        <!--            <v-flex md6 style="overflow: auto"> <-&#45;&#45; added overflow-->
+        <!--                <v-data-table-->
+        <!--                        :headers="headers"-->
+        <!--                        :items="desserts"-->
+        <!--                        hide-actions-->
+        <!--                        class="elevation-1"-->
+        <!--                >-->
 
 
-        <tr v-for="article in articles" class="ListCellStyleHot">
-            <!--            <tr v-for="article in filteredArticles">-->
+        <table class="redTable">
+            <!--        <table class="table">-->
+            <thead>
+            <!--                <template slot="thead">-->
+            <tr>
+                <th class='tdTitle'>Id</th>
+                <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
+                <th class='tdTitle'>Язык</th>
+                <th class='tdTitle'>Хештеги</th>
+                <th class='tdTitle' style="width:6%">Авторы</th>
 
-            <!-- tr v-for="product in products" -->
-            <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
+                <!--                <th class='tdAlignCell'>Movement</th>-->
+                <th class='tdTitle'>Заголовок</th>
+                <!--            <th class='tdAlignCell' style="width:15%">Оригинальный заголовок</th>-->
+                <th class='tdTitle'>Оригинальный заголовок</th>
+                <!--                <th class='tdTitle'>URL</th>-->
 
-            <td>
-                <span id=t>{{article.id }}</span>
-            </td>
-            <td>
-                {{ formatDate(article.date) }}
-            </td>
-            <td>
-                {{article.language.name}}
-            </td>
-            <td>
-                <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
-            </td>
-            <td>
-                <div v-for="author in article.authorList">{{author.surname}}</div>
-            </td>
+                <th class='tdTitle' style="width:29%">Описание</th>
+                <th class='tdTitle'>Комментарии</th>
+                <!--                <th style="width:10%">Links</th>-->
 
-            <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
-            <!--                <td class='tdAlignLeft'><a>-->
-            <!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
-            <!--                    </router-link>-->
-            <!--                </a></td>-->
-            <td>
-                {{article.titleRus }}
-            </td>
-            <td>
-                <a>
-                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{article.title }}
-                    </router-link>
-                </a>
-            </td>
-            <td style="height: 30px">
-                <div style="height:40px; overflow:hidden">
-                {{article.description }}
-                </div>
-            </td> <!--todo dots? if cut-->
-            <td>
-                {{article.miscellany }}
-            </td>
-
-            <!--                <td>-->
-            <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
-            <!--                </td>-->
+                <th class="tdTitle" style="width:6%"></th>
+            </tr>
+            </thead>
+            <tbody>
 
 
-            <td>
-                <!--                    <div class="ListCellStyleForButton">-->
-                <a class="btn btn-warning btn-sm mr-2">
-                    <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
-                    </router-link>
-                </a>
-                <a class="btn btn-danger btn-sm">
-                    <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
-                    </router-link>
-                </a>
-                <!--                    </div>-->
+            <!--            <tr v-for="article in articles" class="ListCellStyleHot">-->
+            <!--                        <tr v-for="article in articles">-->
+            <tr v-for="article in filteredArticles">
 
-                <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
-                <!--                           light small right bottom fab-->
-                <!--                           class="pink" slot="action">-->
+                <!-- tr v-for="product in products" -->
+                <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <!--                        <v-icon right dark >cloud_upload</v-icon>-->
-                <!--&lt;!&ndash;                        <v-icon small class="mr-2">smiley-neutral-outline</v-icon>&ndash;&gt;-->
-                <!--&lt;!&ndash;                        <v-icon>mdi-watch</v-icon>&ndash;&gt;-->
-                <!--                    </v-btn>-->
+                <td>
+                    <span id=t>{{article.id }}</span>
+                </td>
+                <td>
+                    {{ formatDate(article.date) }}
+                </td>
+                <td>
+                    {{article.language.name}}
+                </td>
+                <td>
+                    <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
+                </td>
+                <td>
+                    <div v-for="author in article.authorList">{{author.surname}}</div>
+                </td>
+
+                <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
+                <!--                <td class='tdAlignLeft'><a>-->
+                <!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
+                <!--                    </router-link>-->
+                <!--                </a></td>-->
+
+                <!--            <td>-->
+                <!--                {{article.titleRus }}-->
+                <!--            </td>-->
+
+
+                <td>
+                    <div v-if="article.titleRus">
+                        <a>
+                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                                {{article.titleRus }}
+                            </router-link>
+                        </a>
+                    </div>
+                </td>
+
+                <td>
+                    <div v-if="article.titleRus">
+                        {{article.title}}
+                    </div>
+                    <div v-else>
+                        <a>
+                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                                {{article.title }}
+                            </router-link>
+                        </a>
+                    </div>
+                </td>
+
+
+                <td style="height: 30px">
+                    <div style="height:40px; overflow:hidden">
+                        {{article.description }}
+                    </div>
+                </td> <!--todo dots? if cut-->
+                <td>
+                    {{article.miscellany }}
+                </td>
+
+                <!--                <td>-->
+                <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
+                <!--                </td>-->
+
+
+                <td>
+                    <!--                    <div class="ListCellStyleForButton">-->
+                    <a class="btn btn-warning btn-sm mr-2">
+                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
+                        </router-link>
+                    </a>
+                    <a class="btn btn-danger btn-sm">
+                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
+                        </router-link>
+                    </a>
+                    <!--                    </div>-->
+
+                    <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
+                    <!--                           light small right bottom fab-->
+                    <!--                           class="pink" slot="action">-->
+
+                    <!--                        <v-icon right dark >cloud_upload</v-icon>-->
+                    <!--&lt;!&ndash;                        <v-icon small class="mr-2">smiley-neutral-outline</v-icon>&ndash;&gt;-->
+                    <!--&lt;!&ndash;                        <v-icon>mdi-watch</v-icon>&ndash;&gt;-->
+                    <!--                    </v-btn>-->
 
 
                 </td>
@@ -222,20 +263,19 @@
                 searchKey: '',
                 response: [],
                 errors: [],
+                entries: [],
                 showResponse: false,
                 loggedInFlag: false,
                 loggedName: null,
+                selected: "заголовок",
+                searchItems: ["хештег", "заголовок", "автор"],
             }
         },
         computed: {
-            // filteredArticles() {
-            //return this.articles.filter((article) => {
-            // return article.title.indexOf(this.searchKey) > -1
-
-// || article.date.indexOf(this.searchKey) > -1
-// || article.description.indexOf(this.searchKey) > -1
-            // })
-            // }
+            filteredArticles() {
+                // console.log("FILTERED ARTICLES");
+                return this.entries;
+            },
         },
 
         methods: {
@@ -273,26 +313,112 @@
                 this.loggedInFlag = this.$store.getters.isLoggedIn;
                 this.loggedName = this.$store.getters.getUserName;
             },
+
+            placeholderCreation() {
+                if (this.selected) {
+                    return "Поиск по полю <" + this.selected + ">";
+                } else {
+                    return "Выберете поле поиска"
+                }
+            },
+
+            deleteSearch() {
+                this.searchKey = "";
+                this.entries = this.articles;
+            },
+
+            search() {
+                // console.log("SEARCH", this.searchKey);
+
+                if (this.searchKey === "")
+                    this.entries = this.articles;
+
+                else {
+
+                    // let hashSearchedList;
+                    if (this.selected === "хештег") {
+                        // if (article.hashtagList.length) {
+                        //     for (let hash in article.hashtagList) {
+                        //         if (hash.indexOf(this.searchKey) > -1)
+                        //         // console.log("+++");
+                        //         //hashSearchedList.push(hash);
+                        //             return hash;
+                        //     }
+                        //     return hashSearchedList;
+                        // }
+
+
+                        fetch('../api/v1/article/search?t=' + encodeURIComponent(this.searchKey))
+                            .then(res => res.json())
+                            .then(res => {
+                                this.entries = res;
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                            .finally(() => (this.isLoading = false))
+
+                    }
+
+                    /////////////////////////////////author////////////////////
+                    else if (this.selected === "автор") {
+
+                        //     if (article.title) {
+                        //         return article.title.indexOf(this.searchKey) > -1
+                        // }
+
+                    } else if (this.selected === "заголовок") {   ///////////////////////title///////////////////////////
+
+                        fetch('../api/v1/article/search?t=' + encodeURIComponent(this.searchKey))
+                            .then(res => res.json())
+                            .then(res => {
+                                this.entries = res;
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                            .finally(() => (this.isLoading = false))
+                    }
+
+                    // if (article.title && article.titleRus) {
+                    //     return article.title.indexOf(this.searchKey) > -1
+                    //         || article.titleRus.indexOf(this.searchKey) > -1
+                    //
+                    // } else if (article.title) {
+                    //     return article.title.indexOf(this.searchKey) > -1
+                    //
+                    // } else if (article.titleRus) {
+                    //     return article.titleRus.indexOf(this.searchKey) > -1
+                    // }
+                }
+
+            },
         },
         mounted() {
             this.getLoggedIn();
 
-// const routes = [
-//     { path: '/panda', component: Panda }
-// ];
-
             api.getAll().then(response => {
                 this.articles = response.data;
-                console.log(response.data)
+                this.entries = this.articles;
+                // console.log(response.data)
             })
                 .catch(error => {
                     this.errors.push(error)
                 })
         },
+
         dateFormat(value, row, index) {  //todo
             moment(this.article.date).format('DD/MM/YYYY').then(response => {
                 this.article.date = response.data;
             })
+        },
+
+        watch: {
+            searchKey: function () {
+                console.log("WATCH");
+                if (this.searchKey == "")
+                    this.entries = this.articles;
+            }
         }
     }
 </script>
