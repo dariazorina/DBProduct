@@ -334,52 +334,29 @@
                     this.entries = this.articles;
 
                 else {
-
-                    // let hashSearchedList;
                     if (this.selected === "хештег") {
-                        // if (article.hashtagList.length) {
-                        //     for (let hash in article.hashtagList) {
-                        //         if (hash.indexOf(this.searchKey) > -1)
-                        //         // console.log("+++");
-                        //         //hashSearchedList.push(hash);
-                        //             return hash;
-                        //     }
-                        //     return hashSearchedList;
-                        // }
+                        api.searchHash(this.searchKey, r => {
+                            this.entries = r.data;
+                        });
+                    } else if (this.selected === "автор") {
+                        api.searchAuthor(this.searchKey, r => {
+                            this.entries = r.data;
+                        });
+                    } else if (this.selected === "заголовок") {
+                        api.searchTitle(this.searchKey, r => {
+                            this.entries = r.data;
+                        });
 
-
-                        fetch('../api/v1/article/search?t=' + encodeURIComponent(this.searchKey))
-                            .then(res => res.json())
-                            .then(res => {
-                                this.entries = res;
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                            .finally(() => (this.isLoading = false))
-
+                        // fetch('../api/v1/article/search?title=' + encodeURIComponent(this.searchKey))
+                        //     .then(res => res.json())
+                        //     .then(res => {
+                        //         this.entries = res;
+                        //     })
+                        //     .catch(err => {
+                        //         console.log(err)
+                        //     })
+                        //     .finally(() => (this.isLoading = false))
                     }
-
-                    /////////////////////////////////author////////////////////
-                    else if (this.selected === "автор") {
-
-                        //     if (article.title) {
-                        //         return article.title.indexOf(this.searchKey) > -1
-                        // }
-
-                    } else if (this.selected === "заголовок") {   ///////////////////////title///////////////////////////
-
-                        fetch('../api/v1/article/search?t=' + encodeURIComponent(this.searchKey))
-                            .then(res => res.json())
-                            .then(res => {
-                                this.entries = res;
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                            .finally(() => (this.isLoading = false))
-                    }
-
                     // if (article.title && article.titleRus) {
                     //     return article.title.indexOf(this.searchKey) > -1
                     //         || article.titleRus.indexOf(this.searchKey) > -1
@@ -391,7 +368,6 @@
                     //     return article.titleRus.indexOf(this.searchKey) > -1
                     // }
                 }
-
             },
         },
         mounted() {

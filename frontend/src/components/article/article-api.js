@@ -57,7 +57,38 @@ export default {
             .delete('/article/' + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
+    },
+
+    searchTitle(searchKey, fn) {
+        AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey))
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
+    searchHash(searchKey, fn) {
+        AXIOS.get(`article/search?hash=` + encodeURIComponent(searchKey))
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
+    searchAuthor(searchKey, fn) {
+        AXIOS.get(`article/search?author=` + encodeURIComponent(searchKey))
+            .then(response => fn(response))
+            .catch(error => console.log(error))
     }
+
+
+
+// fetch('../api/v1/article/search?title=' + encodeURIComponent(this.searchKey))
+//     .then(res => res.json())
+//     .then(res => {
+//         this.entries = res;
+//     })
+//     .catch(err => {
+//         console.log(err)
+//     })
+//     .finally(() => (this.isLoading = false))
+
 }
 
 

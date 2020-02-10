@@ -20,9 +20,13 @@ public class ArticleAPI {
 
     private final ArticleService articleService;
 
+    //api/v1/article/search?title=title&hash=hash
     @GetMapping("/search")
-    public ResponseEntity<List<Article>> search(@RequestParam(name = "t", required = false) String q) {
-        List<Article> search = articleService.search(q);
+    public ResponseEntity<List<Article>> search(@RequestParam(name = "title", required = false) String title,
+                                                @RequestParam(name = "hash", required = false) String hash,
+                                                @RequestParam(name = "author", required = false) String author) {
+
+        List<Article> search = articleService.search(title, hash, author);
         return ResponseEntity.ok(search);
     }
 
