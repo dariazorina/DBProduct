@@ -81,18 +81,36 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> search(String title, String hash, String author) {
+    public List<Article> search(String title, String hash, String author, Integer status) {
 
         List<Article> searchList = new ArrayList<>();
 
-        if ( title != null && !title.isEmpty() ) {
-            searchList = articleRepository.findByTitle("%" + title + "%");
+        if (title != null && !title.isEmpty()) {
+            if (status != null && status != -1) {
+                searchList = articleRepository.findByTitleAndStatus("%" + title + "%", status);
+            } else {
+                searchList = articleRepository.findByTitle("%" + title + "%");
+            }
 
-        } else if ( hash != null && !hash.isEmpty() ){
-            searchList = articleRepository.findByHash(hash + "%");
 
-        } else if ( author != null && !author.isEmpty() ){
-            searchList = articleRepository.findByAuthor(author + "%");
+        } else if (hash != null && !hash.isEmpty()) {
+            if (status != null && status != -1) {
+                searchList = articleRepository.findByHashAndStatus(hash + "%", status);
+            } else {
+                searchList = articleRepository.findByHash(hash + "%");
+            }
+
+
+        } else if (author != null && !author.isEmpty()) {
+            if (status != null && status != -1) {
+                searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
+            } else {
+                searchList = articleRepository.findByAuthor(author + "%");
+            }
+
+
+        } else if (status != null) {
+            searchList = articleRepository.findByStatus(status);
         }
         return searchList;
     }

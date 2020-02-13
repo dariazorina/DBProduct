@@ -37,6 +37,7 @@
     <include file="config/liquibase/changelog/00000000000031_add_miscellany_field_all_tables.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000032_remove_movement_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000033_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000034_add_status_field_article.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>

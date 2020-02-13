@@ -28,6 +28,8 @@ public class Article {
 
     private Date date;
     private String title;
+    private Integer status;
+
 
     @Column(name = "title_rus")
     private String titleRus;

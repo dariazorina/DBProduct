@@ -1,8 +1,8 @@
 <template id="article">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-        <div class="form-group row">
-            <div class="col-2 col-form-label">
+        <div class="form-group row" style="margin-bottom: -10px">
+            <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
                     <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
                     </button>
@@ -18,53 +18,48 @@
         <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
         <!--        </div>-->
 
-        <a class="btn btn-default">
-            <router-link :to="{name: 'article-add'}">Add article</router-link>
-        </a>
-
+        <div>
+            <a class="btn btn-default">
+                <router-link :to="{name: 'article-add'}">Add article</router-link>
+            </a>
+            <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
+        </div>
 
         <!--        ////////////////////////////////////////search//////////////////////////////////-->
-        <div class="row col-10">
-            <label class="col-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
-            <div class="col-2">
-                <b-form-select v-model="selected" class="mb-3" id="search-selection">
+        <div class="row">
+            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
+            <div class="col-sm-auto">
+                <b-form-select v-model="selected" id="search-selection">
                     <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
-
                 </b-form-select>
             </div>
 
-
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
                        id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
                 <span class="close" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">&times;</span>
                 <!--                todo-->
             </div>
 
-
             <div style="padding-top: 11px">
                 <button type="button" @click="search" class="btn btn-primary">Search</button>
             </div>
+
+            <div class="col-md-2" style="margin-left:auto; margin-right:0;">
+                <b-form-group label="" style="text-align: left">
+                    <b-form-checkbox
+                            v-for="option in options"
+                            v-model="selectedCheckBox"
+                            :key="option.key"
+                            :value="option.value"
+                            name="statusSelection"
+                    >
+                        {{ option.text }}
+                    </b-form-checkbox>
+                </b-form-group>
+
+            </div>
         </div>
-
-
-        <!--        <vue-scroll-table>-->
-        <!--            <template slot="thead">-->
-        <!--                <table class="table">-->
-
-        <!--        <table id="dtHorizontalExample" class="table table-striped table-bordered table-sm" cellspacing="0"-->
-        <!--               width="100%">-->
-
-        <!--            <div class="scrollable">-->
-
-        <!--        <v-layout column style="height: 90vh"> <-&#45;&#45; added height-->
-        <!--            <v-flex md6 style="overflow: auto"> <-&#45;&#45; added overflow-->
-        <!--                <v-data-table-->
-        <!--                        :headers="headers"-->
-        <!--                        :items="desserts"-->
-        <!--                        hide-actions-->
-        <!--                        class="elevation-1"-->
-        <!--                >-->
 
 
         <table class="redTable">
@@ -72,11 +67,12 @@
             <thead>
             <!--                <template slot="thead">-->
             <tr>
-                <th class='tdTitle'>Id</th>
+                <!--                <th class='tdTitle'>Id</th>-->
                 <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
                 <th class='tdTitle'>Язык</th>
                 <th class='tdTitle'>Хештеги</th>
-                <th class='tdTitle' style="width:6%">Авторы</th>
+                <th class='tdTitle' style="width:6%">Автор</th>
+                <th class='tdTitle' style="width:6%">Автор, русск</th>
 
                 <!--                <th class='tdAlignCell'>Movement</th>-->
                 <th class='tdTitle'>Заголовок</th>
@@ -84,26 +80,29 @@
                 <th class='tdTitle'>Оригинальный заголовок</th>
                 <!--                <th class='tdTitle'>URL</th>-->
 
-                <th class='tdTitle' style="width:29%">Описание</th>
-                <th class='tdTitle'>Комментарии</th>
+                <th class='tdTitle' style="width:20%">Описание</th>
+                <th class='tdTitle' style="width:14%; color:lightgray">Комментарии</th>
+
+                <!--                <template v-if="selectedCheckBox.length!=1">-->
+                <!--            <span v-show="selectedCheckBox.length!=1">-->
+                <th class='tdTitle' style="color:lightgray">Статус</th>
+                <!--                    </span>-->
+                <!--                </template>-->
                 <!--                <th style="width:10%">Links</th>-->
 
-                <th class="tdTitle" style="width:6%"></th>
+                <th class="tdTitle" style="width:4%"></th>
             </tr>
             </thead>
             <tbody>
-
-
             <!--            <tr v-for="article in articles" class="ListCellStyleHot">-->
             <!--                        <tr v-for="article in articles">-->
             <tr v-for="article in filteredArticles">
 
-                <!-- tr v-for="product in products" -->
                 <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
 
-                <td>
-                    <span id=t>{{article.id }}</span>
-                </td>
+                <!--                <td>-->
+                <!--                    <span id=t>{{article.id }}</span>-->
+                <!--                </td>-->
                 <td>
                     {{ formatDate(article.date) }}
                 </td>
@@ -115,6 +114,9 @@
                 </td>
                 <td>
                     <div v-for="author in article.authorList">{{author.surname}}</div>
+                </td>
+                <td>
+                    <div v-for="author in article.authorList">{{author.surnameRus}}</div>
                 </td>
 
                 <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
@@ -152,14 +154,33 @@
                 </td>
 
 
-                <td style="height: 30px">
-                    <div style="height:40px; overflow:hidden">
+                <td style="height: 50px">
+                    <div style="height:60px; overflow:hidden">
                         {{article.description }}
                     </div>
                 </td> <!--todo dots? if cut-->
-                <td>
-                    {{article.miscellany }}
+
+                <td style="height: 50px">
+                    <div style="height:60px; overflow:hidden">
+                        {{article.miscellany }}
+                    </div>
                 </td>
+
+
+                <!--                <template v-if="selectedCheckBox.length!=1">-->
+                <!--            <span v-show="selectedCheckBox.length!=1">-->
+                <td>
+                    <div v-if="article.status==0">
+                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                    </div>
+                    <div v-else>
+                        <v-icon style="color: green">mdi-check</v-icon>
+                        <!--                        <v-icon style="color: green">mdi-pencil-lock</v-icon> -->
+                    </div>
+                </td>
+                <!--                    </span>-->
+                <!--                </template>-->
+                <!--                </div>-->
 
                 <!--                <td>-->
                 <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
@@ -168,14 +189,34 @@
 
                 <td>
                     <!--                    <div class="ListCellStyleForButton">-->
-                    <a class="btn btn-warning btn-sm mr-2">
-                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit
-                        </router-link>
-                    </a>
-                    <a class="btn btn-danger btn-sm">
-                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete
-                        </router-link>
-                    </a>
+                    <!--                    <a class="btn btn-warning btn-sm mr-2">-->
+                    <!--                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit-->
+                    <!--                        </router-link>-->
+                    <!--                    </a>-->
+                    <!--                    <a class="btn btn-danger btn-sm">-->
+                    <!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
+                    <!--                        </router-link>-->
+                    <!--                    </a>-->
+
+
+                    <v-btn text icon x-small>
+                        <a>
+                            <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">
+                                <v-icon style="color: green">mdi-pencil</v-icon>
+                            </router-link>
+                        </a>
+                    </v-btn>
+
+
+                    <v-btn text icon x-small>
+                        <a>
+                            <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
+                                <v-icon style="color: red">mdi-delete-forever</v-icon>
+                            </router-link>
+                        </a>
+                    </v-btn>
+
+
                     <!--                    </div>-->
 
                     <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
@@ -196,6 +237,12 @@
 </template>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
+
+<!--<link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>-->
+<!--<link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.css"/>-->
+<!--&lt;!&ndash; Load Vue followed by BootstrapVueIcons &ndash;&gt;-->
+<!--<script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>-->
+<!--<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>-->
 
 <style lang="scss">
     @import '../dbnm.css';
@@ -252,23 +299,38 @@
     import moment from "moment";
     import router from "./../../router";
     import "vue-scroll-table";
+    import Vuetify from 'vuetify';
+    // import 'vuetify/dist/vuetify.min.css';
+    import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
+    // import 'material-design-icons-iconfont/dist/material-design-icons.css'
+
 
     export default {
         name: 'article',
+        vuetify: new Vuetify(),
         data() {
             return {
                 articles: [],
                 article: {authorList: []},
                 authors: [],
-                searchKey: '',
+
                 response: [],
                 errors: [],
+
                 entries: [],
+
                 showResponse: false,
                 loggedInFlag: false,
                 loggedName: null,
+
                 selected: "заголовок",
                 searchItems: ["хештег", "заголовок", "автор"],
+                searchKey: '',
+
+                selectedCheckBox: [],
+                options: [
+                    {text: 'In Progress', value: 0},
+                    {text: 'Done', value: 1},]
             }
         },
         computed: {
@@ -279,15 +341,6 @@
         },
 
         methods: {
-// loadArticles() {
-//     api.getAll().then(response => {
-//         this.articles = response.data;
-//         console.log(response.data)
-//     })
-//         .catch(error => {
-//             this.errors.push(error)
-//         })
-// },
 
             // formatAuthor(article) {   //to delete?
             //     let surname = '';
@@ -324,52 +377,68 @@
 
             deleteSearch() {
                 this.searchKey = "";
-                this.entries = this.articles;
+                // this.entries = this.articles;
+                this.selectedCheckBoxFunc();
+            },
+
+            dateFormat(value, row, index) {  //todo
+                moment(this.article.date).format('DD/MM/YYYY').then(response => {
+                    this.article.date = response.data;
+                })
             },
 
             search() {
                 // console.log("SEARCH", this.searchKey);
 
-                if (this.searchKey === "")
+                if (this.searchKey === "" && this.selectedCheckBox.length != 1) {//s- ch-
                     this.entries = this.articles;
 
-                else {
-                    if (this.selected === "хештег") {
-                        api.searchHash(this.searchKey, r => {
-                            this.entries = r.data;
-                        });
-                    } else if (this.selected === "автор") {
-                        api.searchAuthor(this.searchKey, r => {
-                            this.entries = r.data;
-                        });
-                    } else if (this.selected === "заголовок") {
-                        api.searchTitle(this.searchKey, r => {
-                            this.entries = r.data;
-                        });
+                } else {
+                    if (this.searchKey === "") {    //s-
+                        if (this.selectedCheckBox.length == 1) { //ch+
+                            api.searchWithStatus(this.selectedCheckBox[0], r => {
+                                this.entries = r.data;
+                            });
+                        }
+                    } else {        //s+
+                        if (this.selected === "хештег") {
+                            if (this.selectedCheckBox.length == 1) { //ch+
+                                api.searchHash(this.searchKey, this.selectedCheckBox[0], r => {
+                                    this.entries = r.data;
+                                });
+                            } else {
+                                api.searchHash(this.searchKey, -1, r => {
+                                    this.entries = r.data;
+                                });
+                            }
 
-                        // fetch('../api/v1/article/search?title=' + encodeURIComponent(this.searchKey))
-                        //     .then(res => res.json())
-                        //     .then(res => {
-                        //         this.entries = res;
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err)
-                        //     })
-                        //     .finally(() => (this.isLoading = false))
+                        } else if (this.selected === "автор") {
+                            if (this.selectedCheckBox.length == 1) {    //ch+
+                                api.searchAuthor(this.searchKey, this.selectedCheckBox[0], r => {
+                                    this.entries = r.data;
+                                });
+                            } else {
+                                api.searchAuthor(this.searchKey, -1, r => {
+                                    this.entries = r.data;
+                                });
+                            }
+
+                        } else if (this.selected === "заголовок") {
+                            if (this.selectedCheckBox.length == 1) {        //ch+
+                                api.searchTitle(this.searchKey, this.selectedCheckBox[0], r => {
+                                    this.entries = r.data;
+                                });
+                            } else {
+                                api.searchTitle(this.searchKey, -1, r => {
+                                    this.entries = r.data;
+                                });
+                            }
+                        }
                     }
-                    // if (article.title && article.titleRus) {
-                    //     return article.title.indexOf(this.searchKey) > -1
-                    //         || article.titleRus.indexOf(this.searchKey) > -1
-                    //
-                    // } else if (article.title) {
-                    //     return article.title.indexOf(this.searchKey) > -1
-                    //
-                    // } else if (article.titleRus) {
-                    //     return article.titleRus.indexOf(this.searchKey) > -1
-                    // }
                 }
             },
         },
+
         mounted() {
             this.getLoggedIn();
 
@@ -383,18 +452,27 @@
                 })
         },
 
-        dateFormat(value, row, index) {  //todo
-            moment(this.article.date).format('DD/MM/YYYY').then(response => {
-                this.article.date = response.data;
-            })
-        },
-
         watch: {
             searchKey: function () {
-                console.log("WATCH");
-                if (this.searchKey == "")
-                    this.entries = this.articles;
+                // console.log("WATCH");
+                if (this.searchKey == "") {
+                    if (this.selectedCheckBox.length == 1) {
+                        this.search();
+                    } else {
+                        this.entries = this.articles;
+                    }
+                }
+            },
+
+            selectedCheckBox: function () {
+                this.search();
+            },
+
+            selected: function () {
+                if (this.searchKey != "") {
+                    this.search();
+                }
             }
-        }
+        },
     }
 </script>

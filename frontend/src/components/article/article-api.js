@@ -59,23 +59,30 @@ export default {
             .catch(error => console.log(error))
     },
 
-    searchTitle(searchKey, fn) {
-        AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey))
+    searchTitle(searchKey, status, fn) {
+        AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey) + `&status=` + status)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    searchHash(searchKey, fn) {
-        AXIOS.get(`article/search?hash=` + encodeURIComponent(searchKey))
+    searchHash(searchKey, status, fn) {
+        AXIOS.get(`article/search?hash=` + encodeURIComponent(searchKey) + `&status=` + status)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    searchAuthor(searchKey, fn) {
-        AXIOS.get(`article/search?author=` + encodeURIComponent(searchKey))
+    searchAuthor(searchKey, status, fn) {
+        AXIOS.get(`article/search?author=` + encodeURIComponent(searchKey) + `&status=` + status)
             .then(response => fn(response))
             .catch(error => console.log(error))
-    }
+    },
+
+    searchWithStatus(status, fn) {
+        AXIOS.get(`article/search?status=` + encodeURIComponent(status))
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
 
 
 

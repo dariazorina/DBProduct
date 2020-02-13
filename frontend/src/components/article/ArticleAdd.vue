@@ -156,11 +156,15 @@
 
 
                 <div class="form-group row">
-                    <div class="offset-sm-3 col-sm-3">
-                        <button type="button" @click="createArticle" class="btn btn-primary">Save</button>
-                        <a class="btn btn-default">
-                            <router-link to="/article">Cancel</router-link>
-                        </a>
+                    <div class="offset-sm-2 col-sm-3">
+                        <button type="button" style="margin-right: 20px" @click="createArticle(status[0])" class="btn btn-warning">In Progress</button>
+                        <button type="button" style="margin-right: 20px" @click="createArticle(status[1])" class="btn btn-success">Done</button>
+
+                        <button type="button" class="btn btn-info">
+
+                            <router-link to="/article" style="color: white">Cancel</router-link>
+
+                        </button>
                     </div>
                 </div>
             </form>
@@ -222,6 +226,7 @@
             // authorListForAutocomplete: [],
 
             selected: [''],
+            status: ["statusProgress", "statusDone"]
         }),
 
         methods: {
@@ -345,7 +350,7 @@
                 return !this.hasError;
             },
 
-            createArticle() {
+            createArticle(currentStatus) {
                 // this.article.movement = {
                 //     "id": this.selectedM
                 // };todo
@@ -357,6 +362,12 @@
                 this.article.language = {
                     "id": this.selectedL
                 };
+
+                if (currentStatus === this.status[0]){
+                    this.article.status = 0;
+                } else {
+                    this.article.status = 1;
+                }
 
                 this.hasError = false;
 
