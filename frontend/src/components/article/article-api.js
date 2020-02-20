@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
@@ -35,7 +36,12 @@ export default {
         AXIOS
             .post('/article', article)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.code == 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     findById(id, fn) {
@@ -59,26 +65,37 @@ export default {
             .catch(error => console.log(error))
     },
 
-    searchTitle(searchKey, status, fn) {
-        AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey) + `&status=` + status)
+    searchTitle(searchKey, status,  start, end,  fn) {
+        AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey) + `&status=` + status  + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    searchHash(searchKey, status, fn) {
-        AXIOS.get(`article/search?hash=` + encodeURIComponent(searchKey) + `&status=` + status)
+    searchHash(searchKey, status, start, end,  fn) {
+        AXIOS.get(`article/search?hash=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    searchAuthor(searchKey, status, fn) {
-        AXIOS.get(`article/search?author=` + encodeURIComponent(searchKey) + `&status=` + status)
+    searchAuthor(searchKey, status, start, end,  fn) {
+        AXIOS.get(`article/search?author=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    searchWithStatus(status, fn) {
-        AXIOS.get(`article/search?status=` + encodeURIComponent(status))
+    searchWithStatus(status, start, end, fn) {
+        AXIOS.get(`article/search?status=` + status + `&startDate=` + start + `&endDate=` + end)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status == 401) {
+                    router.push('/login');
+                }
+            })
+    },
+
+    searchPeriod(start, end, fn) {
+        AXIOS.get(`article/search?startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },

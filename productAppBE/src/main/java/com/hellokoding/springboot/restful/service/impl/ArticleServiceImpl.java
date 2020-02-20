@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -81,37 +83,56 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> search(String title, String hash, String author, Integer status) {
+    public List<Article> search(String title, String hash, String author, String lang, String descr, Integer status, String startDate, String endDate) throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date frmtStartDate = format.parse(startDate);
+        Date frmtEndDate = format.parse(endDate);
 
         List<Article> searchList = new ArrayList<>();
 
         if (title != null && !title.isEmpty()) {
             if (status != null && status != -1) {
-                searchList = articleRepository.findByTitleAndStatus("%" + title + "%", status);
+                searchList = articleRepository.findByTitleAndStatusAndDate("%" + title + "%", status, frmtStartDate, frmtEndDate);
             } else {
-                searchList = articleRepository.findByTitle("%" + title + "%");
+                searchList = articleRepository.findByTitleAndDate("%" + title + "%", frmtStartDate, frmtEndDate);
             }
-
 
         } else if (hash != null && !hash.isEmpty()) {
             if (status != null && status != -1) {
-                searchList = articleRepository.findByHashAndStatus(hash + "%", status);
+                searchList = articleRepository.findByHashAndStatus(hash + "%", status, frmtStartDate, frmtEndDate);
             } else {
-                searchList = articleRepository.findByHash(hash + "%");
+                searchList = articleRepository.findByHash(hash + "%", frmtStartDate, frmtEndDate);
             }
-
 
         } else if (author != null && !author.isEmpty()) {
             if (status != null && status != -1) {
-                searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
+                searchList = articleRepository.findByAuthorAndStatus(author + "%", status, frmtStartDate, frmtEndDate);
             } else {
-                searchList = articleRepository.findByAuthor(author + "%");
+                searchList = articleRepository.findByAuthor(author + "%", frmtStartDate, frmtEndDate);
             }
 
+//        } else if (lang != null && !lang.isEmpty()) {
+//            if (status != null && status != -1) {
+//                searchList = articleRepository.findByLangAndStatus(lang + "%", status);
+//            } else {
+//                searchList = articleRepository.findByLang(lang + "%");
+//            }
+//
+//        } else if (descr != null && !descr.isEmpty()) {
+//            if (status != null && status != -1) {
+//                searchList = articleRepository.findByDescrAndStatus("%" + descr + "%", status);
+//            } else {
+//                searchList = articleRepository.findByDescr("%" + descr + "%");
+//            }
 
         } else if (status != null) {
-            searchList = articleRepository.findByStatus(status);
+            searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
+//            searchList = articleRepository.findByStatus(status);
+        } else {
+            searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
         }
+
         return searchList;
     }
 

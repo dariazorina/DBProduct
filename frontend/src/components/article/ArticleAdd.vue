@@ -91,7 +91,7 @@
             </form>
             <form class="formCreation">
                 <div class="row align-items-center">
-                    <label for="add-title" class="col-1 col-form-label"><b>Заголовок</b></label>
+                    <label for="add-title" class="col-1 col-form-label"><b>Заголовок в оригинале</b></label>
                     <div class="col-4">
                         <input class="form-control" id="add-title" placeholder="Должно быть заполнено одно из полей заголовка" v-model="article.title"/>
                     </div>

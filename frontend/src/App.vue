@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div id="nav">
+        <div id="nav" style="margin-top: -30px">
             <!--      <router-link to="/">Hello</router-link> |-->
             <!--      <router-link to="/callservice">Service</router-link> |-->
             <!--      <router-link to="/bootstrap">Bootstrap</router-link> |-->

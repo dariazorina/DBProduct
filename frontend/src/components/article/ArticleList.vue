@@ -1,7 +1,7 @@
 <template id="article">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-        <div class="form-group row" style="margin-bottom: -10px">
+        <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px">
             <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
                     <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
@@ -11,14 +11,57 @@
                 <!-- Modal Component -->
                 <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
             </div>
+
+
+            <div class="form-group col-2"
+                 style="margin-left:auto; background-color: white">
+
+
+                <div class="row align-items-lg-baseline"
+                     style="margin-top: -20px;  margin-bottom: -5px; background-color: white">
+
+                    <label for="startdate-input" class="col-form-label">Начало</label>
+
+                    <div class="col-9"
+                         style="margin-bottom: -15px">
+                        <input class="form-control" id="startdate-input" type="date" v-model="startDate"
+                               style="background-color: white"/>
+                    </div>
+
+                    <!--                    <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">-->
+                    <!--                        <v-icon style="color: green">mdi-pencil</v-icon>-->
+                    <!--                    </v-btn>-->
+                </div>
+
+                <div class="row align-items-lg-baseline" style="background-color: white">
+                    <label for="enddate-input" class="col-form-label">Конец</label>
+
+                    <div class="col-9" style="margin-left: 10px; margin-bottom: -15px">
+                        <input class="form-control" type="date" id="enddate-input" v-model="endDate"/>
+                    </div>
+                </div>
+
+                <div>
+                    <!--                    <a class="btn btn-default" onclick="refreshPeriod">-->
+                    <button type="button" class="btn btn-link" @click="refreshPeriod">
+                        Refresh period
+                        <!--                    </a>-->
+                    </button>
+                    <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
+                </div>
+
+            </div>
         </div>
+
+
         <!--        <div class="logoutNameAndButton">welcome, {{loggedName}}!-->
         <!--            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>-->
         <!--            &lt;!&ndash; Modal Component &ndash;&gt;-->
         <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
         <!--        </div>-->
 
-        <div>
+
+        <div style="margin-top: -50px">
             <a class="btn btn-default">
                 <router-link :to="{name: 'article-add'}">Add article</router-link>
             </a>
@@ -45,8 +88,10 @@
                 <button type="button" @click="search" class="btn btn-primary">Search</button>
             </div>
 
-            <div class="col-md-2" style="margin-left:auto; margin-right:0;">
-                <b-form-group label="" style="text-align: left">
+            <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////            -->
+
+            <div class="col-2" style="margin-left:auto; margin-right:0; background-color: white">
+                <b-form-group label="" style="text-align: left; margin-left: -15px">
                     <b-form-checkbox
                             v-for="option in options"
                             v-model="selectedCheckBox"
@@ -60,7 +105,7 @@
 
             </div>
         </div>
-
+        <!--///////////////////////////////////////////////////////////////////////////////////////////////-->
 
         <table class="redTable">
             <!--        <table class="table">-->
@@ -68,6 +113,7 @@
             <!--                <template slot="thead">-->
             <tr>
                 <!--                <th class='tdTitle'>Id</th>-->
+                <th class='tdTitle' style="color:lightgray">Статус</th>
                 <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
                 <th class='tdTitle'>Язык</th>
                 <th class='tdTitle'>Хештеги</th>
@@ -85,7 +131,7 @@
 
                 <!--                <template v-if="selectedCheckBox.length!=1">-->
                 <!--            <span v-show="selectedCheckBox.length!=1">-->
-                <th class='tdTitle' style="color:lightgray">Статус</th>
+
                 <!--                    </span>-->
                 <!--                </template>-->
                 <!--                <th style="width:10%">Links</th>-->
@@ -103,6 +149,16 @@
                 <!--                <td>-->
                 <!--                    <span id=t>{{article.id }}</span>-->
                 <!--                </td>-->
+                <td>
+                    <div v-if="article.status==0">
+                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                    </div>
+                    <div v-else>
+                        <v-icon style="color: green">mdi-check</v-icon>
+                        <!--                        <v-icon style="color: green">mdi-pencil-lock</v-icon> -->
+                    </div>
+                </td>
+
                 <td>
                     {{ formatDate(article.date) }}
                 </td>
@@ -169,15 +225,7 @@
 
                 <!--                <template v-if="selectedCheckBox.length!=1">-->
                 <!--            <span v-show="selectedCheckBox.length!=1">-->
-                <td>
-                    <div v-if="article.status==0">
-                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
-                    </div>
-                    <div v-else>
-                        <v-icon style="color: green">mdi-check</v-icon>
-                        <!--                        <v-icon style="color: green">mdi-pencil-lock</v-icon> -->
-                    </div>
-                </td>
+
                 <!--                    </span>-->
                 <!--                </template>-->
                 <!--                </div>-->
@@ -341,16 +389,32 @@
         },
 
         methods: {
+            refreshPeriod() {
+                //console.log("ACHTUNG new start", this.startDate);
+               // console.log("ACHTUNG end start", this.endDate);
 
-            // formatAuthor(article) {   //to delete?
-            //     let surname = '';
-            //
-            //     for (let i = 0; i < article.authorList.length; i++) {
-            //         surname = surname + article.authorList[i].surname;
-            //         surname = surname + '\\10';
-            //     }
-            //     return surname;
-            // },
+                const moment = require('moment');
+
+                let d1 = moment(this.startDate);
+                let d2 = moment(this.endDate);
+
+                let days = d2.diff(d1, 'days');
+                console.log(`Difference in days: ${days}`);
+
+                let hours = d2.diff(d1, 'hours');
+                console.log(`Difference in hours: ${hours}`);
+
+                if (days < 0) {
+                    alert("You select incorrect period of time. Nothing will be done");
+                } else {
+                     this.search();
+
+                    // api.searchPeriod(this.startDate, this.endDate, r => {
+                    //     this.entries = r.data;
+                    // });
+
+                }
+            },
 
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
@@ -378,58 +442,61 @@
             deleteSearch() {
                 this.searchKey = "";
                 // this.entries = this.articles;
-                this.selectedCheckBoxFunc();
             },
 
-            dateFormat(value, row, index) {  //todo
-                moment(this.article.date).format('DD/MM/YYYY').then(response => {
-                    this.article.date = response.data;
-                })
-            },
+            // dateFormat(value, row, index) {  //todo
+            //     moment(this.article.date).format('DD/MM/YYYY').then(response => {
+            //         this.article.date = response.data;
+            //     })
+            // },
 
             search() {
                 // console.log("SEARCH", this.searchKey);
 
                 if (this.searchKey === "" && this.selectedCheckBox.length != 1) {//s- ch-
-                    this.entries = this.articles;
+                    // this.entries = this.articles;
+
+                    api.searchPeriod(this.startDate, this.endDate, r => {
+                        this.entries = r.data;
+                    });
 
                 } else {
                     if (this.searchKey === "") {    //s-
                         if (this.selectedCheckBox.length == 1) { //ch+
-                            api.searchWithStatus(this.selectedCheckBox[0], r => {
+                            api.searchWithStatus(this.selectedCheckBox[0], this.startDate, this.endDate, r => {
                                 this.entries = r.data;
                             });
                         }
                     } else {        //s+
                         if (this.selected === "хештег") {
                             if (this.selectedCheckBox.length == 1) { //ch+
-                                api.searchHash(this.searchKey, this.selectedCheckBox[0], r => {
+                                api.searchHash(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
-                                api.searchHash(this.searchKey, -1, r => {
+                                api.searchHash(this.searchKey, -1, this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             }
 
                         } else if (this.selected === "автор") {
                             if (this.selectedCheckBox.length == 1) {    //ch+
-                                api.searchAuthor(this.searchKey, this.selectedCheckBox[0], r => {
+                                api.searchAuthor(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
-                                api.searchAuthor(this.searchKey, -1, r => {
+                                api.searchAuthor(this.searchKey, -1, this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             }
 
                         } else if (this.selected === "заголовок") {
                             if (this.selectedCheckBox.length == 1) {        //ch+
-                                api.searchTitle(this.searchKey, this.selectedCheckBox[0], r => {
+                                api.searchTitle(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
-                                api.searchTitle(this.searchKey, -1, r => {
+                                api.searchTitle(this.searchKey, -1, this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             }
@@ -440,16 +507,24 @@
         },
 
         mounted() {
+
+           // console.log("START DATE", this.startDate);
+           // console.log("END DATE", this.endDate);
+
             this.getLoggedIn();
 
-            api.getAll().then(response => {
-                this.articles = response.data;
-                this.entries = this.articles;
-                // console.log(response.data)
-            })
-                .catch(error => {
-                    this.errors.push(error)
-                })
+            // api.getAll().then(response => {
+            //     this.articles = response.data;
+            //     this.entries = this.articles;
+            //     // console.log(response.data)
+            // })
+            //     .catch(error => {
+            //         this.errors.push(error)
+            //     })
+
+            api.searchPeriod(this.startDate, this.endDate, r => {
+                this.entries = r.data;
+            });
         },
 
         watch: {
@@ -459,7 +534,11 @@
                     if (this.selectedCheckBox.length == 1) {
                         this.search();
                     } else {
-                        this.entries = this.articles;
+                        //this.entries = this.articles;
+
+                        api.searchPeriod(this.startDate, this.endDate, r => {
+                            this.entries = r.data;
+                        });
                     }
                 }
             },
@@ -472,7 +551,7 @@
                 if (this.searchKey != "") {
                     this.search();
                 }
-            }
+            },
         },
     }
 </script>

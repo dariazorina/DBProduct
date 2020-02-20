@@ -51,6 +51,9 @@
 </template>
 
 <script>
+
+    import Vue from 'vue';
+
     export default {
         name: 'login',
 
@@ -76,6 +79,20 @@
                         this.error = true
                     })
             }
+        },
+        mounted() {
+            const moment = require('moment');
+            let now = moment();
+         //   console.log(`Now: ${now.format('ll')}`);
+            Vue.prototype.endDate = now.format('YYYY-MM-DD');
+
+            now.subtract('1', 'months');
+        //    console.log(`Subtracting 1 m: ${now.format('ll')}`);
+            Vue.prototype.startDate = now.format('YYYY-MM-DD');
+            // Vue.prototype.startDate = now.format("DD/MM/YYYY");
+            //  Vue.prototype.startDate = now.format('MM/DD/YYYY');
+
+            // console.log(Vue.prototype.startDate);
         }
     }
 </script>

@@ -39,7 +39,7 @@
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Дата</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{ formatDate(article.date) }}</span>
+                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{ article.date }}</span>
                 </div>
             </div>
 
@@ -128,12 +128,13 @@
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.miscellany}}</span>
                 </div>
             </div>
-
         </div>
-        <div class="my-md-4">
-            <a class="btn btn-outline-info btn-sm mr-2">
-                <router-link to="/article">Back To Article List</router-link>
-            </a>
+
+        <!--        <div class="my-md-4">-->
+        <div class="offset-sm-1 col-sm-3">
+            <button type="button" class="btn btn-info">
+                <router-link to="/article" style="color: white; font-size: medium">Back To Article List</router-link>
+            </button>
         </div>
     </div>
 
@@ -205,7 +206,6 @@
         mounted() {
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;
-                // console.log(r.data);
                 this.article.date = this.formatDate(this.article.date);
             });
 
@@ -218,10 +218,10 @@
 
         },
 
-        dateFormat(value, row, index) {  //todo
-            moment(this.article.date).format('DD/MM/YYYY').then(response => {
-                this.article.date = response.data;
-            })
-        }
+        // dateFormat(value, row, index) {  //todo
+        //     moment(this.article.date).format('DD/MM/YYYY').then(response => {
+        //         this.article.date = response.data;
+        //     })
+        // }
     }
 </script>
