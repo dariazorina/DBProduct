@@ -372,7 +372,7 @@
                 loggedName: null,
 
                 selected: "заголовок",
-                searchItems: ["хештег", "заголовок", "автор"],
+                searchItems: ["хештег", "заголовок", "автор", "язык", "описание"],
                 searchKey: '',
 
                 selectedCheckBox: [],
@@ -486,6 +486,28 @@
                                 });
                             } else {
                                 api.searchAuthor(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                    this.entries = r.data;
+                                });
+                            }
+
+                        } else if (this.selected === "язык") {
+                            if (this.selectedCheckBox.length == 1) {    //ch+
+                                api.searchLanguage(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                                    this.entries = r.data;
+                                });
+                            } else {
+                                api.searchLanguage(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                    this.entries = r.data;
+                                });
+                            }
+
+                        } else if (this.selected === "описание") {
+                            if (this.selectedCheckBox.length == 1) {    //ch+
+                                api.searchDescription(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                                    this.entries = r.data;
+                                });
+                            } else {
+                                api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             }

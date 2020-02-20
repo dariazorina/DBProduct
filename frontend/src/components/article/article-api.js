@@ -83,6 +83,18 @@ export default {
             .catch(error => console.log(error))
     },
 
+    searchLanguage(searchKey, status, start, end,  fn) {
+        AXIOS.get(`article/search?language=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
+    searchDescription(searchKey, status, start, end,  fn) {
+        AXIOS.get(`article/search?description=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
     searchWithStatus(status, start, end, fn) {
         AXIOS.get(`article/search?status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))

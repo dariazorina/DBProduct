@@ -83,7 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> search(String title, String hash, String author, String lang, String descr, Integer status, String startDate, String endDate) throws ParseException {
+    public List<Article> search(String title, String hash, String author, String language, String description, Integer status, String startDate, String endDate) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date frmtStartDate = format.parse(startDate);
@@ -100,31 +100,31 @@ public class ArticleServiceImpl implements ArticleService {
 
         } else if (hash != null && !hash.isEmpty()) {
             if (status != null && status != -1) {
-                searchList = articleRepository.findByHashAndStatus(hash + "%", status, frmtStartDate, frmtEndDate);
+                searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
             } else {
-                searchList = articleRepository.findByHash(hash + "%", frmtStartDate, frmtEndDate);
+                searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
             }
 
         } else if (author != null && !author.isEmpty()) {
             if (status != null && status != -1) {
-                searchList = articleRepository.findByAuthorAndStatus(author + "%", status, frmtStartDate, frmtEndDate);
+                searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
             } else {
-                searchList = articleRepository.findByAuthor(author + "%", frmtStartDate, frmtEndDate);
+                searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
             }
 
-//        } else if (lang != null && !lang.isEmpty()) {
-//            if (status != null && status != -1) {
-//                searchList = articleRepository.findByLangAndStatus(lang + "%", status);
-//            } else {
-//                searchList = articleRepository.findByLang(lang + "%");
-//            }
-//
-//        } else if (descr != null && !descr.isEmpty()) {
-//            if (status != null && status != -1) {
-//                searchList = articleRepository.findByDescrAndStatus("%" + descr + "%", status);
-//            } else {
-//                searchList = articleRepository.findByDescr("%" + descr + "%");
-//            }
+        } else if (language != null && !language.isEmpty()) {
+            if (status != null && status != -1) {
+                searchList = articleRepository.findByLangAndStatusAndDate(language + "%", status, frmtStartDate, frmtEndDate);
+            } else {
+                searchList = articleRepository.findByLangAndDate(language + "%", frmtStartDate, frmtEndDate);
+            }
+
+        } else if (description != null && !description.isEmpty()) {
+            if (status != null && status != -1) {
+                searchList = articleRepository.findByDescriptionAndStatusAndDate("%" + description + "%", status, frmtStartDate, frmtEndDate);
+            } else {
+                searchList = articleRepository.findByDescriptionAndDate("%" + description + "%", frmtStartDate, frmtEndDate);
+            }
 
         } else if (status != null) {
             searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);

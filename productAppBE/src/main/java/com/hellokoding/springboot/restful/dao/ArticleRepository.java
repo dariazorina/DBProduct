@@ -18,6 +18,18 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByTitleAndDate(String title, Date startDate, Date endDate);
 
+    //search in description, "contains"
+    @Query("from Article as a " +
+            "where lower(a.description) like lower(:description) " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByDescriptionAndDate(String description, Date startDate, Date endDate);
+
+
+    //search in language, "starts with"
+    @Query("select a from Article as a join a.language l where lower(l.name) like lower(:lang) " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByLangAndDate(String lang, Date startDate, Date endDate);
+
 
     //search in hash, "starts with"
     @Query("select a " +
@@ -26,7 +38,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "where lower(h.content) like lower(:hashTag) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
 //            "where h.content = :hashTag")
-    List<Article> findByHash(String hashTag, Date startDate, Date endDate);
+    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
 
 
     //search in author surname and surnameRus, "starts with"
@@ -36,13 +48,17 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "where lower(aL.surname) like lower(:author) " +
             "or lower(aL.surnameRus) like lower(:author) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByAuthor(String author, Date startDate, Date endDate);
+    List<Article> findByAuthorAndDate(String author, Date startDate, Date endDate);
+
+
 
 
     //search status+date
     @Query("from Article a " +
             "where a.status = :status and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByDateAndStatus(Integer status, Date startDate, Date endDate);
+
+
 
 
     //search status+author
@@ -53,7 +69,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "or lower(aL.surnameRus) like lower(:author)) " +
             "and a.status = :status " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByAuthorAndStatus(String author, Integer status, Date startDate, Date endDate);
+    List<Article> findByAuthorAndStatusAndDate(String author, Integer status, Date startDate, Date endDate);
 
     //search status+hash
     @Query("select a " +
@@ -62,7 +78,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "where lower(h.content) like lower(:hashTag) " +
             "and a.status = :status " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByHashAndStatus(String hashTag, Integer status, Date startDate, Date endDate);
+    List<Article> findByHashAndStatusAndDate(String hashTag, Integer status, Date startDate, Date endDate);
 
     //search status+title
     @Query("from Article a " +
@@ -70,6 +86,22 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and a.status = :status " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByTitleAndStatusAndDate(@Param("title") String title, @Param("status") Integer status, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    //search status+description
+    @Query("from Article a " +
+            "where lower(a.description) like lower(:description) " +
+            "and a.status = :status " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByDescriptionAndStatusAndDate(String description, Integer status, Date startDate, Date endDate);
+
+
+    //search in language+status, "starts with"
+    @Query("from Article a " +
+            "where lower(a.language.name) like lower(:lang) " +
+            "and a.status = :status " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByLangAndStatusAndDate(String lang, Integer status, Date startDate, Date endDate);
+
 
 
     //search date range
