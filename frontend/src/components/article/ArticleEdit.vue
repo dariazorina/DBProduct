@@ -253,7 +253,10 @@
 
                 statusOptions: [
                     {text: 'In Progress', value: 0},
-                    {text: 'Done', value: 1},]
+                    {text: 'Done', value: 1},
+                    {text: 'Returned', value: 2},
+                    {text: 'Completed', value: 3},
+                ]
             }
         },
         components: {
