@@ -28,9 +28,9 @@
                                style="background-color: white"/>
                     </div>
 
-                    <!--                    <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">-->
-                    <!--                        <v-icon style="color: green">mdi-pencil</v-icon>-->
-                    <!--                    </v-btn>-->
+                    <!--                                        <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">-->
+                    <!--                                            <v-icon style="color: green">mdi-pencil</v-icon>-->
+                    <!--                                        </v-btn>-->
                 </div>
 
                 <div class="row align-items-lg-baseline" style="background-color: white">
@@ -43,7 +43,7 @@
 
                 <div>
                     <!--                    <a class="btn btn-default" onclick="refreshPeriod">-->
-                    <button type="button" class="btn btn-link" @click="refreshPeriod">
+                    <button id="refreshButton" type="button" class="btn btn-link" @click="refreshPeriod">
                         Refresh period
                         <!--                    </a>-->
                     </button>
@@ -94,7 +94,7 @@
                 <b-form-group label="" style="text-align: left; margin-left: -15px">
                     <b-form-checkbox
                             v-for="option in options"
-                            v-model="selectedCheckBox"
+                            v-model="statusCheckBox"
                             :key="option.key"
                             :value="option.value"
                             name="statusSelection"
@@ -113,7 +113,7 @@
             <!--                <template slot="thead">-->
             <tr>
                 <!--                <th class='tdTitle'>Id</th>-->
-                <th class='tdTitle' style="color:lightgray">Статус</th>
+                <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
                 <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
                 <th class='tdTitle'>Язык</th>
                 <th class='tdTitle'>Хештеги</th>
@@ -129,13 +129,14 @@
                 <th class='tdTitle' style="width:20%">Описание</th>
                 <th class='tdTitle' style="width:14%; color:lightgray">Комментарии</th>
 
-                <!--                <template v-if="selectedCheckBox.length!=1">-->
-                <!--            <span v-show="selectedCheckBox.length!=1">-->
+                <!--                <template v-if="statusCheckBox.length!=1">-->
+                <!--            <span v-show="statusCheckBox.length!=1">-->
 
                 <!--                    </span>-->
                 <!--                </template>-->
                 <!--                <th style="width:10%">Links</th>-->
 
+                <th class="tdTitle" style="width:4%"></th>
                 <th class="tdTitle" style="width:4%"></th>
             </tr>
             </thead>
@@ -149,14 +150,25 @@
                 <!--                <td>-->
                 <!--                    <span id=t>{{article.id }}</span>-->
                 <!--                </td>-->
-                <td>
+                <td :key="article.status">
                     <div v-if="article.status==0">
                         <v-icon style="color: orange">mdi-pencil-plus</v-icon>
                     </div>
-                    <div v-else>
+
+                    <div v-if="article.status==1">
+                        <v-icon style="color: orange">mdi-check</v-icon>
+                        <!--                                                <v-icon style="color: green">mdi-pencil-lock</v-icon>-->
+                    </div>
+
+                    <div v-if="article.status==2">
+                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    </div>
+
+                    <div v-if="article.status==3">
                         <v-icon style="color: green">mdi-check</v-icon>
                         <!--                        <v-icon style="color: green">mdi-pencil-lock</v-icon> -->
                     </div>
+
                 </td>
 
                 <td>
@@ -223,8 +235,8 @@
                 </td>
 
 
-                <!--                <template v-if="selectedCheckBox.length!=1">-->
-                <!--            <span v-show="selectedCheckBox.length!=1">-->
+                <!--                <template v-if="statusCheckBox.length!=1">-->
+                <!--            <span v-show="statusCheckBox.length!=1">-->
 
                 <!--                    </span>-->
                 <!--                </template>-->
@@ -236,17 +248,6 @@
 
 
                 <td>
-                    <!--                    <div class="ListCellStyleForButton">-->
-                    <!--                    <a class="btn btn-warning btn-sm mr-2">-->
-                    <!--                        <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">Edit-->
-                    <!--                        </router-link>-->
-                    <!--                    </a>-->
-                    <!--                    <a class="btn btn-danger btn-sm">-->
-                    <!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
-                    <!--                        </router-link>-->
-                    <!--                    </a>-->
-
-
                     <v-btn text icon x-small>
                         <a>
                             <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">
@@ -263,20 +264,16 @@
                             </router-link>
                         </a>
                     </v-btn>
+                </td>
+                <td>
+                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
+                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    </v-btn>
 
+                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
+                        <v-icon style="color: green">mdi-check</v-icon>
 
-                    <!--                    </div>-->
-
-                    <!--                    <v-btn :to="{name: 'article-edit', params: {article_id: article.id}}"-->
-                    <!--                           light small right bottom fab-->
-                    <!--                           class="pink" slot="action">-->
-
-                    <!--                        <v-icon right dark >cloud_upload</v-icon>-->
-                    <!--&lt;!&ndash;                        <v-icon small class="mr-2">smiley-neutral-outline</v-icon>&ndash;&gt;-->
-                    <!--&lt;!&ndash;                        <v-icon>mdi-watch</v-icon>&ndash;&gt;-->
-                    <!--                    </v-btn>-->
-
-
+                    </v-btn>
                 </td>
             </tr>
             </tbody>
@@ -343,6 +340,7 @@
 
 <script>
 
+    import Vue from 'vue';
     import api from "./article-api";
     import moment from "moment";
     import router from "./../../router";
@@ -359,7 +357,7 @@
         data() {
             return {
                 articles: [],
-                article: {authorList: []},
+                article: {status: 0, authorList: []},
                 authors: [],
 
                 response: [],
@@ -375,10 +373,14 @@
                 searchItems: ["хештег", "заголовок", "автор", "язык", "описание"],
                 searchKey: '',
 
-                selectedCheckBox: [],
+                statusCheckBox: [],
                 options: [
                     {text: 'In Progress', value: 0},
-                    {text: 'Done', value: 1},]
+                    {text: 'Done', value: 1},
+                    {text: 'Returned', value: 2},
+                    {text: 'Completed', value: 3},
+
+                ]
             }
         },
         computed: {
@@ -389,9 +391,44 @@
         },
 
         methods: {
+
+            updateArticleStatus(id, status) {
+
+
+                api.findById(id, r => {
+                    this.article = r.data;
+
+                    this.article.status = status;
+                    api.update(this.article.id, this.article, r => {
+                        //router.push('/article');
+                        // this.entries = r.data;
+                        // console.log("UPDATE= = = = = = =");
+                        // this.$forceUpdate();
+                        // this.filteredArticles();
+                        // document.location.reload(true);
+
+                        this.search();
+                    });
+
+
+                    // this.article.date = this.formatDate(this.article.date);
+
+                    // this.tags = this.article.hashtagList;
+                    // for (let i = 0; i < this.article.hashtagList.length; i++) {
+                    //     this.tags.push(this.article.hashtagList[i].content);
+                    // }
+
+                    // for (let i = 0; i < this.article.linkList.length; i++) {
+                    //     this.links.push(this.article.linkList[i].content);
+                    // }
+                });
+
+
+            },
+
             refreshPeriod() {
                 //console.log("ACHTUNG new start", this.startDate);
-               // console.log("ACHTUNG end start", this.endDate);
+                // console.log("ACHTUNG end start", this.endDate);
 
                 const moment = require('moment');
 
@@ -407,7 +444,10 @@
                 if (days < 0) {
                     alert("You select incorrect period of time. Nothing will be done");
                 } else {
-                     this.search();
+                    Vue.prototype.startDate = this.startDate;
+                    Vue.prototype.endDate = this.endDate;
+
+                    this.search();
 
                     // api.searchPeriod(this.startDate, this.endDate, r => {
                     //     this.entries = r.data;
@@ -439,6 +479,37 @@
                 }
             },
 
+            // complexStatusCreation() {
+            //
+            //     let complexStatus = '';
+            //     for (let i = 0; i < this.statusCheckBox.length; i++) {
+            //         complexStatus += this.statusCheckBox[i].toString();
+            //     }
+            //     console.log(complexStatus);
+            //     return complexStatus;
+            //
+            // },
+
+            complexStatusCreation() {
+
+                let result = '';
+                let complexStatus = '&status=';
+                let i = 0;
+
+                // result = complexStatus;
+                // if (this.statusCheckBox.length>0)
+
+                for (; i < this.statusCheckBox.length - 1; i++) {
+                    result += this.statusCheckBox[i] + complexStatus;
+                }
+
+                result += this.statusCheckBox[i];
+
+                console.log(result);
+                return result;
+
+            },
+
             deleteSearch() {
                 this.searchKey = "";
                 // this.entries = this.articles;
@@ -450,27 +521,40 @@
             //     })
             // },
 
+            isArrayValidAndNotEmpty(array) {
+
+                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                    return false;
+                }
+                return true;
+            },
+
             search() {
                 // console.log("SEARCH", this.searchKey);
 
-                if (this.searchKey === "" && this.selectedCheckBox.length != 1) {//s- ch-
+                let emptyArray = [];
+                let nonExistantArray = undefined;
+
+
+                if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
                     // this.entries = this.articles;
 
-                    api.searchPeriod(this.startDate, this.endDate, r => {
+                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
                         this.entries = r.data;
                     });
 
                 } else {
                     if (this.searchKey === "") {    //s-
-                        if (this.selectedCheckBox.length == 1) { //ch+
-                            api.searchWithStatus(this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                        if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){ //ch+
+                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                 this.entries = r.data;
                             });
                         }
+
                     } else {        //s+
                         if (this.selected === "хештег") {
-                            if (this.selectedCheckBox.length == 1) { //ch+
-                                api.searchHash(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){//ch+
+                                api.searchHash(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
@@ -480,8 +564,8 @@
                             }
 
                         } else if (this.selected === "автор") {
-                            if (this.selectedCheckBox.length == 1) {    //ch+
-                                api.searchAuthor(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){  //ch+
+                                api.searchAuthor(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
@@ -491,8 +575,8 @@
                             }
 
                         } else if (this.selected === "язык") {
-                            if (this.selectedCheckBox.length == 1) {    //ch+
-                                api.searchLanguage(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){    //ch+
+                                api.searchLanguage(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
@@ -502,8 +586,8 @@
                             }
 
                         } else if (this.selected === "описание") {
-                            if (this.selectedCheckBox.length == 1) {    //ch+
-                                api.searchDescription(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){   //ch+
+                                api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
@@ -513,11 +597,12 @@
                             }
 
                         } else if (this.selected === "заголовок") {
-                            if (this.selectedCheckBox.length == 1) {        //ch+
-                                api.searchTitle(this.searchKey, this.selectedCheckBox[0], this.startDate, this.endDate, r => {
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){
+                                api.searchTitle(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
                             } else {
+                                console.log("NIT");
                                 api.searchTitle(this.searchKey, -1, this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
@@ -530,8 +615,8 @@
 
         mounted() {
 
-           // console.log("START DATE", this.startDate);
-           // console.log("END DATE", this.endDate);
+            // console.log("START DATE", this.startDate);
+            // console.log("END DATE", this.endDate);
 
             this.getLoggedIn();
 
@@ -544,28 +629,68 @@
             //         this.errors.push(error)
             //     })
 
-            api.searchPeriod(this.startDate, this.endDate, r => {
+            api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
                 this.entries = r.data;
             });
         },
 
         watch: {
             searchKey: function () {
-                // console.log("WATCH");
+                //If empty search to renew the table
+                console.log("WATCH");
                 if (this.searchKey == "") {
-                    if (this.selectedCheckBox.length == 1) {
-                        this.search();
-                    } else {
-                        //this.entries = this.articles;
-
-                        api.searchPeriod(this.startDate, this.endDate, r => {
-                            this.entries = r.data;
-                        });
-                    }
+                    // if (this.statusCheckBox.length > 0) {
+                    this.search();
+                    // } else {
+                    //this.entries = this.articles;
+                    // api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
+                    //     this.entries = r.data;
+                    // });
+                    // }
                 }
             },
 
-            selectedCheckBox: function () {
+            statusCheckBox: function () {
+                console.log("WATCH SCB!");
+                console.log(this.statusCheckBox);
+
+                if (this.statusCheckBox[this.statusCheckBox.length - 1] == 3) {
+                    console.log("this.statusCheckBox!!! == 3");
+
+                    document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
+                    document.getElementById("enddate-input").style.backgroundColor = "lightgrey";
+
+                    document.getElementById("startdate-input").disabled = true;
+                    document.getElementById("enddate-input").disabled = true;
+                    document.getElementById("refreshButton").disabled = true;
+
+                    for (let i = 0; i < this.statusCheckBox.length; i++) {
+                        if (this.statusCheckBox[i] != 3) {
+                            this.statusCheckBox.shift();
+                            console.log("SHIFT");
+                            // document.getElementById("startdate-input").style.backgroundColor = "green";
+                        }
+                    }
+
+                    console.log("AFTER", this.statusCheckBox);
+                } else {
+                    document.getElementById("startdate-input").style.backgroundColor = "white";
+                    document.getElementById("enddate-input").style.backgroundColor = "white";
+
+                    document.getElementById("startdate-input").disabled = false;
+                    document.getElementById("enddate-input").disabled = false;
+                    document.getElementById("refreshButton").disabled = false;
+
+                    for (let i = 0; i < this.statusCheckBox.length; i++) {
+                        if (this.statusCheckBox[i] == 3) {
+                            this.statusCheckBox.splice(i, 1);
+                            console.log("SPLICE");
+
+                            // document.getElementById("startdate-input").style.backgroundColor = "white";
+                        }
+                    }
+                }
+
                 this.search();
             },
 

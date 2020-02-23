@@ -95,7 +95,7 @@ export default {
             .catch(error => console.log(error))
     },
 
-    searchWithStatus(status, start, end, fn) {
+    searchPeriodAndStatus(status, start, end, fn) {
         AXIOS.get(`article/search?status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => {
@@ -106,11 +106,12 @@ export default {
             })
     },
 
-    searchPeriod(start, end, fn) {
-        AXIOS.get(`article/search?startDate=` + start + `&endDate=` + end)
-            .then(response => fn(response))
-            .catch(error => console.log(error))
-    },
+    // searchPeriod(start, end, fn) {
+    //     AXIOS.get(`article/search?startDate=` + start + `&endDate=` + end)
+    //         .then(response => fn(response))
+    //         .catch(error => console.log(error))
+    // },
+
 
 
 

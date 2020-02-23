@@ -29,7 +29,7 @@ public class ArticleAPI {
                                                 @RequestParam(name = "author", required = false) String author,
                                                 @RequestParam(name = "language", required = false) String lang,
                                                 @RequestParam(name = "description", required = false) String descr,
-                                                @RequestParam(name = "status", required = false) Integer status,
+                                                @RequestParam(name = "status", required = false) List<Integer> status,
                                                 @RequestParam(name = "startDate", required = false) String startDate,
                                                 @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
 
