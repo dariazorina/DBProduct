@@ -117,7 +117,7 @@
                 <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
                 <th class='tdTitle'>Язык</th>
                 <th class='tdTitle'>Хештеги</th>
-                <th class='tdTitle' style="width:6%">Автор</th>
+                <th class='tdTitle'>Автор</th>
                 <th class='tdTitle'>Заголовок</th>
                 <th class='tdTitle' style="width:20%">Описание</th>
                 <th class='tdTitle' style="width:14%; color:lightgray">Комментарии</th>
@@ -253,7 +253,7 @@
                 <td>
                     <v-btn text icon x-small>
                         <a>
-                            <router-link :to="{name: 'article-edit', params: {article_id: article.id}}">
+                            <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
                                 <v-icon style="color: green">mdi-pencil</v-icon>
                             </router-link>
                         </a>

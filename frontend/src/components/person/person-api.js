@@ -45,7 +45,41 @@ export default {
             .delete('/person/' + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
-    }
+    },
+
+    // searchPerson(searchKey, loading, fn, fn2) {
+    //     AXIOS.get(`/person/search?q=` + encodeURIComponent(searchKey))
+    //         .then(response => fn(response))
+    //         .then(response => fn2(response))
+    //         .catch(error => console.log(error))
+    //         .finally(() => (loading = false))
+    // },
+    //
+    //
+    // searchPerson1(searchKey ) {
+    //     fetch(`/person/search?q=` + encodeURIComponent(searchKey))
+    //         .then(function (response) {
+    //             return response.json();
+    //         })
+    //
+    //         .catch(function (error) {
+    //             console.log(error)
+    //         });
+    // }
 }
 
+
+// fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
+//     .then(res => res.json())
+//     .then(res => {
+//         this.entries = res;
+//         // const {count, entries} = res;
+//         // this.count = count;
+//         // this.entries = entries;
+//     })
+//     .catch(err => {
+//         console.log(err)
+//     })
+//     .finally(() => (this.isLoading = false))
+// }
 

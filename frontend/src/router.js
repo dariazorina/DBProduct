@@ -66,7 +66,7 @@ const router = new Router({
         {path: '/', component: ArticleList},
         {path: '/article/:article_id/details', component: ArticleDetails, name: 'article-details'},
         {path: '/article/add', component: ArticleAdd, name: 'article-add'},
-        {path: '/article/:article_id/edit', component: ArticleEdit, name: 'article-edit'},
+        {path: '/article/:article_id/edit', component: ArticleAdd, name: 'article-add'},
         {path: '/article/:article_id/delete', component: ArticleDelete, name: 'article-delete'},
 
         {path: '/event', component: EventList},

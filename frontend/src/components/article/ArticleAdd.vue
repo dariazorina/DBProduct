@@ -2,7 +2,18 @@
     <v-app id="inspire">
         <div>
             <div class="form-group row">
-                <div class="col-2 col-form-label">
+
+                <div v-if="editMode" class="col-5 col-form-label">
+
+                    <div v-if="article.titleRus == null">
+                        <p class="pageEditTitle">Edit "{{article.title}}"</p>
+                    </div>
+                    <div v-else>
+                        <p class="pageEditTitle">Edit "{{article.titleRus}}"</p>
+                    </div>
+                </div>
+
+                <div v-else="editMode" class="col-3 col-form-label">
                     <p class="pageCreateTitle">Add New Article</p>
                 </div>
 
@@ -23,6 +34,18 @@
                 <div class="col-lg-6" style="background-color: white">
 
                     <form class="formCreation">
+
+                        <div v-if="editMode" class="row align-items-center">
+                            <label class="col-2 col-form-label labelInCreation">Status</label>
+                            <div class="col-10">
+                                <b-form-select v-model="selectedS" class="mb-3" id="status-selection">
+                                    <option v-for="status in statusOptions" v-bind:value="status.value">
+                                        {{status.text}}
+                                    </option>
+                                </b-form-select>
+                                <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                            </div>
+                        </div>
 
                         <div class="row align-items-center" style="background-color: white">
                             <label for="add-url" class="col-2 col-form-label"><b>URL*</b></label>
@@ -46,6 +69,13 @@
                                 <input class="form-control" type="date" id="date-input" v-model="article.date">
                             </div>
                         </div>
+
+                        <!--                        <div class="form-group row align-items-center">-->
+                        <!--                            <label for="date-input" class="col-1 col-form-label labelInCreation"><b>Date*</b></label>-->
+                        <!--                            <div class="col-4">-->
+                        <!--                                <input class="form-control" type="date" id="date-input" v-model="article.date">-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
 
                     </form>
 
@@ -148,7 +178,7 @@
                                 <div class="col-10">
 
                                     <textarea class="form-control" id="add-misc" rows="4" v-model="article.miscellany"
-                                  background-color="palegreen" required/>
+                                              background-color="palegreen" required/>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +207,17 @@
                 <!--                </div>-->
 
 
-                <div class="form-group row" style="padding-top: 30px">
+                <div v-if="editMode" class="form-group row align-items-center align-items-center">
+                    <div class="offset-sm-4 col-sm-3">
+
+                        <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
+                        <a class="btn btn-default">
+                            <router-link to="/article">Cancel</router-link>
+                        </a>
+                    </div>
+                </div>
+
+                <div v-else class="form-group row" style="padding-top: 30px">
                     <div class="offset-sm-4 col-sm-3">
                         <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
                                 class="btn btn-warning">In Progress
@@ -199,19 +239,15 @@
 </template>
 
 <script>
-    //  require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
+    import apiPerson from "./../person/person-api";
     import api from "./article-api";
-    // import hashTagApi from "./hash-tag-api";
+    import moment from "moment";
     import InputTag from 'vue-input-tag';
     import router from "./../../router";
-    import customers from './../../assets/customers';
-    //   import Autocomplete from 'vue2-autocomplete-js'
     import Vue from 'vue';
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
 
-    ///// import VoerroTagsInput from '@voerro/vue-tagsinput';
-    // Vue.component('autocomplete', Autocomplete);
     Vue.component('input-tag', InputTag);
 
     export default {
@@ -231,28 +267,31 @@
             // return {
             selectedM: null,
             selectedL: null,
+            selectedS: null,
 
             errorFlag: false,
             errors: [],
             validationErrors: {},
             hasError: false,
 
-            // selectedTags: "",
-            // hashTag: "",
-
-            // hashTags: [],
             tags: [],
-            links: [],
-            // customers: [],
 
             allLanguages: [],
             allMovements: [],
 
-            article: {authorList: [], hashtagList: [], linkList: []},
-            // authorListForAutocomplete: [],
+            article: {authorList: [], hashtagList: []},
 
             selected: [''],
-            status: ["statusProgress", "statusDone"]
+            status: ["statusProgress", "statusDone"],
+
+            statusOptions: [
+                {text: 'In Progress', value: 0},
+                {text: 'Done', value: 1},
+                {text: 'Returned', value: 2},
+                {text: 'Completed', value: 3},
+            ],
+
+            editMode: false
         }),
 
         methods: {
@@ -263,15 +302,14 @@
             },
 
             addAuthor(obj) {
-                console.log("GET CHANGED");
+                // console.log("GET CHANGED");
 
-                var i = 0;
+                let i = 0;
                 for (i = 0; i < this.article.authorList.length; i++) { //to exclude double values
                     if (this.article.authorList[i].id === obj.id) {
                         break;
                     }
                 }
-                // console.log(i);
 
                 if (i === this.article.authorList.length) {
                     this.article.authorList.push(obj);
@@ -293,16 +331,6 @@
                 }
             },
 
-            // loadData: function () {
-            //     if (this.hashTag && this.hashTag.length > 3) {
-            //         hashTagApi.search(this.hashTag, r => this.hashTags = r.data);
-            //         console.log("qqqqqqqqqqqq");
-            //     }
-            // },
-            // deleteHashTag: function () {
-            //     console.log("ddd");
-            // },
-
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -320,6 +348,12 @@
                 // var re = /((0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[0-2])[.][12][0-9]{3})$/;
                 return re.test(code);
             },
+
+            formatDate(date) {
+                return moment(date).format('YYYY-MM-DD');
+                // return moment(date).format('DD/MM/YYYY');
+            },
+
 
             // formValidate() {  //all fields are required
             //     this.addStatus('add-title', (!this.article.title));
@@ -397,14 +431,6 @@
 
                 this.hasError = false;
 
-                // this.article.hashtagList = this.tags;
-
-                // for (let i = 0; i < this.links.length; i++) {
-                //     this.article.linkList[i] = {
-                //         "content": this.links[i]
-                //     };
-                // }
-
                 for (let i = 0; i < this.tags.length; i++) {
                     this.article.hashtagList[i] = {
                         "content": this.tags[i]
@@ -418,6 +444,40 @@
                 }
             },
 
+
+            updateArticle() {
+                // this.article.movement = {
+                //     "id": this.selectedM
+                // }; todo
+
+                this.article.language = {
+                    "id": this.selectedL
+                };
+
+                this.article.status = this.selectedS;
+                this.hasError = false;
+
+                // this.article.linkList = [];
+                // for (let i = 0; i < this.links.length; i++) {
+                //     this.article.linkList[i] = {
+                //         "content": this.links[i]
+                //     };
+                // }
+
+                this.article.hashtagList = [];
+                for (let i = 0; i < this.tags.length; i++) {
+                    this.article.hashtagList[i] = {
+                        "content": this.tags[i]
+                    };
+                }
+
+                if (this.formValidate()) {
+                    api.update(this.article.id, this.article, r => {
+                        router.push('/article');
+                    });
+                }
+            },
+
             // remove (item) {
             //     const index = this.friends.indexOf(item.name)
             //     if (index >= 0) this.friends.splice(index, 1)
@@ -425,13 +485,6 @@
 
         },
         mounted() {
-            this.customers = customers;
-            console.log('mounted');
-
-            // api.findById(this.$route.params.article_id, r => {
-            //     this.article = r.data
-            // });
-
             // api.getAllAuthors().then(response => {
             //     this.authorListForAutocomplete = response.data;
             //     console.log(response.data);
@@ -449,24 +502,34 @@
             //     //this.errors.push(error)
             //     console.log(error);
             // })
+
+            if (this.$route.params.article_id != null) {
+                //console.log("EDIT MODE");
+                this.editMode = true;
+            } //else console.log("ADD MODE");
+
+
+            if (this.editMode) {
+                api.findById(this.$route.params.article_id, r => {
+                    this.article = r.data;
+
+                    // this.selectedM = this.article.movement.id; //to select necessary value from article
+                    this.selectedL = this.article.language.id;
+                    this.selectedS = this.article.status;
+                    console.log("STATUS", this.article.status);
+                    this.article.date = this.formatDate(this.article.date);
+
+                    // this.tags = this.article.hashtagList;
+                    for (let i = 0; i < this.article.hashtagList.length; i++) {
+                        this.tags.push(this.article.hashtagList[i].content);
+                    }
+                });
+            }
+
         },
         computed: {
-            // fields() {
-            //     if (!this.model) return [];
-            //
-            //     return Object.keys(this.model).map(key => {
-            //         return {
-            //             key,
-            //             value: this.model[key] || 'n/a',
-            //         }
-            //     })
-            // },
             items() {
                 return this.entries.map(entry => {
-                    // const Description = entry.Description.length > this.descriptionLimit
-                    //     ? entry.Description.slice(0, this.descriptionLimit) + '...'
-                    //     : entry.Description;
-
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
                 })
@@ -526,11 +589,18 @@
 
                         // Items have already been requested
                         if (this.isLoading) return;
-
                         this.isLoading = true;
 
+                        //this.entries = apiPerson.searchPerson1(val);
+
+                        //     , r => {
+                        //     console.log("serach finished");
+                        //     this.entries = r.data;
+                        //
+                        // });
+
                         // Lazily load input items
-                        //  fetch('https://api.publicapis.org/entries')
+                        //  fetch('https://api.publicapis.org/entries')  //todo
                         fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
                             .then(res => res.json())
                             .then(res => {
@@ -543,6 +613,8 @@
                                 console.log(err)
                             })
                             .finally(() => (this.isLoading = false))
+
+
                     }
             },
         },

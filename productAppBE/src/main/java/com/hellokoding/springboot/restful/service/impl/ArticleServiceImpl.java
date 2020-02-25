@@ -44,10 +44,10 @@ public class ArticleServiceImpl implements ArticleService {
         List<HashTag> hashTagListWithID = new ArrayList<>();
 
 
-        UrlLink linkByContent;
-        UrlLink linkWithID;
-        List<UrlLink> linkList = stock.getLinkList();
-        List<UrlLink> linkListWithID = new ArrayList<>();
+//        UrlLink linkByContent;
+//        UrlLink linkWithID;
+//        List<UrlLink> linkList = stock.getLinkList();
+//        List<UrlLink> linkListWithID = new ArrayList<>();
 
 
         for (HashTag hashtag : hashTagList) {
@@ -63,21 +63,21 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
 
-        for (UrlLink link : linkList) {
-            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
-            if (linkByContent == null) {
-                linkRepository.save(link);
-
-                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
-                linkListWithID.add(linkWithID);
-
-            } else {
-                linkListWithID.add(linkByContent);
-            }
-        }
+//        for (UrlLink link : linkList) {
+//            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
+//            if (linkByContent == null) {
+//                linkRepository.save(link);
+//
+//                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
+//                linkListWithID.add(linkWithID);
+//
+//            } else {
+//                linkListWithID.add(linkByContent);
+//            }
+//        }
 
         stock.setHashtagList(hashTagListWithID);
-        stock.setLinkList(linkListWithID);
+//        stock.setLinkList(linkListWithID);
 
         return articleRepository.save(stock);
     }
