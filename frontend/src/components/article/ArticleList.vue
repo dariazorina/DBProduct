@@ -118,14 +118,7 @@
                 <th class='tdTitle'>Язык</th>
                 <th class='tdTitle'>Хештеги</th>
                 <th class='tdTitle' style="width:6%">Автор</th>
-                <th class='tdTitle' style="width:6%">Автор, русск</th>
-
-                <!--                <th class='tdAlignCell'>Movement</th>-->
                 <th class='tdTitle'>Заголовок</th>
-                <!--            <th class='tdAlignCell' style="width:15%">Оригинальный заголовок</th>-->
-                <th class='tdTitle'>Оригинальный заголовок</th>
-                <!--                <th class='tdTitle'>URL</th>-->
-
                 <th class='tdTitle' style="width:20%">Описание</th>
                 <th class='tdTitle' style="width:14%; color:lightgray">Комментарии</th>
 
@@ -181,10 +174,9 @@
                     <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
                 </td>
                 <td>
-                    <div v-for="author in article.authorList">{{author.surname}}</div>
-                </td>
-                <td>
-                    <div v-for="author in article.authorList">{{author.surnameRus}}</div>
+                    <div v-for="author in article.authorList">
+                        {{createComplexCellValue(author.surname,author.surnameRus)}}
+                    </div>
                 </td>
 
                 <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
@@ -198,24 +190,35 @@
                 <!--            </td>-->
 
 
-                <td>
-                    <div v-if="article.titleRus">
-                        <a>
-                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{article.titleRus }}
-                            </router-link>
-                        </a>
-                    </div>
-                </td>
+                <!--                <td>-->
+                <!--                    <div v-if="article.titleRus">-->
+                <!--                        <a>-->
+                <!--                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">-->
+                <!--                                {{article.titleRus }}-->
+                <!--                            </router-link>-->
+                <!--                        </a>-->
+                <!--                    </div>-->
+                <!--                </td>-->
+
+                <!--                <td>-->
+                <!--                    <div v-if="article.titleRus">-->
+                <!--                        {{article.title}}-->
+                <!--                    </div>-->
+                <!--                    <div v-else>-->
+                <!--                        <a>-->
+                <!--                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">-->
+                <!--                                {{article.title }}-->
+                <!--                            </router-link>-->
+                <!--                        </a>-->
+                <!--                    </div>-->
+                <!--                </td>-->
 
                 <td>
-                    <div v-if="article.titleRus">
-                        {{article.title}}
-                    </div>
-                    <div v-else>
+                    <div>
+<!--                    <div style="white-space:pre-line">-->
                         <a>
                             <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{article.title }}
+                                {{createComplexCellValue(article.titleRus, article.title)}}
                             </router-link>
                         </a>
                     </div>
@@ -336,6 +339,10 @@
     /*    padding: 5px; !* Поля вокруг текста *!*/
     /*}*/
 
+    /*div{*/
+    /*    white-space: pre-wrap;*/
+    /*}*/
+
 </style>
 
 <script>
@@ -380,7 +387,8 @@
                     {text: 'Returned', value: 2},
                     {text: 'Completed', value: 3},
 
-                ]
+                ],
+                message: 'One Line,\nTwo Lines.',
             }
         },
         computed: {
@@ -392,8 +400,31 @@
 
         methods: {
 
-            updateArticleStatus(id, status) {
+            // function(){
+            //     return <div>{this.state.message}</div>
+            // }
 
+            createComplexCellValue(valueRus, valueOrig) {
+
+                let result = '';//"Hello \n World";
+
+                console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
+
+                if (this.isArrayValidAndNotEmpty(valueRus)) {
+                    result = valueRus;
+                    if (this.isArrayValidAndNotEmpty(valueOrig))
+                        result += " / " + valueOrig;
+                        // result += "\n" + valueOrig;
+                }
+                else
+                    if (this.isArrayValidAndNotEmpty(valueOrig))
+                        result += valueOrig;
+
+                return result;
+
+            },
+
+            updateArticleStatus(id, status) {
 
                 api.findById(id, r => {
                     this.article = r.data;
@@ -545,7 +576,7 @@
 
                 } else {
                     if (this.searchKey === "") {    //s-
-                        if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){ //ch+
+                        if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) { //ch+
                             api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                 this.entries = r.data;
                             });
@@ -553,7 +584,7 @@
 
                     } else {        //s+
                         if (this.selected === "хештег") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){//ch+
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//ch+
                                 api.searchHash(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
@@ -564,7 +595,7 @@
                             }
 
                         } else if (this.selected === "автор") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){  //ch+
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {  //ch+
                                 api.searchAuthor(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
@@ -575,7 +606,7 @@
                             }
 
                         } else if (this.selected === "язык") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){    //ch+
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {    //ch+
                                 api.searchLanguage(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
@@ -586,7 +617,7 @@
                             }
 
                         } else if (this.selected === "описание") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){   //ch+
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {   //ch+
                                 api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
@@ -597,7 +628,7 @@
                             }
 
                         } else if (this.selected === "заголовок") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)){
+                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
                                 api.searchTitle(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                     this.entries = r.data;
                                 });
