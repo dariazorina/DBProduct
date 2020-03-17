@@ -1,5 +1,8 @@
 package com.hellokoding.springboot.restful.model.dto;
 
+
+
+//for autocomplete in author search
 public class PersonDto implements Comparable<PersonDto>{
 
     private Integer id;

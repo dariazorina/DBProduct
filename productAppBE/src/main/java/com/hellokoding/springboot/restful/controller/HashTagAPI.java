@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/hashtag")
@@ -20,6 +21,12 @@ public class HashTagAPI {
 
     private final HashTagService hashTagService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "q", required = true) String q) {
+        List<HashTag> search = hashTagService.search(q);
+        return ResponseEntity.ok(search);
+    }
+
     @GetMapping
     public ResponseEntity<List<HashTag>> findAll(@RequestParam(name = "q", required = false) String q) {
         if (!StringUtils.isEmpty(q)){
@@ -27,9 +34,17 @@ public class HashTagAPI {
 
         } else {
             return ResponseEntity.ok(hashTagService.findAll());
-
         }
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<HashTag> findById(@PathVariable Integer id) {
+        Optional<HashTag> stock = hashTagService.findById(id);
+        if (!stock.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(stock.get());
     }
 
     @PostMapping

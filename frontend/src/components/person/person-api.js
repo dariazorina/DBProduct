@@ -7,17 +7,17 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAll() {
+    getAllPersons() {
         return AXIOS.get(`/person`);
     },
 
-    getAllCountries() {
-        return AXIOS.get(`/country`);
-    },
-
-    getAllMovements() {
-        return AXIOS.get(`/movement`);
-    },
+    // getAllCountries() {
+    //     return AXIOS.get(`/country`);
+    // },
+    //
+    // getAllMovements() {
+    //     return AXIOS.get(`/movement`);
+    // },
 
     create(person, fn) {
         AXIOS
@@ -47,39 +47,35 @@ export default {
             .catch(error => console.log(error))
     },
 
-    // searchPerson(searchKey, loading, fn, fn2) {
-    //     AXIOS.get(`/person/search?q=` + encodeURIComponent(searchKey))
-    //         .then(response => fn(response))
-    //         .then(response => fn2(response))
-    //         .catch(error => console.log(error))
-    //         .finally(() => (loading = false))
-    // },
-    //
-    //
-    // searchPerson1(searchKey ) {
-    //     fetch(`/person/search?q=` + encodeURIComponent(searchKey))
-    //         .then(function (response) {
-    //             return response.json();
-    //         })
-    //
-    //         .catch(function (error) {
-    //             console.log(error)
-    //         });
-    // }
+
+    searchPerson(searchKey, fn) {
+        AXIOS.get(
+            `/person/search?q=` + encodeURIComponent(searchKey)
+
+        ).then((response) => {
+            if (response.status >= 200 && response.status < 300) {
+                return response;
+
+            } else {
+                let error = new Error(response.statusText);
+                error.response = response;
+                throw error
+            }
+
+        }).then((response) => {
+            // if (response.headers['content-type'] !== 'application/json') {
+            //     let error = new Error('Некорректный ответ от сервера');
+            //     error.response = response;
+            //     throw error
+            // }
+            return response.data;
+
+        }).then((json) => {
+            fn(json);
+
+        }).catch((error) => {
+            console.log(error);
+
+        })
+    },
 }
-
-
-// fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
-//     .then(res => res.json())
-//     .then(res => {
-//         this.entries = res;
-//         // const {count, entries} = res;
-//         // this.count = count;
-//         // this.entries = entries;
-//     })
-//     .catch(err => {
-//         console.log(err)
-//     })
-//     .finally(() => (this.isLoading = false))
-// }
-

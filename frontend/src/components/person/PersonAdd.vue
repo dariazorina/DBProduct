@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-<!--            //////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!--            //////////////////////////////////////////////////////////////////////////////////////////////-->
             <div class="form-row">
                 <div class="col-md-3">
                     <label>Страна</label>
@@ -84,7 +84,7 @@
             <div class="form-row">
                 <div class="col-md-6">
                     <label for="add-occupation">Должность</label>
-                    <textarea class="form-control" id="add-occupation" rows="4" v-model="person.occupation"/>
+                    <textarea class="form-control" id="add-occupation" rows="4" v-model="position"/>
                 </div>
             </div>
 
@@ -154,6 +154,9 @@
 <script>
     //  require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
     import api from "./person-api";
+    import apiOrg from "./../org/org-api";
+    import apiCountry from "./../country/country-api";
+
     import router from "./../../router";
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
@@ -185,8 +188,19 @@
 
             linkList: [],
             hashtagList: [],
-            orgList: [],
-            person: {hashtagList: [], linkList: []},
+           // orgList: [],
+
+
+            position: null,
+            org: null,
+            org_idList: [],
+            positionList: [],
+
+            // positionEntity: {position: null, org: null},
+            // occupation1: [],//{positionEntity: {}},
+
+            person: {hashtagList: [], linkList: [], org_idList: [], positionList: []},
+
             selected: [''],
         }),
 
@@ -275,10 +289,16 @@
                 //     "id": 1
                 // };
 
+
+                // if (this.selectedC) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
+                //     this.person.country = {
+                //         "id": this.selectedC
+                //     };
+                // }
+
+
                 if (this.selectedC) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
-                    this.person.country = {
-                        "id": this.selectedC
-                    };
+                    this.person.country_id = this.selectedC;
                 }
 
                 for (let i = 0; i < this.links.length; i++) {
@@ -301,11 +321,56 @@
 
                 this.hasError = false;
 
+
+                // this.person.occupation1[0] = {
+                //     org = {
+                //         "id" : 1
+                //     }
+                // };
+                // this.person.occupation1[0] = {
+                //    "position": this.position
+                // };
+
+
+                //this.org = 1;
+                // apiOrg.findById(this.org, r => {
+                //     this.positionEntity.position = this.position;
+                //     //this.positionEntity.org = "123456";
+                //     this.positionEntity.org = r.data;
+                //     this.person.occupation = this.org;
+                //     //this.positionEntity.person = this.person;
+                //
+                //     console.log("r.data", r.data);
+                //
+                //     // this.positionEntity.org = {
+                //     //     "id": this.org
+                //     // };
+                //
+                //     this.person.occupation1[0] = this.positionEntity;
+                //     console.log("occup1", this.person.occupation1);
+                //
+                //     if (this.formValidate()) {
+                //         api.create(this.person, r => {
+                //             console.log(r);
+                //             router.push('/person');
+                //         });
+                //     }
+                // })
+
+
+                this.person.org_idList[0] = 1;
+                this.person.positionList[0] = this.position;
+
+                this.person.org_idList[1] = 3;
+                this.person.positionList[1] = "труляляля";
+
                 if (this.formValidate()) {
                     api.create(this.person, r => {
+                        console.log(r);
                         router.push('/person');
                     });
                 }
+
             },
 
             // remove (item) {
@@ -316,7 +381,7 @@
         mounted() {
             console.log('mounted');
 
-            api.getAllCountries().then(response => {
+            apiCountry.getAllCountries().then(response => {
                 this.allCountries = response.data;
                 console.log(response.data)
             });

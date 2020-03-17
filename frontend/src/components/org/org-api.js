@@ -8,8 +8,15 @@ const AXIOS = axios.create({
 
 export default {
     getAll() {
-        return AXIOS.get(`/orgs`);//  /api/hello
-    }
+        return AXIOS.get(`/org`);//  /api/hello
+    },
+
+    findById(id, fn) {
+        AXIOS
+            .get(`/org/` + id)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
 }
 
 

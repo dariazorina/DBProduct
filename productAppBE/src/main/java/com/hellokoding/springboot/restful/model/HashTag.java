@@ -13,4 +13,7 @@ public class HashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
+    private Integer parent_id;
+    private String miscellany;
+
 }

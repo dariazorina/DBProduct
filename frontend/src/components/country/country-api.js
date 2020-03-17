@@ -7,7 +7,7 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAll() {
+    getAllCountries() {
         return AXIOS.get(`/country`);//  /api/hello
     },
 

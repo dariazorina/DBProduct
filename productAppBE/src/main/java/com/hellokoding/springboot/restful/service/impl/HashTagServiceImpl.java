@@ -49,7 +49,7 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public List<HashTag> search(String q) {
-        return hashTagRepository.findByContentStartsWithOrderByContentDesc(q);
+        return hashTagRepository.findByContentStartsWithIgnoreCaseOrderByContentDesc(q);
     }
 
 /*    public void fillHashTagTableFromArticle() {   ////step1: fill hashtag table

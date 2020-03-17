@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.controller;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hellokoding.springboot.restful.model.Person;
+import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +30,19 @@ public class PersonAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> findAll() {
+    public ResponseEntity<List<NewPersonDto>> findAll() {
         return ResponseEntity.ok(personService.findAll());
     }
 
     @PostMapping
     public ResponseEntity
-    create(@Valid @RequestBody Person person) {
+    create(@Valid @RequestBody NewPersonDto person) {
         return ResponseEntity.ok(personService.save(person));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Person> findById(@PathVariable Integer id) {
-        Optional<Person> stock = personService.findById(id);
+    public ResponseEntity<NewPersonDto> findById(@PathVariable Integer id) {
+        Optional<NewPersonDto> stock = personService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -50,12 +51,13 @@ public class PersonAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody Person person) {
+    public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody NewPersonDto person) {
         person.setId(id);
         if (!personService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(personService.save(person));
     }
 

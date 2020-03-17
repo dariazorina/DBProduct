@@ -155,19 +155,87 @@
                         <div class="row align-items-center">
                             <label for="add-descr" class="col-2 col-form-label">Описание</label>
                             <div class="col-10">
-                                <textarea class="form-control" id="add-descr" rows="10" v-model="article.description"
+                                <textarea class="form-control" id="add-descr" rows="11" v-model="article.description"
                                           required/>
                             </div>
                         </div>
 
-                        <div class="row align-items-center">
-                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>
-                            <div class="col-10">
+
+                        <!--                        <form class="authorsFormCreation" style="background-color: white; padding-right: -10px">-->
+                        <!--                            <div class="row align-items-center"-->
+                        <!--                                 style="background-color: white; ; padding-right: -10px; margin-right: -10px">-->
+                        <!--                                <label class="col-1 col-form-label"> </label>-->
+                        <!--                                <div class="col-6"-->
+                        <!--                                     style="background-color: white; padding-right: -30px; padding-left: -10px; margin-left: -55px; margin-right: 45px">-->
+                        <!--                                    <v-card-text>-->
+                        <!--                                        <v-autocomplete-->
+
+                        <!--                                                id="hashtag-autocomplete"-->
+                        <!--                                                label="Hashtag"-->
+
+                        <!--                                                :items="hashtagItems"-->
+                        <!--                                                :loading="isLoadingHashtag"-->
+                        <!--                                                :search-input.sync="searchHashtag"-->
+                        <!--                                                color="green"-->
+                        <!--                                                hide-no-data-->
+                        <!--                                                hide-selected-->
+
+                        <!--                                                v-model="selectedHashtag"-->
+
+                        <!--                                                @change="addHashtag(selectedHashtag)"-->
+                        <!--                                                item-text="content"-->
+                        <!--                                                item-value="id"-->
+                        <!--                                                placeholder="Начните печатать, чтобы найти хештег"-->
+                        <!--                                                prepend-icon="mdi-database-search"-->
+                        <!--                                                return-object-->
+                        <!--                                        ></v-autocomplete>-->
+                        <!--                                    </v-card-text>-->
+                        <!--                                </div>-->
+
+
+                        <!--                                &lt;!&ndash;                    <label class="col-1 col-form-label labelInCreation">Author</label>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;                    <div class="">&ndash;&gt;-->
+                        <!--                                <ul class="list-group col-sm-5" order="1"-->
+                        <!--                                    style="background-color: white; padding-left: 0px; padding-right: 0px">-->
+                        <!--                                    <li v-for="hash in this.article.hashtagList"-->
+                        <!--                                        class="list-group-item d-flex justify-content-between align-items-center">-->
+                        <!--                                        {{ hash.content }}-->
+                        <!--                                        <span class="close" @click="deleteHashtag(hash)">&times;</span>-->
+                        <!--                                    </li>-->
+                        <!--                                </ul>-->
+                        <!--                                &lt;!&ndash;                    </div>&ndash;&gt;-->
+
+
+                        <!--                            </div>-->
+                        <!--                        </form>-->
+
+
+                        <div class="row align-items-center" style="background-color: white">
+
+                            <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"
+                                    @click="goURL(article.url)">Хештеги</button>
+
+<!--                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>-->
+                            <div class="col-9" style="background-color: white">
                                 <div>
-                                    <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
-                                               placeholder="enter hashtags with 'return' or 'tab'"
+<!--                                <div v-if="tag!=null">-->
+                                    <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                            placeholder="press Pen to add/edit hashtags"
                                                v-model="tags"></input-tag>
+<!--                                    @focus="hashtagViewCall(true)" @blur="hashtagViewCall(false)"-->
+<!--                                    :read-only=true-->
+
                                 </div>
+                            </div>
+                            <div class="col-1"
+                                 style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">
+                                <v-btn text icon x-small>
+                                    <a>
+                                        <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
+                                            <v-icon style="color: green">mdi-pencil</v-icon>
+                                        </router-link>
+                                    </a>
+                                </v-btn>
                             </div>
                         </div>
 
@@ -177,7 +245,7 @@
                                 <label for="add-misc" class="col-2 col-form-label">Комментарии</label>
                                 <div class="col-10">
 
-                                    <textarea class="form-control" id="add-misc" rows="4" v-model="article.miscellany"
+                                    <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
                                               background-color="palegreen" required/>
                                 </div>
                             </div>
@@ -240,6 +308,7 @@
 
 <script>
     import apiPerson from "./../person/person-api";
+    import apiLanguage from "./../language/language-api";
     import api from "./article-api";
     import moment from "moment";
     import InputTag from 'vue-input-tag';
@@ -256,12 +325,15 @@
 
         //data(){
         data: () => ({
-            addTagOnKeys: [13, 9],
+            // addTagOnKeys: [13, 9],
+            addTagOnKeys: [],  //to prevent enter in input-tag))
             descriptionLimit: 60,
             entries: [],
             isLoading: false,
+            isLoadingHashtag: false,
             model: null,
             search: null,
+            //searchHashtag: null,
             // }),
 
             // return {
@@ -282,6 +354,8 @@
             article: {authorList: [], hashtagList: []},
 
             selected: [''],
+           // selectedHashtag: [''],
+
             status: ["statusProgress", "statusDone"],
 
             statusOptions: [
@@ -291,7 +365,8 @@
                 {text: 'Completed', value: 3},
             ],
 
-            editMode: false
+            editMode: false,
+            //focused: false
         }),
 
         methods: {
@@ -300,6 +375,16 @@
                 console.log("GET FOCUS");
                 if (typeof selected !== 'undefined') console.log(selected); // Any scope console.log(selected);
             },
+
+            // hashtagViewCall(focus) {
+            //
+            //     this.focused = focus;
+            //     console.log("FOCUS" + this.focused);
+            //
+            //     // console.log("BEFORE HASHTAG");
+            //
+            //     // router.push('/article');
+            // },
 
             addAuthor(obj) {
                 // console.log("GET CHANGED");
@@ -323,6 +408,21 @@
                 // }
             },
 
+            // addHashtag(obj) {
+            //
+            //     let i = 0;
+            //     for (i = 0; i < this.article.hashtagList.length; i++) { //to exclude double values
+            //         if (this.article.hashtagList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.article.hashtagList.length) {
+            //         this.article.hashtagList.push(obj);
+            //         console.log("ADDED");
+            //     }
+            // },
+
             deleteAuthor(author) {
                 for (let i = 0; i < this.article.authorList.length; i++) {
                     if (this.article.authorList[i].id === author.id) {
@@ -330,6 +430,14 @@
                     }
                 }
             },
+
+            // deleteHashtag(hash) {
+            //     for (let i = 0; i < this.article.hashtagList.length; i++) {
+            //         if (this.article.hashtagList[i].id === hash.id) {
+            //             this.article.hashtagList.splice(i, 1);
+            //         }
+            //     }
+            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -353,37 +461,6 @@
                 return moment(date).format('YYYY-MM-DD');
                 // return moment(date).format('DD/MM/YYYY');
             },
-
-
-            // formValidate() {  //all fields are required
-            //     this.addStatus('add-title', (!this.article.title));
-            //     if (this.hasError) {
-            //     } else {
-            //         this.addStatus('add-title-rus', (!this.article.titleRus));
-            //         if (this.hasError) {
-            //         } else {
-            //             this.addStatus('date-input', (!(this.validDate(this.article.date))));
-            //             if (this.hasError) {
-            //             } else {
-            //                 this.addStatus('language-selection', (!this.selectedL));
-            //                 if (this.hasError) {
-            //                 } else {
-            //                     this.addStatus('movement-selection', (!this.selectedM));
-            //                     if (this.hasError) {
-            //                     } else {
-            //                         this.addStatus('add-descr', (!this.article.description));
-            //                         if (this.hasError) {
-            //                         } else {
-            //                             this.addStatus('add-url', (!this.article.url));
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            //     if (this.hasError) console.log('ERROROROR----------------------------');
-            //     return !this.hasError;
-            // },
 
             formValidate() {
                 this.addStatus('add-url', (!this.article.url));
@@ -450,6 +527,9 @@
                 //     "id": this.selectedM
                 // }; todo
 
+
+
+                //todo!!! если id языков в таблице будут не подряд и не с 1 - будет ошибка
                 this.article.language = {
                     "id": this.selectedL
                 };
@@ -478,6 +558,7 @@
                 }
             },
 
+
             // remove (item) {
             //     const index = this.friends.indexOf(item.name)
             //     if (index >= 0) this.friends.splice(index, 1)
@@ -490,7 +571,7 @@
             //     console.log(response.data);
             // });
 
-            api.getAllLanguages().then(response => {
+            apiLanguage.getAllLanguages().then(response => {
                 this.allLanguages = response.data;
                 console.log(response.data)
             });
@@ -508,15 +589,17 @@
                 this.editMode = true;
             } //else console.log("ADD MODE");
 
+          //  console.log("article!", this.article);
 
             if (this.editMode) {
                 api.findById(this.$route.params.article_id, r => {
                     this.article = r.data;
+                  //  console.log("article EDIT!", this.article);
 
                     // this.selectedM = this.article.movement.id; //to select necessary value from article
                     this.selectedL = this.article.language.id;
                     this.selectedS = this.article.status;
-                    console.log("STATUS", this.article.status);
+                    // console.log("STATUS", this.article.status);
                     this.article.date = this.formatDate(this.article.date);
 
                     // this.tags = this.article.hashtagList;
@@ -529,14 +612,56 @@
         },
         computed: {
             items() {
+                // console.log("items");
                 return this.entries.map(entry => {
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
                 })
             },
+
+            // hashtagItems() {
+            //     return this.entries.map(entry => {
+            //         const hashtag = entry.hashtag;
+            //         return Object.assign({}, entry, {hashtag})
+            //     })
+            // },
         },
 
         watch: {
+
+            // searchHashtag(val) {
+            //     if (val !== null)
+            //         if (val.length > 1) {
+            //             console.log("SEARCH STARTED");
+            //
+            //             if (typeof this.selectedHashtag !== 'undefined') {
+            //                 console.log("SELECTED IN WATCH");
+            //                 console.log(this.selectedHashtag);
+            //                 if (this.article.authorList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+            //                     this.selectedHashtag = "";
+            //             }
+            //
+            //             // Items have already been loaded
+            //             //  if (this.items.length > 0) return;
+            //
+            //             // Items have already been requested
+            //             if (this.isLoadingHashtag) return;
+            //             this.isLoadingHashtag = true;
+            //
+            //             // Lazily load input items
+            //             //  fetch('https://api.publicapis.org/entries')  //todo
+            //             fetch('../api/v1/hashtag/search?q=' + encodeURIComponent(val))
+            //                 .then(res => res.json())
+            //                 .then(res => {
+            //                     this.entries = res;
+            //                 })
+            //                 .catch(err => {
+            //                     console.log(err)
+            //                 })
+            //                 .finally(() => (this.isLoadingHashtag = false))
+            //         }
+            // },
+
             search(val) {
 
                 console.log("SEARCH ACTIVATED");
@@ -591,32 +716,33 @@
                         if (this.isLoading) return;
                         this.isLoading = true;
 
-                        //this.entries = apiPerson.searchPerson1(val);
 
-                        //     , r => {
-                        //     console.log("serach finished");
-                        //     this.entries = r.data;
-                        //
-                        // });
+                        apiPerson.searchPerson(val, r => {
+                            this.entries = r;
+                            //  console.log("****", this.entries);
+                            this.isLoading = false;
+                        });
 
                         // Lazily load input items
                         //  fetch('https://api.publicapis.org/entries')  //todo
-                        fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
-                            .then(res => res.json())
-                            .then(res => {
-                                this.entries = res;
-                                // const {count, entries} = res;
-                                // this.count = count;
-                                // this.entries = entries;
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                            .finally(() => (this.isLoading = false))
-
-
+                        // fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
+                        //     .then(res => res.json())
+                        //     .then(res => {
+                        //         this.entries = res;
+                        //         // const {count, entries} = res;
+                        //         // this.count = count;
+                        //         // this.entries = entries;
+                        //     })
+                        //     .catch(err => {
+                        //         console.log(err)
+                        //     })
+                        //     .finally(() => (this.isLoading = false))
                     }
             },
+
+            // focused: function () {
+            //     console.log("FOCUS" + this.focused);
+            // }
         },
     }
 </script>

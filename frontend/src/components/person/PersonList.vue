@@ -124,7 +124,7 @@
 
         methods: {
             loadPersons() {
-                api.getAll().then(response => {
+                api.getAllPersons().then(response => {
                     this.persons = response.data;
                     console.log(response.data)
                 })
@@ -147,7 +147,7 @@
         }
         ,
         mounted() {
-            api.getAll().then(response => {
+            api.getAllPersons().then(response => {
                 this.persons = response.data;
                 console.log(response.data)
             })

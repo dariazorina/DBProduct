@@ -38,6 +38,9 @@
     <include file="config/liquibase/changelog/00000000000032_remove_movement_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000033_remove_notnull_country_person_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000034_add_status_field_article.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000035_add_position_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000036_add_parentid_field_hashtag.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000037_remove_occupation_string_field_person_table.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>

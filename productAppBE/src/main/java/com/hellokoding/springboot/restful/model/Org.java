@@ -1,5 +1,8 @@
 package com.hellokoding.springboot.restful.model;
+
 import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -43,6 +46,12 @@ public class Org {
     private String type;
     private Integer founded;
     private Integer closed;
+
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    ////////////////@ToString.Exclude
+    /////////////@JsonIgnore             //was active (without NewPersonDto)
+    private List<Position> occupation;
+
 
     @ManyToMany
     @JoinTable(

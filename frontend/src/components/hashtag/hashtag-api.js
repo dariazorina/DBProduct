@@ -7,36 +7,43 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllLanguages() {
-        return AXIOS.get(`/language`);
-    },
 
-    create(language, fn, fnError) {
-        AXIOS
-            .post('/language', language)
-            .then(response => fn(response))
-            .catch(error => fnError(error.response.data))
-            // .catch(error => console.log(error))
-    },
 
-    findById(id, fn) {
+    search(q, fn) {
         AXIOS
-            .get(`/language/` + id)
+            .get(`/hashtag?q=` + q)
             .then(response => fn(response))
             .catch(error => console.log(error))
     },
 
-    update(id, language, fn, fnError) {
+    getAllHashtags() {
+        return AXIOS.get(`/hashtag`);
+    },
+
+    create(hashtag, fn, fnError) {
         AXIOS
-            .put('/language/' + id, language)
+            .post('/hashtag', hashtag)
             .then(response => fn(response))
             .catch(error => fnError(error.response.data))
-            // .catch(error => console.log(error))
+    },
+
+    findById(id, fn) {
+        AXIOS
+            .get(`/hashtag/` + id)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
+    update(id, hashtag, fn, fnError) {
+        AXIOS
+            .put('/hashtag/' + id, hashtag)
+            .then(response => fn(response))
+            .catch(error => fnError(error.response.data))
     },
 
     delete(id, fn) {
         AXIOS
-            .delete('/language/' + id)
+            .delete('/hashtag/' + id)
             .then(response => fn(response))
             .catch(error => console.log(error))
     }

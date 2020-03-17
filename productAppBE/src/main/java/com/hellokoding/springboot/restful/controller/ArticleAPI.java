@@ -33,8 +33,8 @@ public class ArticleAPI {
                                                 @RequestParam(name = "startDate", required = false) String startDate,
                                                 @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
 
-        List<Article> search = articleService.search(title, hash, author, lang, descr, status, startDate, endDate);
-        return ResponseEntity.ok(search);
+        List<Article> searchResult = articleService.search(title, hash, author, lang, descr, status, startDate, endDate);
+        return ResponseEntity.ok(searchResult);
     }
 
     @GetMapping

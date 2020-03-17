@@ -400,15 +400,11 @@
 
         methods: {
 
-            // function(){
-            //     return <div>{this.state.message}</div>
-            // }
-
             createComplexCellValue(valueRus, valueOrig) {
 
                 let result = '';//"Hello \n World";
 
-                console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
+                // console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
 
                 if (this.isArrayValidAndNotEmpty(valueRus)) {
                     result = valueRus;
@@ -510,17 +506,6 @@
                 }
             },
 
-            // complexStatusCreation() {
-            //
-            //     let complexStatus = '';
-            //     for (let i = 0; i < this.statusCheckBox.length; i++) {
-            //         complexStatus += this.statusCheckBox[i].toString();
-            //     }
-            //     console.log(complexStatus);
-            //     return complexStatus;
-            //
-            // },
-
             complexStatusCreation() {
 
                 let result = '';
@@ -538,7 +523,6 @@
 
                 console.log(result);
                 return result;
-
             },
 
             deleteSearch() {
@@ -563,8 +547,8 @@
             search() {
                 // console.log("SEARCH", this.searchKey);
 
-                let emptyArray = [];
-                let nonExistantArray = undefined;
+                // let emptyArray = [];
+                // let nonExistantArray = undefined;
 
 
                 if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
@@ -645,10 +629,6 @@
         },
 
         mounted() {
-
-            // console.log("START DATE", this.startDate);
-            // console.log("END DATE", this.endDate);
-
             this.getLoggedIn();
 
             // api.getAll().then(response => {

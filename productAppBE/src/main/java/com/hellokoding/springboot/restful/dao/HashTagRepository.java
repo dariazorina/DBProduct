@@ -8,5 +8,5 @@ import java.util.List;
 public interface HashTagRepository extends JpaRepository<HashTag, Integer> {
     HashTag getHashTagByContent(String content);
 
-    List<HashTag> findByContentStartsWithOrderByContentDesc(String content);
+    List<HashTag> findByContentStartsWithIgnoreCaseOrderByContentDesc (String content);
 }

@@ -1,12 +1,12 @@
 package com.hellokoding.springboot.restful.service.impl;
 
 import com.hellokoding.springboot.restful.dao.*;
-import com.hellokoding.springboot.restful.model.HashTag;
-import com.hellokoding.springboot.restful.model.Person;
-import com.hellokoding.springboot.restful.model.UrlLink;
+import com.hellokoding.springboot.restful.model.*;
+import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +19,7 @@ public class PersonServiceImpl implements PersonService {
 
     private final ArticleRepository articleRepository;
     private final PersonRepository personRepository;
+    private final PositionRepository positionRepository;
     private final EventRepository eventRepository;
     private final OrgRepository orgRepository;
     private final ScpaperRepository scpaperRepository;
@@ -26,15 +27,39 @@ public class PersonServiceImpl implements PersonService {
     private final HashTagRepository hashTagRepository;
     private final UrlLinkRepository linkRepository;
 
-
     @Override
-    public List<Person> findAll() {
-        return personRepository.findAll();
+//    public List<Person> findAll() {
+//        return personRepository.findAll();
+//    }
+
+    public List<NewPersonDto> findAll() {
+
+        List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
+        List<Person> allPerson = personRepository.findAll();
+
+        NewPersonDto currentNewDtoP;
+        for (Person p : allPerson) {
+            currentNewDtoP = new NewPersonDto(p);
+//            currentNewDtoP.newPersonDtoConverter(p);
+
+            dtoAllPersonList.add(currentNewDtoP);
+        }
+
+        return dtoAllPersonList;
     }
 
     @Override
-    public Optional<Person> findById(Integer id) {
-        return personRepository.findById(id);
+    public Optional<NewPersonDto> findById(Integer id) {
+
+        Optional<Person> p = personRepository.findById(id);
+        Optional<NewPersonDto> newPersonDto;
+
+        newPersonDto = Optional.of(new NewPersonDto(p.get()));
+
+//        newPersonDto = Optional.of(new NewPersonDto());
+//        newPersonDto.get().newPersonDtoConverter(p.get());
+
+        return newPersonDto;
     }
 
 //    public Person save(Person stock) {
@@ -112,17 +137,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person save(Person person) {
+    public Person save(NewPersonDto personDto) {
 
         HashTag hashTagByContent;
         HashTag hashTagWithID;
-        List<HashTag> hashTagList = person.getHashtagList();
+        List<HashTag> hashTagList = personDto.getHashtagList();
         List<HashTag> hashTagListWithID = new ArrayList<>();
 
 
         UrlLink linkByContent;
         UrlLink linkWithID;
-        List<UrlLink> linkList = person.getLinkList();
+        List<UrlLink> linkList = personDto.getLinkList();
         List<UrlLink> linkListWithID = new ArrayList<>();
 
 
@@ -152,8 +177,61 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
+
+        Person person = new Person();
+        Country c = new Country();
+        person.setCountry(c);
+
         person.setHashtagList(hashTagListWithID);
         person.setLinkList(linkListWithID);
+
+        person.setSurname(personDto.getSurname());
+        person.setName(personDto.getName());
+        person.setPatronymic(personDto.getPatronymic());
+        person.setSurnameEng(personDto.getSurnameEng());
+        person.setNameEng(personDto.getNameEng());
+        person.setSurnameRus(personDto.getSurnameRus());
+        person.setNameRus(personDto.getNameRus());
+        person.getCountry().setId(personDto.getCountry_id());
+        person.setSettlement(personDto.getSettlement());
+        person.setDescription(personDto.getDescription());
+        person.setMiscellany(personDto.getMiscellany());
+
+        person.setOrgList(personDto.getOrgList());
+
+
+        Position position;
+        Integer i = 0;
+        List<Position> occList = new ArrayList<>();
+        for (String pos : personDto.getPositionList()) {
+
+            Integer orgId = personDto.getOrg_idList().get(i);
+
+            position = new Position();
+            position.setPosition(pos);
+            position.setPerson(person);
+            position.setOrg(orgRepository.findById(orgId).get());
+            i++;
+
+            occList.add(position);
+        }
+        person.setOccupation(occList);
+
+        //Position pos = person.getOccupation1().get(0);
+        //person.getOccupation1().clear();
+
+
+//        Position pos = new Position();
+//        pos.setPosition("test position =))))");
+//        Org org = orgRepository.findById(3).get();
+//        org.addPosition(person.getOccupation1());
+//        person.addPosition(pos);
+
+
+        //Мое, работало))
+//        Position pos =  person.getOccupation1().get(0);
+//        pos.setPerson(person);
+
 
         return personRepository.save(person);
     }

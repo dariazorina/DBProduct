@@ -30,7 +30,10 @@ import LanguageList from '@/components/language/LanguageList';
 import LanguageAdd from '@/components/language/LanguageAdd';
 import LanguageEdit from '@/components/language/LanguageEdit';
 
+import HashtagList from '@/components/hashtag/HashtagList';
+
 import store from './store'
+// import HashtagList from "./components/hashtag/HashtagList";
 
 Vue.use(Router);
 
@@ -84,6 +87,9 @@ const router = new Router({
         {path: '/language', component: LanguageList},
         {path: '/language/add', component: LanguageAdd, name: 'language-add'},
         {path: '/language/:language_id/edit', component: LanguageEdit, name: 'language-edit'},
+
+        {path: '/hashtag', component: HashtagList},
+        // {path: '/movement/add', component: tAdd, name: 'movement-add'},
 
 
         // otherwise redirect to home

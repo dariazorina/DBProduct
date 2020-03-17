@@ -18,6 +18,8 @@
             <router-link to="/language">Language</router-link>
             |
             <router-link to="/movement">Movement</router-link>
+            |
+            <router-link to="/hashtag">Hashtag</router-link>
 
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
