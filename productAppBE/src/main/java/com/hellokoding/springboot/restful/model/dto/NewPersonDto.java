@@ -30,12 +30,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     //    private List<Position> positionList;
     private List<UrlLink> linkList;
     private List<Org> orgList;
-    private List<HashTag> hashtagList;
+    private List<PersonHashtag> hashtagList;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, List<String> positionList, List<Integer> org_idList, String description, String miscellany, List<UrlLink> linkList, List<Org> orgList, List<HashTag> hashtagList) {
+    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, List<String> positionList, List<Integer> org_idList, String description, String miscellany, List<UrlLink> linkList, List<Org> orgList, List<PersonHashtag> hashtagList) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -55,7 +55,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.hashtagList = hashtagList;
     }
 
-    public NewPersonDto(Person p) {//todo back  constructor
+    public NewPersonDto(Person p) {
         this.id = p.getId();
         this.surname = p.getSurname();
         this.name = p.getName();
@@ -208,11 +208,11 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.orgList = orgList;
     }
 
-    public List<HashTag> getHashtagList() {
+    public List<PersonHashtag> getHashtagList() {
         return hashtagList;
     }
 
-    public void setHashtagList(List<HashTag> hashtagList) {
+    public void setHashtagList(List<PersonHashtag> hashtagList) {
         this.hashtagList = hashtagList;
     }
 

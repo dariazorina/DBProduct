@@ -4,18 +4,18 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "art_hashtag")
+@Table(name = "person_hashtag")
 @Data
-public class ArticleHashtag {
+public class PersonHashtag {
 
     @Id
-    @Column(name = "art_hashtag_id")
+    @Column(name = "person_hashtag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "article_id")
-    private Article article;
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hashtag_id")
@@ -33,12 +33,12 @@ public class ArticleHashtag {
         if (this == o)
             return true;
 
-        if (!(o instanceof ArticleHashtag))
+        if (!(o instanceof PersonHashtag))
             return false;
 
         return
                 id != null &&
-                        id.equals(((ArticleHashtag) o).getId());
+                        id.equals(((PersonHashtag) o).getId());
     }
 
     @Override

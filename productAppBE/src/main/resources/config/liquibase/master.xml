@@ -41,6 +41,9 @@
     <include file="config/liquibase/changelog/00000000000035_add_position_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000036_add_parentid_field_hashtag.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000037_remove_occupation_string_field_person_table.xml" relativeToChangelogFile="false"/>
-
+    <include file="config/liquibase/changelog/00000000000038_drop_all_hashtag_jointables.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000039_add_art_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000040_add_person_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000041_add_notnullconstraint_parentid_field_hashtag.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

@@ -22,7 +22,7 @@ public class HashTagAPI {
     private final HashTagService hashTagService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "q", required = true) String q) {
+    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "q") String q) {
         List<HashTag> search = hashTagService.search(q);
         return ResponseEntity.ok(search);
     }
@@ -35,6 +35,12 @@ public class HashTagAPI {
         } else {
             return ResponseEntity.ok(hashTagService.findAll());
         }
+    }
+
+    @GetMapping("/leafs")
+    public ResponseEntity<List<HashTag>> findLeafs(@RequestParam(name = "parentid") String parentId) {
+        List<HashTag> search = hashTagService.findLeafs(Integer.valueOf(parentId));
+        return ResponseEntity.ok(search);
     }
 
     @GetMapping("/{id}")

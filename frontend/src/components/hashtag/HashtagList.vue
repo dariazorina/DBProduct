@@ -14,74 +14,141 @@
         </div>
 
 
-
-
-
         <!--//////////////////////////////////////////add/edit hashtag/////////////////////////////////////////////////////////////////-->
         <form class="formCreation">
 
-<!--            <div class="row  align-items-center">-->
-<!--                <label for="add-code" class="col-1 col-form-label labelInCreation">Хештег</label>-->
-<!--                <div v-if="hashtag==null" class="col-4">-->
-<!--                    <input type="number" class="form-control" id="add-code" :v-model="hashtag"/>-->
-<!--                </div>-->
+            <!--            <div class="row  align-items-center">-->
+            <!--                <label for="add-code" class="col-1 col-form-label labelInCreation">Хештег</label>-->
+            <!--                <div v-if="hashtag==null" class="col-4">-->
+            <!--                    <input type="number" class="form-control" id="add-code" :v-model="hashtag"/>-->
+            <!--                </div>-->
 
-<!--                <div v-else class="col-4">-->
-<!--                    <input type="number" class="form-control" id="add-code" :v-model="hashtag.content"/>-->
-<!--                </div>-->
-
-
-<!--            </div>-->
+            <!--                <div v-else class="col-4">-->
+            <!--                    <input type="number" class="form-control" id="add-code" :v-model="hashtag.content"/>-->
+            <!--                </div>-->
 
 
-            <div class="row  align-items-center">
-                <label for="add-name" class="col-1 col-form-label labelInCreation">Тип</label>
-                <div class="col-4">
-                    <input class="form-control" id="add-name" v-model="hashtag.content" required/>
+            <!--            </div>-->
+
+
+            <div class="row  align-items-center col-12" style="background-color: greenyellow">
+
+                <div class="form-row col-12" style="background-color: yellow">
+
+                    <div class="row col-6" style="background-color: lightblue">
+                        <div class="col-11" style="background-color: lavender">
+
+                            <label>1 уровень</label>
+                            <b-form-select v-model="selected1LevelId" id="level1-selection">
+                                <option v-for="hash in levelHashtags" :value="hash.id" v-if="hash.parentId==0">
+                                    {{hash.content}}
+                                </option>
+                            </b-form-select>
+
+                            <!--                        <div class="offset-sm-2 col-sm-3">-->
+                            <!--                            <button type="button" @click="clearSelection(1)" class="btn btn-primary">Clear-->
+                            <!--                            </button>-->
+                            <!--                        </div>-->
+
+                        </div>
+                        <div class="col-1"
+                             style="background-color: lavenderblush; padding-top: 50px; padding-right: 0px">
+                            <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
+                                   @click="clearSelection(1)">
+                                <v-icon style="color: green">mdi-close</v-icon>
+                            </v-btn>
+                        </div>
+
+                        <div class="col-11" style="background-color: lightgoldenrodyellow">
+                            <div v-if="selected1LevelId==null">
+                                <div style="margin-top: 10px">
+                                    <label for="add-level1">добавить хештег 1 уровня:</label>
+                                    <input class="form-control" id="add-level1" v-model="hashtag.content" required/>
+                                </div>
+                            </div>
+
+                            <div v-if="selected2LevelId==null">
+                                <div v-if="selected1LevelId!=null">
+                                    <div style="margin-top: 10px">
+                                        <label for="add-level2">добавить хештег 2 уровня:</label>
+                                        <input class="form-control" id="add-level2" v-model="hashtag.content" required/>
+                                        <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-if="selected2LevelId!=null">
+                                <div style="margin-top: 10px">
+                                    <label for="add-level3">добавить хештег 3 уровня:</label>
+                                    <input class="form-control" id="add-level3" v-model="hashtag.content" required/>
+                                </div>
+                            </div>
+                            <!--                        <div class="mt-2">Selected: <strong>{{ selected1Level }}</strong></div>-->
+                        </div>
+                        <div class="col-1" style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
+                            <!--                            <div class="offset-sm-2 col-sm-3">-->
+                            <!--                                <button type="button" @click="addOrUpdateHashtag" class="btn btn-primary">Add/Update-->
+                            <!--                                    hashtag-->
+                            <!--                                </button>-->
+                            <!--                            </div>-->
+
+                            <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
+                                   @click="addOrUpdateHashtag">
+                                <v-icon style="color: green">mdi-message-plus</v-icon>
+                            </v-btn>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row col-6" style="background-color: peachpuff">
+                        <div class="col-11" style="background-color: gold">
+
+                            <label>2 уровень</label>
+                            <b-form-select v-model="selected2LevelId" id="level2-selection">
+                                <option v-for="hash in levelHashtags" :value="hash.id"
+                                        v-if="hash.parentId==selected1LevelId">
+                                    {{hash.content}}
+                                </option>
+                            </b-form-select>
+
+                        </div>
+
+                        <div class="col-1" style="background-color: #e3d2d2; padding-top: 50px;">
+                            <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
+                                   @click="clearSelection(2)">
+                                <v-icon style="color: green">mdi-close</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="row  align-items-center">
-                <label for="add-misc" class="col-1 col-form-label labelInCreation">Комментарий</label>
-                <div class="col-4">
-                    <input class="form-control" id="add-misc" v-model="hashtag.type" required/>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="offset-sm-2 col-sm-3">
-                    <button type="button" @click="addOrUpdateHashtag" class="btn btn-primary">Create/Update</button>
-                    <a class="btn btn-default">
-                        <router-link to="/language">Cancel</router-link>
-                    </a>
-                </div>
-            </div>
-
-
-<!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
-
-            <div class="row">
-                <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
-                <div class="col-sm-auto">
-                    <b-form-select v-model="selected" id="search-selection">
-                        <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
-                    </b-form-select>
-                </div>
-
-                <div class="col-sm-2">
-                    <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
-                           id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
-                    <span class="close" @click="deleteSearch()"
-                          style="margin-top: -31px; margin-right: 5px">&times;</span>
-                    <!--                todo-->
-                </div>
-
-                <div style="padding-top: 11px">
-                    <button type="button" @click="search" class="btn btn-primary">Search</button>
-                </div>
-            </div>
-
         </form>
+
+
+        <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
+
+        <div class="row">
+            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
+            <div class="col-sm-auto">
+                <b-form-select v-model="selected" id="search-selection">
+                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
+                </b-form-select>
+            </div>
+
+            <div class="col-sm-2">
+                <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
+                       id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
+                <span class="close" @click="deleteSearch()"
+                      style="margin-top: -31px; margin-right: 5px">&times;</span>
+                <!--                todo-->
+            </div>
+
+            <div style="padding-top: 11px">
+                <button type="button" @click="search" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+
 
         <!--            /////////////////////////////////table///////////////////////////////////////////////////////-->
 
@@ -234,7 +301,10 @@
                 showResponse: false,
                 loggedInFlag: false,
                 loggedName: null,
-                selectedType: null,
+                selected1LevelId: null,
+                selected2LevelId: null,
+                selected1LevelHashtag: null,
+                selected2LevelHashtag: null,
                 editMode: false,
 
                 selected: "хештег",
@@ -254,9 +324,25 @@
                 // console.log("FILTERED ARTICLES");
                 return this.entries;
             },
+
+            levelHashtags() {
+                return this.hashtags;
+            }
         },
 
         methods: {
+
+            addStatus(id, hasError) {
+                document.getElementById(id).classList.remove('is-valid');
+                document.getElementById(id).classList.remove('is-invalid');
+
+                if (hasError) {
+                    document.getElementById(id).classList.add('is-invalid');
+                } else {
+                    document.getElementById(id).classList.add('is-valid');
+                }
+                this.hasError = this.hasError || hasError;
+            },
 
             formValidate() {
                 this.addStatus('add-url', (!this.hashtag.content));
@@ -270,58 +356,75 @@
                 return !this.hasError;
             },
 
-            addOrUpdateHashtag() {
-                this.hashtag.type = this.selectedType;
-                this.hasError = false;
+            clearSelection(level) {
+                if (level == 1) {
+                    this.selected1LevelId = null;
+                    this.selected2LevelId = null;
+                } else {
+                    this.selected2LevelId = null;
+                }
 
-
-                if (this.formValidate()) {
-                    if (this.hashtag.id != null) {
-                        api.update(this.hashtag.id, this.hashtag, r => {
-                            // router.push('/article');
-                            this.search();
-                        });
-                    } else {
-                        api.create(this.hashtag, r => {
-                            this.search();
-                        })
-                    }
-                }//formValidate
+                this.hashtag.content = null;
             },
 
-            // updateArticleStatus(id, status) {
-            //
-            //     api.findById(id, r => {
-            //         this.article = r.data;
-            //
-            //         this.article.status = status;
-            //         api.update(this.article.id, this.article, r => {
-            //             //router.push('/article');
-            //             // this.entries = r.data;
-            //             // console.log("UPDATE= = = = = = =");
-            //             // this.$forceUpdate();
-            //             // this.filteredArticles();
-            //             // document.location.reload(true);
-            //
-            //             this.search();
-            //         });
-            //
-            //
-            //         // this.article.date = this.formatDate(this.article.date);
-            //
-            //         // this.tags = this.article.hashtagList;
-            //         // for (let i = 0; i < this.article.hashtagList.length; i++) {
-            //         //     this.tags.push(this.article.hashtagList[i].content);
-            //         // }
-            //
-            //         // for (let i = 0; i < this.article.linkList.length; i++) {
-            //         //     this.links.push(this.article.linkList[i].content);
-            //         // }
-            //     });
-            //
-            //
-            // },
+            addOrUpdateHashtag() {
 
+                if (this.hashtag.content != null) {
+
+                    if (this.selected1LevelId == null) {
+                        this.hashtag.parentId = 0;
+                        console.log("PARENTID=0");
+
+                    } else if (this.selected2LevelId == null) {
+                        this.hashtag.parentId = this.selected1LevelId;
+                        console.log("PARENTID=", this.selected1LevelId);
+
+                    } else {
+                        this.hashtag.parentId = this.selected2LevelId;
+                    }
+
+
+                    api.create(this.hashtag, r => {
+                        if (this.selected2LevelId != null) {
+                            api.getLeafHashtags(this.selected2LevelId, r => {
+                                this.entries = r.data;
+                                this.hashtag.content = null;
+
+                                console.log(r.data)
+                            })
+                                .catch(error => {
+                                    this.errors.push(error)
+                                });
+                        } else {
+                            api.getAllHashtags().then(response => {
+                                this.entries = response.data;
+                                this.hashtags = response.data;  //to add new hash in dropdown lists
+                                this.hashtag.content = null;
+
+                                console.log(response.data)
+                            })
+                                .catch(error => {
+                                    this.errors.push(error)
+                                });
+                        }
+                    });
+
+                    // this.hasError = false;
+
+                    // if (this.formValidate()) {
+                    //     if (this.hashtag.id != null) {
+                    //         api.update(this.hashtag.id, this.hashtag, r => {
+                    //             // router.push('/article');
+                    //             this.search();
+                    //         });
+                    //     } else {
+                    //         api.create(this.hashtag, r => {
+                    //             this.search();
+                    //         })
+                    //     }
+                    // }//formValidate
+                }
+            },
 
             logout() {
                 this.$store.dispatch("logout", {}).then(result => {
@@ -374,11 +477,6 @@
             },
 
             search() {
-                // console.log("SEARCH", this.searchKey);
-
-                // let emptyArray = [];
-                // let nonExistantArray = undefined;
-
 
                 if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
                     // this.entries = this.articles;
@@ -406,29 +504,6 @@
                                     this.entries = r.data;
                                 });
                             }
-
-                        } else if (this.selected === "комментарий") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {   //ch+
-                                api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                api.searchDescription(this.searchKey, -1, r => {
-                                    this.entries = r.data;
-                                });
-                            }
-
-                        } else if (this.selected === "тип") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                api.searchTitle(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                console.log("NIT");
-                                api.searchTitle(this.searchKey, -1, r => {
-                                    this.entries = r.data;
-                                });
-                            }
                         }
                     }
                 }
@@ -440,6 +515,8 @@
 
             api.getAllHashtags().then(response => {
                 this.entries = response.data;
+                this.hashtags = response.data;
+
                 console.log(response.data)
             })
                 .catch(error => {
@@ -449,69 +526,22 @@
 
 
         watch: {
-            searchKey: function () {
-                //If empty search to renew the table
-                console.log("WATCH");
-                if (this.searchKey == "") {
-                    // if (this.statusCheckBox.length > 0) {
-                    this.search();
-                    // } else {
-                    //this.entries = this.articles;
-                    // api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
-                    //     this.entries = r.data;
-                    // });
-                    // }
-                }
-            },
+            selected2LevelId: function () {
+                if (this.selected2LevelId == null) {
 
-            statusCheckBox: function () {
-                console.log("WATCH SCB!");
-                console.log(this.statusCheckBox);
+                    api.getAllHashtags().then(response => {
+                        this.entries = response.data;
+                        console.log(response.data)
+                    })
+                        .catch(error => {
+                            this.errors.push(error)
+                        });
 
-                // if (this.statusCheckBox[this.statusCheckBox.length - 1] == 3) {
-                //     console.log("this.statusCheckBox!!! == 3");
-                //
-                //     document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
-                //     document.getElementById("enddate-input").style.backgroundColor = "lightgrey";
-                //
-                //     document.getElementById("startdate-input").disabled = true;
-                //     document.getElementById("enddate-input").disabled = true;
-                //     document.getElementById("refreshButton").disabled = true;
-                //
-                //     for (let i = 0; i < this.statusCheckBox.length; i++) {
-                //         if (this.statusCheckBox[i] != 3) {
-                //             this.statusCheckBox.shift();
-                //             console.log("SHIFT");
-                //             // document.getElementById("startdate-input").style.backgroundColor = "green";
-                //         }
-                //     }
-                //
-                //     console.log("AFTER", this.statusCheckBox);
-                // } else {
-                //     document.getElementById("startdate-input").style.backgroundColor = "white";
-                //     document.getElementById("enddate-input").style.backgroundColor = "white";
-                //
-                //     document.getElementById("startdate-input").disabled = false;
-                //     document.getElementById("enddate-input").disabled = false;
-                //     document.getElementById("refreshButton").disabled = false;
-                //
-                //     for (let i = 0; i < this.statusCheckBox.length; i++) {
-                //         if (this.statusCheckBox[i] == 3) {
-                //             this.statusCheckBox.splice(i, 1);
-                //             console.log("SPLICE");
-                //
-                //             // document.getElementById("startdate-input").style.backgroundColor = "white";
-                //         }
-                //     }
-                // }
-
-                this.search();
-            },
-
-
-            selected: function () {
-                if (this.searchKey != "") {
-                    this.search();
+                } else {
+                    console.log("FINDING HASHTAGS...");
+                    api.getLeafHashtags(this.selected2LevelId, r => {
+                        this.entries = r.data;
+                    });
                 }
             },
         },

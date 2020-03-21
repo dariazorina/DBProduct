@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface HashTagService {
     List<HashTag> findAll();
 
+    List<HashTag> findLeafs(Integer id);
+
     Optional<HashTag> findById(Integer id);
 
     HashTag save(HashTag stock);

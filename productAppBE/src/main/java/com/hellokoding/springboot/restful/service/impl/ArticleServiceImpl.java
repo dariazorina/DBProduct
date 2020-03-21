@@ -38,47 +38,26 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article save(Article stock) {
 
-        HashTag hashTagByContent;
-        HashTag hashTagWithID;
-        List<HashTag> hashTagList = stock.getHashtagList();
-        List<HashTag> hashTagListWithID = new ArrayList<>();
-
-
-//        UrlLink linkByContent;
-//        UrlLink linkWithID;
-//        List<UrlLink> linkList = stock.getLinkList();
-//        List<UrlLink> linkListWithID = new ArrayList<>();
-
-
-        for (HashTag hashtag : hashTagList) {
-            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
-            if (hashTagByContent == null) {
-                hashTagRepository.save(hashtag);
-
-                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
-                hashTagListWithID.add(hashTagWithID);
-
-            } else {
-                hashTagListWithID.add(hashTagByContent);
-            }
-        }
-
-//        for (UrlLink link : linkList) {
-//            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
-//            if (linkByContent == null) {
-//                linkRepository.save(link);
+//        HashTag hashTagByContent;
+//        HashTag hashTagWithID;
+//        List<HashTag> hashTagList = stock.getHashtagList();
+//        List<HashTag> hashTagListWithID = new ArrayList<>();
 //
-//                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
-//                linkListWithID.add(linkWithID);
+//        for (HashTag hashtag : hashTagList) {
+//            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
+//            if (hashTagByContent == null) {
+//                hashTagRepository.save(hashtag);
+//
+//                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
+//                hashTagListWithID.add(hashTagWithID);
 //
 //            } else {
-//                linkListWithID.add(linkByContent);
+//                hashTagListWithID.add(hashTagByContent);
 //            }
 //        }
-
-        stock.setHashtagList(hashTagListWithID);
-//        stock.setLinkList(linkListWithID);
-
+//
+//
+//        stock.setHashtagList(hashTagListWithID);
         return articleRepository.save(stock);
     }
 
@@ -105,17 +84,17 @@ public class ArticleServiceImpl implements ArticleService {
                 }
 
 
-            } else if (hash != null && !hash.isEmpty()) {
-
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
-
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByHashAndStatus(hash + "%", status);
-
-                } else {
-                    searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
-                }
+//            } else if (hash != null && !hash.isEmpty()) {
+//
+//                if (status.get(0) == -1) {
+//                    searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
+//
+//                } else if (status.get(0) == 3) {
+//                    searchList = articleRepository.findByHashAndStatus(hash + "%", status);
+//
+//                } else {
+//                    searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
+//                }
 
 
             } else if (author != null && !author.isEmpty()) {

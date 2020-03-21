@@ -75,12 +75,15 @@ public class Person {
 //    private List<Annex> annexList;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "person_hashtag",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-    private List<HashTag> hashtagList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "person_hashtag",
+//            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+//            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
+
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PersonHashtag> hashtagList;
 
     private String miscellany;
 }

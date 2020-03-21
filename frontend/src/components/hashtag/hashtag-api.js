@@ -20,6 +20,13 @@ export default {
         return AXIOS.get(`/hashtag`);
     },
 
+    getLeafHashtags(id, fn) {
+        return AXIOS
+            .get(`/hashtag/leafs?parentid=` + id)
+            .then(response => fn(response))
+            .catch(error => console.log(error))
+    },
+
     create(hashtag, fn, fnError) {
         AXIOS
             .post('/hashtag', hashtag)

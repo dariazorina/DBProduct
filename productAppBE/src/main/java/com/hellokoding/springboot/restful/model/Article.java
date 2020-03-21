@@ -52,12 +52,14 @@ public class Article {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
-    @ManyToMany
-    @JoinTable(
-            name = "art_hashtag",
-            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-    private List<HashTag> hashtagList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "art_hashtag",
+//            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
+//            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ArticleHashtag> hashtagList;
 
     private String miscellany;
 }

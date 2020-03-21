@@ -13,6 +13,8 @@
             </div>
 
 
+<!--            ////////////////////////////////date period/////////////////////////////////////-->
+
             <div class="form-group col-2"
                  style="margin-left:auto; background-color: white">
 
@@ -171,12 +173,14 @@
                     {{article.language.name}}
                 </td>
                 <td>
-                    <div v-for="hashtag in article.hashtagList">{{hashtag.content}}</div>
+<!--                    <div v-for="hashtag in article.hashtagList">-->
+<!--                        {{hashtag.hashtag.content}}-->
+<!--                    </div>-->
                 </td>
                 <td>
-                    <div v-for="author in article.authorList">
-                        {{createComplexCellValue(author.surname,author.surnameRus)}}
-                    </div>
+<!--                    <div v-for="author in article.authorList">-->
+<!--                        {{createComplexCellValue(author.surname,author.surnameRus)}}-->
+<!--                    </div>-->
                 </td>
 
                 <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
@@ -215,7 +219,7 @@
 
                 <td>
                     <div>
-<!--                    <div style="white-space:pre-line">-->
+                        <!--                    <div style="white-space:pre-line">-->
                         <a>
                             <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
                                 {{createComplexCellValue(article.titleRus, article.title)}}
@@ -364,7 +368,8 @@
         data() {
             return {
                 articles: [],
-                article: {status: 0, authorList: []},
+                //hashtagList: {},//?
+                article: {status: 0, authorList: [], hashtagList: []},
                 authors: [],
 
                 response: [],
@@ -410,11 +415,9 @@
                     result = valueRus;
                     if (this.isArrayValidAndNotEmpty(valueOrig))
                         result += " / " + valueOrig;
-                        // result += "\n" + valueOrig;
-                }
-                else
-                    if (this.isArrayValidAndNotEmpty(valueOrig))
-                        result += valueOrig;
+                    // result += "\n" + valueOrig;
+                } else if (this.isArrayValidAndNotEmpty(valueOrig))
+                    result += valueOrig;
 
                 return result;
 

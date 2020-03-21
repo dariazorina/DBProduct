@@ -25,6 +25,7 @@ public class PersonServiceImpl implements PersonService {
     private final ScpaperRepository scpaperRepository;
     private final IsourceRepository isourceRepository;
     private final HashTagRepository hashTagRepository;
+//    private final PersonHashtagRepository personHashtagRepository;
     private final UrlLinkRepository linkRepository;
 
     @Override
@@ -139,10 +140,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person save(NewPersonDto personDto) {
 
-        HashTag hashTagByContent;
-        HashTag hashTagWithID;
-        List<HashTag> hashTagList = personDto.getHashtagList();
-        List<HashTag> hashTagListWithID = new ArrayList<>();
+//        HashTag hashTagByContent;
+//        HashTag hashTagWithID;
+//        List<HashTag> hashTagList = personDto.getHashtagList();
+//        List<HashTag> hashTagListWithID = new ArrayList<>();
 
 
         UrlLink linkByContent;
@@ -151,18 +152,18 @@ public class PersonServiceImpl implements PersonService {
         List<UrlLink> linkListWithID = new ArrayList<>();
 
 
-        for (HashTag hashtag : hashTagList) {
-            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
-            if (hashTagByContent == null) {
-                hashTagRepository.save(hashtag);
-
-                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
-                hashTagListWithID.add(hashTagWithID);
-
-            } else {
-                hashTagListWithID.add(hashTagByContent);
-            }
-        }
+//        for (HashTag hashtag : hashTagList) {
+//            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
+//            if (hashTagByContent == null) {
+//                hashTagRepository.save(hashtag);
+//
+//                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
+//                hashTagListWithID.add(hashTagWithID);
+//
+//            } else {
+//                hashTagListWithID.add(hashTagByContent);
+//            }
+//        }
 
         for (UrlLink link : linkList) {
             linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
@@ -182,7 +183,7 @@ public class PersonServiceImpl implements PersonService {
         Country c = new Country();
         person.setCountry(c);
 
-        person.setHashtagList(hashTagListWithID);
+//        person.setHashtagList(hashTagListWithID);
         person.setLinkList(linkListWithID);
 
         person.setSurname(personDto.getSurname());
@@ -217,6 +218,12 @@ public class PersonServiceImpl implements PersonService {
         }
         person.setOccupation(occList);
 
+
+
+
+
+        //old, first
+
         //Position pos = person.getOccupation1().get(0);
         //person.getOccupation1().clear();
 
@@ -236,7 +243,9 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.save(person);
     }
 
-    ////utils
+
+
+    ///////////////////////////////////////utils///////////////////////////////////////////////////////
 /*    public void fillPersonTableFromArticle() {   ////step1: create table author
         List<Article> all = articleRepository.findAll();
 

@@ -31,14 +31,14 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findByLangAndDate(String lang, Date startDate, Date endDate);
 
 
-    //search in hash, "starts with"
-    @Query("select a " +
-            "from Article a " +
-            "join a.hashtagList h " +
-            "where lower(h.content) like lower(:hashTag) " +
-            "and (a.date >=:startDate and a.date <= :endDate)")
-//            "where h.content = :hashTag")
-    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
+//    //search in hash, "starts with"
+//    @Query("select a " +
+//            "from Article a " +
+//            "join a.hashtagList h " +
+//            "where lower(h.content) like lower(:hashTag) " +
+//            "and (a.date >=:startDate and a.date <= :endDate)")
+////            "where h.content = :hashTag")
+//    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
 
 
     //search in author surname and surnameRus, "starts with"
@@ -81,21 +81,21 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
 
 
-    //search status+hash
-    @Query("select a " +
-            "from Article a " +
-            "join a.hashtagList h " +
-            "where lower(h.content) like lower(:hashTag) " +
-            "and a.status in (:status) " +
-            "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByHashAndStatusAndDate(String hashTag, List<Integer> status, Date startDate, Date endDate);
-    //search status+hash
-    @Query("select a " +
-            "from Article a " +
-            "join a.hashtagList h " +
-            "where lower(h.content) like lower(:hashTag) " +
-            "and a.status in (:status)")
-    List<Article> findByHashAndStatus(String hashTag, List<Integer> status);
+//    //search status+hash
+//    @Query("select a " +
+//            "from Article a " +
+//            "join a.hashtagList h " +
+//            "where lower(h.content) like lower(:hashTag) " +
+//            "and a.status in (:status) " +
+//            "and (a.date >=:startDate and a.date <= :endDate)")
+//    List<Article> findByHashAndStatusAndDate(String hashTag, List<Integer> status, Date startDate, Date endDate);
+//    //search status+hash
+//    @Query("select a " +
+//            "from Article a " +
+//            "join a.hashtagList h " +
+//            "where lower(h.content) like lower(:hashTag) " +
+//            "and a.status in (:status)")
+//    List<Article> findByHashAndStatus(String hashTag, List<Integer> status);
 
 
 

@@ -31,6 +31,12 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
+    public List<HashTag> findLeafs(Integer id) {
+        return hashTagRepository.findByParentId(id);
+    }
+
+
+    @Override
     public HashTag save(HashTag stock) {
 
         //todo is it ok?
