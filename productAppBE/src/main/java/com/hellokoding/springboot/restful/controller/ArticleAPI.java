@@ -53,7 +53,7 @@ public class ArticleAPI {
         Optional<Article> stock = articleService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(stock.get());
     }

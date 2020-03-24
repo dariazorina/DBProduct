@@ -3,10 +3,13 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="Даша" id="16032020-01">
+    <changeSet author="Даша" id="23032020-01">
         <addNotNullConstraint columnDataType="INT"
                               columnName="parent_id"
                               schemaName="public"
                               tableName="t_hashtag"/>
+
+        <addUniqueConstraint columnNames="parent_id, content" tableName="t_hashtag"/>
+        <addUniqueConstraint columnNames="content" tableName="t_hashtag"/>
     </changeSet>
 </databaseChangeLog>

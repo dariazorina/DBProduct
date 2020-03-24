@@ -22,14 +22,14 @@ public class HashTagAPI {
     private final HashTagService hashTagService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "q") String q) {
-        List<HashTag> search = hashTagService.search(q);
+    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "hash") String hash) {
+        List<HashTag> search = hashTagService.search(hash);
         return ResponseEntity.ok(search);
     }
 
     @GetMapping
     public ResponseEntity<List<HashTag>> findAll(@RequestParam(name = "q", required = false) String q) {
-        if (!StringUtils.isEmpty(q)){
+        if (!StringUtils.isEmpty(q)) {
             return ResponseEntity.ok(hashTagService.search(q));
 
         } else {
@@ -54,8 +54,36 @@ public class HashTagAPI {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody HashTag article) {
-        return ResponseEntity.ok(hashTagService.save(article));
+    public ResponseEntity create(@Valid @RequestBody HashTag hashTag) {
+        HashTag saved = hashTagService.save(hashTag);
+        if (saved != null) {
+            return ResponseEntity.ok(saved);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HashTag> update(@PathVariable Integer id, @Valid @RequestBody HashTag hashTag) {
+        hashTag.setId(id);
+        if (!hashTagService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(hashTagService.save(hashTag));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Integer id) {
+
+        Optional<HashTag> hashtagToDelete = hashTagService.findById(id);
+
+        if (!hashtagToDelete.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            return ResponseEntity.badRequest().build();
+        }
+        hashTagService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     ////utils////
@@ -114,6 +142,6 @@ public class HashTagAPI {
         hashTagService.initializeReferenceBetweenHashTagAndIsource();
         return ResponseEntity.ok().build();
     }*/
-   /////// ////
+    /////// ////
 
 }

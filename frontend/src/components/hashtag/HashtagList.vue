@@ -38,7 +38,8 @@
                     <div class="row col-6" style="background-color: lightblue">
                         <div class="col-11" style="background-color: lavender">
 
-                            <label>1 уровень</label>
+                            <label v-if="isAllHashtagMode" style="color: darkgray"> 1 уровень</label>
+                            <label v-else>1 уровень</label>
                             <b-form-select v-model="selected1LevelId" id="level1-selection">
                                 <option v-for="hash in levelHashtags" :value="hash.id" v-if="hash.parentId==0">
                                     {{hash.content}}
@@ -60,38 +61,16 @@
                         </div>
 
                         <div class="col-11" style="background-color: lightgoldenrodyellow">
-                            <div v-if="selected1LevelId==null">
-                                <div style="margin-top: 10px">
-                                    <label for="add-level1">добавить хештег 1 уровня:</label>
-                                    <input class="form-control" id="add-level1" v-model="hashtag.content" required/>
-                                </div>
-                            </div>
+                            <div style="margin-top: 10px">
 
-                            <div v-if="selected2LevelId==null">
-                                <div v-if="selected1LevelId!=null">
-                                    <div style="margin-top: 10px">
-                                        <label for="add-level2">добавить хештег 2 уровня:</label>
-                                        <input class="form-control" id="add-level2" v-model="hashtag.content" required/>
-                                        <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
-                                    </div>
-                                </div>
-                            </div>
+                                <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
+                                <label for="add-level" v-else>{{labelAddOrEditHashtag}}</label>
 
-                            <div v-if="selected2LevelId!=null">
-                                <div style="margin-top: 10px">
-                                    <label for="add-level3">добавить хештег 3 уровня:</label>
-                                    <input class="form-control" id="add-level3" v-model="hashtag.content" required/>
-                                </div>
+                                <input class="form-control" id="add-level" v-model="hashtag.content" required/>
+                                <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
                             </div>
-                            <!--                        <div class="mt-2">Selected: <strong>{{ selected1Level }}</strong></div>-->
                         </div>
                         <div class="col-1" style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
-                            <!--                            <div class="offset-sm-2 col-sm-3">-->
-                            <!--                                <button type="button" @click="addOrUpdateHashtag" class="btn btn-primary">Add/Update-->
-                            <!--                                    hashtag-->
-                            <!--                                </button>-->
-                            <!--                            </div>-->
-
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="addOrUpdateHashtag">
                                 <v-icon style="color: green">mdi-message-plus</v-icon>
@@ -104,7 +83,8 @@
                     <div class="row col-6" style="background-color: peachpuff">
                         <div class="col-11" style="background-color: gold">
 
-                            <label>2 уровень</label>
+                            <label v-if="isAllHashtagMode" style="color: darkgray"> 2 уровень</label>
+                            <label v-else>2 уровень</label>
                             <b-form-select v-model="selected2LevelId" id="level2-selection">
                                 <option v-for="hash in levelHashtags" :value="hash.id"
                                         v-if="hash.parentId==selected1LevelId">
@@ -127,17 +107,20 @@
 
 
         <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
+        <div class="row" style="margin-left: 20px">
+            <!--            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>-->
+            <!--            <div class="col-sm-auto">-->
+            <!--                <b-form-select v-model="selected" id="search-selection">-->
+            <!--                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>-->
+            <!--                </b-form-select>-->
+            <!--            </div>-->
 
-        <div class="row">
-            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
-            <div class="col-sm-auto">
-                <b-form-select v-model="selected" id="search-selection">
-                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
-                </b-form-select>
+            <div style="padding-top: 11px">
+                <button type="button" @click="showAllHash" class="btn btn-primary">Show all hashtags</button>
             </div>
 
             <div class="col-sm-2">
-                <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
+                <input v-model="searchKey" class="form-control"
                        id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
                 <span class="close" @click="deleteSearch()"
                       style="margin-top: -31px; margin-right: 5px">&times;</span>
@@ -147,11 +130,12 @@
             <div style="padding-top: 11px">
                 <button type="button" @click="search" class="btn btn-primary">Search</button>
             </div>
+
+
         </div>
 
 
         <!--            /////////////////////////////////table///////////////////////////////////////////////////////-->
-
         <table class="redTable">
             <!--        <table class="table">-->
             <thead>
@@ -159,7 +143,7 @@
             <tr>
                 <!--                <th class='tdTitle'>Id</th>-->
 
-                <th class='tdTitle'>Статус</th>
+                <!--                <th class='tdTitle'>Родительский хештег</th>-->
                 <th class='tdTitle'>Хештег</th>
                 <th class='tdTitle'>Комментарий</th>
 
@@ -168,48 +152,47 @@
             </tr>
             </thead>
             <tbody>
-            <!--            <tr v-for="article in articles" class="ListCellStyleHot">-->
-            <!--                        <tr v-for="article in articles">-->
             <tr v-for="hashtag in filteredHashtags">
-
-
-                <td :key="hashtag.type">
-                    <div v-if="hashtag.type==0">
-                        {{options[0].text}}
-                    </div>
-
-                    <div v-if="hashtag.type==1">
-                        {{options[1].text}}
-                    </div>
-
-                </td>
                 <td>
                     {{hashtag.content}}
                 </td>
                 <td>
                     {{hashtag.miscellany}}
                 </td>
-
-
                 <td>
                     <v-btn text icon x-small @click="findEditedHashtag(hashtag.id)">
                         <v-icon style="color: green">mdi-pencil</v-icon>
                     </v-btn>
 
 
-                    <v-btn text icon x-small>
-                        <a>
-                            <router-link :to="{name: 'article-delete', params: {article_id: hashtag.id}}">
-                                <v-icon style="color: red">mdi-delete-forever</v-icon>
-                            </router-link>
-                        </a>
+                    <!--                    <v-btn text icon x-small v-b-modal.modal2>-->
+                    <v-btn text icon x-small @click="deleteHashtag(hashtag.id)">
+                        <!--                        <a>-->
+                        <!--                            <router-link :to="{name: 'hashtag-delete', params: {hashtag_id: hashtag.id}}">-->
+                        <v-icon style="color: red">mdi-delete-forever</v-icon>
+                        <!--                            </router-link>-->
+                        <!--                        </a>-->
                     </v-btn>
+
+                    <!--                    <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal2>Delete-->
+                    <!--                        </button>-->
+                    <!--                    <b-modal id="modal2" title="Are you sure you want to delete hashtag?"-->
+                    <!--                             @ok="deleteHashtag(hashtag.id)"></b-modal>-->
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </template>
+
+
+<!--<button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout-->
+<!--</button>-->
+<!--&lt;!&ndash;                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>&ndash;&gt;-->
+<!--</p>-->
+<!--&lt;!&ndash; Modal Component &ndash;&gt;-->
+<!--<b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
+
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
 
@@ -281,12 +264,13 @@
     import "vue-scroll-table";
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
-    import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
+    import '@mdi/font/css/materialdesignicons.css'
+    import Language from "../language/LanguageList"; //why does icon appear in other file)) add article?
     // import 'material-design-icons-iconfont/dist/material-design-icons.css'
-
 
     export default {
         name: 'hashtag',
+        components: {Language},
         vuetify: new Vuetify(),
         data() {
             return {
@@ -303,12 +287,14 @@
                 loggedName: null,
                 selected1LevelId: null,
                 selected2LevelId: null,
-                selected1LevelHashtag: null,
-                selected2LevelHashtag: null,
+
+                isAllHashtagMode: false,
+
+                selected: null,
                 editMode: false,
 
-                selected: "хештег",
-                searchItems: ["хештег", "тип", "комментарий"],
+                labelAddOrEditHashtag: "",
+                // searchItems: ["хештег", "тип", "комментарий"],
                 searchKey: '',
 
                 statusCheckBox: [],
@@ -324,105 +310,176 @@
                 // console.log("FILTERED ARTICLES");
                 return this.entries;
             },
-
             levelHashtags() {
                 return this.hashtags;
-            }
-        },
-
-        methods: {
-
-            addStatus(id, hasError) {
-                document.getElementById(id).classList.remove('is-valid');
-                document.getElementById(id).classList.remove('is-invalid');
-
-                if (hasError) {
-                    document.getElementById(id).classList.add('is-invalid');
-                } else {
-                    document.getElementById(id).classList.add('is-valid');
-                }
-                this.hasError = this.hasError || hasError;
             },
-
-            formValidate() {
-                this.addStatus('add-url', (!this.hashtag.content));
-                if (this.hasError) {
-                } else {
-                    this.addStatus('language-selection', (!this.selectedL));
-                }
-
-                if (this.hasError)
-                    console.log('ERROROROR----------------------------');
-                return !this.hasError;
+        },
+        methods: {
+            showAllHash() {
+                this.isAllHashtagMode = true;
+                api.getAllHashtags().then(response => {
+                    this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                    this.hashtags = response.data;  //to renew edited 1 level dropdown list
+                    this.entries = response.data;
+                    this.hashtag.content = null;
+                    this.clearSelection(1);
+                });
             },
 
             clearSelection(level) {
-                if (level == 1) {
+                if (level === 1) {
                     this.selected1LevelId = null;
                     this.selected2LevelId = null;
                 } else {
                     this.selected2LevelId = null;
+                    this.level1UpdateTable();
                 }
 
                 this.hashtag.content = null;
             },
 
             addOrUpdateHashtag() {
-
                 if (this.hashtag.content != null) {
+                    if (this.hashtag.id != null) { //update
 
-                    if (this.selected1LevelId == null) {
-                        this.hashtag.parentId = 0;
-                        console.log("PARENTID=0");
+                        api.update(this.hashtag.id, this.hashtag, r => {
 
-                    } else if (this.selected2LevelId == null) {
-                        this.hashtag.parentId = this.selected1LevelId;
-                        console.log("PARENTID=", this.selected1LevelId);
+                            if (this.selected2LevelId != null) {                 ///upd 3 level
+                                api.getLeafHashtags(this.selected2LevelId, r => {
+                                    this.entries = r.data;
+                                    this.hashtag.content = null;
+                                    this.labelAddOrEditHashtag = "Добавить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
+                                    console.log(r.data)
+                                })
+                                    .catch(error => {
+                                        this.errors.push(error)
+                                    });
 
-                    } else {
-                        this.hashtag.parentId = this.selected2LevelId;
-                    }
+                            } else {
+                                if (this.selected1LevelId != null) {             ///upd 2 level
+                                    api.getLeafHashtags(this.selected1LevelId, r => {
+                                        this.entries = r.data;
+                                        this.hashtag.content = null;
+                                        this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
 
+                                        api.getAllHashtags().then(response => {
+                                            this.hashtags = response.data;  //to renew edited 2 level dropdown list
+                                        });
+                                    })
+                                        .catch(error => {
+                                            this.errors.push(error)
+                                        });
 
-                    api.create(this.hashtag, r => {
-                        if (this.selected2LevelId != null) {
-                            api.getLeafHashtags(this.selected2LevelId, r => {
-                                this.entries = r.data;
-                                this.hashtag.content = null;
+                                } else {                                         ///upd 1 level
+                                    api.getAllHashtags().then(response => {
+                                        this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                                        this.hashtags = response.data;  //to renew edited 1 level dropdown list
+                                        this.entries = response.data;
+                                        this.hashtag.content = null;
+                                    });
+                                }
+                            }
+                        });
+                    } else { //create
 
-                                console.log(r.data)
-                            })
-                                .catch(error => {
-                                    this.errors.push(error)
-                                });
+                        if (this.selected1LevelId == null) {
+                            this.hashtag.parentId = 0;
+
+                        } else if (this.selected2LevelId == null) {
+                            this.hashtag.parentId = this.selected1LevelId;
+                            console.log("CREATE 2 level", this.selected1LevelId);
+
                         } else {
-                            api.getAllHashtags().then(response => {
-                                this.entries = response.data;
-                                this.hashtags = response.data;  //to add new hash in dropdown lists
-                                this.hashtag.content = null;
-
-                                console.log(response.data)
-                            })
-                                .catch(error => {
-                                    this.errors.push(error)
-                                });
+                            this.hashtag.parentId = this.selected2LevelId;
                         }
+
+                        api.create(this.hashtag, r => {
+                            if (this.selected2LevelId != null) {  //crt 3 level
+                                api.getLeafHashtags(this.selected2LevelId, r => {
+                                    this.entries = r.data;
+                                    this.hashtag.content = null;
+                                    console.log(r.data)
+                                })
+                                    .catch(error => {
+                                        this.errors.push(error)
+                                    });
+                            } else {
+                                if (this.selected1LevelId != null) {   ///crt 2 level
+
+                                    api.getLeafHashtags(this.selected1LevelId, r => {
+                                        this.entries = r.data;
+                                        this.hashtag.content = null;
+
+                                        api.getAllHashtags().then(response => {
+                                            this.hashtags = response.data;  //to renew edited 2 level dropdown list
+                                        });
+                                        // console.log(r.data)
+                                    })
+                                        .catch(error => {
+                                            this.errors.push(error)
+                                        });
+
+                                } else {                                  ///crt 1 level
+                                    api.getAllHashtags().then(response => {
+                                        this.entries = response.data;
+                                        this.hashtags = response.data;  //to add new hash in dropdown lists
+                                        this.hashtag.content = null;
+
+                                        console.log(response.data)
+                                    })
+                                        .catch(error => {
+                                            this.errors.push(error)
+                                        });
+                                }
+                            }
+                        }, error => {
+                            console.log("Hashtag already exists");
+                            this.labelAddOrEditHashtag = "Hashtag already exists";
+                        });
+                    }
+                }
+            },
+
+            deleteHashtag(id) {
+                if (confirm("Do you really want to delete '" + this.getHashtagContentById(id) + "'?")) {
+                    api.delete(id, r => {
+                        api.getAllHashtags().then(response => {
+                            this.hashtags = response.data;                          //to renew dropdown lists
+
+                            if (this.isAllHashtagMode) {
+                                this.showAllHash();
+                            } else {
+                                if (this.selected1LevelId == null) {
+                                    this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                                    api.getLeafHashtags(0, r => {
+                                        this.entries = r.data;
+                                    });
+                                } else {
+                                    if (this.selected2LevelId == null) {
+                                        this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+                                        api.getLeafHashtags(this.selected1LevelId, r => {
+                                            this.entries = r.data;
+                                        });
+                                    } else {
+                                        this.labelAddOrEditHashtag = "Добавить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
+
+                                        api.getLeafHashtags(this.selected2LevelId, r => {
+                                            this.entries = r.data;
+                                        });
+                                    }
+                                }
+                            }
+                        });
                     });
+                }
+            },
 
-                    // this.hasError = false;
-
-                    // if (this.formValidate()) {
-                    //     if (this.hashtag.id != null) {
-                    //         api.update(this.hashtag.id, this.hashtag, r => {
-                    //             // router.push('/article');
-                    //             this.search();
-                    //         });
-                    //     } else {
-                    //         api.create(this.hashtag, r => {
-                    //             this.search();
-                    //         })
-                    //     }
-                    // }//formValidate
+            getHashtagContentById(id) {
+                let content;
+                for (let i = 0; i < this.hashtags.length; i++) {
+                    if (this.hashtags[i].id === id) {
+                        return this.hashtags[i].content;
+                    }
                 }
             },
 
@@ -447,13 +504,31 @@
 
 
             findEditedHashtag(id) {
-                console.log("enter findOrEdit");
-                // if (this.editMode) {
-                api.findById(id, r => {
-                    this.hashtag = r.data;
-                    console.log("hashtag EDIT!", this.hashtag);
+                api.findById(id, resp => {
+                    this.hashtag = resp.data;
+                    if (this.hashtag.parentId !== 0) {
+
+                        api.findById(this.hashtag.parentId, r => {
+                            if (r.data.parentId === 0) {                                                    //second level
+                                this.selected1LevelId = r.data.id;
+                                this.labelAddOrEditHashtag = "Изменить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+
+                            } else {                                                                         ///third level
+                                api.findById(r.data.parentId, r1 => {
+                                    this.selected1LevelId = r1.data.id;
+                                    this.selected2LevelId = r.data.id;
+
+                                    api.getLeafHashtags(this.selected2LevelId, r => {
+                                        this.entries = r.data;
+                                    });
+                                    this.labelAddOrEditHashtag = "Изменить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
+                                });
+                            }
+                        });
+                    } else {
+                        this.labelAddOrEditHashtag = "Изменить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                    }
                 });
-                // }
             },
 
 
@@ -477,34 +552,76 @@
             },
 
             search() {
+                if (this.searchKey === "") {
+                    api.getAllHashtags().then(response => {
+                        this.hashtags = response.data;                          //to renew dropdown lists
 
-                if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
-                    // this.entries = this.articles;
-
-                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
-                        this.entries = r.data;
-                    });
-
-                } else {
-                    if (this.searchKey === "") {    //s-
-                        if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) { //ch+
-                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                this.entries = r.data;
-                            });
-                        }
-
-                    } else {        //s+
-                        if (this.selected === "хештег") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//ch+
-                                api.searchHash(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                        if (this.isAllHashtagMode) {
+                            this.showAllHash();
+                        } else {
+                            if (this.selected1LevelId == null) {
+                                this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                                api.getLeafHashtags(0, r => {
                                     this.entries = r.data;
                                 });
                             } else {
-                                api.searchHash(this.searchKey, -1, r => {
-                                    this.entries = r.data;
-                                });
+                                if (this.selected2LevelId == null) {
+                                    this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+                                    api.getLeafHashtags(this.selected1LevelId, r => {
+                                        this.entries = r.data;
+                                    });
+                                } else {
+                                    this.labelAddOrEditHashtag = "Добавить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
+
+                                    api.getLeafHashtags(this.selected2LevelId, r => {
+                                        this.entries = r.data;
+                                    });
+                                }
                             }
                         }
+                        console.log("delete", r.data);
+                    });
+                } else {
+                    // if (this.selected === "хештег") {
+                    api.searchHash(this.searchKey, r => {
+                        this.entries = r.data;
+                    });
+                    // }
+                }
+            },
+
+            level1UpdateTable() {
+                if (this.selected1LevelId == null) {
+                    if (!this.isAllHashtagMode) {
+                        this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                        api.getLeafHashtags(0, r => {
+                            this.entries = r.data;
+                        });
+                    }
+                } else {
+                    this.isAllHashtagMode = false;
+                    this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+
+                    api.getLeafHashtags(this.selected1LevelId, r => {
+                        this.entries = r.data;
+                    });
+                }
+            },
+
+            hashtagContentTitle() {
+                console.log(" hashtag: function(){");
+
+                if (this.hashtag.content.length == 0) {
+                    console.log(" hashtag: function(){ NULL");
+
+                    if (this.selected2LevelId == null) {
+                        if (this.selected1LevelId == null) {
+                            this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                        } else {
+                            this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+                        }
+                    } else {
+                        this.labelAddOrEditHashtag = "Добавить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
                     }
                 }
             },
@@ -513,8 +630,14 @@
         mounted() {
             this.getLoggedIn();
 
+            api.getLeafHashtags(0, r => {
+                this.entries = r.data;
+                // this.hashtags = r.data;
+            });
+
+
             api.getAllHashtags().then(response => {
-                this.entries = response.data;
+                // this.entries = response.data;
                 this.hashtags = response.data;
 
                 console.log(response.data)
@@ -522,26 +645,62 @@
                 .catch(error => {
                     this.errors.push(error)
                 });
+
+            this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+
+            let input = document.getElementById("add-level");
+            if (input)
+            // input.addEventListener("keyup", function (event) {
+                input.addEventListener("keyup", (event) => {
+                    if (event.key === "Enter") {
+                        console.log("CATCH ENTER");
+                        event.preventDefault();
+                        this.addOrUpdateHashtag();
+                    }
+
+                    if (event.key === "Backspace") {
+                        event.preventDefault();
+                        this.hashtagContentTitle();
+                    }
+
+                    if (event.key === "Delete") {
+                        event.preventDefault();
+                        this.hashtagContentTitle();
+                    }
+                });
         },
 
-
         watch: {
+            selected1LevelId: function () {
+                this.level1UpdateTable();
+            },
             selected2LevelId: function () {
                 if (this.selected2LevelId == null) {
 
-                    api.getAllHashtags().then(response => {
-                        this.entries = response.data;
-                        console.log(response.data)
-                    })
-                        .catch(error => {
-                            this.errors.push(error)
-                        });
+                    if (this.selected1LevelId == null) {
+                        this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
+                    } else {
+                        this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
+                    }
+
+                    api.getLeafHashtags(this.selected1LevelId, r => {
+                        this.entries = r.data;
+                    });
 
                 } else {
-                    console.log("FINDING HASHTAGS...");
+                    this.labelAddOrEditHashtag = "Добавить хештег 3 уровня, используйте Enter/кнопка <Добавить>";
+
                     api.getLeafHashtags(this.selected2LevelId, r => {
                         this.entries = r.data;
                     });
+                }
+            },
+
+            searchKey: function () {
+                //If empty search to renew the table
+                console.log("WATCH");
+                if (this.searchKey == "") {
+                    this.search();
                 }
             },
         },

@@ -6,6 +6,7 @@ import com.hellokoding.springboot.restful.service.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,6 @@ public class HashTagServiceImpl implements HashTagService {
         return hashTagRepository.findByParentId(id);
     }
 
-
     @Override
     public HashTag save(HashTag stock) {
 
@@ -50,6 +50,33 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public void deleteById(Integer id) {
+
+        List<HashTag> allHash = hashTagRepository.findAll();
+        List<Integer> topLevelIdList = new ArrayList<>();
+        List<Integer> bottomLevelIdList = new ArrayList<>();
+
+        for (HashTag h : allHash) {
+            if (h.getParentId().equals(id)) {
+                topLevelIdList.add(h.getId());
+            }
+        }
+
+        for (Integer branchId : topLevelIdList) {
+            for (HashTag h : allHash) {
+                if (h.getParentId().equals(branchId)) {
+                    bottomLevelIdList.add(h.getId());
+                }
+            }
+        }
+
+        for (Integer leafId : bottomLevelIdList) {
+            hashTagRepository.deleteById(leafId);
+        }
+
+        for (Integer branchId : topLevelIdList) {
+            hashTagRepository.deleteById(branchId);
+        }
+
         hashTagRepository.deleteById(id);
     }
 
