@@ -15,7 +15,7 @@
 
 
         <!--//////////////////////////////////////////add/edit hashtag/////////////////////////////////////////////////////////////////-->
-        <form class="formCreation">
+        <form class="formCreation" >
 
             <!--            <div class="row  align-items-center">-->
             <!--                <label for="add-code" class="col-1 col-form-label labelInCreation">Хештег</label>-->
@@ -31,12 +31,12 @@
             <!--            </div>-->
 
 
-            <div class="row  align-items-center col-12" style="background-color: greenyellow">
+            <div class="row  align-items-center col-12" style="background-color: white; margin-bottom: 0px; padding-bottom: 0px" >
 
-                <div class="form-row col-12" style="background-color: yellow">
+                <div class="form-row col-12" style="background-color: white">
 
-                    <div class="row col-6" style="background-color: lightblue">
-                        <div class="col-11" style="background-color: lavender">
+                    <div class="row col-6" style="background-color: white">
+                        <div class="col-11" style="background-color: white">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 1 уровень</label>
                             <label v-else>1 уровень</label>
@@ -53,14 +53,14 @@
 
                         </div>
                         <div class="col-1"
-                             style="background-color: lavenderblush; padding-top: 50px; padding-right: 0px">
+                             style="background-color: white; padding-top: 50px; padding-right: 0px">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="clearSelection(1)">
                                 <v-icon style="color: green">mdi-close</v-icon>
                             </v-btn>
                         </div>
 
-                        <div class="col-11" style="background-color: lightgoldenrodyellow">
+                        <div class="col-11" style="background-color: white">
                             <div style="margin-top: 10px">
 
                                 <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
@@ -70,7 +70,7 @@
                                 <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
                             </div>
                         </div>
-                        <div class="col-1" style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
+                        <div class="col-1" style="background-color: white; padding-top: 55px; padding-right: 0px">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="addOrUpdateHashtag">
                                 <v-icon style="color: green">mdi-message-plus</v-icon>
@@ -80,8 +80,8 @@
 
                     </div>
 
-                    <div class="row col-6" style="background-color: peachpuff">
-                        <div class="col-11" style="background-color: gold">
+                    <div class="row col-6" style="background-color: white">
+                        <div class="col-11" style="background-color: white">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 2 уровень</label>
                             <label v-else>2 уровень</label>
@@ -94,7 +94,7 @@
 
                         </div>
 
-                        <div class="col-1" style="background-color: #e3d2d2; padding-top: 50px;">
+                        <div class="col-1" style="background-color: white; padding-top: 50px;">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="clearSelection(2)">
                                 <v-icon style="color: green">mdi-close</v-icon>
@@ -107,7 +107,7 @@
 
 
         <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
-        <div class="row" style="margin-left: 20px">
+        <div class="row" style="margin-left: 44px">
             <!--            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>-->
             <!--            <div class="col-sm-auto">-->
             <!--                <b-form-select v-model="selected" id="search-selection">-->
