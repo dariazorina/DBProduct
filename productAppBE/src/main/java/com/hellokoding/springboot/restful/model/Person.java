@@ -44,7 +44,7 @@ public class Person {
     private String settlement;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
-/////    @ToString.Exclude
+    @ToString.Exclude
 //    @JsonIgnore
     private List<Position> occupation;
 
@@ -83,6 +83,7 @@ public class Person {
 
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
     private List<PersonHashtag> hashtagList;
 
     private String miscellany;

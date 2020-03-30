@@ -60,7 +60,9 @@
                     <div v-for="org in person.orgList">{{org.name}}</div>
                 </td>
                 <td class='tdAlignLeft'>
-                    <div v-for="hashtag in person.hashtagList">{{hashtag.content}}</div>
+                    <div v-for="ph in person.hashtagList">
+                        {{ph}}
+                    </div>
                 </td>
 
                 <!--                <td class='tdAlignLeft'>{{person.description }}</td>-->

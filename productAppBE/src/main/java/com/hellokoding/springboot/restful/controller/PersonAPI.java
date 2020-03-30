@@ -50,7 +50,7 @@ public class PersonAPI {
         return ResponseEntity.ok(stock.get());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")  ///todo NewPersonDto
     public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody NewPersonDto person) {
         person.setId(id);
         if (!personService.findById(id).isPresent()) {

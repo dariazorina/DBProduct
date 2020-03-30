@@ -1,6 +1,8 @@
 package com.hellokoding.springboot.restful.model;
 
 import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,8 +26,9 @@ public class PersonHashtag {
     private Integer level;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_hashtag_id")
-    private HashTag assigned_hashtag_id;
+    @ToString.Exclude
+    @JoinColumn(name = "assigned_hashtag")
+    private HashTag assigned_hashtag;
 
 
     @Override

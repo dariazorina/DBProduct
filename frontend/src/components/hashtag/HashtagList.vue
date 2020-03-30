@@ -1,7 +1,7 @@
 <template id="hashtag">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-        <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px">
+        <div v-if="!isAddHashtagMode" class="form-group row" style="margin-bottom: -10px; margin-top: -20px">
             <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
                     <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
@@ -15,7 +15,7 @@
 
 
         <!--//////////////////////////////////////////add/edit hashtag/////////////////////////////////////////////////////////////////-->
-        <form class="formCreation">
+        <form class="hashtagAddVue">
 
             <!--            <div class="row  align-items-center">-->
             <!--                <label for="add-code" class="col-1 col-form-label labelInCreation">Хештег</label>-->
@@ -60,7 +60,8 @@
                             </v-btn>
                         </div>
 
-                        <div class="col-11" style="background-color: lightgoldenrodyellow">
+
+                        <div v-if="!isAddHashtagMode" class="col-11" style="background-color: lightgoldenrodyellow">
                             <div style="margin-top: 10px">
 
                                 <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
@@ -70,14 +71,14 @@
                                 <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
                             </div>
                         </div>
-                        <div class="col-1" style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
+                        <div v-if="!isAddHashtagMode" class="col-1"
+                             style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="addOrUpdateHashtag">
                                 <v-icon style="color: green">mdi-message-plus</v-icon>
                             </v-btn>
                         </div>
-
-
+                        <!--                        </div>-->
                     </div>
 
                     <div class="row col-6" style="background-color: peachpuff">
@@ -103,37 +104,57 @@
                     </div>
                 </div>
             </div>
+
+            <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
+            <div class="row" style="background-color: #e3d2d2">
+                <!--            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>-->
+                <!--            <div class="col-sm-auto">-->
+                <!--                <b-form-select v-model="selected" id="search-selection">-->
+                <!--                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>-->
+                <!--                </b-form-select>-->
+                <!--            </div>-->
+
+                <div style="padding-top: 11px">
+                    <button type="button" @click="showAllHash" class="btn btn-primary">Show all hashtags</button>
+                </div>
+
+                <div class="col-sm-2">
+                    <input v-model="searchKey" class="form-control"
+                           id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
+                    <span class="close" @click="deleteSearch()"
+                          style="margin-top: -31px; margin-right: 5px">&times;</span>
+                    <!--                todo-->
+                </div>
+
+                <div style="padding-top: 11px">
+                    <button type="button" @click="search" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+
+
+            <div class="row" style="background-color:lavenderblush;">
+                <div v-if="isAddHashtagMode" style="padding-top: 0px; padding-bottom: 5px; background-color: #8bc34a">
+                    <label><b>Added hashtags:</b> {{addedHashtagsContent}}</label>
+
+                    <!--                <div style="padding-top: 11px; padding-bottom: 20px">-->
+                    <!--                    <button type="button" @click="showAllHash" class="btn btn-success">Add hashtags and back to-->
+                    <!--                        Article-->
+                    <!--                    </button>-->
+                    <!--                </div>-->
+
+                    <!--                <a @click="$router.go(-1)">back</a>-->
+
+                    <v-btn text icon x-small>
+                        <a @click="addChosenHashtag">
+                            <!--                                        <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
+                            <v-icon style="color: green">mdi-database-plus</v-icon>
+                            <!--                                        </router-link>-->
+                        </a>
+                    </v-btn>
+                </div>
+
+            </div>
         </form>
-
-
-        <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
-        <div class="row" style="margin-left: 20px">
-            <!--            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>-->
-            <!--            <div class="col-sm-auto">-->
-            <!--                <b-form-select v-model="selected" id="search-selection">-->
-            <!--                    <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>-->
-            <!--                </b-form-select>-->
-            <!--            </div>-->
-
-            <div style="padding-top: 11px">
-                <button type="button" @click="showAllHash" class="btn btn-primary">Show all hashtags</button>
-            </div>
-
-            <div class="col-sm-2">
-                <input v-model="searchKey" class="form-control"
-                       id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
-                <span class="close" @click="deleteSearch()"
-                      style="margin-top: -31px; margin-right: 5px">&times;</span>
-                <!--                todo-->
-            </div>
-
-            <div style="padding-top: 11px">
-                <button type="button" @click="search" class="btn btn-primary">Search</button>
-            </div>
-
-
-        </div>
-
 
         <!--            /////////////////////////////////table///////////////////////////////////////////////////////-->
         <table class="redTable">
@@ -144,6 +165,7 @@
                 <!--                <th class='tdTitle'>Id</th>-->
 
                 <!--                <th class='tdTitle'>Родительский хештег</th>-->
+                <th class='tdTitle'>Id</th>
                 <th class='tdTitle'>Хештег</th>
                 <th class='tdTitle'>Комментарий</th>
 
@@ -154,34 +176,52 @@
             <tbody>
             <tr v-for="hashtag in filteredHashtags">
                 <td>
+                    {{hashtag.id}}
+                </td>
+                <td>
                     {{hashtag.content}}
                 </td>
                 <td>
                     {{hashtag.miscellany}}
                 </td>
                 <td>
-                    <v-btn text icon x-small @click="findEditedHashtag(hashtag.id)">
+
+                    <v-btn :disabled="clicked.includes(hashtag.id)" v-if="isAddHashtagMode" text icon x-small
+                           @click="addHashtag(hashtag.id)" v-bind:key="hashtag.id">
+                        <v-icon style="color: green">mdi-cart-plus</v-icon>
+                    </v-btn>
+                    <v-btn v-if="clicked.includes(hashtag.id)" text icon x-small
+                           @click="deleteAddedHashtag(hashtag.id)">
+                        <v-icon style="color: red">mdi-delete-forever</v-icon>
+                    </v-btn>
+
+
+                    <v-btn v-if="!isAddHashtagMode" text icon x-small @click="findEditedHashtag(hashtag.id)">
                         <v-icon style="color: green">mdi-pencil</v-icon>
                     </v-btn>
-
-
-                    <!--                    <v-btn text icon x-small v-b-modal.modal2>-->
-                    <v-btn text icon x-small @click="deleteHashtag(hashtag.id)">
-                        <!--                        <a>-->
-                        <!--                            <router-link :to="{name: 'hashtag-delete', params: {hashtag_id: hashtag.id}}">-->
+                    <v-btn v-if="!isAddHashtagMode" text icon x-small @click="deleteHashtag(hashtag.id)">
                         <v-icon style="color: red">mdi-delete-forever</v-icon>
-                        <!--                            </router-link>-->
-                        <!--                        </a>-->
                     </v-btn>
-
-                    <!--                    <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal2>Delete-->
-                    <!--                        </button>-->
-                    <!--                    <b-modal id="modal2" title="Are you sure you want to delete hashtag?"-->
-                    <!--                             @ok="deleteHashtag(hashtag.id)"></b-modal>-->
                 </td>
             </tr>
             </tbody>
         </table>
+
+        <!--        <div style="padding-top: 11px; padding-bottom: 20px">-->
+        <!--            <button type="button" @click="showAllHash" class="btn btn-success">Add hashtags and back to Article</button>-->
+        <!--        </div>-->
+
+        <!--        <a @click="$router.go(-1)">back</a>-->
+
+        <!--        <v-btn text icon x-small>-->
+        <!--            <a>-->
+        <!--                <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
+        <!--                    <v-icon style="color: green">mdi-pencil</v-icon>-->
+        <!--                </router-link>-->
+        <!--            </a>-->
+        <!--        </v-btn>-->
+
+
     </div>
 </template>
 
@@ -272,11 +312,21 @@
         name: 'hashtag',
         components: {Language},
         vuetify: new Vuetify(),
+        // props: {
+        //     personProp: {
+        //         type: String,
+        //         default: 'Unknown person',
+        //     }
+        // },
+        props: ['personProp'],
         data() {
             return {
                 hashtags: [],
                 hashtag: {},
+                addedHashtagsContent: [],
+                addedHashtagsId: [], //todo: to delete
 
+                clicked: [], //array for button condition keeping
                 response: [],
                 errors: [],
 
@@ -289,20 +339,12 @@
                 selected2LevelId: null,
 
                 isAllHashtagMode: false,
+                isAddHashtagMode: false,
 
                 selected: null,
-                editMode: false,
 
                 labelAddOrEditHashtag: "",
-                // searchItems: ["хештег", "тип", "комментарий"],
                 searchKey: '',
-
-                statusCheckBox: [],
-                options: [
-                    {text: 'main', value: 0},
-                    {text: 'detailed', value: 1},
-                ],
-                message: 'One Line,\nTwo Lines.',
             }
         },
         computed: {
@@ -315,6 +357,47 @@
             },
         },
         methods: {
+
+            addHashtag(id) {
+                this.clicked.push(id);
+                this.addedHashtagsContent.push(this.getHashtagContentById(id));
+                this.addedHashtagsId.push(id);
+            },
+
+            deleteAddedHashtag(id) {
+                let clickedIndex = null;
+                let hashtagsContentIndex = null;
+                let hashtagsIdIndex = null;
+
+                this.clicked.forEach((el, index) => {
+                    if (el === id) clickedIndex = index;
+                });
+
+                this.addedHashtagsContent.forEach((el, index) => {
+                    if (el === this.getHashtagContentById(id)) hashtagsContentIndex = index;
+                });
+
+
+                this.addedHashtagsId.forEach((el, index) => {
+                    if (el === id) hashtagsIdIndex = index;
+                });
+
+
+                this.clicked.splice(clickedIndex, 1);
+                this.addedHashtagsContent.splice(hashtagsContentIndex, 1);
+                this.addedHashtagsId.splice(hashtagsIdIndex, 1);
+            },
+
+            addChosenHashtag() { //add to Person
+                if (this.addedHashtagsContent.length) {
+                    this.$emit('addHashtagToList', this.addedHashtagsContent);
+                    this.addedHashtagsContent = [];
+                    this.addedHashtagsId = [];
+                    this.clicked = [];
+                    console.log("ADD HASHTAG");
+                }
+            },
+
             showAllHash() {
                 this.isAllHashtagMode = true;
                 api.getAllHashtags().then(response => {
@@ -494,15 +577,6 @@
                 this.loggedName = this.$store.getters.getUserName;
             },
 
-            placeholderCreation() {
-                if (this.selected) {
-                    return "Поиск по полю <" + this.selected + ">";
-                } else {
-                    return "Выберете поле поиска"
-                }
-            },
-
-
             findEditedHashtag(id) {
                 api.findById(id, resp => {
                     this.hashtag = resp.data;
@@ -536,12 +610,6 @@
                 this.searchKey = "";
                 // this.entries = this.articles;
             },
-
-            // dateFormat(value, row, index) {  //todo
-            //     moment(this.article.date).format('DD/MM/YYYY').then(response => {
-            //         this.article.date = response.data;
-            //     })
-            // },
 
             isArrayValidAndNotEmpty(array) {
 
@@ -582,11 +650,9 @@
                         console.log("delete", r.data);
                     });
                 } else {
-                    // if (this.selected === "хештег") {
                     api.searchHash(this.searchKey, r => {
                         this.entries = r.data;
                     });
-                    // }
                 }
             },
 
@@ -628,13 +694,21 @@
         },
 
         mounted() {
+          //  console.log("MOUNT hash", this.personProp);
+
             this.getLoggedIn();
+
+            //console.log(this.$route.params);
+            // if (this.$route.params.article_id) {
+            if (this.personProp){
+                this.isAddHashtagMode = true;
+                // console.log("* * * * * * * * isAddHashTag", this.isAddHashtagMode);
+            }
 
             api.getLeafHashtags(0, r => {
                 this.entries = r.data;
                 // this.hashtags = r.data;
             });
-
 
             api.getAllHashtags().then(response => {
                 // this.entries = response.data;

@@ -89,7 +89,7 @@ const router = new Router({
         {path: '/language/:language_id/edit', component: LanguageEdit, name: 'language-edit'},
 
         {path: '/hashtag', component: HashtagList},
-        // {path: '/movement/add', component: tAdd, name: 'movement-add'},
+        {path: '/hashtag/add', component: HashtagList, name: 'hashtag'},
 
 
         // otherwise redirect to home

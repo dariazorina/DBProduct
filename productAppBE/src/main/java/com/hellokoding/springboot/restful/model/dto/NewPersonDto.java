@@ -30,12 +30,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     //    private List<Position> positionList;
     private List<UrlLink> linkList;
     private List<Org> orgList;
-    private List<PersonHashtag> hashtagList;
+    private List<String> hashtagList;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, List<String> positionList, List<Integer> org_idList, String description, String miscellany, List<UrlLink> linkList, List<Org> orgList, List<PersonHashtag> hashtagList) {
+    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, List<String> positionList, List<Integer> org_idList, String description, String miscellany, List<UrlLink> linkList, List<Org> orgList, List<String> hashtagList) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -66,13 +66,16 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameEng = p.getNameEng();
         this.country = p.getCountry();
         this.settlement = p.getSettlement();
-//        this.positionList = p.getOccupation();
         this.orgList = p.getOrgList();
         this.description = p.getDescription();
         this.miscellany = p.getMiscellany();
         this.linkList = p.getLinkList();
         this.orgList = p.getOrgList();
-        this.hashtagList = p.getHashtagList();
+        this.hashtagList = new ArrayList<>();
+        for (PersonHashtag pers: p.getHashtagList()) {
+            if (pers.getHashtag().equals(pers.getAssigned_hashtag()))
+                this.hashtagList.add(pers.getHashtag().getContent());
+        }
 
         this.positionList = new ArrayList<>();
         for (Position pos : p.getOccupation()) {
@@ -208,11 +211,11 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.orgList = orgList;
     }
 
-    public List<PersonHashtag> getHashtagList() {
+    public List<String> getHashtagList() {
         return hashtagList;
     }
 
-    public void setHashtagList(List<PersonHashtag> hashtagList) {
+    public void setHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
     }
 

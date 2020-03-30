@@ -231,7 +231,7 @@
                                  style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">
                                 <v-btn text icon x-small>
                                     <a>
-                                        <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
+                                        <router-link :to="{name: 'hashtag', params: {article_id: 1}}">
                                             <v-icon style="color: green">mdi-pencil</v-icon>
                                         </router-link>
                                     </a>
@@ -566,6 +566,8 @@
 
         },
         mounted() {
+
+            console.log("MOUNTED_ART_ADD");
             // api.getAllAuthors().then(response => {
             //     this.authorListForAutocomplete = response.data;
             //     console.log(response.data);

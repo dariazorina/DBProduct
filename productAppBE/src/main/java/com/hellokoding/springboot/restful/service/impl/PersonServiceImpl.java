@@ -25,7 +25,7 @@ public class PersonServiceImpl implements PersonService {
     private final ScpaperRepository scpaperRepository;
     private final IsourceRepository isourceRepository;
     private final HashTagRepository hashTagRepository;
-//    private final PersonHashtagRepository personHashtagRepository;
+    //    private final PersonHashtagRepository personHashtagRepository;
     private final UrlLinkRepository linkRepository;
 
     @Override
@@ -201,8 +201,9 @@ public class PersonServiceImpl implements PersonService {
         person.setOrgList(personDto.getOrgList());
 
 
+        ///////////////////////////////position/////////////////////
         Position position;
-        Integer i = 0;
+        int i = 0;
         List<Position> occList = new ArrayList<>();
         for (String pos : personDto.getPositionList()) {
 
@@ -211,19 +212,90 @@ public class PersonServiceImpl implements PersonService {
             position = new Position();
             position.setPosition(pos);
             position.setPerson(person);
-            position.setOrg(orgRepository.findById(orgId).get());
-            i++;
-
-            occList.add(position);
+            if (orgRepository.findById(orgId).isPresent()) {
+                position.setOrg(orgRepository.findById(orgId).get());
+                i++;
+                occList.add(position);
+            }
         }
         person.setOccupation(occList);
 
 
+        /////////////////////person-hashtag////////////////////////
+        PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;
+        HashTag hashTag, hashTagPrevious, hashTagPreviousPrevious;
+        List<PersonHashtag> hashtagList = new ArrayList<>();
+        Integer id;
 
+        for (String hashtag_content : personDto.getHashtagList()) {
+
+            id = hashTagRepository.getHashTagByContent(hashtag_content).getId();
+            personHashtag = new PersonHashtag();
+            hashTag = hashTagRepository.findById(id).get();
+
+            if (hashTag.getParentId() == 0) {    ///////////////////////hashtag level 1
+
+                personHashtag.setHashtag(hashTag);
+                personHashtag.setLevel(1);
+                personHashtag.setAssigned_hashtag(hashTag);
+                personHashtag.setPerson(person);
+
+                hashtagList.add(personHashtag);
+
+            } else {  ///////////////////////hashtag level 2/3
+
+                hashTagPrevious = hashTagRepository.findById(hashTag.getParentId()).get();
+                previousPersonHashtag = new PersonHashtag();
+
+                if (hashTagPrevious.getParentId() == 0) {   ///////////////////////hashtag level 2
+
+                    previousPersonHashtag.setHashtag(hashTagPrevious);
+                    previousPersonHashtag.setLevel(1);
+                    previousPersonHashtag.setAssigned_hashtag(hashTag);
+                    previousPersonHashtag.setPerson(person);
+
+                    personHashtag.setHashtag(hashTag);
+                    personHashtag.setLevel(2);
+                    personHashtag.setAssigned_hashtag(hashTag);
+                    personHashtag.setPerson(person);
+
+                    hashtagList.add(personHashtag);
+                    hashtagList.add(previousPersonHashtag);
+
+                } else {   ///////////////////////hashtag level 3
+
+                    hashTagPreviousPrevious = hashTagRepository.findById(hashTagPrevious.getParentId()).get();
+                    previousPreviousPersonHashtag = new PersonHashtag();
+
+                    if (hashTagPreviousPrevious.getParentId() == 0) {
+
+                        previousPreviousPersonHashtag.setHashtag(hashTagPreviousPrevious);
+                        previousPreviousPersonHashtag.setLevel(1);
+                        previousPreviousPersonHashtag.setAssigned_hashtag(hashTag);
+                        previousPreviousPersonHashtag.setPerson(person);
+
+                        previousPersonHashtag.setHashtag(hashTagPrevious);
+                        previousPersonHashtag.setLevel(2);
+                        previousPersonHashtag.setAssigned_hashtag(hashTag);
+                        previousPersonHashtag.setPerson(person);
+
+                        personHashtag.setHashtag(hashTag);
+                        personHashtag.setLevel(3);
+                        personHashtag.setAssigned_hashtag(hashTag);
+                        personHashtag.setPerson(person);
+
+                        hashtagList.add(personHashtag);
+                        hashtagList.add(previousPersonHashtag);
+                        hashtagList.add(previousPreviousPersonHashtag);
+                    }
+                }//level 3
+            } //level 2/3
+        }//for
+
+        person.setHashtagList(hashtagList);
 
 
         //old, first
-
         //Position pos = person.getOccupation1().get(0);
         //person.getOccupation1().clear();
 
@@ -242,7 +314,6 @@ public class PersonServiceImpl implements PersonService {
 
         return personRepository.save(person);
     }
-
 
 
     ///////////////////////////////////////utils///////////////////////////////////////////////////////

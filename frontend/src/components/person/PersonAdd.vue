@@ -104,15 +104,52 @@
                     <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
                 </div>
             </div>
+<!--            <div class="form-row">-->
+<!--                <div class="col-md-6">-->
+<!--                    <label for="add-hashtag">Хештеги</label>-->
+<!--                    <div>-->
+<!--                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"-->
+<!--                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+            <div>
+                <hashtag-list :personProp="test" @addHashtagToList="addHashtagToList($event)"/>
+            </div>
+
+<!--            <div class="row align-items-center" style="background-color: white">-->
+
+<!--                <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"-->
+<!--                        @click="goURL(article.url)">Хештеги</button>-->
+
+<!--                &lt;!&ndash;                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>&ndash;&gt;-->
+<!--                <div class="col-9" style="background-color: white">-->
+<!--                    <div>-->
+                        <!--                                <div v-if="tag!=null">-->
+
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-hashtag">Хештеги</label>
+                    <label for="add-link">Hashtag</label>
                     <div>
                         <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
-                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>
+                                   v-model="tags"></input-tag>
+
                     </div>
                 </div>
+<!--                <div class="col-1" style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">-->
+<!--                    <v-btn text icon x-small>-->
+<!--                        <a>-->
+<!--                            <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
+<!--                                <v-icon style="color: green">mdi-pencil</v-icon>-->
+<!--                            </router-link>-->
+<!--                        </a>-->
+<!--                    </v-btn>-->
+<!--                </div>-->
             </div>
+
+
             <div class="form-row">
                 <div class="col-md-6">
                     <label for="add-link">Link</label>
@@ -160,12 +197,19 @@
     import router from "./../../router";
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
+    import HashtagList from "./../hashtag/HashtagList.vue";
+   // import LanguageAdd from "../language/LanguageAdd";
 
     export default {
+        components: {
+         //   LanguageAdd,
+            HashtagList
+        },
         name: 'person-add',
         vuetify: new Vuetify(),
 
         data: () => ({
+            test: "",
             addTagOnKeys: [13, 9],
             descriptionLimit: 60,
             entries: [],
@@ -205,6 +249,11 @@
         }),
 
         methods: {
+
+            addHashtagToList (hashtag) {//from HashtagList
+                this.tags = hashtag;
+            },
+
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -308,55 +357,10 @@
                 }
 
                 for (let i = 0; i < this.tags.length; i++) {
-                    this.person.hashtagList[i] = {
-                        "content": this.tags[i]
-                    };
+                    this.person.hashtagList[i] = this.tags[i];
                 }
 
-                // for (let i = 0; i < this.tags.length; i++) {
-                //     this.article.orgList[i] = {
-                //         "content": this.tags[i]
-                //     };
-                // }
-
                 this.hasError = false;
-
-
-                // this.person.occupation1[0] = {
-                //     org = {
-                //         "id" : 1
-                //     }
-                // };
-                // this.person.occupation1[0] = {
-                //    "position": this.position
-                // };
-
-
-                //this.org = 1;
-                // apiOrg.findById(this.org, r => {
-                //     this.positionEntity.position = this.position;
-                //     //this.positionEntity.org = "123456";
-                //     this.positionEntity.org = r.data;
-                //     this.person.occupation = this.org;
-                //     //this.positionEntity.person = this.person;
-                //
-                //     console.log("r.data", r.data);
-                //
-                //     // this.positionEntity.org = {
-                //     //     "id": this.org
-                //     // };
-                //
-                //     this.person.occupation1[0] = this.positionEntity;
-                //     console.log("occup1", this.person.occupation1);
-                //
-                //     if (this.formValidate()) {
-                //         api.create(this.person, r => {
-                //             console.log(r);
-                //             router.push('/person');
-                //         });
-                //     }
-                // })
-
 
                 this.person.org_idList[0] = 1;
                 this.person.positionList[0] = this.position;
@@ -370,13 +374,7 @@
                         router.push('/person');
                     });
                 }
-
             },
-
-            // remove (item) {
-            //     const index = this.friends.indexOf(item.name)
-            //     if (index >= 0) this.friends.splice(index, 1)
-            // },
         },
         mounted() {
             console.log('mounted');

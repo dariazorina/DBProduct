@@ -15,11 +15,11 @@
             <column name="level" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="assigned_hashtag_id" type="INT">
+            <column name="assigned_hashtag" type="INT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addUniqueConstraint columnNames="person_id, hashtag_id, level, assigned_hashtag_id" tableName="person_hashtag"/>
+        <addUniqueConstraint columnNames="person_id, hashtag_id, level, assigned_hashtag" tableName="person_hashtag"/>
     </changeSet>
 
     <changeSet author="Даша" id="20032020-2">
@@ -41,7 +41,7 @@
     </changeSet>
 
     <changeSet author="Даша" id="20032020-4">
-        <addForeignKeyConstraint baseColumnNames="assigned_hashtag_id"
+        <addForeignKeyConstraint baseColumnNames="assigned_hashtag"
                                  baseTableName="person_hashtag"
                                  constraintName="t_ass_hashtag_person_hashtag_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
