@@ -96,7 +96,7 @@
                     <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                 </div>
                 <div class="col-sm-10"><span class="float-left">
-                <div style="text-align: left" v-for="ht in article.hashtagList">{{ht.content}}</div></span>
+                <div style="text-align: left" v-for="ht in article.hashtagList">{{ht}}</div></span>
                     <!--                <div class="leftAlignForDetails" v-for="ht in article.hashtagList"><span class="linkButton">{{ht.content}}</span></div></span>-->
                 </div>
             </div>

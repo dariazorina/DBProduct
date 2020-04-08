@@ -424,8 +424,10 @@
 
                     // this.tags = this.article.hashtagList;
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
-                        this.tags.push(this.article.hashtagList[i].content);
+                        this.tags.push(this.article.hashtagList[i]);
                     }
+
+                    console.log("-------------------------this.tags", this.tags);
 
                     // for (let i = 0; i < this.article.linkList.length; i++) {
                     //     this.links.push(this.article.linkList[i].content);

@@ -48,7 +48,6 @@ public class Person {
 //    @JsonIgnore
     private List<Position> occupation;
 
-
     @ManyToMany
     @JoinTable(
             name = "person_link",
@@ -82,7 +81,7 @@ public class Person {
 //            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
 
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<PersonHashtag> hashtagList;
 

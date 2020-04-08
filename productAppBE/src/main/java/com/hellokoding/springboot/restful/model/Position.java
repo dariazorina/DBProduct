@@ -1,5 +1,6 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
 
@@ -15,12 +16,12 @@ public class Position {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "person_id")
-    //////////@JsonIgnore  //was active (without NewPersonDto)
+    @JsonIgnore
     private Person person;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "org_id")
-  //  @JsonIgnore
+    @JsonIgnore
     private Org org;
     private String position; //todo?
 

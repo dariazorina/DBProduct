@@ -1,7 +1,7 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
-            <div class="form-group row">
+            <div class="form-group row" style="margin-bottom: 0">
 
                 <div v-if="editMode" class="col-5 col-form-label">
 
@@ -30,278 +30,187 @@
             <!--            http://localhost:8081/article/add-->
             <!--            <form>-->
 
-            <div class="row" style="background-color: white">
-                <div class="col-lg-6" style="background-color: white">
+            <!--            <div class="row" style="background-color: black">-->
+            <div class="col-lg-10" style="background-color: transparent; padding-top: 0">
 
-                    <form class="formCreation">
+                <form class="formCreation">
 
-                        <div v-if="editMode" class="row align-items-center">
-                            <label class="col-2 col-form-label labelInCreation">Status</label>
-                            <div class="col-10">
-                                <b-form-select v-model="selectedS" class="mb-3" id="status-selection">
-                                    <option v-for="status in statusOptions" v-bind:value="status.value">
-                                        {{status.text}}
-                                    </option>
-                                </b-form-select>
-                                <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
-                            </div>
+                    <div v-if="editMode" class="row align-items-center">
+                        <label class="col-1 col-form-label labelInCreation">Status</label>
+                        <div class="col-6">
+                            <b-form-select v-model="selectedS" class="mb-3" id="status-selection">
+                                <option v-for="status in statusOptions" v-bind:value="status.value">
+                                    {{status.text}}
+                                </option>
+                            </b-form-select>
+                            <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                        </div>
+                    </div>
+
+                     <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="add-url"><b>URL*</b></label>
+                            <input class="form-control" id="add-url" v-model="article.url"/>
                         </div>
 
-                        <div class="row align-items-center" style="background-color: white">
-                            <label for="add-url" class="col-2 col-form-label"><b>URL*</b></label>
-                            <div class="col-10">
-                                <input class="form-control" id="add-url" type="url" v-model="article.url" required/>
-                            </div>
+                        <div class="col-md-3">
+                            <label><b>Язык*</b></label>
+                            <b-form-select v-model="selectedL" class="mb-3" id="language-selection">-->
+                                <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
+                            </b-form-select>
                         </div>
 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label"><b>Язык*</b></label>
-                            <div class="col-10">
-                                <b-form-select v-model="selectedL" class="mb-3" id="language-selection">
-                                    <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
-                                </b-form-select>
-                            </div>
+                        <div class="col-md-3">
+                            <label for="date-input"><b>Дата*</b></label>
+                            <input class="form-control" type="date" id="date-input" v-model="article.date">
+                        </div>
+                    </div>
+
+
+                    <!--                        <div class="form-group row align-items-center">-->
+                    <!--                            <label for="date-input" class="col-1 col-form-label labelInCreation"><b>Date*</b></label>-->
+                    <!--                            <div class="col-4">-->
+                    <!--                                <input class="form-control" type="date" id="date-input" v-model="article.date">-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+
+                </form>
+
+                <form class="authorsFormCreation" style="background-color: transparent; padding-right: -10px">
+                    <div class="row align-items-center"
+                         style="background-color: transparent; ; padding-right: -10px; margin-right: -10px">
+                        <label for="author-autocomplete" class="col-1 col-form-label"> </label>
+                        <div class="col-6"
+                             style="background-color: transparent; padding-right: -30px; padding-left: -10px; margin-left: -55px; margin-right: 45px">
+                            <v-card-text>
+                                <v-autocomplete
+
+                                        id="author-autocomplete"
+                                        label="Авторы"
+
+                                        :items="items"
+                                        :loading="isLoading"
+                                        :search-input.sync="search"
+                                        color="green"
+                                        hide-no-data
+                                        hide-selected
+
+                                        v-model="selected"
+
+                                        @change="addAuthor(selected)"
+                                        @focus="testFocus(selected)"
+                                        item-text="surname"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти автора"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                ></v-autocomplete>
+                            </v-card-text>
                         </div>
 
-                        <div class="row align-items-center">
-                            <label for="date-input" class="col-2 col-form-label"><b>Дата*</b></label>
-                            <div class="col-10">
-                                <input class="form-control" type="date" id="date-input" v-model="article.date">
-                            </div>
+
+                        <!--                    <label class="col-1 col-form-label labelInCreation">Author</label>-->
+                        <!--                    <div class="">-->
+                        <ul class="list-group col-sm-5" order="1"
+                            style="background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            <li v-for="author in this.article.authorList"
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ author.surname }}
+                                <span class="close" @click="deleteAuthor(author)">&times;</span>
+                            </li>
+                        </ul>
+                        <!--                    </div>-->
+
+
+                    </div>
+                </form>
+                <form class="formCreation">
+                    <!--                    <div class="row align-items-center">-->
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="add-title"><b>Заголовок в оригинале</b></label>
+                            <input class="form-control" id="add-title"
+                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   v-model="article.title"/>
                         </div>
 
-                        <!--                        <div class="form-group row align-items-center">-->
-                        <!--                            <label for="date-input" class="col-1 col-form-label labelInCreation"><b>Date*</b></label>-->
-                        <!--                            <div class="col-4">-->
-                        <!--                                <input class="form-control" type="date" id="date-input" v-model="article.date">-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
 
-                    </form>
-
-                    <form class="authorsFormCreation" style="background-color: white; padding-right: -10px">
-                        <div class="row align-items-center"
-                             style="background-color: white; ; padding-right: -10px; margin-right: -10px">
-                            <label for="author-autocomplete" class="col-1 col-form-label"> </label>
-                            <div class="col-6"
-                                 style="background-color: white; padding-right: -30px; padding-left: -10px; margin-left: -55px; margin-right: 45px">
-                                <v-card-text>
-                                    <v-autocomplete
-
-                                            id="author-autocomplete"
-                                            label="Авторы"
-
-                                            :items="items"
-                                            :loading="isLoading"
-                                            :search-input.sync="search"
-                                            color="green"
-                                            hide-no-data
-                                            hide-selected
-
-                                            v-model="selected"
-
-                                            @change="addAuthor(selected)"
-                                            @focus="testFocus(selected)"
-                                            item-text="surname"
-                                            item-value="id"
-                                            placeholder="Начните печатать, чтобы найти автора"
-                                            prepend-icon="mdi-database-search"
-                                            return-object
-                                    ></v-autocomplete>
-                                </v-card-text>
-                            </div>
-
-
-                            <!--                    <label class="col-1 col-form-label labelInCreation">Author</label>-->
-                            <!--                    <div class="">-->
-                            <ul class="list-group col-sm-5" order="1"
-                                style="background-color: white; padding-left: 0px; padding-right: 0px">
-                                <li v-for="author in this.article.authorList"
-                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ author.surname }}
-                                    <span class="close" @click="deleteAuthor(author)">&times;</span>
-                                </li>
-                            </ul>
-                            <!--                    </div>-->
-
-
+                        <!--                        <div class="row align-items-center">-->
+                        <div class="col-md-6">
+                            <label for="add-title-rus"> <b>Заголовок на русском</b></label>
+                            <input class="form-control" id="add-title-rus"
+                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   v-model="article.titleRus"
+                                   required/>
                         </div>
-                    </form>
-                    <form class="formCreation">
-                        <div class="row align-items-center">
-                            <label for="add-title" class="col-2 col-form-label"><b>Заголовок в оригинале</b></label>
-                            <div class="col-10">
-                                <input class="form-control" id="add-title"
-                                       placeholder="Должно быть заполнено одно из полей заголовка"
-                                       v-model="article.title"/>
-                            </div>
-                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-10" style="background-color: transparent">
 
-                        <div class="row align-items-center">
-                            <label for="add-title-rus" class="col-2 col-form-label"><b>Заголовок на русском</b></label>
-                            <div class="col-10">
-                                <input class="form-control" id="add-title-rus"
-                                       placeholder="Должно быть заполнено одно из полей заголовка"
-                                       v-model="article.titleRus"
-                                       required/>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="col-lg-6">
-
-                    <form class="formCreation">
-                        <div class="row align-items-center">
-                            <label for="add-descr" class="col-2 col-form-label">Описание</label>
-                            <div class="col-10">
+                <form class="formCreation">
+                    <div class="form-row align-items-center">
+                        <label for="add-descr">Описание</label>
+                        <div class="col-12">
                                 <textarea class="form-control" id="add-descr" rows="11" v-model="article.description"
                                           required/>
+                        </div>
+
+                        <label>Форма добавления хештегов</label>
+                        <div class="col-12" style="background-color: transparent">
+                            <b-card>
+                                <hashtag-list :commonProp="test"
+                                              @addHashtagToList="addHashtagToArticleList($event)"/>
+                            </b-card>
+                        </div>
+
+                        <label style="background-color: transparent">Хештеги</label>
+                        <div class="col-12" style="background-color: transparent">
+                            <div>
+                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                           v-model="tags"></input-tag>
                             </div>
                         </div>
 
-
-                        <!--                        <form class="authorsFormCreation" style="background-color: white; padding-right: -10px">-->
-                        <!--                            <div class="row align-items-center"-->
-                        <!--                                 style="background-color: white; ; padding-right: -10px; margin-right: -10px">-->
-                        <!--                                <label class="col-1 col-form-label"> </label>-->
-                        <!--                                <div class="col-6"-->
-                        <!--                                     style="background-color: white; padding-right: -30px; padding-left: -10px; margin-left: -55px; margin-right: 45px">-->
-                        <!--                                    <v-card-text>-->
-                        <!--                                        <v-autocomplete-->
-
-                        <!--                                                id="hashtag-autocomplete"-->
-                        <!--                                                label="Hashtag"-->
-
-                        <!--                                                :items="hashtagItems"-->
-                        <!--                                                :loading="isLoadingHashtag"-->
-                        <!--                                                :search-input.sync="searchHashtag"-->
-                        <!--                                                color="green"-->
-                        <!--                                                hide-no-data-->
-                        <!--                                                hide-selected-->
-
-                        <!--                                                v-model="selectedHashtag"-->
-
-                        <!--                                                @change="addHashtag(selectedHashtag)"-->
-                        <!--                                                item-text="content"-->
-                        <!--                                                item-value="id"-->
-                        <!--                                                placeholder="Начните печатать, чтобы найти хештег"-->
-                        <!--                                                prepend-icon="mdi-database-search"-->
-                        <!--                                                return-object-->
-                        <!--                                        ></v-autocomplete>-->
-                        <!--                                    </v-card-text>-->
-                        <!--                                </div>-->
-
-
-                        <!--                                &lt;!&ndash;                    <label class="col-1 col-form-label labelInCreation">Author</label>&ndash;&gt;-->
-                        <!--                                &lt;!&ndash;                    <div class="">&ndash;&gt;-->
-                        <!--                                <ul class="list-group col-sm-5" order="1"-->
-                        <!--                                    style="background-color: white; padding-left: 0px; padding-right: 0px">-->
-                        <!--                                    <li v-for="hash in this.article.hashtagList"-->
-                        <!--                                        class="list-group-item d-flex justify-content-between align-items-center">-->
-                        <!--                                        {{ hash.content }}-->
-                        <!--                                        <span class="close" @click="deleteHashtag(hash)">&times;</span>-->
-                        <!--                                    </li>-->
-                        <!--                                </ul>-->
-                        <!--                                &lt;!&ndash;                    </div>&ndash;&gt;-->
-
-
-                        <!--                            </div>-->
-                        <!--                        </form>-->
-
-
-                        <div class="row align-items-center" style="background-color: white">
-
-                            <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"
-                                    @click="goURL(article.url)">Хештеги</button>
-
-<!--                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>-->
-                            <div class="col-9" style="background-color: white">
-                                <div>
-<!--                                <div v-if="tag!=null">-->
-                                    <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
-                                            placeholder="press Pen to add/edit hashtags"
-                                               v-model="tags"></input-tag>
-<!--                                    @focus="hashtagViewCall(true)" @blur="hashtagViewCall(false)"-->
-<!--                                    :read-only=true-->
-
-                                </div>
-                            </div>
-                            <div class="col-1"
-                                 style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">
-                                <v-btn text icon x-small>
-                                    <a>
-                                        <router-link :to="{name: 'hashtag', params: {article_id: 1}}">
-                                            <v-icon style="color: green">mdi-pencil</v-icon>
-                                        </router-link>
-                                    </a>
-                                </v-btn>
-                            </div>
-                        </div>
-
-                        <!--                    <div class="form-group purple-border"> purple body always wish purple shadow, mi-mi-mi-->
-                        <div class="form-group green-border-focus">
-                            <div class="row align-items-center">
-                                <label for="add-misc" class="col-2 col-form-label">Комментарии</label>
-                                <div class="col-10">
+                        <!--                        <div class="form-group green-border-focus">-->
+                        <label for="add-misc">Комментарии</label>
+                        <div class="col-12 form-group green-border-focus">
 
                                     <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
                                               background-color="palegreen" required/>
-                                </div>
-                            </div>
                         </div>
-                    </form>
-                </div>
-
-                <!--                <div class="form-group row align-items-center">-->
-                <!--                    <label for="add-link" class="col-1 col-form-label labelInCreation">Link</label>-->
-                <!--                    <div class="col-4">-->
-                <!--                        <div>-->
-                <!--                            <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"-->
-                <!--                                       placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-
-
-                <!--                <div class="form-group row align-items-center">-->
-                <!--                    <label class="col-1 col-form-label labelInCreation">Movement</label>-->
-                <!--                    <div class="col-4">-->
-                <!--                        <b-form-select v-model="selectedM" class="mb-3" id="movement-selection">-->
-                <!--                            <option v-for="mov in allMovements" v-bind:value="mov.id">{{ mov.name }}</option>-->
-                <!--                        </b-form-select>-->
-                <!--                        &lt;!&ndash;                    <div class="mb-3">SelEcted: <strong>{{ selectedM }}</strong></div>&ndash;&gt;-->
-                <!--                    </div>-->
-                <!--                </div>-->
-
-
-                <div v-if="editMode" class="form-group row align-items-center align-items-center">
-                    <div class="offset-sm-4 col-sm-3">
-
-                        <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
-                        <a class="btn btn-default">
-                            <router-link to="/article">Cancel</router-link>
-                        </a>
                     </div>
-                </div>
+                    <!--                    </div>-->
+                </form>
+            </div>
 
-                <div v-else class="form-group row" style="padding-top: 30px">
-                    <div class="offset-sm-4 col-sm-3">
-                        <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
-                                class="btn btn-warning">In Progress
-                        </button>
-                        <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
-                                class="btn btn-success">Done
-                        </button>
+            <div v-if="editMode" class="form-group row align-items-center align-items-center">
+                <div class="offset-sm-4 col-sm-3">
 
-                        <button type="button" class="btn btn-info">
-
-                            <router-link to="/article" style="color: white">Cancel</router-link>
-
-                        </button>
-                    </div>
+                    <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
+                    <a class="btn btn-default">
+                        <router-link to="/article">Cancel</router-link>
+                    </a>
                 </div>
             </div>
+
+            <div v-else class="form-group row" style="padding-top: 30px">
+                <div class="offset-sm-4 col-sm-3">
+                    <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
+                            class="btn btn-warning">In Progress
+                    </button>
+                    <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
+                            class="btn btn-success">Done
+                    </button>
+
+                    <button type="button" class="btn btn-info">
+
+                        <router-link to="/article" style="color: white">Cancel</router-link>
+
+                    </button>
+                </div>
+            </div>
+            <!--            </div>-->
         </div>
     </v-app>
 </template>
@@ -309,6 +218,7 @@
 <script>
     import apiPerson from "./../person/person-api";
     import apiLanguage from "./../language/language-api";
+    import HashtagList from "./../hashtag/HashtagList.vue";
     import api from "./article-api";
     import moment from "moment";
     import InputTag from 'vue-input-tag';
@@ -320,11 +230,15 @@
     Vue.component('input-tag', InputTag);
 
     export default {
+        components: {
+            HashtagList
+        },
         name: 'article-add',
         vuetify: new Vuetify(),
 
         //data(){
         data: () => ({
+            test: "articleProp",
             // addTagOnKeys: [13, 9],
             addTagOnKeys: [],  //to prevent enter in input-tag))
             descriptionLimit: 60,
@@ -354,7 +268,7 @@
             article: {authorList: [], hashtagList: []},
 
             selected: [''],
-           // selectedHashtag: [''],
+            // selectedHashtag: [''],
 
             status: ["statusProgress", "statusDone"],
 
@@ -370,6 +284,10 @@
         }),
 
         methods: {
+
+            addHashtagToArticleList(hashtag) {//from HashtagList
+                this.tags = hashtag;
+            },
 
             testFocus(obj) {
                 console.log("GET FOCUS");
@@ -509,10 +427,10 @@
                 this.hasError = false;
 
                 for (let i = 0; i < this.tags.length; i++) {
-                    this.article.hashtagList[i] = {
-                        "content": this.tags[i]
-                    };
+                    this.article.hashtagList[i] = this.tags[i];
                 }
+
+                this.article.linkList = [];
 
                 if (this.formValidate()) {
                     api.create(this.article, r => {
@@ -526,7 +444,6 @@
                 // this.article.movement = {
                 //     "id": this.selectedM
                 // }; todo
-
 
 
                 //todo!!! если id языков в таблице будут не подряд и не с 1 - будет ошибка
@@ -546,9 +463,7 @@
 
                 this.article.hashtagList = [];
                 for (let i = 0; i < this.tags.length; i++) {
-                    this.article.hashtagList[i] = {
-                        "content": this.tags[i]
-                    };
+                    this.article.hashtagList[i] = this.tags[i];
                 }
 
                 if (this.formValidate()) {
@@ -587,16 +502,16 @@
             // })
 
             if (this.$route.params.article_id != null) {
-                //console.log("EDIT MODE");
+                console.log("EDIT MODE");
                 this.editMode = true;
             } //else console.log("ADD MODE");
 
-          //  console.log("article!", this.article);
+            //  console.log("article!", this.article);
 
             if (this.editMode) {
                 api.findById(this.$route.params.article_id, r => {
                     this.article = r.data;
-                  //  console.log("article EDIT!", this.article);
+                    //  console.log("article EDIT!", this.article);
 
                     // this.selectedM = this.article.movement.id; //to select necessary value from article
                     this.selectedL = this.article.language.id;
@@ -606,7 +521,7 @@
 
                     // this.tags = this.article.hashtagList;
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
-                        this.tags.push(this.article.hashtagList[i].content);
+                        this.tags.push(this.article.hashtagList[i]);
                     }
                 });
             }

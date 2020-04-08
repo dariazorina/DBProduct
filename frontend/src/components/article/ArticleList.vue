@@ -173,14 +173,14 @@
                     {{article.language.name}}
                 </td>
                 <td>
-<!--                    <div v-for="hashtag in article.hashtagList">-->
-<!--                        {{hashtag.hashtag.content}}-->
-<!--                    </div>-->
+                    <div v-for="hashtag in article.hashtagList">
+                        {{hashtag}}
+                    </div>
                 </td>
                 <td>
-<!--                    <div v-for="author in article.authorList">-->
-<!--                        {{createComplexCellValue(author.surname,author.surnameRus)}}-->
-<!--                    </div>-->
+                    <div v-for="author in article.authorList">
+                        {{createComplexCellValue(author.surname,author.surnameRus)}}
+                    </div>
                 </td>
 
                 <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->

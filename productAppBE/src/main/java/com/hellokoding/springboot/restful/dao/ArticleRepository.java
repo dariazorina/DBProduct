@@ -31,7 +31,16 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findByLangAndDate(String lang, Date startDate, Date endDate);
 
 
-//    //search in hash, "starts with"
+    //    //search in hash, "starts with"
+    @Query("select distinct a " +   //to remove duplicate if item has several hashtags start with search word
+            "from Article a " +
+            "join a.hashtagList h " +
+            "join h.assigned_hashtag assh " +
+            "where h.assigned_hashtag = assh.id " +
+            "and lower(assh.content) like lower(:hashTag)" +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
+
 //    @Query("select a " +
 //            "from Article a " +
 //            "join a.hashtagList h " +
@@ -42,11 +51,11 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
 
     //search in author surname and surnameRus, "starts with"
-    @Query("select a " +
+    @Query("select distinct a " +
             "from Article a " +
             "join a.authorList aL " +
-            "where lower(aL.surname) like lower(:author) " +
-            "or lower(aL.surnameRus) like lower(:author) " +
+            "where (lower(aL.surname) like lower(:author) " +
+            "or lower(aL.surnameRus) like lower(:author) ) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByAuthorAndDate(String author, Date startDate, Date endDate);
 
@@ -62,7 +71,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     //////////////////////////////////////////////////////////////////////
 
     //search status+author
-    @Query("select a " +
+    @Query("select distinct a " +
             "from Article a " +
             "join a.authorList aL " +
             "where (lower(aL.surname) like lower(:author) " +
@@ -70,8 +79,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and a.status = :status " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByAuthorAndStatusAndDate(String author, List<Integer> status, Date startDate, Date endDate);
+
     //search status+author
-    @Query("select a " +
+    @Query("select distinct a " +
             "from Article a " +
             "join a.authorList aL " +
             "where (lower(aL.surname) like lower(:author) " +
@@ -80,8 +90,37 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findByAuthorAndStatus(String author, List<Integer> status);
 
 
-
 //    //search status+hash
+
+//    @Query("select a " +
+//            "from Article a " +
+//            "join a.hashtagList h " +
+//            "where lower(h.content) like lower(:hashTag) " +
+//            "and (a.date >=:startDate and a.date <= :endDate)")
+////            "where h.content = :hashTag")
+//    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
+
+
+    @Query("select distinct a " +   //to remove duplicate if item has several hashtags start with search word
+            "from Article a " +
+            "join a.hashtagList h " +
+            "join h.assigned_hashtag assh " +
+            "where h.assigned_hashtag = assh.id " +
+            "and lower(assh.content) like lower(:hashTag)" +
+            "and a.status in (:status) " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    List<Article> findByHashAndStatusAndDate(String hashTag, List<Integer> status, Date startDate, Date endDate);
+
+    @Query("select distinct a " +   //to remove duplicate if item has several hashtags start with search word
+            "from Article a " +
+            "join a.hashtagList h " +
+            "join h.assigned_hashtag assh " +
+            "where h.assigned_hashtag = assh.id " +
+            "and lower(assh.content) like lower(:hashTag)" +
+            "and a.status in (:status)" )
+    List<Article> findByHashAndStatus(String hashTag, List<Integer> status);
+
+
 //    @Query("select a " +
 //            "from Article a " +
 //            "join a.hashtagList h " +
@@ -98,19 +137,18 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 //    List<Article> findByHashAndStatus(String hashTag, List<Integer> status);
 
 
-
     //search status+title
     @Query("from Article a " +
             "where (lower(a.title) like lower(:title) or lower(a.titleRus) like lower(:title)) " +
             "and a.status in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByTitleAndStatusAndDate(@Param("title") String title, @Param("status") List<Integer> status, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
     //search status+title
     @Query("from Article a " +
             "where (lower(a.title) like lower(:title) or lower(a.titleRus) like lower(:title)) " +
             "and a.status in (:status)")
     List<Article> findByTitleAndStatus(@Param("title") String title, @Param("status") List<Integer> status);
-
 
 
     //search status+description
@@ -119,6 +157,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and a.status in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByDescriptionAndStatusAndDate(String description, List<Integer> status, Date startDate, Date endDate);
+
     //search status+description
     @Query("from Article a " +
             "where lower(a.description) like lower(:description) " +
@@ -132,6 +171,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and a.status in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByLangAndStatusAndDate(String lang, List<Integer> status, Date startDate, Date endDate);
+
     //search in language+status, "starts with"
     @Query("from Article a " +
             "where lower(a.language.name) like lower(:lang) " +
@@ -139,10 +179,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findByLangAndStatus(String lang, List<Integer> status);
 
 
-
     //search date range
     List<Article> findAllByDateBetween(Date startDate, Date endDate);
+
     //search by status
-    List<Article> findAllByStatus(List<Integer>status);
+    List<Article> findAllByStatus(List<Integer> status);
 
 }

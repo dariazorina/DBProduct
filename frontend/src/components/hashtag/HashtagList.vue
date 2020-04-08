@@ -31,12 +31,10 @@
             <!--            </div>-->
 
 
-            <div class="row  align-items-center col-12" style="background-color: greenyellow">
-
-                <div class="form-row col-12" style="background-color: yellow">
-
-                    <div class="row col-6" style="background-color: lightblue">
-                        <div class="col-11" style="background-color: lavender">
+            <div class="row align-items-center col-12" style="background-color: transparent; padding: 0;">
+                <div class="form-row col-12" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+                    <div class="row col-6" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+                        <div class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0;">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 1 уровень</label>
                             <label v-else>1 уровень</label>
@@ -53,7 +51,7 @@
 
                         </div>
                         <div class="col-1"
-                             style="background-color: lavenderblush; padding-top: 50px; padding-right: 0px">
+                             style="background-color: transparent; padding: 36px 0px 0px 0px;">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="clearSelection(1)">
                                 <v-icon style="color: green">mdi-close</v-icon>
@@ -61,7 +59,7 @@
                         </div>
 
 
-                        <div v-if="!isAddHashtagMode" class="col-11" style="background-color: lightgoldenrodyellow">
+                        <div v-if="!isAddHashtagMode" class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
                             <div style="margin-top: 10px">
 
                                 <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
@@ -72,7 +70,7 @@
                             </div>
                         </div>
                         <div v-if="!isAddHashtagMode" class="col-1"
-                             style="background-color: lightgray; padding-top: 55px; padding-right: 0px">
+                             style="background-color: transparent; padding: 43px 0px 0px 0px;">
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="addOrUpdateHashtag">
                                 <v-icon style="color: green">mdi-message-plus</v-icon>
@@ -81,8 +79,8 @@
                         <!--                        </div>-->
                     </div>
 
-                    <div class="row col-6" style="background-color: peachpuff">
-                        <div class="col-11" style="background-color: gold">
+                    <div class="row col-6" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+                        <div class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 2 уровень</label>
                             <label v-else>2 уровень</label>
@@ -95,7 +93,8 @@
 
                         </div>
 
-                        <div class="col-1" style="background-color: #e3d2d2; padding-top: 50px;">
+                        <div class="col-1" style="background-color: transparent; padding: 36px 0px 0px 0px;">
+                            <!--                        <div class="col-1" style="background-color: #e3d2d2; padding-top: 50px;">-->
                             <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
                                    @click="clearSelection(2)">
                                 <v-icon style="color: green">mdi-close</v-icon>
@@ -106,7 +105,9 @@
             </div>
 
             <!--////////////////////////////////////////search//////////////////////////////////-/////////////////////////////////////////////////////////////-->
-            <div class="row" style="background-color: #e3d2d2">
+            <div class="row col-12" style="background-color: transparent; padding-bottom: 0; padding-top: 25px">
+                <!--                <div class="row" style="background-color: #e3d2d2">-->
+
                 <!--            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>-->
                 <!--            <div class="col-sm-auto">-->
                 <!--                <b-form-select v-model="selected" id="search-selection">-->
@@ -114,26 +115,30 @@
                 <!--                </b-form-select>-->
                 <!--            </div>-->
 
-                <div style="padding-top: 11px">
-                    <button type="button" @click="showAllHash" class="btn btn-primary">Show all hashtags</button>
+                <div style="padding-top: 11px;">
+                    <button type="button" style="font-size: small" @click="showAllHash" class="btn btn-primary">Show all hashtags</button>
                 </div>
 
                 <div class="col-sm-2">
-                    <input v-model="searchKey" class="form-control"
-                           id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
+                    <input  v-model="searchKey" class="form-control"
+                           id="search-element" style="padding-right: 20px; font-size: small" v-on:keyup.enter="search" requred/>
+
                     <span class="close" @click="deleteSearch()"
-                          style="margin-top: -31px; margin-right: 5px">&times;</span>
+                          style="margin-top: -29px; margin-right: 5px">&times;</span>
                     <!--                todo-->
+
                 </div>
 
                 <div style="padding-top: 11px">
-                    <button type="button" @click="search" class="btn btn-primary">Search</button>
+                    <button type="button"  style="font-size: small" @click="search" class="btn btn-primary">Search</button>
                 </div>
             </div>
 
 
-            <div class="row" style="background-color:lavenderblush;">
-                <div v-if="isAddHashtagMode" style="padding-top: 0px; padding-bottom: 5px; background-color: #8bc34a">
+            <div class="row col-12" style="background-color:transparent; padding-top: 10px; padding-bottom: 0">
+                <!--            <div class="row" style="background-color:lavenderblush;">-->
+                <div v-if="isAddHashtagMode" style="padding-top: 0px; padding-bottom: 5px; background-color: transparent">
+                    <!--                <div v-if="isAddHashtagMode" style="padding-top: 0px; padding-bottom: 5px; background-color: #8bc34a">-->
                     <label><b>Added hashtags:</b> {{addedHashtagsContent}}</label>
 
                     <!--                <div style="padding-top: 11px; padding-bottom: 20px">-->
@@ -157,7 +162,7 @@
         </form>
 
         <!--            /////////////////////////////////table///////////////////////////////////////////////////////-->
-        <table class="redTable">
+        <table class="redTable" style="margin-left: 15px; padding-right: 35px; width: 99%">
             <!--        <table class="table">-->
             <thead>
             <!--                <template slot="thead">-->
@@ -318,7 +323,7 @@
         //         default: 'Unknown person',
         //     }
         // },
-        props: ['personProp'],
+        props: ['commonProp'],
         data() {
             return {
                 hashtags: [],
@@ -694,13 +699,14 @@
         },
 
         mounted() {
-          //  console.log("MOUNT hash", this.personProp);
+            console.log("MOUNT hash", this.commonProp);
+            // console.log("MOUNT ARTICLE hash", this.articleProp);
 
             this.getLoggedIn();
 
             //console.log(this.$route.params);
             // if (this.$route.params.article_id) {
-            if (this.personProp){
+            if (this.commonProp) {
                 this.isAddHashtagMode = true;
                 // console.log("* * * * * * * * isAddHashTag", this.isAddHashtagMode);
             }

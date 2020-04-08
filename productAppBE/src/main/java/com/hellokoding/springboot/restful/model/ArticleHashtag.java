@@ -1,6 +1,10 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,20 +17,21 @@ public class ArticleHashtag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "article_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
+    @ToString.Exclude
+    @JsonIgnore
     private Article article;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "hashtag_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hashtag_id", nullable = false)
     private HashTag hashtag;
 
     private Integer level;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_hashtag_id")
-    private HashTag assigned_hashtag_id;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_hashtag_id", nullable = false)
+    private HashTag assigned_hashtag;
 
     @Override
     public boolean equals(Object o) {
@@ -36,13 +41,12 @@ public class ArticleHashtag {
         if (!(o instanceof ArticleHashtag))
             return false;
 
-        return
-                id != null &&
-                        id.equals(((ArticleHashtag) o).getId());
+        return  id != null &&
+                id.equals(((ArticleHashtag)o).getId());
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return new HashCodeBuilder().append(id).toHashCode();
     }
 }

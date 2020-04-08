@@ -3,9 +3,8 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.ArticleRepository;
 import com.hellokoding.springboot.restful.dao.HashTagRepository;
 import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
-import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.HashTag;
-import com.hellokoding.springboot.restful.model.UrlLink;
+import com.hellokoding.springboot.restful.model.*;
+import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,62 +12,181 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final HashTagRepository hashTagRepository;
     private final UrlLinkRepository linkRepository;
 
+
     @Override
-    public List<Article> findAll() {
+    public List<ArticleDto> findAll() {
+        List<ArticleDto> dtoAllArticleList = new ArrayList<>();
         List<Article> all = articleRepository.findAll();
-        return all;
+
+        ArticleDto articleDto;
+        for (Article article : all) {
+            articleDto = new ArticleDto(article);
+            dtoAllArticleList.add(articleDto);
+        }
+        return dtoAllArticleList;
     }
 
     @Override
-    public Optional<Article> findById(Integer id) {
+    public Optional<ArticleDto> findById(Integer id) {
         Optional<Article> byId = articleRepository.findById(id);
-        return byId;
+        Optional<ArticleDto> byIdDto;
+
+        byIdDto = Optional.of(new ArticleDto(byId.get()));
+        return byIdDto;
     }
 
     @Override
-    public Article save(Article stock) {
+    @Transactional
+    public Article save(ArticleDto articleDto) {
 
-//        HashTag hashTagByContent;
-//        HashTag hashTagWithID;
-//        List<HashTag> hashTagList = stock.getHashtagList();
-//        List<HashTag> hashTagListWithID = new ArrayList<>();
+        Article article;
+        if (articleDto.getId() == null){
+            article = new Article();
+        }
+        else if (articleRepository.findById(articleDto.getId()).isPresent()){
+            article = articleRepository.findById(articleDto.getId()).get();
+        } else
+            return null;
+
+//        UrlLink linkByContent;
+//        UrlLink linkWithID;
+//        UrlLink newLink;
+//        List<String> linkStringList = articleDto.getLinkList();
+//        List<UrlLink> linkListWithID = new ArrayList<>();
 //
-//        for (HashTag hashtag : hashTagList) {
-//            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
-//            if (hashTagByContent == null) {
-//                hashTagRepository.save(hashtag);
 //
-//                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
-//                hashTagListWithID.add(hashTagWithID);
+//        for (String link : linkStringList) {
+//            linkByContent = linkRepository.getUrlLinkByContent(link); //ищем link в БД
+//            if (linkByContent == null) {
+//                newLink = new UrlLink();
+//                newLink.setContent(link);
+//                linkRepository.save(newLink);
+//
+//                linkWithID = linkRepository.getUrlLinkByContent(link);
+//                linkListWithID.add(linkWithID);
 //
 //            } else {
-//                hashTagListWithID.add(hashTagByContent);
+//                linkListWithID.add(linkByContent);
 //            }
 //        }
 //
-//
-//        stock.setHashtagList(hashTagListWithID);
-        return articleRepository.save(stock);
+//        article.setLinkList(linkListWithID);
+
+        //if (articleDto.getId() != null)
+        //    article.setId(articleDto.getId());
+
+        article.setTitle(articleDto.getTitle());
+        article.setTitleRus(articleDto.getTitleRus());
+        article.setMovement(articleDto.getMovement());
+        article.setLanguage(articleDto.getLanguage());
+        article.setDate(articleDto.getDate());
+        article.setStatus(articleDto.getStatus());
+        article.setUrl(articleDto.getUrl());
+        article.setDescription(articleDto.getDescription());
+        article.setMiscellany(articleDto.getMiscellany());
+        article.setAuthorList(articleDto.getAuthorList());
+
+        /////////////////////article-hashtag////////////////////////
+        ArticleHashtag articleHashtag, previousArticleHashtag, previousPreviousArticleHashtag;
+        HashTag hashTag, hashTagPrevious, hashTagPreviousPrevious;
+        //List<ArticleHashtag> hashtagList = new ArrayList<>();
+
+        if (article.getHashtagList() != null) {
+            for (ArticleHashtag at : article.getHashtagList()) {
+                at.setArticle(null);
+            }
+            article.getHashtagList().clear();
+            articleRepository.flush();
+        } else {
+            article.setHashtagList(new ArrayList<>());
+        }
+
+        for (String hashtag_content : articleDto.getHashtagList()) {
+            hashTag = hashTagRepository.getHashTagByContent(hashtag_content);
+            articleHashtag = new ArticleHashtag();
+
+            if (hashTag.getParentId() == 0) {    ///////////////////////hashtag level 1
+                articleHashtag.setHashtag(hashTag);
+                articleHashtag.setLevel(1);
+                articleHashtag.setAssigned_hashtag(hashTag);
+                articleHashtag.setArticle(article);
+
+                article.getHashtagList().add(articleHashtag);
+
+            } else {  ///////////////////////hashtag level 2/3
+                hashTagPrevious = hashTagRepository.findById(hashTag.getParentId()).get();
+                previousArticleHashtag = new ArticleHashtag();
+
+                if (hashTagPrevious.getParentId() == 0) {   ///////////////////////hashtag level 2
+
+                    previousArticleHashtag.setHashtag(hashTagPrevious);
+                    previousArticleHashtag.setLevel(1);
+                    previousArticleHashtag.setAssigned_hashtag(hashTag);
+                    previousArticleHashtag.setArticle(article);
+
+                    articleHashtag.setHashtag(hashTag);
+                    articleHashtag.setLevel(2);
+                    articleHashtag.setAssigned_hashtag(hashTag);
+                    articleHashtag.setArticle(article);
+
+                    article.getHashtagList().add(articleHashtag);
+                    article.getHashtagList().add(previousArticleHashtag);
+
+                } else {   ///////////////////////hashtag level 3
+                    hashTagPreviousPrevious = hashTagRepository.findById(hashTagPrevious.getParentId()).get();
+                    previousPreviousArticleHashtag = new ArticleHashtag();
+
+                    if (hashTagPreviousPrevious.getParentId() == 0) {
+
+                        previousPreviousArticleHashtag.setHashtag(hashTagPreviousPrevious);
+                        previousPreviousArticleHashtag.setLevel(1);
+                        previousPreviousArticleHashtag.setAssigned_hashtag(hashTag);
+                        previousPreviousArticleHashtag.setArticle(article);
+
+                        previousArticleHashtag.setHashtag(hashTagPrevious);
+                        previousArticleHashtag.setLevel(2);
+                        previousArticleHashtag.setAssigned_hashtag(hashTag);
+                        previousArticleHashtag.setArticle(article);
+
+                        articleHashtag.setHashtag(hashTag);
+                        articleHashtag.setLevel(3);
+                        articleHashtag.setAssigned_hashtag(hashTag);
+                        articleHashtag.setArticle(article);
+
+                        article.getHashtagList().add(articleHashtag);
+                        article.getHashtagList().add(previousArticleHashtag);
+                        article.getHashtagList().add(previousPreviousArticleHashtag);
+                    }
+                }//level 3
+            } //level 2/3
+        }//for
+        //article.setHashtagList(null);
+        //article.setHashtagList(hashtagList);
+        return articleRepository.save(article);
+//        return article;
     }
 
     @Override
-    public List<Article> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {
+    public List<ArticleDto> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date frmtStartDate = format.parse(startDate);
         Date frmtEndDate = format.parse(endDate);
 
         List<Article> searchList = new ArrayList<>();
+        List<ArticleDto> dtoSearchList = new ArrayList<>();
 
         if (status != null && status.size() > 0) {
             if (title != null && !title.isEmpty()) {
@@ -84,30 +202,30 @@ public class ArticleServiceImpl implements ArticleService {
                 }
 
 
-//            } else if (hash != null && !hash.isEmpty()) {
-//
-//                if (status.get(0) == -1) {
-//                    searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
-//
-//                } else if (status.get(0) == 3) {
-//                    searchList = articleRepository.findByHashAndStatus(hash + "%", status);
-//
-//                } else {
-//                    searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
-//                }
+            } else if (hash != null && !hash.isEmpty()) {
+
+                if (status.get(0) == -1) {
+                    searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
+
+                } else if (status.get(0) == 3) {
+                    searchList = articleRepository.findByHashAndStatus(hash + "%", status);
+
+                } else {
+                    searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
+                }
 
 
             } else if (author != null && !author.isEmpty()) {
 
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
+                    if (status.get(0) == -1) {
+                        searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
 
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
+                    } else if (status.get(0) == 3) {
+                        searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
 
-                } else {
-                    searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
-                }
+                    } else {
+                        searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
+                    }
 
             } else if (language != null && !language.isEmpty()) {
 
@@ -141,53 +259,14 @@ public class ArticleServiceImpl implements ArticleService {
                 searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
             }
         }
-        return searchList;
+
+        ArticleDto dtoArticle;
+        for (Article article : searchList) {
+            dtoArticle = new ArticleDto(article);
+            dtoSearchList.add(dtoArticle);
+        }
+        return dtoSearchList;
     }
-
-
-//    public LmUserSearchResult getLmUsers(LmUserSearchFilterDto filter) {
-//        BooleanBuilder builder = new BooleanBuilder();
-//        if (filter.getUserId() != null) {
-//            builder.and(lmUserEntity.userId.likeIgnoreCase("%" + filter.getUserId() + "%"));
-//        }
-//        if (filter.getFirstName() != null) {
-//            builder.and(lmUserEntity.firstName.likeIgnoreCase("%" + filter.getFirstName() + "%"));
-//        }
-//        if (filter.getLastName() != null) {
-//            builder.and(lmUserEntity.lastName.likeIgnoreCase("%" + filter.getLastName() + "%"));
-//        }
-//        if (filter.getIsInvalid() != null) {
-//            if (filter.getIsInvalid()) {
-//                builder.and(lmUserEntity.invalidDate.isNotNull())
-//                        .and(lmUserEntity.invalidDate.loe(LocalDate.now()));
-//            } else {
-//                builder.andAnyOf(lmUserEntity.invalidDate.isNull(),
-//                        lmUserEntity.invalidDate.gt(LocalDate.now())
-//                );
-//            }
-//        }
-//
-//        //default ordering
-//        OrderSpecifier order = lmUserEntity.userId.asc();
-//
-//        LmUserSearchResultBuilder resultBuilder = LmUserSearchResult.builder();
-//
-//        //add pagination and perform query
-//        if (filter.getPage() != null && filter.getPageSize() != null) {
-//            resultBuilder.result(Lists.newArrayList(lmUserRepository
-//                    .findAll(builder.getValue(),
-//                            new QPageRequest(filter.getPage() - 1, filter.getPageSize(), order))));
-//            resultBuilder.count(lmUserRepository.count(builder.getValue()));
-//        } else {
-//            Collection<LmUserEntity> queryResult = Lists
-//                    .newArrayList(lmUserRepository.findAll(builder.getValue(), order));
-//            resultBuilder.result(queryResult);
-//            resultBuilder.count(Long.valueOf(queryResult.size()));
-//        }
-//
-//        return resultBuilder.build();
-//    }
-
 
     @Override
     public void deleteById(Integer id) {

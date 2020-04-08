@@ -104,49 +104,54 @@
                     <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
                 </div>
             </div>
-<!--            <div class="form-row">-->
-<!--                <div class="col-md-6">-->
-<!--                    <label for="add-hashtag">Хештеги</label>-->
-<!--                    <div>-->
-<!--                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"-->
-<!--                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="form-row">-->
+            <!--                <div class="col-md-6">-->
+            <!--                    <label for="add-hashtag">Хештеги</label>-->
+            <!--                    <div>-->
+            <!--                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"-->
+            <!--                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
 
-            <div>
-                <hashtag-list :personProp="test" @addHashtagToList="addHashtagToList($event)"/>
+            <div class="form-row">
+                <div class="col-md-10">
+                    <label for="add-description">Форма добавления хештегов</label>
+                    <b-card style="width: 80%">
+                        <hashtag-list :commonProp="test" @addHashtagToList="addHashtagToList($event)"/>
+                    </b-card>
+                </div>
             </div>
 
-<!--            <div class="row align-items-center" style="background-color: white">-->
+            <!--            <div class="row align-items-center" style="background-color: white">-->
 
-<!--                <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"-->
-<!--                        @click="goURL(article.url)">Хештеги</button>-->
+            <!--                <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"-->
+            <!--                        @click="goURL(article.url)">Хештеги</button>-->
 
-<!--                &lt;!&ndash;                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>&ndash;&gt;-->
-<!--                <div class="col-9" style="background-color: white">-->
-<!--                    <div>-->
-                        <!--                                <div v-if="tag!=null">-->
+            <!--                &lt;!&ndash;                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>&ndash;&gt;-->
+            <!--                <div class="col-9" style="background-color: white">-->
+            <!--                    <div>-->
+            <!--                                <div v-if="tag!=null">-->
 
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-link">Hashtag</label>
+                    <label for="add-link">Хештеги</label>
                     <div>
                         <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
                                    v-model="tags"></input-tag>
 
                     </div>
                 </div>
-<!--                <div class="col-1" style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">-->
-<!--                    <v-btn text icon x-small>-->
-<!--                        <a>-->
-<!--                            <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
-<!--                                <v-icon style="color: green">mdi-pencil</v-icon>-->
-<!--                            </router-link>-->
-<!--                        </a>-->
-<!--                    </v-btn>-->
-<!--                </div>-->
+                <!--                <div class="col-1" style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">-->
+                <!--                    <v-btn text icon x-small>-->
+                <!--                        <a>-->
+                <!--                            <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
+                <!--                                <v-icon style="color: green">mdi-pencil</v-icon>-->
+                <!--                            </router-link>-->
+                <!--                        </a>-->
+                <!--                    </v-btn>-->
+                <!--                </div>-->
             </div>
 
 
@@ -198,18 +203,18 @@
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
     import HashtagList from "./../hashtag/HashtagList.vue";
-   // import LanguageAdd from "../language/LanguageAdd";
+    // import LanguageAdd from "../language/LanguageAdd";
 
     export default {
         components: {
-         //   LanguageAdd,
+            //   LanguageAdd,
             HashtagList
         },
         name: 'person-add',
         vuetify: new Vuetify(),
 
         data: () => ({
-            test: "",
+            test: "personProp",
             addTagOnKeys: [13, 9],
             descriptionLimit: 60,
             entries: [],
@@ -232,7 +237,7 @@
 
             linkList: [],
             hashtagList: [],
-           // orgList: [],
+            // orgList: [],
 
 
             position: null,
@@ -250,7 +255,7 @@
 
         methods: {
 
-            addHashtagToList (hashtag) {//from HashtagList
+            addHashtagToList(hashtag) {//from HashtagList
                 this.tags = hashtag;
             },
 

@@ -58,7 +58,8 @@ public class Article {
 //            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
 //            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@ToString.Exclude
     private List<ArticleHashtag> hashtagList;
 
     private String miscellany;
