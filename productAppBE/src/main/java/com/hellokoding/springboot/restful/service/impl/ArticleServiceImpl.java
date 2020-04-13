@@ -22,8 +22,6 @@ import java.util.Optional;
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final HashTagRepository hashTagRepository;
-    private final UrlLinkRepository linkRepository;
-
 
     @Override
     public List<ArticleDto> findAll() {

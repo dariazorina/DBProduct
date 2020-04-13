@@ -1,11 +1,13 @@
 package com.hellokoding.springboot.restful.model.dto;
 
 import com.hellokoding.springboot.restful.model.*;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 public class ArticleDto implements Comparable<ArticleDto> {
 
     private Integer id;
