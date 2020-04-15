@@ -45,13 +45,6 @@ public class Article {
     private String description;
     private String url;
 
-    @ManyToMany
-    @JoinTable(
-            name = "art_link",
-            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
-    private List<UrlLink> linkList;
-
 //    @ManyToMany
 //    @JoinTable(
 //            name = "art_hashtag",

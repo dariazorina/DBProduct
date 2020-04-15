@@ -22,11 +22,10 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private List<Person> authorList;
     private String description;
     private String url;
-    private List<String> linkList;
     private List<String> hashtagList;
     private String miscellany;
 
-    public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status, String titleRus, List<Person> authorList, String description, String url, List<String> linkList, List<String> hashtagList, String miscellany) {
+    public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status, String titleRus, List<Person> authorList, String description, String url, List<String> hashtagList, String miscellany) {
         this.id = id;
         this.movement = movement;
         this.language = language;
@@ -37,7 +36,6 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.authorList = authorList;
         this.description = description;
         this.url = url;
-        this.linkList = linkList;
         this.hashtagList = hashtagList;
         this.miscellany = miscellany;
     }
@@ -60,11 +58,6 @@ public class ArticleDto implements Comparable<ArticleDto> {
             if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag()))
                 this.hashtagList.add(articleHashtag.getHashtag().getContent());
         }
-
-//        this.linkList = new ArrayList<>();
-//        for (UrlLink link : article.getLinkList()) {
-//            this.hashtagList.add(link.getContent());
-//        }
     }
 
     public Integer getId() {
@@ -145,14 +138,6 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public List<String> getLinkList() {
-        return linkList;
-    }
-
-    public void setLinkList(List<String> linkList) {
-        this.linkList = linkList;
     }
 
     public List<String> getHashtagList() {

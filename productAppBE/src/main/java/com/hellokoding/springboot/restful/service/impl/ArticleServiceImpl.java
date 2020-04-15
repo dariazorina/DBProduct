@@ -50,40 +50,12 @@ public class ArticleServiceImpl implements ArticleService {
     public Article save(ArticleDto articleDto) {
 
         Article article;
-        if (articleDto.getId() == null){
+        if (articleDto.getId() == null) {
             article = new Article();
-        }
-        else if (articleRepository.findById(articleDto.getId()).isPresent()){
+        } else if (articleRepository.findById(articleDto.getId()).isPresent()) {
             article = articleRepository.findById(articleDto.getId()).get();
         } else
             return null;
-
-//        UrlLink linkByContent;
-//        UrlLink linkWithID;
-//        UrlLink newLink;
-//        List<String> linkStringList = articleDto.getLinkList();
-//        List<UrlLink> linkListWithID = new ArrayList<>();
-//
-//
-//        for (String link : linkStringList) {
-//            linkByContent = linkRepository.getUrlLinkByContent(link); //ищем link в БД
-//            if (linkByContent == null) {
-//                newLink = new UrlLink();
-//                newLink.setContent(link);
-//                linkRepository.save(newLink);
-//
-//                linkWithID = linkRepository.getUrlLinkByContent(link);
-//                linkListWithID.add(linkWithID);
-//
-//            } else {
-//                linkListWithID.add(linkByContent);
-//            }
-//        }
-//
-//        article.setLinkList(linkListWithID);
-
-        //if (articleDto.getId() != null)
-        //    article.setId(articleDto.getId());
 
         article.setTitle(articleDto.getTitle());
         article.setTitleRus(articleDto.getTitleRus());
@@ -115,60 +87,63 @@ public class ArticleServiceImpl implements ArticleService {
             hashTag = hashTagRepository.getHashTagByContent(hashtag_content);
             articleHashtag = new ArticleHashtag();
 
-            if (hashTag.getParentId() == 0) {    ///////////////////////hashtag level 1
-                articleHashtag.setHashtag(hashTag);
-                articleHashtag.setLevel(1);
-                articleHashtag.setAssigned_hashtag(hashTag);
-                articleHashtag.setArticle(article);
+            if (hashTag != null) { // hashtag was found in repo
 
-                article.getHashtagList().add(articleHashtag);
-
-            } else {  ///////////////////////hashtag level 2/3
-                hashTagPrevious = hashTagRepository.findById(hashTag.getParentId()).get();
-                previousArticleHashtag = new ArticleHashtag();
-
-                if (hashTagPrevious.getParentId() == 0) {   ///////////////////////hashtag level 2
-
-                    previousArticleHashtag.setHashtag(hashTagPrevious);
-                    previousArticleHashtag.setLevel(1);
-                    previousArticleHashtag.setAssigned_hashtag(hashTag);
-                    previousArticleHashtag.setArticle(article);
-
+                if (hashTag.getParentId() == 0) {    ///////////////////////hashtag level 1
                     articleHashtag.setHashtag(hashTag);
-                    articleHashtag.setLevel(2);
+                    articleHashtag.setLevel(1);
                     articleHashtag.setAssigned_hashtag(hashTag);
                     articleHashtag.setArticle(article);
 
                     article.getHashtagList().add(articleHashtag);
-                    article.getHashtagList().add(previousArticleHashtag);
 
-                } else {   ///////////////////////hashtag level 3
-                    hashTagPreviousPrevious = hashTagRepository.findById(hashTagPrevious.getParentId()).get();
-                    previousPreviousArticleHashtag = new ArticleHashtag();
+                } else {  ///////////////////////hashtag level 2/3
+                    hashTagPrevious = hashTagRepository.findById(hashTag.getParentId()).get();
+                    previousArticleHashtag = new ArticleHashtag();
 
-                    if (hashTagPreviousPrevious.getParentId() == 0) {
-
-                        previousPreviousArticleHashtag.setHashtag(hashTagPreviousPrevious);
-                        previousPreviousArticleHashtag.setLevel(1);
-                        previousPreviousArticleHashtag.setAssigned_hashtag(hashTag);
-                        previousPreviousArticleHashtag.setArticle(article);
+                    if (hashTagPrevious.getParentId() == 0) {   ///////////////////////hashtag level 2
 
                         previousArticleHashtag.setHashtag(hashTagPrevious);
-                        previousArticleHashtag.setLevel(2);
+                        previousArticleHashtag.setLevel(1);
                         previousArticleHashtag.setAssigned_hashtag(hashTag);
                         previousArticleHashtag.setArticle(article);
 
                         articleHashtag.setHashtag(hashTag);
-                        articleHashtag.setLevel(3);
+                        articleHashtag.setLevel(2);
                         articleHashtag.setAssigned_hashtag(hashTag);
                         articleHashtag.setArticle(article);
 
                         article.getHashtagList().add(articleHashtag);
                         article.getHashtagList().add(previousArticleHashtag);
-                        article.getHashtagList().add(previousPreviousArticleHashtag);
-                    }
-                }//level 3
-            } //level 2/3
+
+                    } else {   ///////////////////////hashtag level 3
+                        hashTagPreviousPrevious = hashTagRepository.findById(hashTagPrevious.getParentId()).get();
+                        previousPreviousArticleHashtag = new ArticleHashtag();
+
+                        if (hashTagPreviousPrevious.getParentId() == 0) {
+
+                            previousPreviousArticleHashtag.setHashtag(hashTagPreviousPrevious);
+                            previousPreviousArticleHashtag.setLevel(1);
+                            previousPreviousArticleHashtag.setAssigned_hashtag(hashTag);
+                            previousPreviousArticleHashtag.setArticle(article);
+
+                            previousArticleHashtag.setHashtag(hashTagPrevious);
+                            previousArticleHashtag.setLevel(2);
+                            previousArticleHashtag.setAssigned_hashtag(hashTag);
+                            previousArticleHashtag.setArticle(article);
+
+                            articleHashtag.setHashtag(hashTag);
+                            articleHashtag.setLevel(3);
+                            articleHashtag.setAssigned_hashtag(hashTag);
+                            articleHashtag.setArticle(article);
+
+                            article.getHashtagList().add(articleHashtag);
+                            article.getHashtagList().add(previousArticleHashtag);
+                            article.getHashtagList().add(previousPreviousArticleHashtag);
+                        }
+                    }//level 3
+                } //level 2/3
+            }
         }//for
         //article.setHashtagList(null);
         //article.setHashtagList(hashtagList);
@@ -215,15 +190,15 @@ public class ArticleServiceImpl implements ArticleService {
 
             } else if (author != null && !author.isEmpty()) {
 
-                    if (status.get(0) == -1) {
-                        searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
+                if (status.get(0) == -1) {
+                    searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
 
-                    } else if (status.get(0) == 3) {
-                        searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
+                } else if (status.get(0) == 3) {
+                    searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
 
-                    } else {
-                        searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
-                    }
+                } else {
+                    searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
+                }
 
             } else if (language != null && !language.isEmpty()) {
 
