@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 
 @Configuration
 @AllArgsConstructor
-@Profile(value = {"development", "production"})
+@Profile(value = {"development", "production", "default"})
 public class LiquibaseConfiguration {
 
     @Autowired
