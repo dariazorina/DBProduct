@@ -126,6 +126,6 @@ public class ArticleServiceImplTest {
 
         when(hashTagRepository.getHashTagByContent(h1.getContent())).thenReturn(h1);
         when(articleRepository.save(any())).then(returnsFirstArg());
-        assertEquals(article, articleService.save(dtoBuilder.build()));
+        assertEquals(article.toString(), articleService.save(dtoBuilder.build()).toString());
     }
 }
