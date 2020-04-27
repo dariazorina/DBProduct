@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                     <div class="form-row">
+                    <div class="form-row">
                         <div class="col-md-6">
                             <label for="add-url"><b>URL*</b></label>
                             <input class="form-control" id="add-url" v-model="article.url"/>
@@ -158,9 +158,80 @@
 
                         <label>Форма добавления хештегов</label>
                         <div class="col-12" style="background-color: transparent">
-                            <b-card>
-                                <hashtag-list :commonProp="test"
-                                              @addHashtagToList="addHashtagToArticleList($event)"/>
+                            <b-card style="background-color: transparent">
+                                <!--                                <hashtag-list :commonProp="test"-->
+                                <!--                                              @addHashtagToList="addHashtagToArticleList($event)"/>-->
+
+
+                                <!--                                <v-treeview-->
+                                <!--                                        dense-->
+                                <!--                                        :items="items"-->
+                                <!--                                ></v-treeview>-->
+
+                                <!--                                <v-treeview-->
+                                <!--                                        selectable-->
+                                <!--                                        selected-color="red"-->
+                                <!--                                        :items="items"-->
+                                <!--                                ></v-treeview>-->
+
+                                <!--                                <v-select v-model="selectionType" :items="['leaf', 'independent']" label="Selection type"></v-select>-->
+                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;
+">
+                                    <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
+                                                class="overflow-y-auto"
+                                        >
+                                            <v-treeview
+                                                    v-model="selection"
+                                                    :items="tagItems"
+                                                    :selection-type="selectionType"
+                                                    dense
+                                                    selectable
+                                                    return-object
+                                                    open-all
+                                            ></v-treeview>
+                                        </v-container>
+                                    </v-col>
+
+                                    <v-divider vertical
+                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
+
+                                    <!--                                    <v-col class="pa-6" cols="6"-->
+                                    <v-col
+                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"
+                                                class="overflow-y-auto">
+
+                                            <template v-if="!selection.length">
+                                                No nodes selected.
+                                            </template>
+
+                                            <template v-else>
+                                                <div v-for="node in selection" :key="node.id">
+                                                    {{ node.name }}
+                                                </div>
+
+                                                <div class="form-group row" style="padding-top: 30px">
+
+                                                    <button type="button" style="margin-right: 20px; margin-left: 15px"
+                                                            @click="addHashtagToArticleList()"
+                                                            class="btn btn-success">Add
+                                                    </button>
+
+                                                    <button type="button" class="btn btn-info"
+                                                            @click="clearAllTreeTags()">Clear All
+                                                    </button>
+                                                </div>
+                                            </template>
+                                        </v-container>
+                                    </v-col>
+                                </v-row>
+
                             </b-card>
                         </div>
 
@@ -218,6 +289,7 @@
 <script>
     import apiPerson from "./../person/person-api";
     import apiLanguage from "./../language/language-api";
+    import apiHashtag from "./../hashtag/hashtag-api";
     import HashtagList from "./../hashtag/HashtagList.vue";
     import api from "./article-api";
     import moment from "moment";
@@ -260,7 +332,14 @@
             validationErrors: {},
             hasError: false,
 
+
             tags: [],
+            allTags: [],
+            tagsTree: [],
+            selectionType: 'independent',
+            selection: [],
+            tagItems: [],
+
 
             allLanguages: [],
             allMovements: [],
@@ -285,8 +364,49 @@
 
         methods: {
 
+            createTree(treeData, parent_id) {
+                let tree = [];
+
+                treeData.forEach((item, id) => {
+                        if (item.parentId === parent_id) {
+
+                            let newItem = {
+                                id: id,
+                                name: item.content,
+                                children: [],
+                            };
+
+                            newItem.children = this.createTree(treeData, item.id);
+                            tree.push(newItem);
+                        }
+                    }
+                );
+                return tree;
+            },
+
+            buildTree() {
+                this.tagItems = this.createTree(this.allTags, 0);
+            },
+
+            clearAllTreeTags(){
+                this.selection = [];
+            },
+
             addHashtagToArticleList(hashtag) {//from HashtagList
                 this.tags = hashtag;
+            },
+
+            addHashtagToArticleList() {
+                let tagAlreadyAdded = 0;
+                this.selection.forEach((item, i) => {
+                    this.tags.forEach((tag, j) => {
+                        if (tag === item.name)
+                            tagAlreadyAdded = 1;
+                    });
+                    if (tagAlreadyAdded == 0)
+                        this.tags.push(item.name);
+                });
+                this.selection = [];
             },
 
             testFocus(obj) {
@@ -370,7 +490,7 @@
             },
 
             validDate: function (code) {
-                var re = /([12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$/; ///digit format "inside", see it while debugging
+                let re = /([12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$/; ///digit format "inside", see it while debugging
                 // var re = /((0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[0-2])[.][12][0-9]{3})$/;
                 return re.test(code);
             },
@@ -492,6 +612,16 @@
                 this.allLanguages = response.data;
                 console.log(response.data)
             });
+
+            apiHashtag.getAllHashtags().then(response => {
+                this.allTags = response.data;
+                this.buildTree();
+                console.log(response.data)
+            })
+                .catch(error => {
+                    this.errors.push(error)
+                });
+
 
             // api.getAllMovements().then(response => {
             //     this.allMovements = response.data;
