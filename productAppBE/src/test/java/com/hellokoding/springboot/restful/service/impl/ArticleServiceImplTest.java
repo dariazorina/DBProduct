@@ -4,6 +4,7 @@ import com.hellokoding.springboot.restful.dao.ArticleRepository;
 import com.hellokoding.springboot.restful.dao.HashTagRepository;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class ArticleServiceImplTest {
 //    private String miscellany;
 
     @Test
+    @Ignore
     public void testSave() {
 
         String title = "title";

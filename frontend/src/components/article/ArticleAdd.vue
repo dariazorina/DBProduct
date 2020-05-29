@@ -90,7 +90,7 @@
 
                                         :items="items"
                                         :loading="isLoading"
-                                        :search-input.sync="search"
+                                        :search-input.sync="authorSearch"
                                         color="green"
                                         hide-no-data
                                         hide-selected
@@ -175,23 +175,89 @@
                                 <!--                                ></v-treeview>-->
 
                                 <!--                                <v-select v-model="selectionType" :items="['leaf', 'independent']" label="Selection type"></v-select>-->
-                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;
-">
+                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
+                                        <v-sheet
+                                                style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
+                                            <!--                                                <v-text-field-->
+                                            <!--                                                        v-model="searchHashtag"-->
+                                            <!--                                                        label="Type To Search Hashtag..."-->
+                                            <!--                                                        dark-->
+                                            <!--                                                        flat-->
+                                            <!--                                                        solo-inverted-->
+                                            <!--                                                        hide-details-->
+                                            <!--                                                        box-->
+                                            <!--                                                        clearable-->
+                                            <!--                                                        clear-icon="mdi-close-circle-outline"-->
+                                            <!--                                                ></v-text-field>-->
+                                            <!--                                            </v-sheet>-->
+
+                                            <!--                                                v-text-field with clear icon-->
+                                            <!--                                                <v-text-field label="search"-->
+                                            <!--                                                              v-model="searchHashtag"-->
+                                            <!--                                                              @click:clear="searchFieldChanged()"-->
+                                            <!--                                                              @input="testSearch()"-->
+                                            <!--                                                              clearable-->
+                                            <!--                                                              clear-icon="mdi-close"-->
+                                            <!--                                                              filled>-->
+                                            <!--                                                </v-text-field>-->
+
+                                            <v-text-field label="search"
+                                                          v-model="searchHashtag"
+                                                          filled>
+                                            </v-text-field>
+
+
+                                        </v-sheet>
+
                                         <v-container
                                                 id="scroll-target"
                                                 style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
                                                 class="overflow-y-auto"
                                         >
+
+
+                                            <!--                                            <v-treeview-->
+                                            <!--                                                    v-model="selection"-->
+                                            <!--                                                    :items="tagItems"-->
+                                            <!--                                                    :selection-type="selectionType"-->
+                                            <!--                                                    :search="searchHashtag"-->
+                                            <!--                                                    dense-->
+                                            <!--                                                    open-on-click-->
+                                            <!--                                                    selectable-->
+                                            <!--                                                    return-object-->
+                                            <!--                                                    open-all-->
+                                            <!--                                            ></v-treeview>-->
+
+                                            <!--                                            @update:open="onSearchToOpen"-->
+
+
+                                            <!--                                            selectable-->
+                                            <!--                                            :selection-type="selectionType"-->
+                                            <!--                                            open-on-click-->
+                                            <!--                                            v-model="selectedHashtag"-->
+                                            <!--                                            :active="activeNode"-->
+
+
+                                            <!--                                            :items="tagItems"-->
                                             <v-treeview
-                                                    v-model="selection"
-                                                    :items="tagItems"
-                                                    :selection-type="selectionType"
+                                                    :items="filteredElements"
+                                                    :open="filteredKeys"
+                                                    item-key="name"
+
+                                                    activatable
+                                                    color="warning"
                                                     dense
-                                                    selectable
+
                                                     return-object
-                                                    open-all
-                                            ></v-treeview>
+                                                    hoverable
+                                            >
+
+                                                <template slot="label" slot-scope="{ item }">
+                                                    <a @click="onHashtagSelect(item)">{{ item.name }}</a>
+                                                </template>
+
+                                            </v-treeview>
                                         </v-container>
                                     </v-col>
 
@@ -207,13 +273,19 @@
                                                 style="max-height: 300px; background-color: transparent; margin-top: -10px;"
                                                 class="overflow-y-auto">
 
-                                            <template v-if="!selection.length">
+                                            <template v-if="!selectedHashtag.length">
                                                 No nodes selected.
                                             </template>
 
                                             <template v-else>
-                                                <div v-for="node in selection" :key="node.id">
-                                                    {{ node.name }}
+                                                <!--                                                <div v-for="node in selectedHashtag" :key="node.id">-->
+                                                <!--                                                    {{  node.name }}-->
+
+                                                <div v-for="node in selectedHashtag">
+                                                    <v-btn text icon x-small @click="removeSelectedHashtag(node)">
+                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>
+                                                    </v-btn>
+                                                    {{ node }}
                                                 </div>
 
                                                 <div class="form-group row" style="padding-top: 30px">
@@ -224,7 +296,7 @@
                                                     </button>
 
                                                     <button type="button" class="btn btn-info"
-                                                            @click="clearAllTreeTags()">Clear All
+                                                            @click="clearAllSelectedTags()">Clear All
                                                     </button>
                                                 </div>
                                             </template>
@@ -317,9 +389,9 @@
             entries: [],
             isLoading: false,
             isLoadingHashtag: false,
-            model: null,
-            search: null,
-            //searchHashtag: null,
+            // model: null,
+            authorSearch: null,
+            searchHashtag: '',
             // }),
 
             // return {
@@ -337,8 +409,9 @@
             allTags: [],
             tagsTree: [],
             selectionType: 'independent',
-            selection: [],
-            tagItems: [],
+            selectedHashtag: [],
+            hashtagTree: [],
+            hashtagFlatTree: [],
 
 
             allLanguages: [],
@@ -346,8 +419,7 @@
 
             article: {authorList: [], hashtagList: []},
 
-            selected: [''],
-            // selectedHashtag: [''],
+            selected: [], //[''],
 
             status: ["statusProgress", "statusDone"],
 
@@ -359,10 +431,40 @@
             ],
 
             editMode: false,
-            //focused: false
         }),
 
         methods: {
+            removeSelectedHashtag(hash) {
+                const index = this.selectedHashtag.indexOf(hash);
+                if (index > -1) {
+                    this.selectedHashtag.splice(index, 1);
+                }
+            },
+
+            onHashtagSelect(item) {
+                const index = this.selectedHashtag.indexOf(item.name);
+                if (index === -1) {
+                    this.selectedHashtag.push(item.name);
+                }
+            },
+
+            // testSearch() {
+            //     console.log("v-text-field - input ~===~~~~", this.selectedHashtag.length);
+            //     //  this.selection = [];
+            // },
+
+            // searchFieldChanged() {
+            //     //v-text-field - clear
+            //     console.log("v-text-field - clear ~===~~~~");
+            //     this.searchHashtag = '';
+            //     //  this.buildTree();
+            // },
+
+            // onSearchToOpen() {
+            //     //v-treeview - open - update
+            //     console.log("v-treeview - open - update ~===~~~~");
+            //     //return this.filteredKeys;
+            // },
 
             createTree(treeData, parent_id) {
                 let tree = [];
@@ -385,28 +487,68 @@
             },
 
             buildTree() {
-                this.tagItems = this.createTree(this.allTags, 0);
+                this.hashtagTree = this.createTree(this.allTags, 0);
+                this.hashtagFlatTree = this.createFlatTree(this.allTags);
+                // console.log("CREATED TREE", this.hashtagTree);
+                // console.log("FLAT TREE", this.hashtagFlatTree);
             },
 
-            clearAllTreeTags(){
-                this.selection = [];
+            createFlatTree(treeData) {
+                let flatTree = [];
+                for (let i = 0; i < treeData.length; i++) {
+                    let newItem = {
+                        id: treeData[i].id,
+                        name: treeData[i].content,
+                        children: [],
+                    };
+                    for (let j = 0; j < treeData.length; j++) {
+                        if (treeData[j].parentId === treeData[i].id) {
+
+                            let refNewItem = {
+                                id: treeData[j].id,
+                                name: null,
+                                children: null,
+                            };
+                            newItem.children.push(refNewItem);
+                        }
+                    }
+                    flatTree.push(newItem);
+                }
+                return flatTree;
+            },
+
+            clearAllSelectedTags() {
+                this.selectedHashtag = [];
             },
 
             addHashtagToArticleList(hashtag) {//from HashtagList
                 this.tags = hashtag;
             },
 
+            // addHashtagToArticleList() {
+            //     let tagAlreadyAdded = 0;
+            //     this.selectedHashtag.forEach((item, i) => {
+            //         this.tags.forEach((tag, j) => {
+            //             if (tag === item.name)
+            //                 tagAlreadyAdded = 1;
+            //         });
+            //         if (tagAlreadyAdded == 0)
+            //             this.tags.push(item.name);
+            //     });
+            //     this.selectedHashtag = [];
+            // },
+
             addHashtagToArticleList() {
                 let tagAlreadyAdded = 0;
-                this.selection.forEach((item, i) => {
+                this.selectedHashtag.forEach((item, i) => {
                     this.tags.forEach((tag, j) => {
-                        if (tag === item.name)
+                        if (tag === item)
                             tagAlreadyAdded = 1;
                     });
                     if (tagAlreadyAdded == 0)
-                        this.tags.push(item.name);
+                        this.tags.push(item);
                 });
-                this.selection = [];
+                this.selectedHashtag = [];
             },
 
             testFocus(obj) {
@@ -598,11 +740,10 @@
             //     const index = this.friends.indexOf(item.name)
             //     if (index >= 0) this.friends.splice(index, 1)
             // },
-
         },
         mounted() {
 
-            console.log("MOUNTED_ART_ADD");
+            //   console.log("MOUNTED_ART_ADD");
             // api.getAllAuthors().then(response => {
             //     this.authorListForAutocomplete = response.data;
             //     console.log(response.data);
@@ -616,7 +757,7 @@
             apiHashtag.getAllHashtags().then(response => {
                 this.allTags = response.data;
                 this.buildTree();
-                console.log(response.data)
+                // console.log(response.data)
             })
                 .catch(error => {
                     this.errors.push(error)
@@ -655,8 +796,8 @@
                     }
                 });
             }
-
         },
+
         computed: {
             items() {
                 // console.log("items");
@@ -672,8 +813,279 @@
             //         return Object.assign({}, entry, {hashtag})
             //     })
             // },
+
+            // filteredElements() {
+            //
+            //     return this.tagItems.reduce((acc, curr) => {
+            //
+            //         console.log('acc', acc);
+            //         console.log('curr', curr.name);
+            //
+            //         const childrenContain = curr.children.filter((child) => {
+            //
+            //             const index = child.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+            //             return index;
+            //
+            //             // console.log('index', index);
+            //
+            //         });
+            //         // console.log('childrenContain', childrenContain);
+            //         // return childrenContain
+            //
+            //         if (childrenContain.length) {
+            //             acc.push({
+            //                 curr,
+            //                 children: childrenContain
+            //             })
+            //         }
+            //
+            //         return acc
+            //     }, [])
+            // },
+
+            searchLength() {
+                return this.searchHashtag.length
+            },
+
+            filteredElements() {
+
+                //    if (this.searchLength === 0) {
+                let tree = [];
+                let resultIds = [];
+
+                let touched = false;
+                let resultSearchTree = []; //this.hashtagFlatTree.slice(); //this.hashtagFlatTree.map((x) => x);
+
+                // let treeSize = this.hashtagFlatTree.length;
+                // for (let i = 0; i < treeSize; i++){
+                //     let item = this.hashtagFlatTree[i];
+                //     resultSearchTree.push(item);
+                // }
+
+
+                resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree));
+
+                // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
+               // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
+                //console.log("do while flatTree", resultSearchTree);
+
+
+                do {
+                   // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                    // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
+                   // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
+                   // console.log("do while flatTree", resultSearchTree);
+
+
+                    // remove leaves which do not match search string
+                    let toRemove = [];
+                    touched = false;
+
+                    resultSearchTree.forEach((node, id) => {
+                        const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+                        if ((index === false) && (node.children.length === 0)) {
+                            // console.log("node.children.length (to remove)", node.children.length, node.name);
+                            toRemove.push(node.id);
+                            touched = true;
+                        } else {
+                            // console.log("node.children.length (to stay)", node.children.length, node.name);
+                        }
+                    });
+
+                  // console.log("toRemove", toRemove);
+                  //  console.log("this.searchHashtag", this.searchHashtag);
+
+                    for (let i = 0; i < toRemove.length; i++) {
+                        let index = resultSearchTree.findIndex(x => x.id === toRemove[i]);
+                     //   console.log("INDEX * * * * *", index, toRemove[i]);
+                        if (index >= 0) {
+                            resultSearchTree.splice(index, 1);
+                        }
+                    }
+
+                    // remove references to deleted leaves
+                    let treeSize = resultSearchTree.length;
+                    for (let i = 0; i < treeSize; i++) {
+                        let newChildren = [];
+                        let currentItem = resultSearchTree[i];
+
+                        for (let j = 0; j < currentItem.children.length; j++) {
+
+                            let childWasFound = false;
+                            for (let k = 0; k < treeSize; k++) {
+                                if ((resultSearchTree[k].id === currentItem.children[j].id)) {
+                                    newChildren.push(currentItem.children[j]);
+                                    childWasFound = true;
+                                }
+                            }//for k
+
+                            if (!childWasFound) {
+                                touched = true;
+                             //   console.log("deleted ref", currentItem.children[j].id);
+                            }
+                        }//for j
+                        resultSearchTree[i].children = newChildren;
+                    }
+
+                } while (touched);
+
+                // resultSearchTree.forEach((item, id) => {
+                //     console.log("FLAT SEARCH TREE", item.name, item.id);
+                // });
+
+
+                let movedChildren = [];
+                do {
+                    movedChildren = [];
+
+                    let treeSize = resultSearchTree.length;
+                    for (let i = 0; i < treeSize; i++) {
+
+                        let currentItem = resultSearchTree[i];
+                        let removedChildrenAlreadyContains = false;
+                        let childrenQ = currentItem.children.length;
+
+                        for (let j = 0; j < movedChildren.length; j++) {
+                            if (movedChildren[j] === currentItem.id)
+                                removedChildrenAlreadyContains = true;
+                        }
+
+                        if (!removedChildrenAlreadyContains) {
+                            for (let j = 0; j < childrenQ; j++) {
+                                let child = currentItem.children[j];
+
+                                if ((child.name == null)) {
+                                    let index = resultSearchTree.findIndex(x => x.id === child.id);
+                                    if (index >= 0) {
+                                        //if (resultSearchTree[index].children.length === 0) {
+                                        let isChildrenNull = false;
+
+                                        if (resultSearchTree[index].children !== null) {
+                                            for (let k = 0; k < resultSearchTree[index].children.length; k++) {
+                                                if (resultSearchTree[index].children[k].name === null) {
+                                                    isChildrenNull = true;
+                                                }
+                                            }//for k
+
+                                            if (!isChildrenNull) {
+                                                child.name = resultSearchTree[index].name;
+                                                child.children = resultSearchTree[index].children;
+                                                movedChildren.push(child.id);
+                                            }
+                                        }//if child.children
+                                    }
+                                }
+                            }//for j
+                        }//if contains
+                    }
+
+                    for (let j = 0; j < movedChildren.length; j++) {
+                        let index = resultSearchTree.findIndex(x => x.id === movedChildren[j]);
+                       // console.log("I-N-D-E-X-======", index, movedChildren[j]);
+                        if (index >= 0) {
+                            resultSearchTree.splice(index, 1);
+                        }
+                    }
+
+                    //console.log("-----------------------------------------------");
+
+                } while (movedChildren.length > 0);
+
+                // flatTree.forEach((item, id) => {
+                //     console.log("GOOD))     SEARCH TREE", flatTree);
+                // });
+
+              //  console.log("GOOD))     SEARCH TREE", resultSearchTree);
+                return resultSearchTree;
+
+                // } else {
+                //     return this.hashtagTree;
+                // }
+
+                // return this.hashtagTree.reduce((acc, curr) => {
+                //     console.log('acc', acc);
+                //     const childrenContain = curr.children.filter((node) => {
+                //         const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+                //
+                //         if (index === false) {//if branch doesn't contain search text will go to leafs
+                //
+                //             return childrenContain.reduce((acc1, node) => {
+                //                 const leafContain = node.children.filter((leaf) => {
+                //                     const indexLeaf = leaf.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+                //                     return indexLeaf;
+                //                 });
+                //
+                //                 if (leafContain.length) {
+                //
+                //                     acc1.push({
+                //                         ...node,
+                //                         children: [
+                //                             ...leafContain
+                //                         ]
+                //                     })
+                //                 }
+                //             }, [])
+                //         }
+                //
+                //         return index;
+                //     }); //filter
+                //
+                //     console.log(childrenContain);
+                //
+                //     if (childrenContain.length) {
+                //         acc.push({
+                //             ...curr,
+                //             children: [
+                //                 ...childrenContain
+                //             ]
+                //         })
+                //     }                    //
+                //     return acc
+                // }, []) //reduce
+            },
+
+            // filteredElements() {
+            //     return this.tagItems.reduce((acc, curr) => {
+            //
+            //         console.log('acc', acc);
+            //         console.log('curr', curr.name);
+            //
+            //         const childrenContain = curr.children.filter((child) => {
+            //             const index = child.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+            //             return index;
+            //         }); //filter
+            //
+            //
+            //         // console.log('childrenContain', childrenContain);
+            //         // return childrenContain
+            //
+            //         if (childrenContain.length) {
+            //             acc.push({
+            //                 ...curr,
+            //                 children: [
+            //                     ...childrenContain
+            //                 ]
+            //             })
+            //         }
+            //
+            //         return acc
+            //     }, []) //reduce
+            // },
+
+            filteredKeys() {
+                if (this.searchHashtag != null)   //for start view without search
+                    if (this.searchLength === 0) {
+                        return this.filteredElements.map((top) => {
+                            return top.name
+                        })
+                    } else {
+                        return this.filteredElements;
+                    }
+            }
         },
 
+
+        ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
 
             // searchHashtag(val) {
@@ -709,7 +1121,7 @@
             //         }
             // },
 
-            search(val) {
+            authorSearch(val) {
 
                 console.log("SEARCH ACTIVATED");
 
