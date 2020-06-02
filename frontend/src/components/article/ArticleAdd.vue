@@ -206,8 +206,6 @@
                                                           v-model="searchHashtag"
                                                           filled>
                                             </v-text-field>
-
-
                                         </v-sheet>
 
                                         <v-container
@@ -248,10 +246,11 @@
                                                     activatable
                                                     color="warning"
                                                     dense
+                                                    :open-all="true"
 
                                                     return-object
                                                     hoverable
-                                            >
+                                                    ref="treeviewref">
 
                                                 <template slot="label" slot-scope="{ item }">
                                                     <a @click="onHashtagSelect(item)">{{ item.name }}</a>
@@ -380,7 +379,6 @@
         name: 'article-add',
         vuetify: new Vuetify(),
 
-        //data(){
         data: () => ({
             test: "articleProp",
             // addTagOnKeys: [13, 9],
@@ -389,12 +387,9 @@
             entries: [],
             isLoading: false,
             isLoadingHashtag: false,
-            // model: null,
             authorSearch: null,
             searchHashtag: '',
-            // }),
 
-            // return {
             selectedM: null,
             selectedL: null,
             selectedS: null,
@@ -404,7 +399,6 @@
             validationErrors: {},
             hasError: false,
 
-
             tags: [],
             allTags: [],
             tagsTree: [],
@@ -413,23 +407,18 @@
             hashtagTree: [],
             hashtagFlatTree: [],
 
-
             allLanguages: [],
             allMovements: [],
 
             article: {authorList: [], hashtagList: []},
-
             selected: [], //[''],
-
             status: ["statusProgress", "statusDone"],
-
             statusOptions: [
                 {text: 'In Progress', value: 0},
                 {text: 'Done', value: 1},
                 {text: 'Returned', value: 2},
                 {text: 'Completed', value: 3},
             ],
-
             editMode: false,
         }),
 
@@ -466,28 +455,28 @@
             //     //return this.filteredKeys;
             // },
 
-            createTree(treeData, parent_id) {
-                let tree = [];
-
-                treeData.forEach((item, id) => {
-                        if (item.parentId === parent_id) {
-
-                            let newItem = {
-                                id: id,
-                                name: item.content,
-                                children: [],
-                            };
-
-                            newItem.children = this.createTree(treeData, item.id);
-                            tree.push(newItem);
-                        }
-                    }
-                );
-                return tree;
-            },
+            // createTree(treeData, parent_id) {
+            //     let tree = [];
+            //
+            //     treeData.forEach((item, id) => {
+            //             if (item.parentId === parent_id) {
+            //
+            //                 let newItem = {
+            //                     id: id,
+            //                     name: item.content,
+            //                     children: [],
+            //                 };
+            //
+            //                 newItem.children = this.createTree(treeData, item.id);
+            //                 tree.push(newItem);
+            //             }
+            //         }
+            //     );
+            //     return tree;
+            // },
 
             buildTree() {
-                this.hashtagTree = this.createTree(this.allTags, 0);
+                //this.hashtagTree = this.createTree(this.allTags, 0);
                 this.hashtagFlatTree = this.createFlatTree(this.allTags);
                 // console.log("CREATED TREE", this.hashtagTree);
                 // console.log("FLAT TREE", this.hashtagFlatTree);
@@ -556,16 +545,6 @@
                 if (typeof selected !== 'undefined') console.log(selected); // Any scope console.log(selected);
             },
 
-            // hashtagViewCall(focus) {
-            //
-            //     this.focused = focus;
-            //     console.log("FOCUS" + this.focused);
-            //
-            //     // console.log("BEFORE HASHTAG");
-            //
-            //     // router.push('/article');
-            // },
-
             addAuthor(obj) {
                 // console.log("GET CHANGED");
 
@@ -588,21 +567,6 @@
                 // }
             },
 
-            // addHashtag(obj) {
-            //
-            //     let i = 0;
-            //     for (i = 0; i < this.article.hashtagList.length; i++) { //to exclude double values
-            //         if (this.article.hashtagList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.article.hashtagList.length) {
-            //         this.article.hashtagList.push(obj);
-            //         console.log("ADDED");
-            //     }
-            // },
-
             deleteAuthor(author) {
                 for (let i = 0; i < this.article.authorList.length; i++) {
                     if (this.article.authorList[i].id === author.id) {
@@ -610,14 +574,6 @@
                     }
                 }
             },
-
-            // deleteHashtag(hash) {
-            //     for (let i = 0; i < this.article.hashtagList.length; i++) {
-            //         if (this.article.hashtagList[i].id === hash.id) {
-            //             this.article.hashtagList.splice(i, 1);
-            //         }
-            //     }
-            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -701,7 +657,6 @@
                 }
             },
 
-
             updateArticle() {
                 // this.article.movement = {
                 //     "id": this.selectedM
@@ -734,12 +689,6 @@
                     });
                 }
             },
-
-
-            // remove (item) {
-            //     const index = this.friends.indexOf(item.name)
-            //     if (index >= 0) this.friends.splice(index, 1)
-            // },
         },
         mounted() {
 
@@ -800,56 +749,17 @@
 
         computed: {
             items() {
-                // console.log("items");
                 return this.entries.map(entry => {
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
                 })
             },
 
-            // hashtagItems() {
-            //     return this.entries.map(entry => {
-            //         const hashtag = entry.hashtag;
-            //         return Object.assign({}, entry, {hashtag})
-            //     })
-            // },
-
-            // filteredElements() {
-            //
-            //     return this.tagItems.reduce((acc, curr) => {
-            //
-            //         console.log('acc', acc);
-            //         console.log('curr', curr.name);
-            //
-            //         const childrenContain = curr.children.filter((child) => {
-            //
-            //             const index = child.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
-            //             return index;
-            //
-            //             // console.log('index', index);
-            //
-            //         });
-            //         // console.log('childrenContain', childrenContain);
-            //         // return childrenContain
-            //
-            //         if (childrenContain.length) {
-            //             acc.push({
-            //                 curr,
-            //                 children: childrenContain
-            //             })
-            //         }
-            //
-            //         return acc
-            //     }, [])
-            // },
-
             searchLength() {
                 return this.searchHashtag.length
             },
 
             filteredElements() {
-
-                //    if (this.searchLength === 0) {
                 let tree = [];
                 let resultIds = [];
 
@@ -862,19 +772,19 @@
                 //     resultSearchTree.push(item);
                 // }
 
-
+                //the way for deep copy
                 resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree));
 
                 // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
-               // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
+                // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
                 //console.log("do while flatTree", resultSearchTree);
 
 
                 do {
-                   // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                    // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                     // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
-                   // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
-                   // console.log("do while flatTree", resultSearchTree);
+                    // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
+                    // console.log("do while flatTree", resultSearchTree);
 
 
                     // remove leaves which do not match search string
@@ -892,12 +802,12 @@
                         }
                     });
 
-                  // console.log("toRemove", toRemove);
-                  //  console.log("this.searchHashtag", this.searchHashtag);
+                    // console.log("toRemove", toRemove);
+                    //  console.log("this.searchHashtag", this.searchHashtag);
 
                     for (let i = 0; i < toRemove.length; i++) {
                         let index = resultSearchTree.findIndex(x => x.id === toRemove[i]);
-                     //   console.log("INDEX * * * * *", index, toRemove[i]);
+                        //   console.log("INDEX * * * * *", index, toRemove[i]);
                         if (index >= 0) {
                             resultSearchTree.splice(index, 1);
                         }
@@ -921,7 +831,7 @@
 
                             if (!childWasFound) {
                                 touched = true;
-                             //   console.log("deleted ref", currentItem.children[j].id);
+                                //   console.log("deleted ref", currentItem.children[j].id);
                             }
                         }//for j
                         resultSearchTree[i].children = newChildren;
@@ -934,6 +844,7 @@
                 // });
 
 
+                //create normal tree from flat tree
                 let movedChildren = [];
                 do {
                     movedChildren = [];
@@ -981,96 +892,15 @@
 
                     for (let j = 0; j < movedChildren.length; j++) {
                         let index = resultSearchTree.findIndex(x => x.id === movedChildren[j]);
-                       // console.log("I-N-D-E-X-======", index, movedChildren[j]);
+                        // console.log("I-N-D-E-X-======", index, movedChildren[j]);
                         if (index >= 0) {
                             resultSearchTree.splice(index, 1);
                         }
                     }
-
                     //console.log("-----------------------------------------------");
-
                 } while (movedChildren.length > 0);
-
-                // flatTree.forEach((item, id) => {
-                //     console.log("GOOD))     SEARCH TREE", flatTree);
-                // });
-
-              //  console.log("GOOD))     SEARCH TREE", resultSearchTree);
                 return resultSearchTree;
-
-                // } else {
-                //     return this.hashtagTree;
-                // }
-
-                // return this.hashtagTree.reduce((acc, curr) => {
-                //     console.log('acc', acc);
-                //     const childrenContain = curr.children.filter((node) => {
-                //         const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
-                //
-                //         if (index === false) {//if branch doesn't contain search text will go to leafs
-                //
-                //             return childrenContain.reduce((acc1, node) => {
-                //                 const leafContain = node.children.filter((leaf) => {
-                //                     const indexLeaf = leaf.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
-                //                     return indexLeaf;
-                //                 });
-                //
-                //                 if (leafContain.length) {
-                //
-                //                     acc1.push({
-                //                         ...node,
-                //                         children: [
-                //                             ...leafContain
-                //                         ]
-                //                     })
-                //                 }
-                //             }, [])
-                //         }
-                //
-                //         return index;
-                //     }); //filter
-                //
-                //     console.log(childrenContain);
-                //
-                //     if (childrenContain.length) {
-                //         acc.push({
-                //             ...curr,
-                //             children: [
-                //                 ...childrenContain
-                //             ]
-                //         })
-                //     }                    //
-                //     return acc
-                // }, []) //reduce
             },
-
-            // filteredElements() {
-            //     return this.tagItems.reduce((acc, curr) => {
-            //
-            //         console.log('acc', acc);
-            //         console.log('curr', curr.name);
-            //
-            //         const childrenContain = curr.children.filter((child) => {
-            //             const index = child.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
-            //             return index;
-            //         }); //filter
-            //
-            //
-            //         // console.log('childrenContain', childrenContain);
-            //         // return childrenContain
-            //
-            //         if (childrenContain.length) {
-            //             acc.push({
-            //                 ...curr,
-            //                 children: [
-            //                     ...childrenContain
-            //                 ]
-            //             })
-            //         }
-            //
-            //         return acc
-            //     }, []) //reduce
-            // },
 
             filteredKeys() {
                 if (this.searchHashtag != null)   //for start view without search
@@ -1088,38 +918,15 @@
         ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
 
-            // searchHashtag(val) {
-            //     if (val !== null)
-            //         if (val.length > 1) {
-            //             console.log("SEARCH STARTED");
-            //
-            //             if (typeof this.selectedHashtag !== 'undefined') {
-            //                 console.log("SELECTED IN WATCH");
-            //                 console.log(this.selectedHashtag);
-            //                 if (this.article.authorList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
-            //                     this.selectedHashtag = "";
-            //             }
-            //
-            //             // Items have already been loaded
-            //             //  if (this.items.length > 0) return;
-            //
-            //             // Items have already been requested
-            //             if (this.isLoadingHashtag) return;
-            //             this.isLoadingHashtag = true;
-            //
-            //             // Lazily load input items
-            //             //  fetch('https://api.publicapis.org/entries')  //todo
-            //             fetch('../api/v1/hashtag/search?q=' + encodeURIComponent(val))
-            //                 .then(res => res.json())
-            //                 .then(res => {
-            //                     this.entries = res;
-            //                 })
-            //                 .catch(err => {
-            //                     console.log(err)
-            //                 })
-            //                 .finally(() => (this.isLoadingHashtag = false))
-            //         }
-            // },
+            searchHashtag() {
+                this.$nextTick(() => {
+                    if (this.searchLength === 0) {
+                        this.$refs.treeviewref.updateAll(false);
+                    } else {
+                        this.$refs.treeviewref.updateAll(true);
+                    }
+                });
+            },
 
             authorSearch(val) {
 
@@ -1197,11 +1004,7 @@
                         //     })
                         //     .finally(() => (this.isLoading = false))
                     }
-            },
-
-            // focused: function () {
-            //     console.log("FOCUS" + this.focused);
-            // }
+            }
         },
     }
 </script>
