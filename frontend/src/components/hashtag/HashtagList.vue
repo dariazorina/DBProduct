@@ -34,6 +34,31 @@
             <div class="row align-items-center col-12" style="background-color: transparent; padding: 0;">
                 <div class="form-row col-12" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
                     <div class="row col-6" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+
+
+
+                        <div v-if="!isAddHashtagMode" class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+                            <div style="margin-top:     0px">
+
+                                <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
+                                <label for="add-level" v-else>{{labelAddOrEditHashtag}}</label>
+
+                                <input class="form-control" id="add-level" v-model="hashtag.content" required/>
+                                <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
+                            </div>
+                        </div>
+                        <div v-if="!isAddHashtagMode" class="col-1"
+                             style="background-color: transparent; padding: 36px 0px 0px 0px;">
+                            <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
+                                   @click="addOrUpdateHashtag">
+                                <v-icon style="color: green">mdi-message-plus</v-icon>
+                            </v-btn>
+                        </div>
+                        <!--                        </div>-->
+                    </div>
+
+                    <div class="row col-6" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
+
                         <div class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0;">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 1 уровень</label>
@@ -59,27 +84,7 @@
                         </div>
 
 
-                        <div v-if="!isAddHashtagMode" class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
-                            <div style="margin-top: 10px">
 
-                                <label for="add-level" v-if="isAllHashtagMode" style="color: darkgray">{{labelAddOrEditHashtag}}</label>
-                                <label for="add-level" v-else>{{labelAddOrEditHashtag}}</label>
-
-                                <input class="form-control" id="add-level" v-model="hashtag.content" required/>
-                                <!--                            todo <span class="add" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">+</span>-->
-                            </div>
-                        </div>
-                        <div v-if="!isAddHashtagMode" class="col-1"
-                             style="background-color: transparent; padding: 43px 0px 0px 0px;">
-                            <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px"
-                                   @click="addOrUpdateHashtag">
-                                <v-icon style="color: green">mdi-message-plus</v-icon>
-                            </v-btn>
-                        </div>
-                        <!--                        </div>-->
-                    </div>
-
-                    <div class="row col-6" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
                         <div class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0">
 
                             <label v-if="isAllHashtagMode" style="color: darkgray"> 2 уровень</label>
