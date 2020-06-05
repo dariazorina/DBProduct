@@ -38,9 +38,10 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.code == 401) {
+                if (error.code === 401) {
                     router.push('/login');
                 }
+
             })
     },
 
@@ -50,7 +51,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -62,7 +63,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -74,7 +75,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -85,7 +86,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -96,7 +97,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -107,7 +108,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -118,7 +119,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -129,7 +130,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             });
@@ -140,7 +141,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     router.push('/login');
                 }
             })

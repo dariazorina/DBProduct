@@ -698,12 +698,12 @@
             //     console.log(response.data);
             // });
 
-            apiLanguage.getAllLanguages().then(response => {
+            apiLanguage.getAllLanguages(response => {
                 this.allLanguages = response.data;
                 console.log(response.data)
             });
 
-            apiHashtag.getAllHashtags().then(response => {
+            apiHashtag.getAllHashtags(response => {
                 this.allTags = response.data;
                 this.buildTree();
                 // console.log(response.data)

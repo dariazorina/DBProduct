@@ -384,7 +384,7 @@
         mounted() {
             console.log('mounted');
 
-            apiCountry.getAllCountries().then(response => {
+            apiCountry.getAllCountries(response => {
                 this.allCountries = response.data;
                 console.log(response.data)
             });

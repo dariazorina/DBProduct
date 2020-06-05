@@ -401,7 +401,7 @@
                 // this.customers = customers;
                 console.log('mounted');
 
-                api.getAllLanguages().then(response => {
+                api.getAllLanguages(response => {
                     this.allLanguages = response.data;
                     // console.log(response.data)
                 });

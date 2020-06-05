@@ -405,7 +405,7 @@
 
             showAllHash() {
                 this.isAllHashtagMode = true;
-                api.getAllHashtags().then(response => {
+                api.getAllHashtags(response => {
                     this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
                     this.hashtags = response.data;  //to renew edited 1 level dropdown list
                     this.entries = response.data;
@@ -450,7 +450,7 @@
                                         this.hashtag.content = null;
                                         this.labelAddOrEditHashtag = "Добавить хештег 2 уровня, используйте Enter/кнопка <Добавить>";
 
-                                        api.getAllHashtags().then(response => {
+                                        api.getAllHashtags(response => {
                                             this.hashtags = response.data;  //to renew edited 2 level dropdown list
                                         });
                                     })
@@ -459,7 +459,7 @@
                                         });
 
                                 } else {                                         ///upd 1 level
-                                    api.getAllHashtags().then(response => {
+                                    api.getAllHashtags(response => {
                                         this.labelAddOrEditHashtag = "Добавить хештег 1 уровня, используйте Enter/кнопка <Добавить>";
                                         this.hashtags = response.data;  //to renew edited 1 level dropdown list
                                         this.entries = response.data;
@@ -498,7 +498,7 @@
                                         this.entries = r.data;
                                         this.hashtag.content = null;
 
-                                        api.getAllHashtags().then(response => {
+                                        api.getAllHashtags(response => {
                                             this.hashtags = response.data;  //to renew edited 2 level dropdown list
                                         });
                                         // console.log(r.data)
@@ -508,7 +508,7 @@
                                         });
 
                                 } else {                                  ///crt 1 level
-                                    api.getAllHashtags().then(response => {
+                                    api.getAllHashtags(response => {
                                         this.entries = response.data;
                                         this.hashtags = response.data;  //to add new hash in dropdown lists
                                         this.hashtag.content = null;
@@ -531,7 +531,7 @@
             deleteHashtag(id) {
                 if (confirm("Do you really want to delete '" + this.getHashtagContentById(id) + "'?")) {
                     api.delete(id, r => {
-                        api.getAllHashtags().then(response => {
+                        api.getAllHashtags(response => {
                             this.hashtags = response.data;                          //to renew dropdown lists
 
                             if (this.isAllHashtagMode) {
@@ -626,7 +626,7 @@
 
             search() {
                 if (this.searchKey === "") {
-                    api.getAllHashtags().then(response => {
+                    api.getAllHashtags(response => {
                         this.hashtags = response.data;                          //to renew dropdown lists
 
                         if (this.isAllHashtagMode) {
@@ -716,7 +716,7 @@
                 // this.hashtags = r.data;
             });
 
-            api.getAllHashtags().then(response => {
+            api.getAllHashtags(response => {
                 // this.entries = response.data;
                 this.hashtags = response.data;
 

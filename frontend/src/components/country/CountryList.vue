@@ -97,7 +97,7 @@
             // }
         },
         mounted() {
-            api.getAllCountries().then(response => {
+            api.getAllCountries(response => {
                 this.countries = response.data;
                 console.log(response.data)
             })

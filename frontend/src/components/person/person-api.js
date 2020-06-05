@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
@@ -7,8 +8,16 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllPersons() {
-        return AXIOS.get(`/person`);
+    getAllPersons(fn) {
+        return AXIOS
+            .get(`/person`)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     // getAllCountries() {
@@ -23,28 +32,48 @@ export default {
         AXIOS
             .post('/person', person)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     findById(id, fn) {
         AXIOS
             .get(`/person/` + id)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     update(id, person, fn) {
         AXIOS
             .put('/person/' + id, person)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     delete(id, fn) {
         AXIOS
             .delete('/person/' + id)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
 
@@ -75,7 +104,9 @@ export default {
 
         }).catch((error) => {
             console.log(error);
-
+            if (error.response.status === 401) {
+                router.push('/login');
+            }
         })
     },
 }

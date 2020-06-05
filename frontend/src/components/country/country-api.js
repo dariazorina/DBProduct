@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
@@ -7,41 +8,68 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllCountries() {
-        return AXIOS.get(`/country`);//  /api/hello
+    getAllCountries(fn) {
+        return AXIOS
+            .get(`/country`)
+            .then(response => fn(response))
+            .catch(error => {
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     findById(id, fn) {
         AXIOS
             .get(`/country/` + id)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     },
 
     create(country, fn, fnError) {
         AXIOS
             .post('/country', country)
             .then(response => fn(response))
-            .catch( error =>fnError(error.response.data))
-            // .catch(response => console.log('hhhh' + response))
+            .catch(error => {
+                if (error.response.status === 401) {
+                    router.push('/login');
+                } else {
+                    fnError(error.response.data);
+                }
+            })
+        // .catch(response => console.log('hhhh' + response))
     },
 
     update(id, country, fn, fnError) {
         AXIOS
             .put('/country/' + id, country)
             .then(response => fn(response))
-            .catch(error => fnError(error.response.data))
-            // .catch(error => console.log(error))
+            .catch(error => {
+                if (error.response.status === 401) {
+                    router.push('/login');
+                } else {
+                    fnError(error.response.data);
+                }
+            })
+        // .catch(error => console.log(error))
     },
 
     delete(id, fn) {
         AXIOS
             .delete('/country/' + id)
             .then(response => fn(response))
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
     }
-
-
 }
 
 

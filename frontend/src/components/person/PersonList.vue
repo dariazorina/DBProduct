@@ -126,15 +126,11 @@
 
         methods: {
             loadPersons() {
-                api.getAllPersons().then(response => {
+                api.getAllPersons(response => {
                     this.persons = response.data;
                     console.log(response.data)
                 })
-                    .catch(error => {
-                        this.errors.push(error)
-                    })
-            }
-            ,
+            },
 
             showCountry(country) {
                 if (country) {
@@ -144,18 +140,12 @@
                 // console.log("COUNTRY NULL")
                 return "";
             }
-
-
-        }
-        ,
+        },
         mounted() {
-            api.getAllPersons().then(response => {
+            api.getAllPersons(response => {
                 this.persons = response.data;
                 console.log(response.data)
             })
-                .catch(error => {
-                    this.errors.push(error)
-                })
         }
     }
 </script>

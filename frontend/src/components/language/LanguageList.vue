@@ -88,7 +88,7 @@
         methods: {
         },
         mounted() {
-            api.getAllLanguages().then(response => {
+            api.getAllLanguages(response => {
                 this.languages = response.data;
                 console.log(response.data)
             })

@@ -10,7 +10,8 @@
 
         <div class="filters row">
             <div class="form-group col-sm-3">
-                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element" requred/>
+                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element"
+                       requred/>
             </div>
         </div>
 
@@ -27,7 +28,7 @@
             </thead>
             <tbody>
 
-<!--            <tr v-for="movement in movements">-->
+            <!--            <tr v-for="movement in movements">-->
             <tr v-for="movement in filteredMovements">
 
                 <td class='tdAlignLeft'>{{movement.id }}</td>
@@ -39,10 +40,10 @@
                         <router-link :to="{name: 'movement-edit', params: {movement_id: movement.id}}">Edit
                         </router-link>
                     </a>
-<!--                    <a class="btn btn-danger btn-sm">-->
-<!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
-<!--                        </router-link>-->
-<!--                    </a>-->
+                    <!--                    <a class="btn btn-danger btn-sm">-->
+                    <!--                        <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">Delete-->
+                    <!--                        </router-link>-->
+                    <!--                    </a>-->
 
 
                 </td>
@@ -79,22 +80,18 @@
             filteredMovements() {
                 return this.movements.filter((movement) => {
                     return movement.name.indexOf(this.searchKey) > -1
-                     || movement.code.indexOf(this.searchKey) > -1
+                        || movement.code.indexOf(this.searchKey) > -1
                     // || article.description.indexOf(this.searchKey) > -1
                 })
             }
         },
 
-        methods: {
-        },
+        methods: {},
         mounted() {
-            api.getAll().then(response => {
+            api.getAll(response => {
                 this.movements = response.data;
                 console.log(response.data)
             })
-                .catch(error => {
-                    this.errors.push(error)
-                })
         },
     }
 </script>
