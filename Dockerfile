@@ -21,7 +21,7 @@ MAINTAINER Jonas Hecht
 VOLUME /tmp
 
 # Add Spring Boot app.jar to Container
-COPY --from=0 "/springbootvuejs/backend/target/backend-0.0.1-SNAPSHOT.jar" app.jar
+COPY --from=0 "/springbootvuejs/productAppBE/target/productAppBE-0.0.1-SNAPSHOT.jar" app.jar
 
 ENV JAVA_OPTS=""
 

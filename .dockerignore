@@ -3,4 +3,4 @@ frontend/node*
 
 # also leave out pre-build output folders
 frontend/target
-backend/target
+productAppBE/target
