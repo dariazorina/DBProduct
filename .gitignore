@@ -26,8 +26,8 @@ target
 # logback
 logback.out.xml
 
-backend/src/main/resources/public/
-backend/target
+productAppBE/src/main/resources/public/
+productAppBE/target
 frontend/dist/
 frontend/node/
 frontend/node_modules/
