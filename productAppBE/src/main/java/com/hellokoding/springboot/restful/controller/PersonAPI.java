@@ -1,7 +1,10 @@
 package com.hellokoding.springboot.restful.controller;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hellokoding.springboot.restful.model.Person;
+import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
+import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
+@JsonSerialize
 @RestController
 @RequestMapping("/api/v1/person")
 @Slf4j
@@ -18,19 +23,56 @@ import java.util.List;
 public class PersonAPI {
     private final PersonService personService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q) {
+        List<PersonDto> search = personService.search(q);
+        return ResponseEntity.ok(search);
+    }
+
     @GetMapping
-    public ResponseEntity<List<Person>> findAll() {
+    public ResponseEntity<List<NewPersonDto>> findAll() {
         return ResponseEntity.ok(personService.findAll());
     }
 
     @PostMapping
     public ResponseEntity
-    create(@Valid @RequestBody Person person) {
+    create(@Valid @RequestBody NewPersonDto person) {
         return ResponseEntity.ok(personService.save(person));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<NewPersonDto> findById(@PathVariable Integer id) {
+        Optional<NewPersonDto> stock = personService.findById(id);
+        if (!stock.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(stock.get());
+    }
+
+    @PutMapping("/{id}")  ///todo NewPersonDto
+    public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody NewPersonDto person) {
+        person.setId(id);
+        if (!personService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(personService.save(person));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Integer id) {
+        if (!personService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        personService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
     //////////////////////utils/////////////////////////////////////////
-    @GetMapping("/fillPersonTableFromArticle")
+/*    @GetMapping("/fillPersonTableFromArticle")
     public ResponseEntity fillPersonTableFromArticle() {
         // localhost:8098/api/v1/person/fillPersonTableFromArticle
         personService.fillPersonTableFromArticle();
@@ -99,6 +141,6 @@ public class PersonAPI {
         //  localhost:8098/api/v1/person/initializeReferenceBetweenActorAndOrg
         personService.initializeReferenceBetweenActorAndOrg();
         return ResponseEntity.ok().build();
-    }
+    }*/
     ///////////////////////
 }

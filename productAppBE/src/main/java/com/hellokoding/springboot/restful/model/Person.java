@@ -1,6 +1,8 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,11 +15,14 @@ public class Person {
     @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer movement_id;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "movement_id", nullable = false)
+//    private Movement movement;
+
     private String surname;
     private String name;
     private String patronymic;
-
 
     @Column(name = "surname_rus")
     private String surnameRus;
@@ -31,9 +36,17 @@ public class Person {
     @Column(name = "name_eng")
     private String nameEng;
 
-    private Integer country_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")//, insertable = false, updatable = false)
+//    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
+
     private String settlement;
-    private String occupation;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+//    @JsonIgnore
+    private List<Position> occupation;
 
     @ManyToMany
     @JoinTable(
@@ -44,8 +57,8 @@ public class Person {
 
     @ManyToMany
     @JoinTable(
-            name = "person_org",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+            name = "org_actor",
+            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
     private List<Org> orgList;
 
@@ -61,12 +74,16 @@ public class Person {
 //    private List<Annex> annexList;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "person_hashtag",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-    private List<HashTag> hashtagList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "person_hashtag",
+//            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+//            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
 
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<PersonHashtag> hashtagList;
+
+    private String miscellany;
 }

@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="16032020-03">
+        <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="art_hashtag"/></preConditions>
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="art_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="16032020-04">
+        <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="person_hashtag"/></preConditions>
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="person_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="16032020-05">
+        <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="scpaper_hashtag"/></preConditions>
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="scpaper_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="16032020-06">
+        <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="isource_hashtag"/></preConditions>
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="isource_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="16032020-07">
+        <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="event_hashtag"/></preConditions>
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="event_hashtag"/>
+    </changeSet>
+</databaseChangeLog>

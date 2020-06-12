@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/scpaper/")
+@RequestMapping("/api/v1/scpaper")
 @RequiredArgsConstructor
 @Slf4j
 
@@ -30,7 +30,7 @@ public class ScpaperAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Scpaper> findById(@PathVariable Long id) {
+    public ResponseEntity<Scpaper> findById(@PathVariable Integer id) {
         Optional<Scpaper> stock = scpaperService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -40,7 +40,7 @@ public class ScpaperAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Scpaper> update(@PathVariable Long id, @Valid @RequestBody Scpaper scpaper) {
+    public ResponseEntity<Scpaper> update(@PathVariable Integer id, @Valid @RequestBody Scpaper scpaper) {
         if (!scpaperService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -49,7 +49,7 @@ public class ScpaperAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!scpaperService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

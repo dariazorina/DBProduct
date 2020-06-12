@@ -14,13 +14,21 @@ public class Event {
     @Column(name = "event_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer movement_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movement_id", nullable = false)
+    private Movement movement;
+
     private Date date;
-    private Integer country_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
+
     private String settlement;
     private String location;
     private String type;
-    private String orgs;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
 
     @ManyToMany
     @JoinTable(
@@ -29,7 +37,7 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
     private List<Org> orgList;
 
-    private String actors;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
     @ManyToMany
     @JoinTable(
             name = "event_actor",
@@ -40,7 +48,7 @@ public class Event {
     private String title;
     private String description;
 
-    private String url;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
     @ManyToMany
     @JoinTable(
             name = "event_link",
@@ -49,7 +57,6 @@ public class Event {
     private List<UrlLink> linkList;
 
 
-    private String hashtags;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "event_hashtag",

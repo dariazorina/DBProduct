@@ -5,10 +5,12 @@ import com.hellokoding.springboot.restful.service.HashTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/hashtag")
@@ -19,18 +21,73 @@ public class HashTagAPI {
 
     private final HashTagService hashTagService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<HashTag>> search(@RequestParam(name = "hash") String hash) {
+        List<HashTag> search = hashTagService.search(hash);
+        return ResponseEntity.ok(search);
+    }
+
     @GetMapping
-    public ResponseEntity<List<HashTag>> findAll() {
-        return ResponseEntity.ok(hashTagService.findAll());
+    public ResponseEntity<List<HashTag>> findAll(@RequestParam(name = "q", required = false) String q) {
+        if (!StringUtils.isEmpty(q)) {
+            return ResponseEntity.ok(hashTagService.search(q));
+
+        } else {
+            return ResponseEntity.ok(hashTagService.findAll());
+        }
+    }
+
+    @GetMapping("/leafs")
+    public ResponseEntity<List<HashTag>> findLeafs(@RequestParam(name = "parentid") String parentId) {
+        List<HashTag> search = hashTagService.findLeafs(Integer.valueOf(parentId));
+        return ResponseEntity.ok(search);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<HashTag> findById(@PathVariable Integer id) {
+        Optional<HashTag> stock = hashTagService.findById(id);
+        if (!stock.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(stock.get());
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody HashTag article) {
-        return ResponseEntity.ok(hashTagService.save(article));
+    public ResponseEntity create(@Valid @RequestBody HashTag hashTag) {
+        HashTag saved = hashTagService.save(hashTag);
+        if (saved != null) {
+            return ResponseEntity.ok(saved);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HashTag> update(@PathVariable Integer id, @Valid @RequestBody HashTag hashTag) {
+        hashTag.setId(id);
+        if (!hashTagService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(hashTagService.save(hashTag));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Integer id) {
+
+        Optional<HashTag> hashtagToDelete = hashTagService.findById(id);
+
+        if (!hashtagToDelete.isPresent()) {
+            log.error("Id " + id + " is not existed");
+            return ResponseEntity.badRequest().build();
+        }
+        hashTagService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     ////utils////
-    @GetMapping("/fillHashTagTableFromArticle")
+/*    @GetMapping("/fillHashTagTableFromArticle")
     public ResponseEntity fillHashTagTableFromArticle() {
         // localhost:8098/api/v1/hashtag/fillHashTagTableFromArticle
         hashTagService.fillHashTagTableFromArticle();
@@ -84,7 +141,7 @@ public class HashTagAPI {
         //  localhost:8098/api/v1/hashtag/initializeReferenceBetweenHashTagAndIsource
         hashTagService.initializeReferenceBetweenHashTagAndIsource();
         return ResponseEntity.ok().build();
-    }
-   /////// ////
+    }*/
+    /////// ////
 
 }

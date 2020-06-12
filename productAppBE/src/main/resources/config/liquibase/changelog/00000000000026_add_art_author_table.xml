@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="09112019-12">
+        <createTable remarks="Таблица связка" tableName="art_author">
+            <column name="author_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="art_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="author_id, art_id" tableName="art_author"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="06112019-5">
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="art_author"
+                                 constraintName="t_author_art_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="person_id"
+                                 referencedTableName="t_person"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="06112019-6">
+        <addForeignKeyConstraint baseColumnNames="art_id"
+                                 baseTableName="art_author"
+                                 constraintName="t_art_author_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="article_id"
+                                 referencedTableName="t_article"/>
+    </changeSet>
+</databaseChangeLog>

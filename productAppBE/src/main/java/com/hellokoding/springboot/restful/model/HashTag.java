@@ -2,6 +2,7 @@ package com.hellokoding.springboot.restful.model;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name="t_hashtag")
 @Entity
@@ -13,4 +14,13 @@ public class HashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
+
+    @Column(name = "parent_id")
+    private Integer parentId;
+
+    private String miscellany;
+
+//    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<ArticleHashtag> hashtagList;
+
 }

@@ -13,15 +13,23 @@ public class Scpaper {
     @Column(name = "scpaper_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer movement_id;
-    private Integer country_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movement_id", nullable = false)
+    private Movement movement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
+
     private String lang;
     private Integer year;
     private String type;
     private String title;
-    private String title_rus;
+    @Column(name = "title_rus")
+    private String titleRus;
 
-    private String author;          // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
     @ManyToMany
     @JoinTable(
             name = "scpaper_author",
@@ -34,7 +42,7 @@ public class Scpaper {
     @Column(name = "abstract")
     private String abstractField;
 
-    private String url;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
     @ManyToMany
     @JoinTable(
             name = "scpaper_link",
@@ -44,7 +52,7 @@ public class Scpaper {
 
     private String misc;
 
-    private String hashtags;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+
     @ManyToMany
     @JoinTable(
             name = "scpaper_hashtag",

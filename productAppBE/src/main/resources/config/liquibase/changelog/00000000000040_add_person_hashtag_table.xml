@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="20032020-1">
+        <createTable tableName="person_hashtag">
+            <column autoIncrement="true" name="person_hashtag_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_person_hashtag_pkey"/>
+            </column>
+            <column name="person_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hashtag_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assigned_hashtag" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="person_id, hashtag_id, level, assigned_hashtag" tableName="person_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="20032020-2">
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="person_hashtag"
+                                 constraintName="t_person_person_hashtag_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="person_id"
+                                 referencedTableName="t_person"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="20032020-3">
+        <addForeignKeyConstraint baseColumnNames="hashtag_id"
+                                 baseTableName="person_hashtag"
+                                 constraintName="t_hashtag_person_hashtag_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="hashtag_id"
+                                 referencedTableName="t_hashtag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="20032020-4">
+        <addForeignKeyConstraint baseColumnNames="assigned_hashtag"
+                                 baseTableName="person_hashtag"
+                                 constraintName="t_ass_hashtag_person_hashtag_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="hashtag_id"
+                                 referencedTableName="t_hashtag"/>
+    </changeSet>
+</databaseChangeLog>

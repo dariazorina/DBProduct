@@ -1,40 +1,20 @@
 package com.hellokoding.springboot.restful.service;
 
-import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.HashTagRepository;
-import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
 import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.Author;
-import com.hellokoding.springboot.restful.model.HashTag;
-import com.hellokoding.springboot.restful.model.UrlLink;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 
-import java.util.LinkedList;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class ArticleService {
-    private final ArticleRepository articleRepository;
+public interface ArticleService {
+    List<ArticleDto> search(String title, String hash, String author, String lang, String descr, List<Integer> status, String startDate, String endDate) throws ParseException;
 
-    public List<Article> findAll() {
-        List<Article> all = articleRepository.findAll();
-        return all;
-    }
+    List<ArticleDto> findAll();
 
-    public Optional<Article> findById(Long id) {
-        Optional<Article> byId = articleRepository.findById(Math.toIntExact(id));
-        Article article = byId.get();
-        return byId;
-    }
+    Optional<ArticleDto> findById(Integer id);
 
-    public Article save(Article stock) {
-        return articleRepository.save(stock);
-    }
+    Article save(ArticleDto stock);
 
-    public void deleteById(Long id) {
-        articleRepository.deleteById(Math.toIntExact(id));
-    }
+    void deleteById(Integer id);
 }

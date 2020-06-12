@@ -15,11 +15,12 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/movement/")
+@RequestMapping("/api/v1/movement")
 
 public class MovementAPI {
 
     private final MovementService movementService;
+    public static final String MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE = "Movement code or name is not unique.";
 
     @GetMapping
     public ResponseEntity<List<Movement>> findAll() {
@@ -28,11 +29,15 @@ public class MovementAPI {
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody Movement movement) {
-        return ResponseEntity.ok(movementService.save(movement));
+        try {
+            return ResponseEntity.ok(movementService.save(movement));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movement> findById(@PathVariable Long id) {
+    public ResponseEntity<Movement> findById(@PathVariable Integer id) {
         Optional<Movement> stock = movementService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -42,16 +47,20 @@ public class MovementAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movement> update(@PathVariable Long id, @Valid @RequestBody Movement movement) {
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Movement movement) {
         if (!movementService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(movementService.save(movement));
+        try {
+            return ResponseEntity.ok(movementService.save(movement));
+        } catch (UniqueConstraintViolationException ex){
+            return ResponseEntity.badRequest().body(MOVEMENT_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!movementService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -60,7 +69,7 @@ public class MovementAPI {
         return ResponseEntity.ok().build();
     }
 
-    //////////////////////utils/////////////////////////////////////////
+/*    //////////////////////utils/////////////////////////////////////////
     @GetMapping("/initializeReferenceBetweenMovementAndIsource")
     public ResponseEntity initializeReferenceBetweenMovementAndIsource() {
         //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndIsource
@@ -73,5 +82,5 @@ public class MovementAPI {
         //  localhost:8098/api/v1/movement/initializeReferenceBetweenMovementAndOrg
         movementService.initializeReferenceBetweenMovementAndOrg();
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

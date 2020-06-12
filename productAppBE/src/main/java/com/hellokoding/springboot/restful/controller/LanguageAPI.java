@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/language/")
+@RequestMapping("/api/v1/language")
 @Data
 @Slf4j
 public class LanguageAPI {
 
     private final LanguageService languageService;
+    public static final String LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE = "Language code or name is not unique.";
 
     @GetMapping
     public ResponseEntity<List<Language>> findAll() {
@@ -25,11 +26,15 @@ public class LanguageAPI {
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody Language language) {
-        return ResponseEntity.ok(languageService.save(language));
+        try {
+            return ResponseEntity.ok(languageService.save(language));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Language> findById(@PathVariable Long id) {
+    public ResponseEntity<Language> findById(@PathVariable Integer id) {
         Optional<Language> stock = languageService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -39,16 +44,20 @@ public class LanguageAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Language> update(@PathVariable Long id, @Valid @RequestBody Language language) {
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Language language) {
         if (!languageService.findById(id).isPresent()) {
-            log.error("Id " + id + " is not existed");
+            log.error("Id {} is not existed", id);
             ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(languageService.save(language));
+        try {
+            return ResponseEntity.ok(languageService.save(language));
+        } catch (UniqueConstraintViolationException ex){
+            return ResponseEntity.badRequest().body(LANGUAGE_CODE_OR_NAME_IS_NOT_UNIQUE);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!languageService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -57,12 +66,12 @@ public class LanguageAPI {
         return ResponseEntity.ok().build();
     }
 
-    //////////////////////utils/////////////////////////////////////////
-    @GetMapping("/initializeReferenceBetweenLanguageAndIsource")
-    public ResponseEntity initializeReferenceBetweenLanguageAndIsource() {
-        //  localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
-        languageService.initializeReferenceBetweenLanguageAndIsource();
-        return ResponseEntity.ok().build();
-    }
+//    //////////////////////utils/////////////////////////////////////////
+//    @GetMapping("/initializeReferenceBetweenLanguageAndIsource")
+//    public ResponseEntity initializeReferenceBetweenLanguageAndIsource() {
+//        //  localhost:8098/api/v1/language/initializeReferenceBetweenLanguageAndIsource
+//        languageService.initializeReferenceBetweenLanguageAndIsource();
+//        return ResponseEntity.ok().build();
+//    }
 
 }

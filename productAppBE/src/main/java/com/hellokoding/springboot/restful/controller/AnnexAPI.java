@@ -27,19 +27,19 @@ public class AnnexAPI {
         return ResponseEntity.ok(annexService.save(annex));
     }
 
-    //utils
-    @GetMapping("/fillAnnexTableFromEvent")
-    public ResponseEntity fillAnnexTableFromEvent() {
-        // localhost:8098/api/v1/annex/fillAnnexTableFromEvent
-        annexService.fillAnnexTableFromEvent();
-        return ResponseEntity.ok().build();
-    }
+//    //utils
+//    @GetMapping("/fillAnnexTableFromEvent")
+//    public ResponseEntity fillAnnexTableFromEvent() {
+//        // localhost:8098/api/v1/annex/fillAnnexTableFromEvent
+//        annexService.fillAnnexTableFromEvent();
+//        return ResponseEntity.ok().build();
+//    }
 
-    @GetMapping("/initializeReferenceBetweenAnnexAndEvent")
-    public ResponseEntity initializeReferenceBetweenAnnexAndEvent() {
-        //  localhost:8098/api/v1/annex/initializeReferenceBetweenAnnexAndEvent
-        annexService.initializeReferenceBetweenAnnexAndEvent();
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/initializeReferenceBetweenAnnexAndEvent")
+//    public ResponseEntity initializeReferenceBetweenAnnexAndEvent() {
+//        //  localhost:8098/api/v1/annex/initializeReferenceBetweenAnnexAndEvent
+//        annexService.initializeReferenceBetweenAnnexAndEvent();
+//        return ResponseEntity.ok().build();
+//    }
     ///////////////////////
 }

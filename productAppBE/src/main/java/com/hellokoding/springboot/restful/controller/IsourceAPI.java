@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/v1/api/isource/")
+@RequestMapping("/api/v1/isource")
 @Data
 @Slf4j
 public class IsourceAPI {
@@ -30,7 +30,7 @@ public class IsourceAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Isource> findById(@PathVariable Long id) {
+    public ResponseEntity<Isource> findById(@PathVariable Integer id) {
         Optional<Isource> stock = isourceService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -40,7 +40,7 @@ public class IsourceAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Isource> update(@PathVariable Long id, @Valid @RequestBody Isource scpaper) {
+    public ResponseEntity<Isource> update(@PathVariable Integer id, @Valid @RequestBody Isource scpaper) {
         if (!isourceService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -49,7 +49,7 @@ public class IsourceAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!isourceService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();

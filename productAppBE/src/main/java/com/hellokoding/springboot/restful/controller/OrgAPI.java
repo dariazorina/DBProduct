@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/org/")
+@RequestMapping("/api/v1/org")
 @Data
 @Slf4j
 public class OrgAPI {
@@ -30,7 +30,7 @@ public class OrgAPI {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Org> findById(@PathVariable Long id) {
+    public ResponseEntity<Org> findById(@PathVariable Integer id) {
         Optional<Org> stock = orgService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
@@ -40,7 +40,7 @@ public class OrgAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Org> update(@PathVariable Long id, @Valid @RequestBody Org org) {
+    public ResponseEntity<Org> update(@PathVariable Integer id, @Valid @RequestBody Org org) {
         if (!orgService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -49,7 +49,7 @@ public class OrgAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         if (!orgService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -59,26 +59,26 @@ public class OrgAPI {
     }
 
 
-    ////////utils////
-    @GetMapping("/addOrgFromEventTableToOrgTable")
-    public ResponseEntity addOrgFromEventTableToOrgTable() {
-        //  localhost:8098/api/v1/org/addOrgFromEventTableToOrgTable
-        orgService.addOrgFromEventTableToOrgTable();
-        return ResponseEntity.ok().build();
-    }
+//    ////////utils////
+//    @GetMapping("/addOrgFromEventTableToOrgTable")
+//    public ResponseEntity addOrgFromEventTableToOrgTable() {
+//        //  localhost:8098/api/v1/org/addOrgFromEventTableToOrgTable
+//        orgService.addOrgFromEventTableToOrgTable();
+//        return ResponseEntity.ok().build();
+//    }
 
-    @GetMapping("/changeOrgTitleToOrgId")
-    public ResponseEntity changeOrgTitleToOrgId() {
-        //  localhost:8098/api/v1/org/changeOrgTitleToOrgId
-        orgService.changeOrgTitleToOrgId();
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/initializeReferenceBetweenOrgAndEvent")
-    public ResponseEntity initializeReferenceBetweenOrgAndEvent() {
-        //  localhost:8098/api/v1/org/initializeReferenceBetweenOrgAndEvent
-        orgService.initializeReferenceBetweenOrgAndEvent();
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/changeOrgTitleToOrgId")
+//    public ResponseEntity changeOrgTitleToOrgId() {
+//        //  localhost:8098/api/v1/org/changeOrgTitleToOrgId
+//        orgService.changeOrgTitleToOrgId();
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/initializeReferenceBetweenOrgAndEvent")
+//    public ResponseEntity initializeReferenceBetweenOrgAndEvent() {
+//        //  localhost:8098/api/v1/org/initializeReferenceBetweenOrgAndEvent
+//        orgService.initializeReferenceBetweenOrgAndEvent();
+//        return ResponseEntity.ok().build();
+//    }
 
 }

@@ -1,62 +1,53 @@
-<template id="countries">
+<template id="country">
     <div>
 
+        <link href="../dbnm.css" rel="stylesheet"/>
+        <div class="actions">
+            <a class="btn btn-default">
+                <router-link :to="{name: 'country-add'}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add country
+                </router-link>
+            </a>
+        </div>
 
-<!--        <link href="../dbnm.css" rel="stylesheet"/>-->
-        <!--<div class="actions">-->
-        <!--<a class="btn btn-default">-->
-        <!--<router-link :to="{path: '/add-product'}">-->
-        <!--<span class="glyphicon glyphicon-plus"></span>-->
-        <!--Add product-->
-        <!--</router-link>-->
-        <!--</a>-->
-        <!--</div>-->
         <div class="filters row">
             <div class="form-group col-sm-3">
-                <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" requred/>
+                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element" requred/>
             </div>
         </div>
 
 
-        <table class="table">
+        <table class="redTable">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Code</th>
-                <th>Name</th>
+                <th class='tdAlignLeft'>Id</th>
+                <th class='tdAlignLeft'>Код</th>
+                <th class='tdAlignLeft'>Название</th>
 
-                <th class="col-sm-2">Actions</th>
+                <th style="width:10%" class="col-sm-2"></th>
             </tr>
             </thead>
             <tbody>
 
 
             <tr v-for="country in filteredCountries">
-                <!-- tr v-for="product in products" -->
-                <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
-
-                <td>
-                    {{ country.id }}
-                    <!--<span class="glyphicon glyphicon-euro" aria-hidden="true"></span>-->
-                </td>
-
-                <td>{{ country.code }}</td>
-
-                <td>
-                    <a>
-                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}
-                        </router-link>
-                    </a>
+                <td class='tdAlignLeft'> {{ country.id }} </td>
+                <td class='tdAlignLeft'> {{ country.code }}</td>
+                <td class='tdAlignLeft'> {{ country.name }}
+                    <!--                    <a>-->
+                    <!--                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}-->
+                    <!--                        </router-link>-->
+                    <!--                    </a>-->
                 </td>
 
                 <td>
-                    <a class="btn btn-warning btn-xs">
+                    <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'country-edit', params: {country_id: country.id}}">Edit</router-link>
                     </a>
-                    <a class="btn btn-danger btn-xs">
-                        <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete
-                        </router-link>
-                    </a>
+<!--                                        <a class="btn btn-danger btn-xs">-->
+<!--                                            <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>-->
+<!--                                        </a>-->
                 </td>
             </tr>
 
@@ -71,9 +62,10 @@
 
 <script>
     import api from "./country-api";
+    // import api from "../article/article-api";
 
     export default {
-        name: 'countries',
+        name: 'country',
         data() {
             return {
                 countries: [],
@@ -94,25 +86,37 @@
             }
         },
         methods: {
-            loadCountries() {
-                api.getAll().then(response => {
-                    this.countries = response.data;
-                    console.log(response.data)
-                })
-                    .catch(error => {
-                        this.errors.push(error)
-                    })
-            }
+            // loadCountries() {
+            //     api.getAll().then(response => {
+            //         this.countries = response.data;
+            //         console.log(response.data)
+            //     })
+            //         .catch(error => {
+            //             this.errors.push(error)
+            //         })
+            // }
         },
         mounted() {
-            api.getAll().then(response => {
+            api.getAllCountries(response => {
                 this.countries = response.data;
                 console.log(response.data)
             })
                 .catch(error => {
                     this.errors.push(error)
                 })
-        }
+        },
+
+        // name: 'country-edit',
+        // data() {
+        //     return {
+        //         country: findCountry(this.$route.params.country_id)
+        //     };
+        // },
+        // methods: {
+        //     updateProduct: function () {
+        //         countryService.update(this.country.id, this.country, r => router.push('/'))
+        //     }
+        // }
     }
 
     // var List = Vue.extend({

@@ -39,6 +39,6 @@
                                  constraintName="t_article_hashtag_ref_id_fkey"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="article_id"
-                                 referencedTableName="t_articles"/>
+                                 referencedTableName="t_article"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,8 @@
 package com.hellokoding.springboot.restful.model;
+
 import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,8 +15,6 @@ public class Org {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String movement_id; //todo delete
-
     @ManyToMany
     @JoinTable(
             name = "org_movement",
@@ -21,7 +22,10 @@ public class Org {
             inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
     private List<Movement> movementList;
 
-    private Integer country_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
+
     private String settlement;
 
     @Column(name="name_rus")
@@ -43,7 +47,12 @@ public class Org {
     private Integer founded;
     private Integer closed;
 
-    private String actors;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    ////////////////@ToString.Exclude
+    /////////////@JsonIgnore             //was active (without NewPersonDto)
+    private List<Position> occupation;
+
+
     @ManyToMany
     @JoinTable(
             name = "org_actor",
@@ -51,7 +60,6 @@ public class Org {
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"))
     private List<Person> actorList;
 
-    private String url;       // TODO: исходные данные по url_links - массив строк)) Нужно удалить потом
     @ManyToMany
     @JoinTable(
             name = "org_link",
@@ -61,7 +69,4 @@ public class Org {
 
     private String address;
     private String description;
-
-
-
 }
