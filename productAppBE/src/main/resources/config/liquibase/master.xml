@@ -45,5 +45,6 @@
     <include file="config/liquibase/changelog/00000000000039_add_art_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000040_add_person_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000041_add_notnullconstraint_parentid_field_hashtag.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000042_add_isource_hashtag_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

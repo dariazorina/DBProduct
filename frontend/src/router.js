@@ -10,9 +10,12 @@ import PersonDelete from '@/components/person/PersonDelete'
 
 import ArticleList from '@/components/article/ArticleList'
 import ArticleDetails from '@/components/article/ArticleDetails'
-import ArticleEdit from '@/components/article/ArticleEdit'
+// import ArticleEdit from '@/components/article/ArticleEdit'
 import ArticleDelete from '@/components/article/ArticleDelete'
 import ArticleAdd from '@/components/article/ArticleAdd'
+
+import IsourceList from '@/components/isource/IsourceList'
+import IsourceAdd from '@/components/isource/IsourceAdd'
 
 import EventList from '@/components/event/EventList'
 import OrgList from '@/components/org/OrgList'
@@ -31,6 +34,8 @@ import LanguageAdd from '@/components/language/LanguageAdd';
 import LanguageEdit from '@/components/language/LanguageEdit';
 
 import HashtagList from '@/components/hashtag/HashtagList';
+
+
 
 import store from './store'
 // import HashtagList from "./components/hashtag/HashtagList";
@@ -71,6 +76,10 @@ const router = new Router({
         {path: '/article/add', component: ArticleAdd, name: 'article-add'},
         {path: '/article/:article_id/edit', component: ArticleAdd, name: 'article-add'},
         {path: '/article/:article_id/delete', component: ArticleDelete, name: 'article-delete'},
+
+        {path: '/isource', component: IsourceList},
+        {path: '/isource/add', component: IsourceAdd, name: 'isource-add'},
+
 
         {path: '/event', component: EventList},
         {path: '/org', component: OrgList},

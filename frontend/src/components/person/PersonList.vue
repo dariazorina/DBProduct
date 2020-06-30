@@ -6,6 +6,7 @@
                 <router-link :to="{name: 'person-add'}"><span class="glyphicon glyphicon-plus"></span>Add person
                 </router-link>
             </a>
+            <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
         </div>
 
         <div class="filters row">

@@ -407,8 +407,7 @@
 
             createComplexCellValue(valueRus, valueOrig) {
 
-                let result = '';//"Hello \n World";
-
+                let result = '';
                 // console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
 
                 if (this.isArrayValidAndNotEmpty(valueRus)) {
@@ -420,7 +419,6 @@
                     result += valueOrig;
 
                 return result;
-
             },
 
             updateArticleStatus(id, status) {

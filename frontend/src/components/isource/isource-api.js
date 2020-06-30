@@ -8,21 +8,9 @@ const AXIOS = axios.create({
 
 
 export default {
-    search(q, fn) {  //todo check where this search is called
-        AXIOS
-            .get(`/hashtag?q=` + q)
-            .then(response => fn(response))
-            .catch(error => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    router.push('/login');
-                }
-            })
-    },
-
-    getAllHashtags(fn) {
+    getAllIsource(fn) {
         return AXIOS
-            .get(`/hashtag`)
+            .get(`/isource`)
             .then(response => fn(response))
             .catch(error => {
                 if (error.response.status === 401) {
@@ -32,21 +20,9 @@ export default {
 
     },
 
-    getLeafHashtags(id, fn) {
-        return AXIOS
-            .get(`/hashtag/leafs?parentid=` + id)
-            .then(response => fn(response))
-            .catch(error => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    router.push('/login');
-                }
-            })
-    },
-
-    create(hashtag, fn, fnError) {
+    create(isource, fn, fnError) {
         AXIOS
-            .post('/hashtag', hashtag)
+            .post('/isource', isource)
             .then(response => fn(response))
             .catch(error => {
                 if (error.response.status === 401) {
@@ -60,7 +36,7 @@ export default {
 
     findById(id, fn) {
         AXIOS
-            .get(`/hashtag/` + id)
+            .get(`/isource/` + id)
             .then(response => fn(response))
             .catch(error =>  {
                 console.log(error);
@@ -70,9 +46,9 @@ export default {
             })
     },
 
-    update(id, hashtag, fn, fnError) {
+    update(id, isource, fn, fnError) {
         AXIOS
-            .put('/hashtag/' + id, hashtag)
+            .put('/isource/' + id, isource)
             .then(response => fn(response))
             .catch(error => {
                 if (error.response.status === 401) {
@@ -86,7 +62,7 @@ export default {
 
     delete(id, fn) {
         AXIOS
-            .delete('/hashtag/' + id)
+            .delete('/isource/' + id)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
@@ -96,8 +72,8 @@ export default {
             })
     },
 
-    searchHash(searchKey, fn) {
-        AXIOS.get(`/hashtag/search?hash=` + encodeURIComponent(searchKey))
+    searchIsource(searchKey, fn) {
+        AXIOS.get(`/isource/search?isource=` + encodeURIComponent(searchKey))
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
