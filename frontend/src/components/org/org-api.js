@@ -8,7 +8,7 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllOrg(fn) {
+    getAllOrgs(fn) {
         return AXIOS
             .get(`/org`)
             .then(response => fn(response))

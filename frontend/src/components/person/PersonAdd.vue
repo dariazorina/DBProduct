@@ -69,7 +69,7 @@
             <div class="form-row">
                 <div class="col-md-3">
                     <label>Страна</label>
-                    <b-form-select v-model="selectedC" class="mb-3" id="country-selection">
+                    <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">
                         <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>
                     </b-form-select>
                     <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
@@ -80,40 +80,30 @@
                     <input class="form-control" id="add-settlement" v-model="person.settlement">
                 </div>
             </div>
+        </form>
 
+        <div style="background-color: transparent; margin-left: 30px">
+            <b-card class="col-md-6" style="background-color: #f8f8f8; font-size: small; text-align: left">
+                <OccupationList :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>
+            </b-card>
+        </div>
+<!--        .formCreation{-->
+<!--        vertical-align: text-bottom;-->
+<!--        text-align: left;-->
+<!--        margin-left: 30px;-->
+<!--        /*margin-right: 40px;*/-->
+<!--        font-size: small;-->
+<!--        }-->
+
+<!--        component doesn't work correctly in form 'formCreation;-->
+        <form class="formCreation">
             <div class="form-row">
                 <div class="col-md-6">
-                    <label for="add-occupation">Должность</label>
-                    <textarea class="form-control" id="add-occupation" rows="4" v-model="position"/>
-                </div>
-            </div>
 
-
-            <div class="form-row">
-                <div class="col-md-6">
-                    <label for="add-org">Организации</label>
-                    <input class="form-control" id="add-org"
-                           placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи"
-                           disabled="disabled">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="col-md-6">
                     <label for="add-description">Описание</label>
                     <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
                 </div>
             </div>
-            <!--            <div class="form-row">-->
-            <!--                <div class="col-md-6">-->
-            <!--                    <label for="add-hashtag">Хештеги</label>-->
-            <!--                    <div>-->
-            <!--                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"-->
-            <!--                                   placeholder="enter hashtags with 'return' or 'tab'" v-model="tags"></input-tag>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
-
 
             <div class="form-row">
                 <div class="col-md-10">
@@ -124,16 +114,6 @@
                 </div>
             </div>
 
-            <!--            <div class="row align-items-center" style="background-color: white">-->
-
-            <!--                <button class="col-2 btn btn-link col-form-label" style="font-size: small; background-color: white; text-align: left"-->
-            <!--                        @click="goURL(article.url)">Хештеги</button>-->
-
-            <!--                &lt;!&ndash;                            <label for="add-hashtag" class="col-2 col-form-label">Хештеги</label>&ndash;&gt;-->
-            <!--                <div class="col-9" style="background-color: white">-->
-            <!--                    <div>-->
-            <!--                                <div v-if="tag!=null">-->
-
             <div class="form-row">
                 <div class="col-md-6">
                     <label for="add-link">Хештеги</label>
@@ -143,15 +123,6 @@
 
                     </div>
                 </div>
-                <!--                <div class="col-1" style="background-color: white; margin-right: -10px; padding-right: -10px; padding-left: -10px">-->
-                <!--                    <v-btn text icon x-small>-->
-                <!--                        <a>-->
-                <!--                            <router-link :to="{name: 'hashtag', params: {article_id: 1}}">-->
-                <!--                                <v-icon style="color: green">mdi-pencil</v-icon>-->
-                <!--                            </router-link>-->
-                <!--                        </a>-->
-                <!--                    </v-btn>-->
-                <!--                </div>-->
             </div>
 
 
@@ -164,21 +135,17 @@
                     </div>
                 </div>
             </div>
-            <!--            <div class="form-group row align-items-center">-->
-            <!--                <label for="add-org" class="col-1 col-form-label labelInCreation">Organization</label>-->
-            <!--                <div class="col-4">-->
-            <!--                    <input class="form-control" id="add-org"-->
-            <!--                           placeholder="Будет реализовано в следующей версии по типу добавления авторов при создании статьи"-->
-            <!--                           disabled="disabled">-->
-            <!--                </div>-->
-            <!--            </div>-->
 
-            <!--            <div class="form-group row align-items-center">-->
-            <!--                <label for="add-description" class="col-1 col-form-label labelInCreation">Description</label>-->
-            <!--                <div class="col-4">-->
-            <!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
-            <!--                </div>-->
-            <!--            </div>-->
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label for="add-misc">Комментарии</label>
+                    <div class="green-border-focus">
+
+                                    <textarea class="form-control" id="add-misc" rows="5" v-model="person.miscellany"
+                                              background-color="palegreen" required></textarea>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group row">
                 <div class="col-sm-4">
@@ -203,12 +170,12 @@
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
     import HashtagList from "./../hashtag/HashtagList.vue";
-    // import LanguageAdd from "../language/LanguageAdd";
+    import OccupationList from "./OccupationList";
 
     export default {
         components: {
-            //   LanguageAdd,
-            HashtagList
+            OccupationList,
+            HashtagList,
         },
         name: 'person-add',
         vuetify: new Vuetify(),
@@ -222,8 +189,10 @@
             model: null,
             search: null,
 
+            selected: '',
             selectedM: null,
-            selectedC: null,
+            selectedCountry: null,
+
             tags: [],
             links: [],
 
@@ -233,27 +202,24 @@
             hasError: false,
 
             allCountries: [],
+            allOrgs: [],
             // allMovements: [],
 
             linkList: [],
             hashtagList: [],
-            // orgList: [],
 
-
-            position: null,
-            org: null,
-            org_idList: [],
-            positionList: [],
-
-            // positionEntity: {position: null, org: null},
-            // occupation1: [],//{positionEntity: {}},
-
-            person: {hashtagList: [], linkList: [], org_idList: [], positionList: []},
-
-            selected: [''],
+            position: '',
+            orgId: null,
+            occupationWithIndexList: [],
+            testList: [],
+            person: {hashtagList: [], linkList: [], testList: []},
         }),
 
         methods: {
+            updateOccupation(occupation) {
+                this.occupationWithIndexList.push(occupation);
+                console.log("OCCUPATION PUSH", occupation.orgId, occupation.position);
+            },
 
             addHashtagToList(hashtag) {//from HashtagList
                 this.tags = hashtag;
@@ -271,52 +237,6 @@
                 this.hasError = this.hasError || hasError;
             },
 
-            // formValidate() {
-            //     this.addStatus('add-surname', (!this.person.surname));
-            //     if (this.hasError) {
-            //     } else {
-            //         this.addStatus('add-name', (!this.person.name));
-            //         if (this.hasError) {
-            //         } else {
-            //             // this.addStatus('add-patronymic', (!this.person.patronymic));
-            //             // if (this.hasError) {
-            //             // } else {
-            //             this.addStatus('add-surname-rus', (!this.person.surnameRus));
-            //             if (this.hasError) {
-            //             } else {
-            //                 this.addStatus('add-name-rus', (!this.person.nameRus));
-            //                 if (this.hasError) {
-            //                 } else {
-            //                     this.addStatus('add-surname-eng', (!this.person.surnameEng));
-            //                     if (this.hasError) {
-            //                     } else {
-            //                         this.addStatus('add-name-eng', (!this.person.nameEng));
-            //                         if (this.hasError) {
-            //                         } else {
-            //                             this.addStatus('country-selection', (!this.selectedC));
-            //                             if (this.hasError) {
-            //                             } else {
-            //                                 this.addStatus('movement-selection', (!this.selectedM));
-            //                                 if (this.hasError) {
-            //                                 } else {
-            //                                     this.addStatus('add-settlement', (!this.person.settlement));
-            //                                     if (this.hasError) {
-            //                                     } else {
-            //                                         this.addStatus('add-occupation', (!this.person.occupation));
-            //                                         if (this.hasError) {
-            //                                         } else {
-            //                                             this.addStatus('add-description', (!this.person.description));
-            //                                         }
-            //                                     }
-            //                                 }
-            //                             }
-            //                         }
-            //                     }
-            //                     // }
-            //                 }
-            //             }
-            //         }
-            //     }
 
             formValidate() {
                 this.addStatus('add-surname', (!this.person.surname));
@@ -343,16 +263,8 @@
                 //     "id": 1
                 // };
 
-
-                // if (this.selectedC) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
-                //     this.person.country = {
-                //         "id": this.selectedC
-                //     };
-                // }
-
-
-                if (this.selectedC) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
-                    this.person.country_id = this.selectedC;
+                if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
+                    this.person.country_id = this.selectedCountry;
                 }
 
                 for (let i = 0; i < this.links.length; i++) {
@@ -367,11 +279,16 @@
 
                 this.hasError = false;
 
-                this.person.org_idList[0] = 1;
-                this.person.positionList[0] = this.position;
+                for (let i = 0; i < this.occupationWithIndexList.length; i++) {
+                    let a = {
+                        "orgId": this.occupationWithIndexList[i].orgId,
+                        "position": this.occupationWithIndexList[i].position
+                    };
+                    console.log("CREATE PERSON A: ", a);
+                    this.person.testList.push(a);
+                }
 
-                this.person.org_idList[1] = 3;
-                this.person.positionList[1] = "труляляля";
+                // console.log("PERSON BEFORE SAVING", this.person);
 
                 if (this.formValidate()) {
                     api.create(this.person, r => {
@@ -382,11 +299,14 @@
             },
         },
         mounted() {
-            console.log('mounted');
-
             apiCountry.getAllCountries(response => {
                 this.allCountries = response.data;
-                console.log(response.data)
+                // console.log(response.data)
+            });
+
+            apiOrg.getAllOrgs(response => {
+                this.allOrgs = response.data;
+                // console.log(" O R G A ", response.data)
             });
 
             // api.getAllMovements().then(response => {

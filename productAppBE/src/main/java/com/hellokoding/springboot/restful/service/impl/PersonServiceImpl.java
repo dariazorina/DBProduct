@@ -4,6 +4,7 @@ import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
+import com.hellokoding.springboot.restful.model.dto.PositionDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.access.method.P;
@@ -134,7 +135,6 @@ public class PersonServiceImpl implements PersonService {
 
         List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
         return finalList;
-
     }
 
     @Override
@@ -180,8 +180,12 @@ public class PersonServiceImpl implements PersonService {
 
 
         Person person = new Person();
-        Country c = new Country();
-        person.setCountry(c);
+
+        if (personDto.getCountry_id() != null) { //to avoid hiber error when country is empty (from user form)
+            Country c = new Country();
+            person.setCountry(c);
+            person.getCountry().setId(personDto.getCountry_id());
+        }
 
 //        person.setHashtagList(hashTagListWithID);
         person.setLinkList(linkListWithID);
@@ -193,33 +197,27 @@ public class PersonServiceImpl implements PersonService {
         person.setNameEng(personDto.getNameEng());
         person.setSurnameRus(personDto.getSurnameRus());
         person.setNameRus(personDto.getNameRus());
-        person.getCountry().setId(personDto.getCountry_id());
         person.setSettlement(personDto.getSettlement());
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
 
-        person.setOrgList(personDto.getOrgList());
 
-
-        ///////////////////////////////position/////////////////////
+        Integer orgId;
         Position position;
-        int i = 0;
         List<Position> occList = new ArrayList<>();
-        for (String pos : personDto.getPositionList()) {
+        for (PositionDto posDto : personDto.getTestList()) {
 
-            Integer orgId = personDto.getOrg_idList().get(i);
-
-            position = new Position();
-            position.setPosition(pos);
-            position.setPerson(person);
+            orgId = posDto.getOrgId();
             if (orgRepository.findById(orgId).isPresent()) {
+                position = new Position();
                 position.setOrg(orgRepository.findById(orgId).get());
-                i++;
+                position.setPerson(person);
+                position.setPosition(posDto.getPosition());
+
                 occList.add(position);
             }
         }
         person.setOccupation(occList);
-
 
         /////////////////////person-hashtag////////////////////////
         PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;

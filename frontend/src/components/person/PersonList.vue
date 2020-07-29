@@ -54,10 +54,13 @@
                 <!--                <td class='tdAlignLeft'>{{person.movement.name}}</td>-->
                 <!--                <td class='tdAlignLeft'>{{person.country.name}}</td>-->
                 <td class='tdAlignLeft'>{{person.settlement }}</td>
-                <td class='tdAlignLeft'>{{person.occupation }}</td>
+                <td class='tdAlignLeft'>
+                    <div v-for="occ in person.testList">{{occ.position}}</div>
+                </td>
 
                 <td class='tdAlignLeft'>
-                    <div v-for="org in person.orgList">{{org.name}}</div>
+                    <div v-for="occ in person.testList">{{getOrgNameById(occ.orgId)}}</div>
+<!--                    <div v-for="org in person.orgList">{{org.name}}</div>-->
                 </td>
                 <td class='tdAlignLeft'>
                     <div v-for="ph in person.hashtagList">
@@ -95,12 +98,19 @@
 
 <script>
     import api from "./person-api";
+    import apiOrg from "./../org/org-api";
+    import OccupationList from "./OccupationList";
 
     export default {
+        components: {
+            OccupationList,
+        },
         name: 'person',
         data() {
             return {
                 persons: [],
+                allOrgs: [],
+
                 searchKey: '',
                 response: [],
                 errors: [],
@@ -132,6 +142,14 @@
                 })
             },
 
+            getOrgNameById(orgId){
+                for (let i = 0; i < this.allOrgs.length; i++) {
+                    if (this.allOrgs[i].id === orgId){
+                        return this.allOrgs[i].name;
+                    }
+                }
+            },
+
             showCountry(country) {
                 if (country) {
                     // console.log("COUNTRY " + country.name);
@@ -144,11 +162,13 @@
         mounted() {
             api.getAllPersons(response => {
                 this.persons = response.data;
-                console.log(response.data)
-            })
+                // console.log(response.data)
+            });
+
+            apiOrg.getAllOrgs(response => {
+                this.allOrgs = response.data;
+                // console.log(" O R G A ", response.data)
+            });
         }
     }
 </script>
-
-<!--<style scoped>-->
-<!--</style>-->

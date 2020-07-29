@@ -94,44 +94,33 @@
                 </div>
             </div>
 
-            <!--        ///////////////////////////////////////////////////////////////////-->
-
-
             <div class="row">
                 <div class="col-sm-2 back1">
-                    <div class="cellTitle"><span class="float-left">Должность</span></div>
+                    <div class="cellTitle"><span class="float-left">Организация / Должность</span></div>
                 </div>
-
-                <div class="col-sm-10 back1"> <span class="float-left">
-                {{person.occupation}} </span>
+                <div class="col-sm-10 back1" style="text-align: left;">
+                    <div>
+                        <a v-for="test in person.testList">{{showOrgAndPosition(test)}}</a>
+                    </div>
                 </div>
             </div>
 
 
             <div class="row">
                 <div class="col-sm-2">
-                    <div class="cellTitle"><span class="float-left">Организации</span></div>
-                </div>
-                <div class="col-sm-10" style="text-align: left">{{showCountry(person.country)}}
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-sm-2 back1">
                     <div class="cellTitle"><span class="float-left">Описание</span></div>
                 </div>
 
-                <div class="col-sm-10 back1" style="text-align: left">
+                <div class="col-sm-10" style="text-align: left">
                     {{person.description}}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-2 back1">
                     <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left">
+                <div class="col-sm-10 back1"><span class="float-left">
                 <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}</div></span>
                 </div>
             </div>
@@ -147,11 +136,11 @@
 
 
             <div class="row">
-                <div class="col-sm-2" style="background-color:lavender;">
+                <div class="col-sm-2">
                     <div class="cellTitle"><span class="float-left">Links</span></div>
                 </div>
 
-                <div class="col-sm-10" style="background-color:lavender;">
+                <div class="col-sm-10">
                     <span class="float-left">
                         <div class="linkButton" v-for="link in person.linkList">
                             <span class="float-left">
@@ -186,6 +175,7 @@
 
 <script>
     import api from "./person-api";
+    import apiOrg from "./../org/org-api";
     import "vue-scroll-table";
 
     export default {
@@ -197,6 +187,8 @@
                 orgList: [],
                 hashtagList: [],
                 linkList: [],
+                allOrg: [],
+
                 searchKey: '',
                 response: [],
                 errors: [],
@@ -205,6 +197,20 @@
         },
 
         methods: {
+            getOrgNameById(orgId) {
+                if (this.allOrgs !== null) {
+                    for (let i = 0; i < this.allOrgs.length; i++) {
+                        if (this.allOrgs[i].id === orgId) {
+                            return this.allOrgs[i].name;
+                        }
+                    }
+                }
+            },
+
+            showOrgAndPosition(occ) {
+                return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+            },
+
             goURL(url) {
                 location.href = url;
                 // console.log("123");
@@ -245,14 +251,18 @@
                     return country.name;
                 }
                 return "";
-            }
-
+            },
         },
         mounted() {
             api.findById(this.$route.params.person_id, r => {
-                this.person = r.data;
                 // console.log(r.data);
                 // this.article.date = this.formatDate(this.article.date);
+
+                apiOrg.getAllOrgs(response => {
+                    this.person = r.data;
+                    this.allOrgs = response.data;
+                    // console.log(" O R G A ", response.data)
+                });
             });
         },
     }

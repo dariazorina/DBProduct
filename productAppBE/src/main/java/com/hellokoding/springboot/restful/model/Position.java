@@ -2,6 +2,8 @@ package com.hellokoding.springboot.restful.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,11 +19,13 @@ public class Position {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "person_id")
     @JsonIgnore
+    @ToString.Exclude
     private Person person;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "org_id")
     @JsonIgnore
+    @ToString.Exclude
     private Org org;
     private String position; //todo?
 

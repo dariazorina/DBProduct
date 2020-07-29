@@ -6,7 +6,6 @@ const AXIOS = axios.create({
     timeout: 1000
 });
 
-
 export default {
     getAllPersons(fn) {
         return AXIOS
@@ -14,6 +13,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
+                // if (error.response !== undefined)
                 if (error.response.status === 401) {
                     router.push('/login');
                 }
@@ -80,7 +80,6 @@ export default {
     searchPerson(searchKey, fn) {
         AXIOS.get(
             `/person/search?q=` + encodeURIComponent(searchKey)
-
         ).then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response;
