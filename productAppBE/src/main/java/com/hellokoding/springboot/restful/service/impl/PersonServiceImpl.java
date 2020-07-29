@@ -193,6 +193,8 @@ public class PersonServiceImpl implements PersonService {
         person.setSurname(personDto.getSurname());
         person.setName(personDto.getName());
         person.setPatronymic(personDto.getPatronymic());
+        person.setBirthYear(personDto.getBirthYear());
+        person.setDeathYear(personDto.getDeathYear());
         person.setSurnameEng(personDto.getSurnameEng());
         person.setNameEng(personDto.getNameEng());
         person.setSurnameRus(personDto.getSurnameRus());

@@ -27,6 +27,8 @@
                 <!--                <th class='tdAlignLeft'>Surname</th>-->
                 <!--                <th class='tdAlignLeft'>Name</th>-->
                 <!--                <th class='tdAlignLeft'>Movement</th>-->
+                <th class='tdAlignLeft'>Год рождения</th>
+                <th class='tdAlignLeft'>Год смерти</th>
                 <th class='tdAlignLeft'>Страна</th>
                 <th class='tdAlignLeft'>Город</th>
                 <th class='tdAlignLeft'>Должность</th>
@@ -47,7 +49,9 @@
 
                 <td class='tdAlignLeft'>{{person.name}}</td>
                 <td class='tdAlignLeft'>{{person.surnameRus }}</td>
-                <td class='tdAlignLeft'>{{person.nameRus }}</td>
+                <td class='tdAlignLeft'>{{person.nameRus}}</td>
+                <td class='tdAlignLeft'>{{person.birthYear}}</td>
+                <td class='tdAlignLeft'>{{person.deathYear}}</td>
                 <td class='tdAlignLeft'>{{showCountry(person.country)}}</td>
                 <!--                <td class='tdAlignLeft'>{{person.surnameEng }}</td>-->
                 <!--                <td class='tdAlignLeft'>{{person.nameEng }}</td>-->

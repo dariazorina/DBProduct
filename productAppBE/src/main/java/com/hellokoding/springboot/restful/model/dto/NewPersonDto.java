@@ -5,7 +5,6 @@ import com.hellokoding.springboot.restful.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 //just Person Dto
 public class NewPersonDto implements Comparable<NewPersonDto> {
 
@@ -24,21 +23,17 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private String description;
     private String miscellany;
 
-//    private List<PositionDto> occupationList;
-    //private List<String> occupationList;
-    //private List<Integer> org_idList;
+    private Integer birthYear;
+    private Integer deathYear;
 
-    //    private List<Position> positionList;
     private List<UrlLink> linkList;
-    private List<String> orgList;
     private List<String> hashtagList;
-
     private List<PositionDto> testList;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> orgList, List<String> hashtagList, List<PositionDto> testList) {
+    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -49,15 +44,13 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameEng = nameEng;
         this.country_id = country_id;
         this.settlement = settlement;
-//        this.occupationList = occupationList;
-//        this.org_idList = org_idList;
         this.description = description;
         this.miscellany = miscellany;
         this.linkList = linkList;
-        this.orgList = orgList;
         this.hashtagList = hashtagList;
         this.testList = testList;
-
+        this.birthYear = bYear;
+        this.deathYear = dYear;
     }
 
     public NewPersonDto(Person p) {
@@ -71,47 +64,17 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameEng = p.getNameEng();
         this.country = p.getCountry();
         this.settlement = p.getSettlement();
-
-        //this.orgList = p.getOrgList();
-//        this.org_idList = new ArrayList<>();
-
         this.description = p.getDescription();
         this.miscellany = p.getMiscellany();
         this.linkList = p.getLinkList();
-
-        this.orgList = new ArrayList<>();
-        for (Org org : p.getOrgList())
-                this.orgList.add(org.getName());
+        this.birthYear = p.getBirthYear();
+        this.deathYear = p.getDeathYear();
 
         this.hashtagList = new ArrayList<>();
         for (PersonHashtag pers: p.getHashtagList()) {
             if (pers.getHashtag().equals(pers.getAssigned_hashtag()))
                 this.hashtagList.add(pers.getHashtag().getContent());
         }
-
-//        this.testList = new ArrayList<>();
-//        for (PersonHashtag pers: p.getHashtagList()) {
-//            if (pers.getHashtag().equals(pers.getAssigned_hashtag()))
-//                this.testList.add(pers.getHashtag().getContent());
-//        }
-
-//        this.positionList = new ArrayList<>();
-//        for (Position pos : p.getOccupation()) {
-//            this.positionList.add(pos.getPosition());
-//        }
-
-
-//        this.occupationList = new ArrayList<>();
-//
-//        PositionDto posDto;
-//        for (Position pos : p.getOccupation()){
-//            posDto = new PositionDto();
-//            posDto.setOrgId(pos.getOrg().getId());
-//            posDto.setPosition(pos.getPosition());
-//
-//            this.occupationList.add(posDto);
-//        }
-
 
         this.testList = new ArrayList<>();
 
@@ -213,22 +176,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.settlement = settlement;
     }
 
-//    public List<String> getOccupationList() {
-//        return occupationList;
-//    }
-//
-//    public void setOccupationList(List<String> occupationList) {
-//        this.occupationList = getOccupationList();
-//    }
-
-//    public List<Integer> getOrg_idList() {
-//        return org_idList;
-//    }
-//
-//    public void setOrg_idList(List<Integer> org_idList) {
-//        this.org_idList = org_idList;
-//    }
-
     public String getDescription() {
         return description;
     }
@@ -243,14 +190,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public void setLinkList(List<UrlLink> linkList) {
         this.linkList = linkList;
-    }
-
-    public List<String> getOrgList() {
-        return orgList;
-    }
-
-    public void setOrgList(List<String> orgList) {
-        this.orgList = orgList;
     }
 
     public List<String> getHashtagList() {
@@ -277,6 +216,21 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.miscellany = miscellany;
     }
 
+    public Integer getBirthYear() {
+        return birthYear;
+    }
+
+    public void setBirthYear(Integer birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public Integer getDeathYear() {
+        return deathYear;
+    }
+
+    public void setDeathYear(Integer deathYear) {
+        this.deathYear = deathYear;
+    }
 
     @Override
     public boolean equals(Object obj) {

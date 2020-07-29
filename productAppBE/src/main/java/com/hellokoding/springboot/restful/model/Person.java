@@ -36,6 +36,12 @@ public class Person {
     @Column(name = "name_eng")
     private String nameEng;
 
+    @Column(name = "birth_year")
+    private Integer birthYear;
+
+    @Column(name = "death_year")
+    private Integer deathYear;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")//, insertable = false, updatable = false)
 //    @JoinColumn(name = "country_id", nullable = false)
@@ -54,13 +60,6 @@ public class Person {
             joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
-
-    @ManyToMany
-    @JoinTable(
-            name = "org_actor",
-            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
-    private List<Org> orgList;
 
     private String description;
 //    @Column(name = "photo")

@@ -18,23 +18,6 @@
                 <div class="col-sm-10">
                     <span class="float-left"> {{showSurname()}}</span></div>
             </div>
-            <!--        <div class="row">-->
-            <!--            <div class="col-sm-2 back1">-->
-            <!--                <div class="cellTitle"><span class="float-left">Фамилия на русском</span></div>-->
-            <!--            </div>-->
-            <!--            <div class="col-sm-10 back1"><span-->
-            <!--                    class="float-left"> {{ person.surnameRus }}</span>-->
-            <!--            </div>-->
-            <!--        </div>-->
-            <!--        <div class="row">-->
-            <!--            <div class="col-sm-2">-->
-            <!--                <div class="cellTitle"><span class="float-left">Фамилия на английском</span></div>-->
-            <!--            </div>-->
-            <!--            <div class="col-sm-10"><span-->
-            <!--                    class="float-left"> {{person.surnameEng}}</span>-->
-            <!--            </div>-->
-            <!--        </div>-->
-
 
             <!--//////////////////////////////////////////////////////////////////-->
             <div class="row">
@@ -47,24 +30,6 @@
                 </div>
             </div>
 
-            <!--        <div class="row">-->
-            <!--            <div class="col-sm-2">-->
-            <!--                <div class="cellTitle"><span class="float-left">Имя на русском</span></div>-->
-            <!--            </div>-->
-            <!--            <div class="col-sm-10"><span-->
-            <!--                    class="float-left"> {{person.nameRus}}</span>-->
-            <!--            </div>-->
-            <!--        </div>-->
-
-            <!--        <div class="row">-->
-            <!--            <div class="col-sm-2 back1">-->
-            <!--                <div class="cellTitle"><span class="float-left">Имя на английском</span></div>-->
-            <!--            </div>-->
-            <!--            <div class="col-sm-10 back1"><span-->
-            <!--                    class="float-left"> {{person.nameEng}}</span>-->
-            <!--            </div>-->
-            <!--        </div>-->
-
             <!--        //////////////////////////////////////////////////////////////////////-->
             <div class="row">
                 <div class="col-sm-2">
@@ -72,6 +37,25 @@
                         <span class="float-left">Отчество</span></div>
                 </div>
                 <div class="col-sm-10"><span class="float-left"> {{person.patronymic}}</span>
+                </div>
+            </div>
+
+<!--            ////////////////////////////////////////////////////////////////-->
+            <div class="row">
+                <div class="col-sm-2 back1">
+                    <div class="cellTitle">
+                        <span class="float-left">Год рождения</span></div>
+                </div>
+                <div class="col-sm-10 back1"><span class="float-left"> {{person.birthYear}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="cellTitle">
+                        <span class="float-left">Год смерти</span></div>
+                </div>
+                <div class="col-sm-10"><span class="float-left"> {{person.deathYear}}</span>
                 </div>
             </div>
 
@@ -183,8 +167,7 @@
         data() {
             return {
                 persons: [],
-                person: {orgList: [], country: {}, hashtagList: [], linkList: []},
-                orgList: [],
+                person: {country: {}, hashtagList: [], linkList: []},
                 hashtagList: [],
                 linkList: [],
                 allOrg: [],
@@ -213,7 +196,6 @@
 
             goURL(url) {
                 location.href = url;
-                // console.log("123");
             },
 
             showSurname() {
@@ -256,7 +238,6 @@
         mounted() {
             api.findById(this.$route.params.person_id, r => {
                 // console.log(r.data);
-                // this.article.date = this.formatDate(this.article.date);
 
                 apiOrg.getAllOrgs(response => {
                     this.person = r.data;
