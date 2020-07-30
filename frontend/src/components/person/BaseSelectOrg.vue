@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-6" style="background-color: transparent">
+    <div class="col-md-4" style="background-color: transparent">
         <label>Организация</label>
         <b-form-select v-model="selectedOrg" class="mb-3">
             <option v-for="org in allOrgs" v-bind:value="org.id">{{org.name}}</option>

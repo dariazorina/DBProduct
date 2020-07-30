@@ -10,6 +10,11 @@
                     @keydown.enter="addTodo"
             />
 
+            <BaseInputCommentText
+                    v-model="newCommentText"
+                    @keydown.enter="addTodo"
+            />
+
             <ul v-if="todos.length">
                 <OccupationListItem
                         v-for="todo in todos"
@@ -29,11 +34,13 @@
     import BaseInputOccupationText from './BaseInputOccupationText.vue'
     import OccupationListItem from './OccupationListItem.vue'
     import BaseSelectOrg from "./BaseSelectOrg";
+    import BaseInputCommentText from "./BaseInputCommentText";
 
     let nextTodoId = 1;
 
     export default {
         components: {
+            BaseInputCommentText,
             BaseInputOccupationText, OccupationListItem, BaseSelectOrg
         },
         props: {
@@ -48,6 +55,7 @@
                 selected: null,
                 selectedOrg: '',
                 newTodoText: '',
+                newCommentText: '',
                 todos: [
                     // {
                     //     id: nextTodoId++,
@@ -69,19 +77,20 @@
         },
         methods: {
             updateOrg(selectedOrg) {
-                // console.log("LIST SELCTED ORG = = = = =", selectedOrg);
                 this.selectedOrg = selectedOrg;
             },
             addTodo() {
                 // console.log("newTodoText = = = = =", this.newTodoText, this.selectedOrg);
-                const trimmedText = this.newTodoText.trim();
-                if (trimmedText && this.selectedOrg) {
+                const trimmedPositionText = this.newTodoText.trim();
+                const trimmedCommentText = this.newCommentText.trim();
 
+                if (trimmedPositionText && this.selectedOrg) {
                     let currentOccupation = {
                         "id": nextTodoId++,
                         "org": this.allOrgs.find(org => org.id === this.selectedOrg).name,
                         "orgId": this.selectedOrg,
-                        "position": trimmedText
+                        "position": trimmedPositionText,
+                        "comment": trimmedCommentText
                     };
 
                     this.$emit("update-occupation", currentOccupation);
@@ -93,7 +102,9 @@
                     // });
 
                     this.newTodoText = '';
+                    this.newCommentText = '';
                     this.selected = null;
+                    this.selectedOrg = null;
 
                     this.componentKey += 1;  //to rerender org selection element
                 }

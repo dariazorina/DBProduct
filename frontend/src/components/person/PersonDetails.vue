@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-<!--            ////////////////////////////////////////////////////////////////-->
+            <!--            ////////////////////////////////////////////////////////////////-->
             <div class="row">
                 <div class="col-sm-2 back1">
                     <div class="cellTitle">
@@ -191,7 +191,12 @@
             },
 
             showOrgAndPosition(occ) {
-                return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+                if (occ.comment === null) {
+                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+                }
+                else {
+                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + " / " + occ.comment + "; ";
+                }
             },
 
             goURL(url) {

@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-4">
-        <label>Должность</label>
+        <label>Комментарий</label>
         <div class="form-row" style="background-color: transparent">
             <div class="col-md-12" style="background-color: transparent; margin-top: -12px">
                 <input class="form-control" type="text" :value="value" v-on="listeners" placeholder="Для сохранения введенных данных нажмите 'Enter'"/>

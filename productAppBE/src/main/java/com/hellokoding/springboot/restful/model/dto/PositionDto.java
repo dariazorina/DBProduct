@@ -5,13 +5,16 @@ public class PositionDto implements Comparable<PositionDto> {
 
     private Integer orgId;
     private String position;
+    private String comment;
+
 
     public PositionDto() {
     }
 
-    public PositionDto(Integer orgId, String position) {
+    public PositionDto(Integer orgId, String position, String comment) {
         this.orgId = orgId;
         this.position = position;
+        this.comment = comment;
     }
 
     public Integer getOrgId() {
@@ -28,6 +31,14 @@ public class PositionDto implements Comparable<PositionDto> {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override

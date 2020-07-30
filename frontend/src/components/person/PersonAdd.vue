@@ -96,7 +96,7 @@
         </form>
 
         <div style="background-color: transparent; margin-left: 30px">
-            <b-card class="col-md-6" style="background-color: #f8f8f8; font-size: small; text-align: left">
+            <b-card class="col-md-9" style="background-color: #f8f8f8; font-size: small; text-align: left">
                 <OccupationList :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>
             </b-card>
         </div>
@@ -243,7 +243,7 @@
             },
             updateOccupation(occupation) {
                 this.occupationWithIndexList.push(occupation);
-                console.log("OCCUPATION PUSH", occupation.orgId, occupation.position);
+                console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
             },
 
             addHashtagToList(hashtag) {//from HashtagList
@@ -315,9 +315,10 @@
                 for (let i = 0; i < this.occupationWithIndexList.length; i++) {
                     let a = {
                         "orgId": this.occupationWithIndexList[i].orgId,
-                        "position": this.occupationWithIndexList[i].position
+                        "position": this.occupationWithIndexList[i].position,
+                        "comment": this.occupationWithIndexList[i].comment
                     };
-                    console.log("CREATE PERSON A: ", a);
+                    console.log("CREATE PERS    ON A: ", a);
                     this.person.testList.push(a);
                 }
 

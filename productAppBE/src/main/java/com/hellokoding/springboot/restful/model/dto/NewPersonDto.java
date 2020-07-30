@@ -83,6 +83,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             posDto = new PositionDto();
             posDto.setOrgId(pos.getOrg().getId());
             posDto.setPosition(pos.getPosition());
+            posDto.setComment(pos.getComment());
 
             this.testList.add(posDto);
         }

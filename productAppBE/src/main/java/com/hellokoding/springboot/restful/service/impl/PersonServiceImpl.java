@@ -215,6 +215,7 @@ public class PersonServiceImpl implements PersonService {
                 position.setOrg(orgRepository.findById(orgId).get());
                 position.setPerson(person);
                 position.setPosition(posDto.getPosition());
+                position.setComment(posDto.getComment());
 
                 occList.add(position);
             }

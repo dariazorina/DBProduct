@@ -27,7 +27,8 @@ public class Position {
     @JsonIgnore
     @ToString.Exclude
     private Org org;
-    private String position; //todo?
+    private String position;
+    private String comment;
 
 
     @Override

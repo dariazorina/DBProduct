@@ -1,7 +1,7 @@
 <template>
     <div style="padding-left: -50px; background-color: transparent">
         <li>
-            {{ todo.org}},  {{ todo.position }}
+            {{ todo.org}},  {{ todo.position }},  {{todo.comment}}
             <button class="btn btn-link" style="background-color: #EAF2F5" @click="$emit('remove', todo.id)">
                 delete
             </button>
