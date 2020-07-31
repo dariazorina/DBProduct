@@ -19,7 +19,7 @@
             <div class="form-group row  align-items-center">
                 <label for="add-code" class="col-1 col-form-label labelInCreation">Код</label>
                 <div class="col-4">
-                    <input type="number" class="form-control" id="add-code" v-model="country.code"/>
+                    <input type="number" class="form-control" id="add-code" v-model ="country.code" placeholder="Three digits only" min="1" max="999"/>
                 </div>
             </div>
 
