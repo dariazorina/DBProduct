@@ -119,11 +119,96 @@
             </div>
 
             <div class="form-row">
-                <div class="col-md-10">
-                    <label for="add-description">Форма добавления хештегов</label>
-                    <b-card style="width: 80%">
-                        <hashtag-list :commonProp="test" @addHashtagToList="addHashtagToList($event)"/>
-                    </b-card>
+
+                <div class="col-md-7">
+<!--                <div class="col-md-10">-->
+<!--                    <label for="add-description">Форма добавления хештегов</label>-->
+<!--                    <b-card style="width: 80%">-->
+<!--                        <hashtag-list :commonProp="test" @addHashtagToList="addHashtagToList($event)"/>-->
+<!--                    </b-card>-->
+
+
+                    <label>Форма добавления хештегов</label>
+                    <div class="col-12" style="background-color: transparent; margin-left: -15px">
+                        <b-card style="background-color: transparent; width: 88%">
+<!--                            todo? 88%-->
+                            <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
+                                <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
+                                    <v-sheet style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
+                                        <v-text-field label="search"
+                                                      v-model="searchHashtag"
+                                                      filled>
+                                        </v-text-field>
+                                    </v-sheet>
+
+                                    <v-container
+                                            id="scroll-target"
+                                            style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
+                                            class="overflow-y-auto">
+                                        <v-treeview
+                                                :items="filteredElements"
+                                                :open="filteredKeys"
+                                                item-key="name"
+
+                                                activatable
+                                                color="warning"
+                                                dense
+                                                :open-all="true"
+
+                                                return-object
+                                                hoverable
+                                                ref="treeviewref">
+
+                                            <template slot="label" slot-scope="{ item }">
+                                                <a @click="onHashtagSelect(item)">{{ item.name }}</a>
+                                            </template>
+
+                                        </v-treeview>
+                                    </v-container>
+                                </v-col>
+
+                                <v-divider vertical
+                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
+                                <v-col
+                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+
+                                    <v-container
+                                            id="scroll-target"
+                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"
+                                            class="overflow-y-auto">
+
+                                        <template v-if="!selectedHashtag.length">
+                                            No nodes selected.
+                                        </template>
+
+                                        <template v-else>
+                                            <div v-for="node in selectedHashtag">
+                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">
+                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>
+                                                </v-btn>
+                                                {{ node }}
+                                            </div>
+
+                                            <div class="form-group row" style="padding-top: 30px">
+
+                                                <button type="button" style="margin-right: 20px; margin-left: 15px"
+                                                        @click="addHashtagToArticleList()"
+                                                        class="btn btn-success">Add
+                                                </button>
+
+                                                <button type="button" class="btn btn-info"
+                                                        @click="clearAllSelectedTags()">Clear All
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </v-container>
+                                </v-col>
+                            </v-row>
+
+                        </b-card>
+                    </div>
+
+
                 </div>
             </div>
 
@@ -182,13 +267,14 @@
     import router from "./../../router";
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
-    import HashtagList from "./../hashtag/HashtagList.vue";
+  //  import HashtagList from "./../hashtag/HashtagList.vue";
     import OccupationList from "./OccupationList";
+    import apiHashtag from "./../hashtag/hashtag-api";
 
     export default {
         components: {
             OccupationList,
-            HashtagList,
+            //HashtagList,
         },
         name: 'person-add',
         vuetify: new Vuetify(),
@@ -201,6 +287,14 @@
             isLoading: false,
             model: null,
             search: null,
+            searchHashtag: '',
+            tags: [],
+            allTags: [],
+            tagsTree: [],
+            selectionType: 'independent',
+            selectedHashtag: [],
+            hashtagTree: [],
+            hashtagFlatTree: [],
 
             selected: '',
             selectedM: null,
@@ -241,14 +335,82 @@
                     this.years.push(y);
                 }
             },
+
             updateOccupation(occupation) {
                 this.occupationWithIndexList.push(occupation);
                 console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
             },
 
-            addHashtagToList(hashtag) {//from HashtagList
-                this.tags = hashtag;
+            removeSelectedHashtag(hash) {
+                const index = this.selectedHashtag.indexOf(hash);
+                if (index > -1) {
+                    this.selectedHashtag.splice(index, 1);
+                }
             },
+
+            onHashtagSelect(item) {
+                const index = this.selectedHashtag.indexOf(item.name);
+                if (index === -1) {
+                    this.selectedHashtag.push(item.name);
+                }
+            },
+
+            buildTree() {
+                //this.hashtagTree = this.createTree(this.allTags, 0);
+                this.hashtagFlatTree = this.createFlatTree(this.allTags);
+                // console.log("CREATED TREE", this.hashtagTree);
+                // console.log("FLAT TREE", this.hashtagFlatTree);
+            },
+
+            createFlatTree(treeData) {
+                let flatTree = [];
+                for (let i = 0; i < treeData.length; i++) {
+                    let newItem = {
+                        id: treeData[i].id,
+                        name: treeData[i].content,
+                        children: [],
+                    };
+                    for (let j = 0; j < treeData.length; j++) {
+                        if (treeData[j].parentId === treeData[i].id) {
+
+                            let refNewItem = {
+                                id: treeData[j].id,
+                                name: null,
+                                children: null,
+                            };
+                            newItem.children.push(refNewItem);
+                        }
+                    }
+                    flatTree.push(newItem);
+                }
+                return flatTree;
+            },
+
+            clearAllSelectedTags() {
+                this.selectedHashtag = [];
+            },
+
+            // addHashtagToArticleList(hashtag) {//from HashtagList
+            //     this.tags = hashtag;
+            // },
+
+            addHashtagToArticleList() {
+                let tagAlreadyAdded = 0;
+                this.selectedHashtag.forEach((item, i) => {
+                    this.tags.forEach((tag, j) => {
+                        if (tag === item)
+                            tagAlreadyAdded = 1;
+                    });
+                    if (tagAlreadyAdded == 0)
+                        this.tags.push(item);
+                });
+                this.selectedHashtag = [];
+            },
+
+
+            // addHashtagToList(hashtag) {//from HashtagList
+            //     this.tags = hashtag;
+            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -346,6 +508,12 @@
                 // console.log(" O R G A ", response.data)
             });
 
+            apiHashtag.getAllHashtags(response => {
+                this.allTags = response.data;
+                this.buildTree();
+                // console.log(response.data)
+            });
+
             // api.getAllMovements().then(response => {
             //     this.allMovements = response.data;
             //     console.log(response.data)
@@ -364,6 +532,154 @@
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
                 })
+            },
+
+            searchLength() {
+                return this.searchHashtag.length
+            },
+
+            filteredElements() {
+                let tree = [];
+                let resultIds = [];
+
+                let touched = false;
+                let resultSearchTree = []; //this.hashtagFlatTree.slice(); //this.hashtagFlatTree.map((x) => x);
+
+                //the way for deep copy
+                resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree));
+
+                do {
+
+                    // remove leaves which do not match search string
+                    let toRemove = [];
+                    touched = false;
+
+                    resultSearchTree.forEach((node, id) => {
+                        const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+                        if ((index === false) && (node.children.length === 0)) {
+                            // console.log("node.children.length (to remove)", node.children.length, node.name);
+                            toRemove.push(node.id);
+                            touched = true;
+                        } else {
+                            // console.log("node.children.length (to stay)", node.children.length, node.name);
+                        }
+                    });
+
+                    for (let i = 0; i < toRemove.length; i++) {
+                        let index = resultSearchTree.findIndex(x => x.id === toRemove[i]);
+                        //   console.log("INDEX * * * * *", index, toRemove[i]);
+                        if (index >= 0) {
+                            resultSearchTree.splice(index, 1);
+                        }
+                    }
+
+                    // remove references to deleted leaves
+                    let treeSize = resultSearchTree.length;
+                    for (let i = 0; i < treeSize; i++) {
+                        let newChildren = [];
+                        let currentItem = resultSearchTree[i];
+
+                        for (let j = 0; j < currentItem.children.length; j++) {
+
+                            let childWasFound = false;
+                            for (let k = 0; k < treeSize; k++) {
+                                if ((resultSearchTree[k].id === currentItem.children[j].id)) {
+                                    newChildren.push(currentItem.children[j]);
+                                    childWasFound = true;
+                                }
+                            }//for k
+
+                            if (!childWasFound) {
+                                touched = true;
+                                //   console.log("deleted ref", currentItem.children[j].id);
+                            }
+                        }//for j
+                        resultSearchTree[i].children = newChildren;
+                    }
+
+                } while (touched);
+
+
+                //create normal tree from flat tree
+                let movedChildren = [];
+                do {
+                    movedChildren = [];
+
+                    let treeSize = resultSearchTree.length;
+                    for (let i = 0; i < treeSize; i++) {
+
+                        let currentItem = resultSearchTree[i];
+                        let removedChildrenAlreadyContains = false;
+                        let childrenQ = currentItem.children.length;
+
+                        for (let j = 0; j < movedChildren.length; j++) {
+                            if (movedChildren[j] === currentItem.id)
+                                removedChildrenAlreadyContains = true;
+                        }
+
+                        if (!removedChildrenAlreadyContains) {
+                            for (let j = 0; j < childrenQ; j++) {
+                                let child = currentItem.children[j];
+
+                                if ((child.name == null)) {
+                                    let index = resultSearchTree.findIndex(x => x.id === child.id);
+                                    if (index >= 0) {
+                                        //if (resultSearchTree[index].children.length === 0) {
+                                        let isChildrenNull = false;
+
+                                        if (resultSearchTree[index].children !== null) {
+                                            for (let k = 0; k < resultSearchTree[index].children.length; k++) {
+                                                if (resultSearchTree[index].children[k].name === null) {
+                                                    isChildrenNull = true;
+                                                }
+                                            }//for k
+
+                                            if (!isChildrenNull) {
+                                                child.name = resultSearchTree[index].name;
+                                                child.children = resultSearchTree[index].children;
+                                                movedChildren.push(child.id);
+                                            }
+                                        }//if child.children
+                                    }
+                                }
+                            }//for j
+                        }//if contains
+                    }
+
+                    for (let j = 0; j < movedChildren.length; j++) {
+                        let index = resultSearchTree.findIndex(x => x.id === movedChildren[j]);
+                        // console.log("I-N-D-E-X-======", index, movedChildren[j]);
+                        if (index >= 0) {
+                            resultSearchTree.splice(index, 1);
+                        }
+                    }
+                    //console.log("-----------------------------------------------");
+                } while (movedChildren.length > 0);
+                return resultSearchTree;
+            },
+
+            filteredKeys() {
+                if (this.searchHashtag != null)   //for start view without search
+                    if (this.searchLength === 0) {
+                        return this.filteredElements.map((top) => {
+                            return top.name
+                        })
+                    } else {
+                        return this.filteredElements;
+                    }
+            }
+        },
+
+        ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
+        watch: {
+            searchHashtag() {
+                this.$nextTick(() => {
+                    if (this.searchLength === 0) {
+                        this.$refs.treeviewref.updateAll(false);
+                    } else {
+                        this.$refs.treeviewref.updateAll(true);
+                    }
+                });
             },
         },
     }
