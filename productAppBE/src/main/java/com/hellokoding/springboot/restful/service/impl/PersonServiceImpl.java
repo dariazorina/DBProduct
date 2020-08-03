@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 //import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Random;
 
 import java.util.*;
 
@@ -38,6 +39,18 @@ public class PersonServiceImpl implements PersonService {
 
         List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
         List<Person> allPerson = personRepository.findAll();
+
+        // hack for org creation, for relase
+//        Random objGenerator = new Random();
+//        int randomNumber = objGenerator.nextInt(100);
+//        Org newOrg = new Org();
+//        String name = "Org " + randomNumber;
+//        newOrg.setName(name);
+//
+//        Country country = new Country();
+//        newOrg.setCountry(country);
+//        newOrg.getCountry().setId(1);
+//        orgRepository.save(newOrg);
 
         NewPersonDto currentNewDtoP;
         for (Person p : allPerson) {
