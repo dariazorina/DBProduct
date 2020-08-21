@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.model.dto;
 import com.hellokoding.springboot.restful.model.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 //just Person Dto
@@ -29,11 +30,14 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private List<UrlLink> linkList;
     private List<String> hashtagList;
     private List<PositionDto> testList;
+    private String photo;
+//    private byte[] photo;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear) {
+    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear, String photo) {
+//    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear, byte[] photo) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -51,6 +55,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.testList = testList;
         this.birthYear = bYear;
         this.deathYear = dYear;
+        this.photo = photo;
     }
 
     public NewPersonDto(Person p) {
@@ -87,6 +92,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
             this.testList.add(posDto);
         }
+
+        if (p.getPhoto() != null) {
+            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
+            this.photo = encodedString;
+        }
+
     }
 
     public Integer getId() {
@@ -231,6 +242,23 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public void setDeathYear(Integer deathYear) {
         this.deathYear = deathYear;
+    }
+
+//    public byte[] getPhoto() {
+//        return photo;
+//    }
+//
+//    public void setPhoto(byte[] photo) {
+//        this.photo = photo;
+//    }
+
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override

@@ -28,6 +28,15 @@ export default {
     //     return AXIOS.get(`/movement`);
     // },
 
+    // getImage(data, config) {
+    //     AXIOS
+    //         .put('/person', data, config)
+    //         .then(response => {
+    //                 console.log('image upload response > ', response)
+    //             }
+    //         )
+    // },
+
     create(person, fn) {
         AXIOS
             .post('/person', person)

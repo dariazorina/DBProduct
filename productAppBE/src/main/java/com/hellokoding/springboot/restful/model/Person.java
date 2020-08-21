@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+//import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -64,6 +65,17 @@ public class Person {
     private String description;
 //    @Column(name = "photo")
 //    private byte[] photo;
+
+//    columnDefinition="BLOB"
+//    @Lob  //was an error bytea - bigint
+    @Column(name = "photo")//, columnDefinition="mediumblob")
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] photo;
+
+
+//    @Column(name = "image")
+//    private Blob image;
+
 
 //    @ManyToMany
 //    @JoinTable(
