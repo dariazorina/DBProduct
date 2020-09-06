@@ -86,6 +86,16 @@
                     <a class="btn btn-warning btn-sm mr-2">
                         <router-link :to="{name: 'person-edit', params: {person_id: person.id}}">Edit</router-link>
                     </a>
+
+
+                    <v-btn text icon x-small>
+                        <a>
+                            <router-link :to="{name: 'person-add', params: {person_id: person.id}}">
+                                <v-icon style="color: green">mdi-pencil</v-icon>
+                            </router-link>
+                        </a>
+                    </v-btn>
+
                     <!--                    <a class="btn btn-danger btn-sm">-->
                     <!--                        <router-link :to="{name: 'person-delete', params: {person_id: person.id}}">Delete</router-link>-->
                     <!--                    </a>-->

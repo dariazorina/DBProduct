@@ -2,13 +2,28 @@
     <v-app id="inspire">
         <div>
             <div class="form-group row">
-                <div class="col-2 col-form-label">
+                <!--                <div class="col-2 col-form-label">-->
+                <!--                    <p class="pageCreateTitle">Add New Person</p>-->
+                <!--                </div>-->
+
+                <!--                <div class="unprotected" v-if="errorFlag">-->
+                <!--                    <h5>Error: {{errors}}</h5>-->
+                <!--                </div>-->
+
+
+                <div v-if="editMode" class="col-5 col-form-label">
+                    <p class="pageEditTitle">Edit Person <i>{{person.surname}}</i></p>
+                </div>
+
+                <div v-else="editMode" class="col-2 col-form-label">
                     <p class="pageCreateTitle">Add New Person</p>
                 </div>
 
                 <div class="unprotected" v-if="errorFlag">
                     <h5>Error: {{errors}}</h5>
                 </div>
+
+
             </div>
         </div>
 
@@ -75,7 +90,8 @@
                         <div class="col-md-3">
                             <label>Страна</label>
                             <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">
-                                <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>
+                                <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}
+                                </option>
                             </b-form-select>
                             <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
@@ -101,40 +117,40 @@
                     <!--                    </div>-->
 
                     <div id="preview">
-<!--                        <div>-->
-<!--                            <img v-if="avatar.imageUrl" :src="avatar.imageUrl" :style="{ height: 200 +'px' }"/>-->
-<!--                        </div>-->
+                        <!--                        <div>-->
+                        <!--                            <img v-if="avatar.imageUrl" :src="avatar.imageUrl" :style="{ height: 200 +'px' }"/>-->
+                        <!--                        </div>-->
 
                         <!--                            <img v-if="avatar.imageUrl" :src="avatar.imageUrl" :style="{ height: 320+'px' }"/>-->
 
                         <img v-if="avatar.imageUrl" :src="avatar.imageUrl" @load="setHeight"
                              :style="{ height: imageHeight + 'px' }"/>
-<!--                        <div>{{imageHeight}}</div>-->
+                        <!--                        <div>{{imageHeight}}</div>-->
                     </div>
-                    <div  v-if="avatar.imageUrl" style="margin-top: 5px">
+                    <div v-if="avatar.imageUrl" style="margin-top: 5px">
                         <input type="file" accept="image/*" @change="onChange"/>
                     </div>
-                    <div  v-else style="margin-top: 30px">
+                    <div v-else style="margin-top: 30px">
                         <input type="file" accept="image/*" @change="onChange"/>
                     </div>
                 </div>
             </div>
 
             <!--            //////////////////////////////////////////////////////////////////////////////////////////////-->
-<!--            <div class="form-row" style="background-color: #ffe87c">-->
-<!--                <div class="col-md-3">-->
-<!--                    <label>Страна</label>-->
-<!--                    <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">-->
-<!--                        <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>-->
-<!--                    </b-form-select>-->
-<!--                    &lt;!&ndash;                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>&ndash;&gt;-->
-<!--                </div>-->
+            <!--            <div class="form-row" style="background-color: #ffe87c">-->
+            <!--                <div class="col-md-3">-->
+            <!--                    <label>Страна</label>-->
+            <!--                    <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">-->
+            <!--                        <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>-->
+            <!--                    </b-form-select>-->
+            <!--                    &lt;!&ndash;                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>&ndash;&gt;-->
+            <!--                </div>-->
 
-<!--                <div class="col-md-3">-->
-<!--                    <label for="add-settlement">Город</label>-->
-<!--                    <input class="form-control" id="add-settlement" v-model="person.settlement">-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--                <div class="col-md-3">-->
+            <!--                    <label for="add-settlement">Город</label>-->
+            <!--                    <input class="form-control" id="add-settlement" v-model="person.settlement">-->
+            <!--                </div>-->
+            <!--            </div>-->
         </form>
 
         <div style="background-color: transparent; margin-left: 30px">
@@ -373,6 +389,7 @@
             testList: [],
             person: {hashtagList: [], linkList: [], testList: []},
             years: [],
+            editMode: false,
             //     [
             //     "1990",
             //     "1991"
@@ -667,6 +684,53 @@
             //     //this.errors.push(error)
             //     console.log(error);
             // })
+
+            if (this.$route.params.person_id != null) {
+                console.log("EDIT MODE");
+                this.editMode = true;
+            }
+
+            if (this.editMode) {
+                api.findById(this.$route.params.person_id, r => {
+                    this.person = r.data;
+                    console.log("person EDIT!", this.person);
+
+                    this.selectedCountry = this.person.country.id;
+                    this.selectedBYear = this.person.birthYear;
+                    this.selectedDYear = this.person.deathYear;
+
+                    for (let i = 0; i < this.person.hashtagList.length; i++) {
+                        this.tags.push(this.person.hashtagList[i]);
+                    }
+
+                    for (let i = 0; i < this.person.linkList.length; i++) {
+                        this.links.push(this.person.linkList[i].content);
+                        // console.log("links!", this.person.linkList[i].content);
+                    }
+
+
+
+                    for (let i = 0; i < this.person.testList.length; i++) {
+                        let a = {
+                            "orgId": this.person.testList[i].orgId,
+                            "position": this.person.testList[i].position,
+                            "comment": this.person.testList[i].comment
+                        };
+                        console.log("GET PERS    ON A: ", a);
+                        this.occupationWithIndexList.push(a);
+                        this.updateOccupation(a);
+                    }
+
+                    this.avatar.imageBase64 = this.person.photo;
+
+
+
+
+
+
+
+                });
+            }
         },
         computed: {
             items() {

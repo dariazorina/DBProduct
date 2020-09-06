@@ -329,18 +329,19 @@ public class PersonServiceImpl implements PersonService {
 //        BufferedImage image = null;
 
 
-        String base64Image = personDto.getPhoto().split(",")[1];
-        byte[] imageByte;
-        try {
+        if (personDto.getPhoto() != null) {
+            String base64Image = personDto.getPhoto().split(",")[1];
+            byte[] imageByte;
+            try {
+                imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 
-            imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
-
-            // Converting a Base64 String into Image byte array
+                // Converting a Base64 String into Image byte array
 //            imageByte = Base64.getDecoder().decode(personDto.getPhoto());
-            person.setPhoto(imageByte);
+                person.setPhoto(imageByte);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
 //        byte[] imageByte;
