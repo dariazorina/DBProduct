@@ -336,10 +336,14 @@
             },
 
             showOrgAndPosition(occ) {
-                if (occ.comment === null) {
-                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+                if (occ.comment !== null) {
+                    if (occ.comment.length === 0) {
+                        return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+                    } else {
+                        return this.getOrgNameById(occ.orgId) + " / " + occ.position + " / " + occ.comment + "; ";
+                    }
                 } else {
-                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + " / " + occ.comment + "; ";
+                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
                 }
             },
 

@@ -187,7 +187,6 @@
                     <!--                        <hashtag-list :commonProp="test" @addHashtagToList="addHashtagToList($event)"/>-->
                     <!--                    </b-card>-->
 
-
                     <label>Форма добавления хештегов</label>
                     <div class="col-12" style="background-color: transparent; margin-left: -15px">
                         <b-card style="background-color: transparent; width: 88%">
@@ -672,42 +671,53 @@
 
                     apiOrg.getAllOrgs(response => {
                         this.allOrgs = response.data;
-                        console.log("all orgs!");
 
-                        if (this.editMode) {
-                            for (let i = 0; i < this.person.testList.length; i++) {
-                                 let a = {
-                                    "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
-                                    "orgId": this.person.testList[i].orgId,
-                                    "position": this.person.testList[i].position,
-                                    "comment": this.person.testList[i].comment
-                                };
-                                console.log("GET PERS    ON A: ", a);
-                                this.occupationWithIndexList.push(a);
-                            }
+                        for (let i = 0; i < this.person.testList.length; i++) {
+                            let a = {
+                                "id": i,
+                                "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
+                                "orgId": this.person.testList[i].orgId,
+                                "position": this.person.testList[i].position,
+                                "comment": this.person.testList[i].comment
+                            };
+                            // console.log("GET PERS    ON A: ", a);
+                            this.occupationWithIndexList.push(a);
                         }
                     });
                     this.avatar.imageBase64 = this.person.photo;
                 });
 
-            apiCountry.getAllCountries(response => {
-                this.allCountries = response.data;
-                // console.log(response.data)
-            });
+                apiCountry.getAllCountries(response => {
+                    this.allCountries = response.data;
+                    // console.log(response.data)
+                });
 
-            apiHashtag.getAllHashtags(response => {
-                this.allTags = response.data;
-                this.buildTree();
-                // console.log(response.data)
-            });
+                apiHashtag.getAllHashtags(response => {
+                    this.allTags = response.data;
+                    this.buildTree();
+                    // console.log(response.data)
+                });
 
-            // api.getAllMovements().then(response => {
-            //     this.allMovements = response.data;
-            //     console.log(response.data)
-            // }).catch(error => {
-            //     //this.errors.push(error)
-            //     console.log(error);
-            // })
+                // api.getAllMovements().then(response => {
+                //     this.allMovements = response.data;
+                //     console.log(response.data)
+                // }).catch(error => {
+                //     //this.errors.push(error)
+                //     console.log(error);
+                // })
+            } else {
+                apiOrg.getAllOrgs(response => {
+                    this.allOrgs = response.data;
+                });
+
+                apiCountry.getAllCountries(response => {
+                    this.allCountries = response.data;
+                });
+
+                apiHashtag.getAllHashtags(response => {
+                    this.allTags = response.data;
+                    this.buildTree();
+                });
             }
         },
         computed: {

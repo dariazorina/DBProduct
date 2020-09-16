@@ -17,7 +17,7 @@
 
             <ul v-if="todos.length">
                 <OccupationListItem
-                        v-for="todo in todos"
+                        v-for="todo in position"
                         :key="todo.id"
                         :todo="todo"
                         @remove="removeTodo"
@@ -82,7 +82,7 @@
                     };
 
                     this.$emit("update-occupation", currentOccupation);
-                   // this.todos.push(currentOccupation);
+                    // this.todos.push(currentOccupation);
 
                     this.newTodoText = '';
                     this.newCommentText = '';
@@ -94,10 +94,17 @@
             },
 
             removeTodo(idToRemove) {
-                this.todos = this.todos.filter(todo => {
-                    return todo.id !== idToRemove
-                })
+                for (let i = 0; i < this.todos.length; i++) {
+                    if (this.todos[i].id === idToRemove) {
+                        this.todos.splice(i, 1);
+                    }
+                }
             }
-        }
+        },
+        computed: {
+            position() {
+                return this.todos;
+            }
+        },
     }
 </script>
