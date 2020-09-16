@@ -4,13 +4,11 @@ import Login from '@/components/Login'
 
 import PersonList from '@/components/person/PersonList'
 import PersonAdd from '@/components/person/PersonAdd'
-import PersonEdit from '@/components/person/PersonEdit'
 import PersonDetails from '@/components/person/PersonDetails'
 import PersonDelete from '@/components/person/PersonDelete'
 
 import ArticleList from '@/components/article/ArticleList'
 import ArticleDetails from '@/components/article/ArticleDetails'
-import ArticleEdit from '@/components/article/ArticleEdit'
 import ArticleDelete from '@/components/article/ArticleDelete'
 import ArticleAdd from '@/components/article/ArticleAdd'
 
@@ -61,7 +59,7 @@ const router = new Router({
 
         {path: '/person', component: PersonList},
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
-        {path: '/person/:person_id/edit', component: PersonEdit, name: 'person-edit'},
+        {path: '/person/:person_id/edit', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/delete', component: PersonDelete, name: 'person-delete'},
         {path: '/person/:person_id/details', component: PersonDetails, name: 'person-details'},
 

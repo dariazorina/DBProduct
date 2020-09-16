@@ -83,9 +83,9 @@
 
 
                 <td>
-                    <a class="btn btn-warning btn-sm mr-2">
-                        <router-link :to="{name: 'person-edit', params: {person_id: person.id}}">Edit</router-link>
-                    </a>
+<!--                    <a class="btn btn-warning btn-sm mr-2">-->
+<!--                        <router-link :to="{name: 'person-add', params: {person_id: person.id}}">Edit</router-link>-->
+<!--                    </a>-->
 
 
                     <v-btn text icon x-small>

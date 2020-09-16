@@ -47,6 +47,10 @@
             allOrgs: {
                 required: true
             },
+            todos: {
+                type: Array,
+                required: true
+            },
         },
         data() {
             return {
@@ -56,23 +60,7 @@
                 selectedOrg: '',
                 newTodoText: '',
                 newCommentText: '',
-                todos: [
-                    // {
-                    //     id: nextTodoId++,
-                    //     text: 'Learn Vue',
-                    //     org: 'Org1'
-                    // },
-                    // {
-                    //     id: nextTodoId++,
-                    //     text: 'Learn about single-file components',
-                    //     org: 'Org2'
-                    // },
-                    // {
-                    //     id: nextTodoId++,
-                    //     text: 'Fall in love',
-                    //     org: 'Org3'
-                    // }
-                ]
+                // todos: []
             }
         },
         methods: {
@@ -94,12 +82,7 @@
                     };
 
                     this.$emit("update-occupation", currentOccupation);
-                    this.todos.push(currentOccupation);
-
-                    // this.todos.push({
-                    //     id: nextTodoId++,
-                    //     text: trimmedText
-                    // });
+                   // this.todos.push(currentOccupation);
 
                     this.newTodoText = '';
                     this.newCommentText = '';

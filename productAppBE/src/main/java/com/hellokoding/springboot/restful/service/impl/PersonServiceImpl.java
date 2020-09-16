@@ -157,15 +157,7 @@ public class PersonServiceImpl implements PersonService {
 //        HashTag hashTagWithID;
 //        List<HashTag> hashTagList = personDto.getHashtagList();
 //        List<HashTag> hashTagListWithID = new ArrayList<>();
-
-
-        UrlLink linkByContent;
-        UrlLink linkWithID;
-        List<UrlLink> linkList = personDto.getLinkList();
-        List<UrlLink> linkListWithID = new ArrayList<>();
-
-
-//        for (HashTag hashtag : hashTagList) {
+        //        for (HashTag hashtag : hashTagList) {
 //            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
 //            if (hashTagByContent == null) {
 //                hashTagRepository.save(hashtag);
@@ -177,6 +169,12 @@ public class PersonServiceImpl implements PersonService {
 //                hashTagListWithID.add(hashTagByContent);
 //            }
 //        }
+        //        person.setHashtagList(hashTagListWithID);
+
+        UrlLink linkByContent;
+        UrlLink linkWithID;
+        List<UrlLink> linkList = personDto.getLinkList();
+        List<UrlLink> linkListWithID = new ArrayList<>();
 
         for (UrlLink link : linkList) {
             linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
@@ -191,8 +189,14 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
+        Person person;// = new Person();
 
-        Person person = new Person();
+        if (personDto.getId() == null) {
+            person = new Person();
+        } else if (personRepository.findById(personDto.getId()).isPresent()) {
+            person = personRepository.findById(personDto.getId()).get();
+        } else
+            return null;
 
         if (personDto.getCountry_id() != null) { //to avoid hiber error when country is empty (from user form)
             Country c = new Country();
@@ -200,15 +204,29 @@ public class PersonServiceImpl implements PersonService {
             person.getCountry().setId(personDto.getCountry_id());
         }
 
-//        person.setHashtagList(hashTagListWithID);
-        person.setLinkList(linkListWithID);
+        if (person.getLinkList() != null) {
+//            for (UrlLink lnk : person.getLinkList()) {
+//                lnk.setArticle(null);
+//            }
+            person.getLinkList().clear();
+            personRepository.flush();
+        } else {
+            person.setLinkList(new ArrayList<>());
+        }
+
+        if (person.getLinkList() == null) {
+            person.setLinkList(linkListWithID);
+        } else {
+            person.getLinkList().addAll(linkListWithID);
+        }
+        //person.setLinkList(linkListWithID);
 
         person.setSurname(personDto.getSurname());
         person.setName(personDto.getName());
         person.setPatronymic(personDto.getPatronymic());
         person.setBirthYear(personDto.getBirthYear());
         person.setDeathYear(personDto.getDeathYear());
-        person.setSurnameEng(personDto.getSurnameEng());
+        person.setSurnameEng(personDto.getSurnameEng());л
         person.setNameEng(personDto.getNameEng());
         person.setSurnameRus(personDto.getSurnameRus());
         person.setNameRus(personDto.getNameRus());
@@ -216,6 +234,12 @@ public class PersonServiceImpl implements PersonService {
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
 
+
+
+        if (person.getOccupation() != null) {
+            person.getOccupation().clear();
+            personRepository.flush();
+        }
 
         Integer orgId;
         Position position;
@@ -233,13 +257,28 @@ public class PersonServiceImpl implements PersonService {
                 occList.add(position);
             }
         }
-        person.setOccupation(occList);
+
+        if (person.getOccupation() == null) {
+            person.setOccupation(occList);
+        } else {
+            person.getOccupation().addAll(occList);
+        }
 
         /////////////////////person-hashtag////////////////////////
         PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;
         HashTag hashTag, hashTagPrevious, hashTagPreviousPrevious;
         List<PersonHashtag> hashtagList = new ArrayList<>();
         Integer id;
+
+        if (person.getHashtagList() != null) {
+            for (PersonHashtag pt : person.getHashtagList()) {
+                pt.setPerson(null);
+            }
+            person.getHashtagList().clear();
+            personRepository.flush();
+        } else {
+            person.setHashtagList(new ArrayList<>());
+        }
 
         for (String hashtag_content : personDto.getHashtagList()) {
 
@@ -306,7 +345,11 @@ public class PersonServiceImpl implements PersonService {
             } //level 2/3
         }//for
 
-        person.setHashtagList(hashtagList);
+        if (person.getHashtagList() == null) {
+            person.setHashtagList(hashtagList);
+        } else {
+            person.getHashtagList().addAll(hashtagList);
+        }
 
 
         //old, first
@@ -329,8 +372,15 @@ public class PersonServiceImpl implements PersonService {
 //        BufferedImage image = null;
 
 
+        String base64Image;
         if (personDto.getPhoto() != null) {
-            String base64Image = personDto.getPhoto().split(",")[1];
+            String[] base64ImageParts = personDto.getPhoto().split(",");
+            if (base64ImageParts.length > 1) {
+                base64Image = base64ImageParts[1];
+            } else  {
+                base64Image = base64ImageParts[0];
+            }
+
             byte[] imageByte;
             try {
                 imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
@@ -358,6 +408,10 @@ public class PersonServiceImpl implements PersonService {
 
         return personRepository.save(person);
     }
+
+
+
+
 
 
     ///////////////////////////////////////utils///////////////////////////////////////////////////////

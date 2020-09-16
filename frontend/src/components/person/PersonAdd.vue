@@ -116,16 +116,23 @@
                     <!--                        <input type="file" accept="image/jpeg" @change="uploadImage">-->
                     <!--                    </div>-->
 
+<!--                    <div v-if="person.photo" class="col-sm-2" style="background-color: transparent">-->
+
+<!--&lt;!&ndash;                        <div id="preview" style="background-color: transparent">&ndash;&gt;-->
+<!--                            <img v-bind:src="'data:image/jpeg;base64,'+person.photo" :style="{ width: 250+'px' }"/>-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                    </div>-->
+
+
+
                     <div id="preview">
-                        <!--                        <div>-->
-                        <!--                            <img v-if="avatar.imageUrl" :src="avatar.imageUrl" :style="{ height: 200 +'px' }"/>-->
-                        <!--                        </div>-->
-
-                        <!--                            <img v-if="avatar.imageUrl" :src="avatar.imageUrl" :style="{ height: 320+'px' }"/>-->
-
-                        <img v-if="avatar.imageUrl" :src="avatar.imageUrl" @load="setHeight"
+                        <div v-if="avatar.imageUrl">
+                            <img :src="avatar.imageUrl" @load="setHeight"
                              :style="{ height: imageHeight + 'px' }"/>
-                        <!--                        <div>{{imageHeight}}</div>-->
+                        </div>
+                        <div v-else>
+                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo" :style="{ width: 250+'px' }"/>
+                        </div>
                     </div>
                     <div v-if="avatar.imageUrl" style="margin-top: 5px">
                         <input type="file" accept="image/*" @change="onChange"/>
@@ -155,17 +162,13 @@
 
         <div style="background-color: transparent; margin-left: 30px">
             <b-card class="col-md-9" style="background-color: #f8f8f8; font-size: small; text-align: left">
-                <OccupationList :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>
+<!--                <OccupationList v-if="!editMode" :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>-->
+                <OccupationList :allOrgs="allOrgs"
+                                :selected="selected"
+                                :todos="occupationWithIndexList"
+                                @update-occupation="updateOccupation"/>
             </b-card>
         </div>
-        <!--        .formCreation{-->
-        <!--        vertical-align: text-bottom;-->
-        <!--        text-align: left;-->
-        <!--        margin-left: 30px;-->
-        <!--        /*margin-right: 40px;*/-->
-        <!--        font-size: small;-->
-        <!--        }-->
-
         <!--        component doesn't work correctly in form 'formCreation;-->
         <form class="formCreation">
             <div class="form-row">
@@ -177,7 +180,6 @@
             </div>
 
             <div class="form-row">
-
                 <div class="col-md-7">
                     <!--                <div class="col-md-10">-->
                     <!--                    <label for="add-description">Форма добавления хештегов</label>-->
@@ -390,10 +392,6 @@
             person: {hashtagList: [], linkList: [], testList: []},
             years: [],
             editMode: false,
-            //     [
-            //     "1990",
-            //     "1991"
-            // ],
         }),
 
         methods: {
@@ -408,20 +406,7 @@
                 }
             },
 
-            // setHeight(event) {
-            //
-            //     console.log(event);
-            //
-            //     let image = event.target;
-            //     this.imageHeight = image.clientWidth * 0.5;
-            //
-            //
-            //     console.log("IMAGE", image);
-            //     console.log("IMAGE HEIGHT", this.imageHeight);
-            // },
-
             onChange(e) {
-
                 //todo need to set size limit
 
                 const file = e.target.files[0];
@@ -550,10 +535,6 @@
                 this.selectedHashtag = [];
             },
 
-            // addHashtagToArticleList(hashtag) {//from HashtagList
-            //     this.tags = hashtag;
-            // },
-
             addHashtagToArticleList() {
                 let tagAlreadyAdded = 0;
                 this.selectedHashtag.forEach((item, i) => {
@@ -567,11 +548,6 @@
                 this.selectedHashtag = [];
             },
 
-
-            // addHashtagToList(hashtag) {//from HashtagList
-            //     this.tags = hashtag;
-            // },
-
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
                 document.getElementById(id).classList.remove('is-invalid');
@@ -583,7 +559,6 @@
                 }
                 this.hasError = this.hasError || hasError;
             },
-
 
             formValidate() {
                 this.addStatus('add-surname', (!this.person.surname));
@@ -626,6 +601,7 @@
                     this.person.linkList[i] = {
                         "content": this.links[i]
                     };
+                    // console.log("CREATE PERS link: ", this.links[i]);
                 }
 
                 for (let i = 0; i < this.tags.length; i++) {
@@ -633,6 +609,7 @@
                 }
 
                 this.hasError = false;
+                this.person.testList = [];
 
                 for (let i = 0; i < this.occupationWithIndexList.length; i++) {
                     let a = {
@@ -640,35 +617,82 @@
                         "position": this.occupationWithIndexList[i].position,
                         "comment": this.occupationWithIndexList[i].comment
                     };
-                    console.log("CREATE PERS    ON A: ", a);
+                    //console.log("CREATE PERS    ON A: ", a);
                     this.person.testList.push(a);
                 }
 
                 this.person.photo = this.avatar.imageBase64;
 
-
-                console.log("PERSON BEFORE SAVING", this.person);
-
-                if (this.formValidate()) {
-                    api.create(this.person, r => {
-                        console.log(r);
-                        router.push('/person');
-                    });
+                if (this.editMode) {
+                    // console.log("PERSON BEFORE UPDATING", this.person);
+                    if (this.formValidate()) {
+                        api.update(this.person.id, this.person, r => {
+                            console.log(r);
+                            router.push('/person');
+                        });
+                    }
+                } else {
+                    // console.log("PERSON BEFORE SAVING", this.person);
+                    if (this.formValidate()) {
+                        api.create(this.person, r => {
+                            console.log(r);
+                            router.push('/person');
+                        });
+                    }
                 }
             },
         },
         mounted() {
+            if (this.$route.params.person_id != null) {
+                console.log("EDIT MODE");
+                this.editMode = true;
+            }
 
             this.initYears();
+
+            if (this.editMode) {
+                api.findById(this.$route.params.person_id, r => {
+                    this.person = r.data;
+                    // console.log("person EDIT!", this.person);
+
+                    if (this.person.country != null) {
+                        this.selectedCountry = this.person.country.id;
+                    }
+                    this.selectedBYear = this.person.birthYear;
+                    this.selectedDYear = this.person.deathYear;
+
+                    for (let i = 0; i < this.person.hashtagList.length; i++) {
+                        this.tags.push(this.person.hashtagList[i]);
+                    }
+
+                    for (let i = 0; i < this.person.linkList.length; i++) {
+                        this.links.push(this.person.linkList[i].content);
+                        // console.log("links!", this.person.linkList[i].content);
+                    }
+
+                    apiOrg.getAllOrgs(response => {
+                        this.allOrgs = response.data;
+                        console.log("all orgs!");
+
+                        if (this.editMode) {
+                            for (let i = 0; i < this.person.testList.length; i++) {
+                                 let a = {
+                                    "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
+                                    "orgId": this.person.testList[i].orgId,
+                                    "position": this.person.testList[i].position,
+                                    "comment": this.person.testList[i].comment
+                                };
+                                console.log("GET PERS    ON A: ", a);
+                                this.occupationWithIndexList.push(a);
+                            }
+                        }
+                    });
+                    this.avatar.imageBase64 = this.person.photo;
+                });
 
             apiCountry.getAllCountries(response => {
                 this.allCountries = response.data;
                 // console.log(response.data)
-            });
-
-            apiOrg.getAllOrgs(response => {
-                this.allOrgs = response.data;
-                // console.log(" O R G A ", response.data)
             });
 
             apiHashtag.getAllHashtags(response => {
@@ -684,52 +708,6 @@
             //     //this.errors.push(error)
             //     console.log(error);
             // })
-
-            if (this.$route.params.person_id != null) {
-                console.log("EDIT MODE");
-                this.editMode = true;
-            }
-
-            if (this.editMode) {
-                api.findById(this.$route.params.person_id, r => {
-                    this.person = r.data;
-                    console.log("person EDIT!", this.person);
-
-                    this.selectedCountry = this.person.country.id;
-                    this.selectedBYear = this.person.birthYear;
-                    this.selectedDYear = this.person.deathYear;
-
-                    for (let i = 0; i < this.person.hashtagList.length; i++) {
-                        this.tags.push(this.person.hashtagList[i]);
-                    }
-
-                    for (let i = 0; i < this.person.linkList.length; i++) {
-                        this.links.push(this.person.linkList[i].content);
-                        // console.log("links!", this.person.linkList[i].content);
-                    }
-
-
-
-                    for (let i = 0; i < this.person.testList.length; i++) {
-                        let a = {
-                            "orgId": this.person.testList[i].orgId,
-                            "position": this.person.testList[i].position,
-                            "comment": this.person.testList[i].comment
-                        };
-                        console.log("GET PERS    ON A: ", a);
-                        this.occupationWithIndexList.push(a);
-                        this.updateOccupation(a);
-                    }
-
-                    this.avatar.imageBase64 = this.person.photo;
-
-
-
-
-
-
-
-                });
             }
         },
         computed: {
