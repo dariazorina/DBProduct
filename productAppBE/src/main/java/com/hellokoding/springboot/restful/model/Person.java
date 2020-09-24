@@ -94,6 +94,7 @@ public class Person {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @JsonIgnore
     private List<PersonHashtag> hashtagList;
 
     private String miscellany;

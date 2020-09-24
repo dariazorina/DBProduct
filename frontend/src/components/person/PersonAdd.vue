@@ -174,8 +174,10 @@
             <div class="form-row">
                 <div class="col-md-6">
 
-                    <label for="add-description">Описание</label>
-                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>
+<!--                    <label for="add-description">Описание</label>-->
+<!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
+
+                    <ckeditor :editor="editor" v-model="person.description" :config="editorConfig"></ckeditor>
                 </div>
             </div>
 
@@ -329,10 +331,13 @@
     import OccupationList from "./OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
 
+    import CKEditor from 'ckeditor4-vue';
+
     export default {
         components: {
             OccupationList,
             //HashtagList,
+            ckeditor: CKEditor.component, // to use the component locally
         },
         name: 'person-add',
         vuetify: new Vuetify(),
@@ -391,6 +396,11 @@
             person: {hashtagList: [], linkList: [], testList: []},
             years: [],
             editMode: false,
+
+            editor: CKEditor, // to use the component locally
+            editorConfig: {
+                // The configuration of the editor.
+            }
         }),
 
         methods: {

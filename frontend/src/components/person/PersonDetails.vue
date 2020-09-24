@@ -106,7 +106,7 @@
                         </div>
 
                         <div class="col-sm-10" style="text-align: left">
-                            {{person.description}}
+                            <span v-html="person.description"></span>
                         </div>
                     </div>
 
@@ -115,7 +115,8 @@
                             <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                         </div>
                         <div class="col-sm-10 back1"><span class="float-left">
-                <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}</div></span>
+                            <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}
+                            </div></span>
                         </div>
                     </div>
 
@@ -144,7 +145,6 @@
                     </span>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -238,7 +238,7 @@
                         </div>
 
                         <div class="col-sm-10" style="text-align: left">
-                            {{person.description}}
+                            <span v-html="person.description"></span>
                         </div>
                     </div>
 

@@ -6,6 +6,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import store from './store'
 
+// import CKEditor from 'ckeditor4-vue';
+// Vue.use( CKEditor );
+
 // import vuetify from 'vuetify'
 
 Vue.config.productionTip = false;
