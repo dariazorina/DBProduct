@@ -12,7 +12,8 @@
             <router-link to="/article">Article</router-link>
             |
             <!--      <router-link to="/event">Event</router-link> |-->
-            <!--      <router-link to="/org">Organization</router-link> |-->
+            <router-link to="/org/add">Organization</router-link>
+            |
             <router-link to="/country">Country</router-link>
             |
             <router-link to="/language">Language</router-link>

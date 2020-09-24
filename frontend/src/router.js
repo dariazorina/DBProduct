@@ -30,6 +30,8 @@ import LanguageEdit from '@/components/language/LanguageEdit';
 
 import HashtagList from '@/components/hashtag/HashtagList';
 
+import OrgAdd from '@/components/org/OrgAdd';
+
 import store from './store'
 // import HashtagList from "./components/hashtag/HashtagList";
 
@@ -88,6 +90,9 @@ const router = new Router({
 
         {path: '/hashtag', component: HashtagList},
         {path: '/hashtag/add', component: HashtagList, name: 'hashtag'},
+
+        {path: '/org', component: OrgList},
+        {path: '/org/add', component: OrgAdd, name: 'org-add'},
 
 
         // otherwise redirect to home

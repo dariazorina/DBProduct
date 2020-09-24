@@ -19,6 +19,19 @@ export default {
             })
     },
 
+    create(org, fn, fnError) {
+        AXIOS
+            .post('/org', org)
+            .then(response => fn(response))
+            .catch(error => {
+                if (error.response.status === 401) {
+                    router.push('/login');
+                } else {
+                    fnError(error.response.data);
+                }
+            })
+    },
+
     findById(id, fn) {
         AXIOS
             .get(`/org/` + id)
