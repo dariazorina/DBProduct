@@ -105,10 +105,10 @@
             },
 
             formValidate() {
-                this.addStatus('add-code', (!(this.validCode(this.language.code))));
+                this.addStatus('edit-code', (!(this.validCode(this.language.code))));
                 if (this.hasError) {
                 } else {
-                    this.addStatus('add-name', (!this.language.name));
+                    this.addStatus('edit-name', (!this.language.name));
                 }
 
                 if (this.hasError)

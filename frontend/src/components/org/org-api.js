@@ -8,13 +8,26 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllOrg(fn) {
+    getAllOrgs(fn) {
         return AXIOS
             .get(`/org`)
             .then(response => fn(response))
             .catch(error => {
                 if (error.response.status === 401) {
                     router.push('/login');
+                }
+            })
+    },
+
+    create(org, fn, fnError) {
+        AXIOS
+            .post('/org', org)
+            .then(response => fn(response))
+            .catch(error => {
+                if (error.response.status === 401) {
+                    router.push('/login');
+                } else {
+                    fnError(error.response.data);
                 }
             })
     },

@@ -1,9 +1,9 @@
-<template id="movement-add">
+<template id="org-add">
     <v-app id="inspire">
         <div>
             <div class="form-group row">
                 <div class="col-2 col-form-label">
-                    <p class="pageCreateTitle">Add New Movement</p>
+                    <p class="pageCreateTitle">Add New Organization</p>
                 </div>
             </div>
             <!--            <div class="unprotected" v-if="errorFlag">-->
@@ -24,27 +24,30 @@
 
             <form>
 
-                <div class="form-group row  align-items-center">
-                    <label for="add-code" class="col-1 col-form-label labelInCreation">Код</label>
-                    <div class="col-4">
-                        <input type="number" class="form-control" id="add-code" v-model ="movement.code" placeholder="Three digits only" min="1" max="999"/>
+
+                <div class="form-group row align-items-center">
+                    <div class="col-12" style="background-color: gainsboro">
+                        <label class="col-12 col-form-label labelInCreation">Временная страничка упрощенного добавления организации. Для
+                            тестирования позиций в разделе "Персона"</label>
                     </div>
                 </div>
 
-                <div class="form-group row  align-items-center">
+
+                <div class="form-group row align-items-center">
+
                     <label for="add-name" class="col-1 col-form-label labelInCreation">Название</label>
                     <div class="col-4">
-                        <input class="form-control" id="add-name" v-model="movement.name" required/>
+                        <input type="text" class="form-control" id="add-name" v-model="org.name"/>
                     </div>
                 </div>
 
 
                 <div class="form-group row">
-                    <div class="offset-sm-2 col-sm-3">
+                    <div class="col-4">
 
-                        <button type="button" @click="createMovement" class="btn btn-primary">Create</button>
+                        <button type="button" @click="createOrg" class="btn btn-primary">Create</button>
                         <a class="btn btn-default">
-                            <router-link to="/movement">Cancel</router-link>
+                            <router-link to="/article">Cancel</router-link>
                         </a>
                     </div>
                 </div>
@@ -56,25 +59,24 @@
 
 <script>
 
-    import api from "./movement-api";
+    import apiOrg from "./org-api";
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
+    import LanguageAdd from "../language/LanguageAdd";
 
     export default {
-        name: 'movement-add',
+        name: 'org-add',
+        components: {LanguageAdd},
         vuetify: new Vuetify(),
 
         data: () => ({
-            model: null,
-            search: null,
-
             errorFlag: false,
             errors: [],
             validationErrors: {},
             hasError: false,
 
-            movement: {},
+            org: {},
             movements: [],
         }),
 
@@ -92,37 +94,24 @@
                 this.hasError = this.hasError || hasError;
             },
 
-            validCode: function (code) {
-                var re = /^[0-9]*$/;
-                var r1 = re.test(code);
-                var r2 = code.length;
-
-                if (r1)
-                    if (r2 == 3) {
-                        return true;
-                    }
-                return false;
-                // return (re.test(code)&&this.code.length()==3);
-            },
-
             formValidate() {
-                this.addStatus('add-code', (!(this.validCode(this.movement.code))));
-                if (this.hasError) {
-                } else {
-                    this.addStatus('add-name', (!this.movement.name));
-                }
+                if (this.org.name != null) {
+                    if (this.org.name.length != 0) {
+                        this.addStatus('add-name', (!this.org.name));
+                    } else this.hasError = true;
+                } else this.hasError = true;
 
                 if (this.hasError)
                     console.log('ERROROROR----------------------------');
                 return !this.hasError;
             },
 
-            createMovement() {
+            createOrg() {
                 this.hasError = false;
 
                 if (this.formValidate()) {
-                    api.create(this.movement, r => {
-                        router.push('/movement')
+                    apiOrg.create(this.org, r => {
+                        router.push('/article')
                     }, r => {
                         this.errorFlag = true;
                         this.errors.push(r);

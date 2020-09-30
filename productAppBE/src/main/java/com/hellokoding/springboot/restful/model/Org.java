@@ -1,5 +1,6 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -48,8 +49,8 @@ public class Org {
     private Integer closed;
 
     @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    ////////////////@ToString.Exclude
-    /////////////@JsonIgnore             //was active (without NewPersonDto)
+//    @ToString.Exclude
+//    @JsonIgnore             //was active (without NewPersonDto)
     private List<Position> occupation;
 
 
@@ -58,6 +59,8 @@ public class Org {
             name = "org_actor",
             joinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"))
+    @JsonIgnore
+    @ToString.Exclude
     private List<Person> actorList;
 
     @ManyToMany

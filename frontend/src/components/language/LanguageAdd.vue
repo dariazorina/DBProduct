@@ -19,7 +19,10 @@
                 <div class="form-group row  align-items-center">
                     <label for="add-code" class="col-1 col-form-label labelInCreation">Код</label>
                     <div class="col-4">
-                        <input type="number" class="form-control" id="add-code" v-model="language.code"/>
+                        <input type="number" class="form-control" id="add-code" v-model ="language.code" placeholder="Three digits only" min="1" max="999"/>
+<!--                        <input type="text" @keypress="onlyNumber">-->
+<!--                        <input type="text" @keydown="onKeydown" v-model="value">-->
+
                     </div>
                 </div>
 
@@ -70,6 +73,21 @@
         }),
 
         methods: {
+
+            // onKeydown (event) {
+            //     const char = String.fromCharCode(event.keyCode)
+            //     if (!/[0-9]/.test(char)) {
+            //         event.preventDefault()
+            //     }
+            // },
+            //
+            // onlyNumber ($event) {
+            //     //console.log($event.keyCode); //keyCodes value
+            //     let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
+            //     if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { // 46 is dot
+            //         $event.preventDefault();
+            //     }
+            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');

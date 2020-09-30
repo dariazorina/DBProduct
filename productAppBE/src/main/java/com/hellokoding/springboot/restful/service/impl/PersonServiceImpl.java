@@ -4,11 +4,13 @@ import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
+import com.hellokoding.springboot.restful.model.dto.PositionDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Random;
 
 import java.util.*;
 
@@ -37,6 +39,18 @@ public class PersonServiceImpl implements PersonService {
 
         List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
         List<Person> allPerson = personRepository.findAll();
+
+        // hack for org creation, for relase
+//        Random objGenerator = new Random();
+//        int randomNumber = objGenerator.nextInt(100);
+//        Org newOrg = new Org();
+//        String name = "Org " + randomNumber;
+//        newOrg.setName(name);
+//
+//        Country country = new Country();
+//        newOrg.setCountry(country);
+//        newOrg.getCountry().setId(1);
+//        orgRepository.save(newOrg);
 
         NewPersonDto currentNewDtoP;
         for (Person p : allPerson) {
@@ -134,7 +148,6 @@ public class PersonServiceImpl implements PersonService {
 
         List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
         return finalList;
-
     }
 
     @Override
@@ -144,15 +157,7 @@ public class PersonServiceImpl implements PersonService {
 //        HashTag hashTagWithID;
 //        List<HashTag> hashTagList = personDto.getHashtagList();
 //        List<HashTag> hashTagListWithID = new ArrayList<>();
-
-
-        UrlLink linkByContent;
-        UrlLink linkWithID;
-        List<UrlLink> linkList = personDto.getLinkList();
-        List<UrlLink> linkListWithID = new ArrayList<>();
-
-
-//        for (HashTag hashtag : hashTagList) {
+        //        for (HashTag hashtag : hashTagList) {
 //            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
 //            if (hashTagByContent == null) {
 //                hashTagRepository.save(hashtag);
@@ -164,6 +169,12 @@ public class PersonServiceImpl implements PersonService {
 //                hashTagListWithID.add(hashTagByContent);
 //            }
 //        }
+        //        person.setHashtagList(hashTagListWithID);
+
+        UrlLink linkByContent;
+        UrlLink linkWithID;
+        List<UrlLink> linkList = personDto.getLinkList();
+        List<UrlLink> linkListWithID = new ArrayList<>();
 
         for (UrlLink link : linkList) {
             linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
@@ -178,54 +189,96 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
+        Person person;// = new Person();
 
-        Person person = new Person();
-        Country c = new Country();
-        person.setCountry(c);
+        if (personDto.getId() == null) {
+            person = new Person();
+        } else if (personRepository.findById(personDto.getId()).isPresent()) {
+            person = personRepository.findById(personDto.getId()).get();
+        } else
+            return null;
 
-//        person.setHashtagList(hashTagListWithID);
-        person.setLinkList(linkListWithID);
+        if (personDto.getCountry_id() != null) { //to avoid hiber error when country is empty (from user form)
+            Country c = new Country();
+            person.setCountry(c);
+            person.getCountry().setId(personDto.getCountry_id());
+        }
+
+        if (person.getLinkList() != null) {
+//            for (UrlLink lnk : person.getLinkList()) {
+//                lnk.setArticle(null);
+//            }
+            person.getLinkList().clear();
+            personRepository.flush();
+        } else {
+            person.setLinkList(new ArrayList<>());
+        }
+
+        if (person.getLinkList() == null) {
+            person.setLinkList(linkListWithID);
+        } else {
+            person.getLinkList().addAll(linkListWithID);
+        }
+        //person.setLinkList(linkListWithID);
 
         person.setSurname(personDto.getSurname());
         person.setName(personDto.getName());
         person.setPatronymic(personDto.getPatronymic());
+        person.setBirthYear(personDto.getBirthYear());
+        person.setDeathYear(personDto.getDeathYear());
         person.setSurnameEng(personDto.getSurnameEng());
         person.setNameEng(personDto.getNameEng());
         person.setSurnameRus(personDto.getSurnameRus());
         person.setNameRus(personDto.getNameRus());
-        person.getCountry().setId(personDto.getCountry_id());
         person.setSettlement(personDto.getSettlement());
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
 
-        person.setOrgList(personDto.getOrgList());
 
 
-        ///////////////////////////////position/////////////////////
+        if (person.getOccupation() != null) {
+            person.getOccupation().clear();
+            personRepository.flush();
+        }
+
+        Integer orgId;
         Position position;
-        int i = 0;
         List<Position> occList = new ArrayList<>();
-        for (String pos : personDto.getPositionList()) {
+        for (PositionDto posDto : personDto.getTestList()) {
 
-            Integer orgId = personDto.getOrg_idList().get(i);
-
-            position = new Position();
-            position.setPosition(pos);
-            position.setPerson(person);
+            orgId = posDto.getOrgId();
             if (orgRepository.findById(orgId).isPresent()) {
+                position = new Position();
                 position.setOrg(orgRepository.findById(orgId).get());
-                i++;
+                position.setPerson(person);
+                position.setPosition(posDto.getPosition());
+                position.setComment(posDto.getComment());
+
                 occList.add(position);
             }
         }
-        person.setOccupation(occList);
 
+        if (person.getOccupation() == null) {
+            person.setOccupation(occList);
+        } else {
+            person.getOccupation().addAll(occList);
+        }
 
         /////////////////////person-hashtag////////////////////////
         PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;
         HashTag hashTag, hashTagPrevious, hashTagPreviousPrevious;
         List<PersonHashtag> hashtagList = new ArrayList<>();
         Integer id;
+
+        if (person.getHashtagList() != null) {
+            for (PersonHashtag pt : person.getHashtagList()) {
+                pt.setPerson(null);
+            }
+            person.getHashtagList().clear();
+            personRepository.flush();
+        } else {
+            person.setHashtagList(new ArrayList<>());
+        }
 
         for (String hashtag_content : personDto.getHashtagList()) {
 
@@ -292,7 +345,11 @@ public class PersonServiceImpl implements PersonService {
             } //level 2/3
         }//for
 
-        person.setHashtagList(hashtagList);
+        if (person.getHashtagList() == null) {
+            person.setHashtagList(hashtagList);
+        } else {
+            person.getHashtagList().addAll(hashtagList);
+        }
 
 
         //old, first
@@ -312,8 +369,49 @@ public class PersonServiceImpl implements PersonService {
 //        pos.setPerson(person);
 
 
+//        BufferedImage image = null;
+
+
+        String base64Image;
+        if (personDto.getPhoto() != null) {
+            String[] base64ImageParts = personDto.getPhoto().split(",");
+            if (base64ImageParts.length > 1) {
+                base64Image = base64ImageParts[1];
+            } else  {
+                base64Image = base64ImageParts[0];
+            }
+
+            byte[] imageByte;
+            try {
+                imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
+
+                // Converting a Base64 String into Image byte array
+//            imageByte = Base64.getDecoder().decode(personDto.getPhoto());
+                person.setPhoto(imageByte);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+//        byte[] imageByte;
+//        try {
+//            BASE64Decoder decoder = new BASE64Decoder();
+//            imageByte = decoder.decodeBuffer(personDto.getPhoto());
+
+//            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+//            image = ImageIO.read(bis);
+//            bis.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
         return personRepository.save(person);
     }
+
+
+
+
 
 
     ///////////////////////////////////////utils///////////////////////////////////////////////////////

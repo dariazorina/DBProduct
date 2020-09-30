@@ -10,7 +10,6 @@ import PersonDelete from '@/components/person/PersonDelete'
 
 import ArticleList from '@/components/article/ArticleList'
 import ArticleDetails from '@/components/article/ArticleDetails'
-// import ArticleEdit from '@/components/article/ArticleEdit'
 import ArticleDelete from '@/components/article/ArticleDelete'
 import ArticleAdd from '@/components/article/ArticleAdd'
 
@@ -35,7 +34,7 @@ import LanguageEdit from '@/components/language/LanguageEdit';
 
 import HashtagList from '@/components/hashtag/HashtagList';
 
-
+import OrgAdd from '@/components/org/OrgAdd';
 
 import store from './store'
 // import HashtagList from "./components/hashtag/HashtagList";
@@ -66,7 +65,7 @@ const router = new Router({
 
         {path: '/person', component: PersonList},
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
-        {path: '/person/:person_id/edit', component: PersonEdit, name: 'person-edit'},
+        {path: '/person/:person_id/edit', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/delete', component: PersonDelete, name: 'person-delete'},
         {path: '/person/:person_id/details', component: PersonDetails, name: 'person-details'},
 
@@ -99,6 +98,9 @@ const router = new Router({
 
         {path: '/hashtag', component: HashtagList},
         {path: '/hashtag/add', component: HashtagList, name: 'hashtag'},
+
+        {path: '/org', component: OrgList},
+        {path: '/org/add', component: OrgAdd, name: 'org-add'},
 
 
         // otherwise redirect to home

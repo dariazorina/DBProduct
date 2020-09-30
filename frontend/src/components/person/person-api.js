@@ -3,9 +3,8 @@ import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
-    timeout: 1000
+    timeout: 10000
 });
-
 
 export default {
     getAllPersons(fn) {
@@ -14,6 +13,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
+                // if (error.response !== undefined)
                 if (error.response.status === 401) {
                     router.push('/login');
                 }
@@ -26,6 +26,15 @@ export default {
     //
     // getAllMovements() {
     //     return AXIOS.get(`/movement`);
+    // },
+
+    // getImage(data, config) {
+    //     AXIOS
+    //         .put('/person', data, config)
+    //         .then(response => {
+    //                 console.log('image upload response > ', response)
+    //             }
+    //         )
     // },
 
     create(person, fn) {
@@ -80,7 +89,6 @@ export default {
     searchPerson(searchKey, fn) {
         AXIOS.get(
             `/person/search?q=` + encodeURIComponent(searchKey)
-
         ).then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response;

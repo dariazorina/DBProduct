@@ -35,8 +35,7 @@ public class PersonAPI {
     }
 
     @PostMapping
-    public ResponseEntity
-    create(@Valid @RequestBody NewPersonDto person) {
+    public ResponseEntity create(@Valid @RequestBody NewPersonDto person) {
         return ResponseEntity.ok(personService.save(person));
     }
 
@@ -50,14 +49,13 @@ public class PersonAPI {
         return ResponseEntity.ok(stock.get());
     }
 
-    @PutMapping("/{id}")  ///todo NewPersonDto
-    public ResponseEntity<Person> update(@PathVariable Integer id, @Valid @RequestBody NewPersonDto person) {
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody NewPersonDto person) {
         person.setId(id);
         if (!personService.findById(id).isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
         }
-
         return ResponseEntity.ok(personService.save(person));
     }
 

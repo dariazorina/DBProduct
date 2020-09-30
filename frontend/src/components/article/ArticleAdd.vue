@@ -6,10 +6,10 @@
                 <div v-if="editMode" class="col-5 col-form-label">
 
                     <div v-if="article.titleRus == null">
-                        <p class="pageEditTitle">Edit "{{article.title}}"</p>
+                        <p class="pageEditTitle">Edit <i>"{{article.title}}"</i></p>
                     </div>
                     <div v-else>
-                        <p class="pageEditTitle">Edit "{{article.titleRus}}"</p>
+                        <p class="pageEditTitle">Edit <i>"{{article.titleRus}}"</i></p>
                     </div>
                 </div>
 

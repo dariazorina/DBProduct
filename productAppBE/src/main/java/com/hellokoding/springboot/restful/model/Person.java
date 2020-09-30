@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+//import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,12 @@ public class Person {
     @Column(name = "name_eng")
     private String nameEng;
 
+    @Column(name = "birth_year")
+    private Integer birthYear;
+
+    @Column(name = "death_year")
+    private Integer deathYear;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")//, insertable = false, updatable = false)
 //    @JoinColumn(name = "country_id", nullable = false)
@@ -55,16 +62,20 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
-    @ManyToMany
-    @JoinTable(
-            name = "org_actor",
-            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
-    private List<Org> orgList;
-
     private String description;
 //    @Column(name = "photo")
 //    private byte[] photo;
+
+//    columnDefinition="BLOB"
+//    @Lob  //was an error bytea - bigint
+    @Column(name = "photo")//, columnDefinition="mediumblob")
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] photo;
+
+
+//    @Column(name = "image")
+//    private Blob image;
+
 
 //    @ManyToMany
 //    @JoinTable(
@@ -83,6 +94,7 @@ public class Person {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @JsonIgnore
     private List<PersonHashtag> hashtagList;
 
     private String miscellany;
