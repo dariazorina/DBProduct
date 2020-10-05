@@ -4,7 +4,6 @@ import Login from '@/components/Login'
 
 import PersonList from '@/components/person/PersonList'
 import PersonAdd from '@/components/person/PersonAdd'
-import PersonEdit from '@/components/person/PersonEdit'
 import PersonDetails from '@/components/person/PersonDetails'
 import PersonDelete from '@/components/person/PersonDelete'
 
