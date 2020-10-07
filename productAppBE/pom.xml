@@ -24,7 +24,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <!--<liquibase.maven.plugin.version>3.6.3</liquibase.maven.plugin.version>-->
 
         <!--versions for liquibase plugin-->
@@ -165,7 +165,6 @@
                     </diffChangeLogFile>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/dbnm</url>
-                    <defaultSchemaName></defaultSchemaName>
                     <username>postgres</username>
                     <password>2405</password>
                     <!--<referenceUrl>hibernate:spring:io.github.crud-mysql-vuejs.application.domain?dialect=org.hibernate.dialect.PostgreSQL9Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>-->
