@@ -2,7 +2,9 @@ package com.hellokoding.springboot.restful.service.attachments;
 
 import com.hellokoding.springboot.restful.service.dto.Attachment;
 import com.hellokoding.springboot.restful.service.dto.EntityType;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -10,70 +12,68 @@ import java.time.Instant;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AttachmentService {
 
-    private EntityPathProvider entityPathProvider;
-    private IdSupplier idSupplier;
+    EntityPathProvider entityPathProvider;
+    AttachmentIdProvider idProvider;
+    AttachmentPathProvider pathProvider;
 
     /**
      * Create new attachment.
-     * byte[] type for content is just for simplicity, maybe another type is needed.
-     * This method should be thread-safe and can be called by many users in parallel.
+     * This method is thread-safe and can be used by multiple users concurrently without locks.
+     * byte[] for content is just for simplicity, maybe another type is needed.
      *
      * @param entityType parent entity type
      * @param entityId   parent entity id
      * @param fileName   original attachment filename
      * @param created    attachment creation time
+     * @param user       creator
      * @param content    attachment content
-     * @return attachment id
+     * @return  attachment id
      */
-    public String createAttachment(EntityType entityType, Long entityId, String fileName, Instant created,
-                                   byte[] content) {
+    public Long createAttachment(EntityType entityType, Long entityId, Instant created, String user,
+                                 String fileName, byte[] content) {
 
-        Path entityPath = Path.of(entityPathProvider.get(entityType, entityId));
+        Path entityPath = entityPathProvider.get(entityType, entityId);
+        Long id = idProvider.get(entityType, entityId, created, user, fileName);
+        Path attachmentPath = pathProvider.get(entityPath, id, fileName);
 
-        // when saving attachment to file system, keep in mind id may not be unique
-        // check that file with such id does not exist yet
-        // if it does- generate new id in loop
-        // this operation may be not safe when multiple users save attachments
-        String id = idSupplier.get();
-
-        // generate attachment name for example as <attachment-id>-fileName
-        // 234fg456-image.png
-        // combine entity path with attachment name and save it to file system
-        // set file creation date to created
+        // save content to attachmentPath
+        // set new file creation date to created
 
         return id;
     }
 
     /**
      * Get attachment list.
-     * This method should be thread-safe and can be called by many users in parallel.
+     * This method is thread-safe and can be used by multiple users concurrently without locks.
      *
-     * @param entityType parent entity type
-     * @param entityId parent entity id
-     * @return attachment list
+     * @param entityType    parent entity type
+     * @param entityId      parent entity id
+     * @return  attachment list
      */
     public List<Attachment> getAttachments(EntityType entityType, Long entityId) {
         // build the entity folder path
         // read files in it
-        // split file names into attachment id and attachment file name, read creation date
+        // split file names into attachment id and attachment file name, get file creation date
         // return attachment list with properties collected
+        // for now we use file system as the only "source of truth" for entity attachments
         return null;
     }
 
     /**
      * Get attachment content.
-     * This method should be thread-safe and can be called by many users in parallel.
-     * byte[] type for content is just for simplicity, maybe another type is needed.
+     * This method is thread-safe and can be used by multiple users concurrently without locks.
+     * byte[] for content is just for simplicity, maybe another type is needed.
      *
-     * @param entityType parent entity type
-     * @param entityId parent entity id
-     * @param id attachment id
-     * @return attachment content
+     * @param entityType    parent entity type
+     * @param entityId      parent entity id
+     * @param id            attachment id
+     * @return  attachment content
      */
-    public byte[] getAttachment(EntityType entityType, Long entityId, String id) {
+    public byte[] getAttachment(EntityType entityType, Long entityId, Long id) {
         // build attachment path and return content from file system
         return null;
     }
