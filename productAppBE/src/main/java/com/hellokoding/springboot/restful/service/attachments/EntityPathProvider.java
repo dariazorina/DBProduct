@@ -25,7 +25,7 @@ class EntityPathProvider {
      * @return  entity home path
      */
     Path get(EntityType type, Long id) {
-        return Path.of(attachmentsRoot, type.toString(), id.toString());
+        return Path.of(attachmentsRoot, type.getName(), id.toString());
     }
 
 }
