@@ -1,21 +1,18 @@
 package com.hellokoding.springboot.restful.service.attachments;
 
 import com.hellokoding.springboot.restful.service.dto.EntityType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 
 @Component
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 class EntityPathProvider {
 
     @Value("${attachments.root}")
-    String attachmentsRoot;
+    private String attachmentsRoot;
 
     /**
      * Build the file system path to entity home.

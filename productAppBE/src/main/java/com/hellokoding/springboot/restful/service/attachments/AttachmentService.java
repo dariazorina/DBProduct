@@ -2,9 +2,7 @@ package com.hellokoding.springboot.restful.service.attachments;
 
 import com.hellokoding.springboot.restful.service.dto.Attachment;
 import com.hellokoding.springboot.restful.service.dto.EntityType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -12,13 +10,12 @@ import java.time.Instant;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class AttachmentService {
 
-    EntityPathProvider entityPathProvider;
-    AttachmentIdProvider idProvider;
-    AttachmentPathProvider pathProvider;
+    private EntityPathProvider entityPathProvider;
+    private AttachmentIdProvider idProvider;
+    private AttachmentPathProvider pathProvider;
 
     /**
      * Create new attachment.
@@ -42,6 +39,16 @@ public class AttachmentService {
 
         // save content to attachmentPath
         // set new file creation date to created
+
+
+
+
+//        Path path = ...
+//        URI u = URI.create("http://java.sun.com/");
+//        try (InputStream in = u.toURL().openStream()) {
+//            Files.copy(in, path);
+//        }
+
 
         return id;
     }

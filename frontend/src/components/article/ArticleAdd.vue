@@ -322,7 +322,10 @@
                                               background-color="palegreen" required/>
                         </div>
                     </div>
-                    <!--                    </div>-->
+
+                    <div v-if="uploadMode||editMode">
+                        <file-attachment @onChange="createAttachment" :userName="loggedName"/>
+                    </div>
                 </form>
             </div>
 
@@ -337,6 +340,13 @@
             </div>
 
             <div v-else class="form-group row" style="padding-top: 30px">
+
+                <div v-if="!uploadMode" class="offset-sm-4 col-sm-3">
+                    <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
+                    <label for="checkbox">Check if you want to upload files after article creation</label>
+                </div>
+
+
                 <div class="offset-sm-4 col-sm-3">
                     <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
                             class="btn btn-warning">In Progress
@@ -361,7 +371,9 @@
     import apiPerson from "./../person/person-api";
     import apiLanguage from "./../language/language-api";
     import apiHashtag from "./../hashtag/hashtag-api";
-    import HashtagList from "./../hashtag/HashtagList.vue";
+    import FileAttachment from "./../FileAttachment";
+
+    // import HashtagList from "./../hashtag/HashtagList.vue";
     import api from "./article-api";
     import moment from "moment";
     import InputTag from 'vue-input-tag';
@@ -374,7 +386,8 @@
 
     export default {
         components: {
-            HashtagList
+            FileAttachment
+            // HashtagList
         },
         name: 'article-add',
         vuetify: new Vuetify(),
@@ -420,9 +433,40 @@
                 {text: 'Completed', value: 3},
             ],
             editMode: false,
+
+            avatar: {
+                image: null,
+                imageUrl: null,
+                imageBase64: null
+            },
+
+
+            attachedFiles: [],
+            loggedInFlag: false,
+            loggedName: null,
+            uploadFilesCheckBoxValue: false,
+            uploadMode: false,
+
         }),
 
         methods: {
+            createAttachment(files) {
+                console.log("files from COMPONENT", files)
+
+                // for (let i = 0; i < e.target.files.length; i++) {
+                //     this.attachedFiles.push(e.target.files[i]);
+                // }
+            },
+
+
+            // onChange(e) {
+            //     console.log("files", e.target.files)
+            //
+            //     for (let i = 0; i < e.target.files.length; i++) {
+            //         this.attachedFiles.push(e.target.files[i]);
+            //     }
+            // },
+
             removeSelectedHashtag(hash) {
                 const index = this.selectedHashtag.indexOf(hash);
                 if (index > -1) {
@@ -652,7 +696,13 @@
 
                 if (this.formValidate()) {
                     api.create(this.article, r => {
-                        router.push('/article');
+                        if (!this.uploadFilesCheckBoxValue){ //&&this.attachedFiles.length) {
+                            router.push('/article');
+                        } else {
+                            this.uploadMode = true;
+                            this.uploadFilesCheckBoxValue = false;
+                            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here");
+                        }
                     });
                 }
             },
@@ -689,8 +739,15 @@
                     });
                 }
             },
+
+            getLoggedIn() {
+                this.loggedInFlag = this.$store.getters.isLoggedIn;
+                this.loggedName = this.$store.getters.getUserName;
+            },
         },
         mounted() {
+
+            this.getLoggedIn();
 
             //   console.log("MOUNTED_ART_ADD");
             // api.getAllAuthors().then(response => {
@@ -724,6 +781,8 @@
             if (this.$route.params.article_id != null) {
                 console.log("EDIT MODE");
                 this.editMode = true;
+                this.uploadFilesCheckBoxValue = true;
+
             } //else console.log("ADD MODE");
 
             //  console.log("article!", this.article);

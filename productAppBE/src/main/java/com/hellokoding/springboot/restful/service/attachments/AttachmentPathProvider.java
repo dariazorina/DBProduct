@@ -1,15 +1,12 @@
 package com.hellokoding.springboot.restful.service.attachments;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 
 @Component
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 class AttachmentPathProvider {
 
     /**

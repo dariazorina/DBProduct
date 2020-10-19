@@ -1,16 +1,13 @@
 package com.hellokoding.springboot.restful.service.attachments;
 
 import com.hellokoding.springboot.restful.service.dto.EntityType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 @Component
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 class AttachmentIdProvider {
 
     /**
@@ -24,7 +21,7 @@ class AttachmentIdProvider {
      */
     Long get(EntityType entityType, Long entityId, Instant created, String user, String fileName) {
         // create new table and entity "attachment" with autoincremented id and fields in parameters
-        // (as usual, in model, not here of course)
+        // (as usual, in model)
         // all fields are not null
         // for now we will just use this entity to generate unique numeric ids for attachments,
         // and act as a "log" of attachment creation
