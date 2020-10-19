@@ -34,7 +34,7 @@ public class AttachmentService {
                                  String fileName, byte[] content) {
 
         Path entityPath = entityPathProvider.get(entityType, entityId);
-        Long id = idProvider.get(entityType, entityId, created, user, fileName);
+        Long id = idProvider.get();
         Path attachmentPath = pathProvider.get(entityPath, id, fileName);
 
         // save content to attachmentPath
