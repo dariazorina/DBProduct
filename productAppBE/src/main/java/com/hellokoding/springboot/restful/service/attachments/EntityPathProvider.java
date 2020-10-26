@@ -13,7 +13,6 @@ class EntityPathProvider {
 
     @Value("${attachments.root}")
     private String attachmentsRoot;
-
     /**
      * Build the file system path to entity home.
      *
@@ -21,8 +20,7 @@ class EntityPathProvider {
      * @param id    entity id
      * @return  entity home path
      */
-    Path get(EntityType type, Long id) {
+    Path get(EntityType type, Integer id) {
         return Path.of(attachmentsRoot, type.getName(), id.toString());
     }
-
 }

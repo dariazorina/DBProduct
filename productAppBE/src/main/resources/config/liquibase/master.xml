@@ -49,5 +49,6 @@
     <include file="config/liquibase/changelog/00000000000044_add_birth_death_year_field_person.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000045_add_comment_field_position.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000046_add_photo_field_person.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000048_add_attachment_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

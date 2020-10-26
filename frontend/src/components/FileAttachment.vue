@@ -1,29 +1,62 @@
 <template id="file-attachment">
 
-    <!--    <form class="formCreation">-->
     <b-card style="background-color: transparent">
-        <!--        <div class="col-md-12" style="margin-top: 0; background-color: transparent">-->
-        <label>Attach Files</label>
-        <div style="margin-top: 0px; background-color: transparent">
-            <input type="file" accept="*" multiple @change="onChange"/>
+<!--        <label>Attach Files</label>-->
+
+        <template v-if="alreadyUploadedFiles.length > 0">
+            <div class="col-12"  style="margin-bottom: 30px; background-color: transparent">
+                <label style="color: orange; font-size: 15px; font-weight: bold;">Already Uploaded Files</label>
+                <table class="greyGridTable" style="background-color: transparent" :key="componentKey">
+                    <thead>
+                    <tr>
+                        <th class='tdTitle'>Имя</th>
+                        <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата создания</th>
+                        <th class='tdTitle'>Автор</th>
+                        <th class='tdTitle'>Размер</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="file in alreadyUploadedFiles">
+                        <td>
+                            {{file.name}}
+                        </td>
+                        <td>
+                            {{ formatDate(file.date) }}
+                        </td>
+                        <td>
+                            {{userName}}
+                        </td>
+                        <td>
+                            {{formatSize(file.size)}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+
+        <div class="col-12">
+            <label style="color: orange; font-size: 15px; font-weight: bold;">Attach Files</label>
+            <div>
+                <input type="file" accept="*" multiple @change="onChange"/>
+            </div>
         </div>
 
 
-        <template v-if="!attachedFiles.length">
-            <!--               Здесь могла бы быть Ваша реклама ,)-->
-        </template>
-
-        <template v-else>
-            <div style="margin-top: 30px; background-color: transparent">
-                <!--                    <div v-for="node in attachedFiles">-->
-                <!--                        <v-btn text icon x-small @click="removeSelectedHashtag(node.name)">-->
-                <!--                            <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-                <!--                        </v-btn>-->
-                <!--                        {{ node.name }}-->
-                <!--                    </div>-->
+        <template v-if="attachedFiles.length>0">
+            <div class="col-12" style="margin-top: 30px;">
+                <label style="color: orange; font-size: 15px; font-weight: bold;">Attachments</label>
+<!--                            <div style="margin-top: 30px; background-color: pink">-->
+<!--                                    <div v-for="node in attachedFiles">-->
+<!--                                        <v-btn text icon x-small @click="removeSelectedHashtag(node.name)">-->
+<!--                                            <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+<!--                                        </v-btn>-->
+<!--                                        {{ node.name }}-->
+<!--                                    </div>-->
 
 
-                <table class="greyGridTable" style="background-color: transparent">
+                <table class="greyGridTable" style="background-color: transparent" :key="componentKey">
                     <thead>
                     <tr>
                         <th class='tdTitle'>Имя</th>
@@ -34,6 +67,13 @@
                     </thead>
                     <tbody>
                     <tr v-for="file in attachedFiles">
+<!--                        <td>-->
+<!--                            1111-->
+<!--                            <v-btn text icon x-small v-on:click="kkk">-->
+<!--&lt;!&ndash;                            <v-btn text icon x-small @click="removeSelectedFile(file.name)">&ndash;&gt;-->
+<!--                                <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+<!--                            </v-btn>-->
+<!--                        </td>-->
                         <td>
                             {{file.name}}
                         </td>
@@ -64,9 +104,9 @@
                 <!--                    </div>-->
             </div>
         </template>
-        <!--        </div>-->
+        <template v-else>
+        </template>
     </b-card>
-    <!--    </form>-->
 
 </template>
 
@@ -84,10 +124,14 @@
             userName: {
                 type: String
             },
+            alreadyUploadedFiles: {
+                type: Array
+            },
         },
 
         data: () => ({
             attachedFiles: [],
+            componentKey: 0,
         }),
 
         methods: {
@@ -107,22 +151,40 @@
             },
 
             formatSize(size) {
-                var i = Math.floor( Math.log(size) / Math.log(1024) );
-                return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+                let i = Math.floor(Math.log(size) / Math.log(1024));
+                return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
             },
 
-            // removeSelectedHashtag(hash) {
-            //     const index = this.selectedHashtag.indexOf(hash);
+            // kkk(){
+            //   console.log("KKK");
+            // },
+            //
+            // removeSelectedFile(file) {
+            //     console.log("IATT FILES", this.attachedFiles);
+            //     const index = this.attachedFiles.indexOf(file);
+            //     console.log("INDEX", index);
+            //
             //     if (index > -1) {
-            //         this.selectedHashtag.splice(index, 1);
+            //         this.attachedFiles.splice(index, 1);
             //     }
             // },
+
             // clearAllSelectedTags() {
             //     this.selectedHashtag = [];
             // },
             // addHashtagToArticleList(hashtag) {//from HashtagList
             //     this.tags = hashtag;
             // },
+        },
+        mounted() {
+            console.log("@@@@COMPONENT MOUNTED1", this.alreadyUploadedFiles);
+
+            // if (this.alreadyUploadedFiles.length > 0) {
+            //     console.log("@@@@COMPONENT MOUNTED2", this.alreadyUploadedFiles);
+            //     this.$emit('onChange', this.alreadyUploadedFiles);
+            // }
+            //if (already)
+            // this.componentKey += 1;
         }
 
     }

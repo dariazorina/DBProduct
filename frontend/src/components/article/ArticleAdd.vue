@@ -324,7 +324,8 @@
                     </div>
 
                     <div v-if="uploadMode||editMode">
-                        <file-attachment @onChange="createAttachment" :userName="loggedName"/>
+                        <file-attachment @onChange="createAttachment" :userName="loggedName"
+                                         :already-uploaded-files="uploadedFiles"/>
                     </div>
                 </form>
             </div>
@@ -344,10 +345,8 @@
                 <div v-if="!uploadMode" class="offset-sm-4 col-sm-3">
                     <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
                     <label for="checkbox">Check if you want to upload files after article creation</label>
-                </div>
 
 
-                <div class="offset-sm-4 col-sm-3">
                     <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
                             class="btn btn-warning">In Progress
                     </button>
@@ -356,13 +355,20 @@
                     </button>
 
                     <button type="button" class="btn btn-info">
+                        <router-link to="/article" style="color: white">Cancel</router-link>
+                    </button>
+                </div>
 
+                <div v-else class="offset-sm-4 col-sm-3">
+                    <button type="button" style="margin-right: 20px" @click="uploadFiles"
+                            class="btn btn-info">Upload Files
+                    </button>
+                    <button type="button" class="btn btn-info">
                         <router-link to="/article" style="color: white">Cancel</router-link>
 
                     </button>
                 </div>
             </div>
-            <!--            </div>-->
         </div>
     </v-app>
 </template>
@@ -371,6 +377,7 @@
     import apiPerson from "./../person/person-api";
     import apiLanguage from "./../language/language-api";
     import apiHashtag from "./../hashtag/hashtag-api";
+    import apiAttachment from "./../attachment-api";
     import FileAttachment from "./../FileAttachment";
 
     // import HashtagList from "./../hashtag/HashtagList.vue";
@@ -446,26 +453,44 @@
             loggedName: null,
             uploadFilesCheckBoxValue: false,
             uploadMode: false,
-
+            uploadedFiles: [],
         }),
 
         methods: {
-            createAttachment(files) {
-                console.log("files from COMPONENT", files)
+            // submitFile(file) {
+            //     let formData = new FormData();
+            //     formData.append('file', file);
+            //     axios.post('/api/v1/article/attachment/' + this.article.id,
+            //         formData,
+            //         {
+            //             headers: {
+            //                 'Content-Type': 'multipart/form-data'
+            //             }
+            //         }
+            //     ).then(function () {
+            //         console.log('SUCCESS!!');
+            //     })
+            //         .catch(function () {
+            //             console.log('FAILURE!!');
+            //         });
+            // },
 
-                // for (let i = 0; i < e.target.files.length; i++) {
-                //     this.attachedFiles.push(e.target.files[i]);
-                // }
+            uploadFiles() {             //on button press
+                for (let i = 0; i < this.attachedFiles.length; i++) {
+                    apiAttachment.uploadFile('article', this.article.id, this.attachedFiles[i], r => {
+                    });
+                    // this.submitFile(this.attachedFiles[i]);
+                    //todo progress bar?
+                }
+                router.push('/article');
             },
 
-
-            // onChange(e) {
-            //     console.log("files", e.target.files)
-            //
-            //     for (let i = 0; i < e.target.files.length; i++) {
-            //         this.attachedFiles.push(e.target.files[i]);
-            //     }
-            // },
+            createAttachment(files) {     //emit from FilesAttachment Component 'onChange'
+                console.log("files from COMPONENT", files);
+                for (let i = 0; i < files.length; i++) {
+                    this.attachedFiles.push(files[i]);
+                }
+            },
 
             removeSelectedHashtag(hash) {
                 const index = this.selectedHashtag.indexOf(hash);
@@ -696,12 +721,14 @@
 
                 if (this.formValidate()) {
                     api.create(this.article, r => {
-                        if (!this.uploadFilesCheckBoxValue){ //&&this.attachedFiles.length) {
+                        if (!this.uploadFilesCheckBoxValue) {
                             router.push('/article');
                         } else {
                             this.uploadMode = true;
                             this.uploadFilesCheckBoxValue = false;
-                            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here");
+                            let ID = r.data.id;
+                            this.article.id = ID;
+                            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here, ARTICLE ID", r.data, ID);
                         }
                     });
                 }
@@ -735,6 +762,11 @@
 
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
+                        for (let i = 0; i < this.attachedFiles.length; i++) {
+                            apiAttachment.uploadFile('article', this.article.id, this.attachedFiles[i], r => {
+                            });
+                            //todo progress bar?
+                        }
                         router.push('/article');
                     });
                 }
@@ -802,6 +834,11 @@
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
                         this.tags.push(this.article.hashtagList[i]);
                     }
+                    apiAttachment.getAttachments('article', this.article.id, r => {
+                        for (let i = 0; i < r.data.length; i++) {
+                            this.uploadedFiles.push(r.data[i]);
+                        }
+                    })
                 });
             }
         },

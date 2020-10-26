@@ -3,7 +3,8 @@ package com.hellokoding.springboot.restful.service.dto;
 public enum EntityType {
 
     ARTICLE("article"),
-    EVENT("event");
+    EVENT("event"),
+    PERSON("person");
 
     private String name;
 

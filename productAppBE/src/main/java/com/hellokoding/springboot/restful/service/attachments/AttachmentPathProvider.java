@@ -17,8 +17,8 @@ class AttachmentPathProvider {
      * @param fileName      attachment filename
      * @return  attachment path
      */
-    Path get(Path entityPath, Long id, String fileName) {
-        return Path.of(entityPath.toString(), String.format("%d-%s", id, fileName));
+    Path get(Path entityPath, Integer id, String fileName) {
+        return Path.of(entityPath.toString(), String.format("%d#%s", id, fileName));
     }
 
 }

@@ -1,20 +1,17 @@
 package com.hellokoding.springboot.restful.service.attachments;
 
+import com.hellokoding.springboot.restful.dao.AttachmentRepository;
+import com.hellokoding.springboot.restful.model.Attachment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 class AttachmentIdProvider {
-
-    /**
-     * Get attachment id unique in scope of system.
-     *
-     * @return  unique attachment id
-     */
-    Long get() {
-        // create new table and entity "attachment" with autoincremented primary-key id
-        return 0L;
+    private final AttachmentRepository attachmentRepository;
+    Integer get() {
+        Attachment attachment = new Attachment();
+        Attachment savedAttachment = attachmentRepository.save(attachment);
+        return savedAttachment.getId();
     }
-
 }

@@ -1,15 +1,24 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Article;
+import com.hellokoding.springboot.restful.model.Attachment;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
+import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
+import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
+import com.hellokoding.springboot.restful.service.dto.EntityType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +31,7 @@ import java.util.Optional;
 public class ArticleAPI {
 
     private final ArticleService articleService;
+    private final AttachmentService attachmentService;
 
     //api/v1/article/search?title=title&hash=hash
     @GetMapping("/search")
@@ -45,8 +55,13 @@ public class ArticleAPI {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody ArticleDto article) {
-        return ResponseEntity.ok(articleService.save(article));
+    public ResponseEntity<Article> create(@Valid @RequestBody ArticleDto article) {
+        Article art = articleService.save(article);
+
+        System.out.println("SAVED ARTICLE");
+        System.out.println(art);
+
+        return ResponseEntity.ok(art);
     }
 
     @GetMapping("/{id}")
@@ -77,5 +92,18 @@ public class ArticleAPI {
         }
         articleService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/attachment/{id}")
+    public ResponseEntity<Integer> handleFileUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
+        Integer attachmentId = attachmentService.createAttachment(EntityType.ARTICLE, id, Instant.now(), "admin", file.getOriginalFilename(), file.getBytes());
+//        if (attachmentId == 0) return ResponseEntity.ok(attachmentId); //todo?
+        return ResponseEntity.ok(attachmentId);
+    }
+
+    @GetMapping("/attachments/{id}")
+    public ResponseEntity<List<AttachmentDTO>> getAttachments(@PathVariable Integer id) {
+        List<AttachmentDTO> all = attachmentService.getAttachments(EntityType.ARTICLE, id);
+        return ResponseEntity.ok(all);
     }
 }
