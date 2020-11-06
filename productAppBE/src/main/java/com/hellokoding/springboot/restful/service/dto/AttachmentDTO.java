@@ -11,5 +11,5 @@ public class AttachmentDTO {
     private FileTime date;
     private Long size;
     //author? todo
-
+    private byte[] content;
 }

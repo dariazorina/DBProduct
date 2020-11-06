@@ -1,6 +1,9 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
+
+            <iframe id="iframeToDownload" style="display:none;"></iframe>
+
             <div class="form-group row" style="margin-bottom: 0">
 
                 <div v-if="editMode" class="col-5 col-form-label">
@@ -50,19 +53,21 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="add-url"><b>URL*</b></label>
-                            <input class="form-control" id="add-url" v-model="article.url"/>
+                            <input class="form-control" id="add-url" :disabled="uploadMode" v-model="article.url"/>
                         </div>
 
                         <div class="col-md-3">
                             <label><b>Язык*</b></label>
-                            <b-form-select v-model="selectedL" class="mb-3" id="language-selection">-->
+                            <b-form-select v-model="selectedL" class="mb-3" :disabled="uploadMode"
+                                           id="language-selection">-->
                                 <option v-for="lang in allLanguages" v-bind:value="lang.id">{{lang.name}}</option>
                             </b-form-select>
                         </div>
 
                         <div class="col-md-3">
                             <label for="date-input"><b>Дата*</b></label>
-                            <input class="form-control" type="date" id="date-input" v-model="article.date">
+                            <input class="form-control" type="date" id="date-input" :disabled="uploadMode"
+                                   v-model="article.date">
                         </div>
                     </div>
 
@@ -104,6 +109,7 @@
                                         placeholder="Начните печатать, чтобы найти автора"
                                         prepend-icon="mdi-database-search"
                                         return-object
+                                        :disabled="uploadMode"
                                 ></v-autocomplete>
                             </v-card-text>
                         </div>
@@ -131,6 +137,7 @@
                             <label for="add-title"><b>Заголовок в оригинале</b></label>
                             <input class="form-control" id="add-title"
                                    placeholder="Должно быть заполнено одно из полей заголовка"
+                                   :disabled="uploadMode"
                                    v-model="article.title"/>
                         </div>
 
@@ -140,8 +147,8 @@
                             <label for="add-title-rus"> <b>Заголовок на русском</b></label>
                             <input class="form-control" id="add-title-rus"
                                    placeholder="Должно быть заполнено одно из полей заголовка"
-                                   v-model="article.titleRus"
-                                   required/>
+                                   :disabled="uploadMode"
+                                   v-model="article.titleRus"/>
                         </div>
                     </div>
                 </form>
@@ -153,7 +160,7 @@
                         <label for="add-descr">Описание</label>
                         <div class="col-12">
                                 <textarea class="form-control" id="add-descr" rows="11" v-model="article.description"
-                                          required/>
+                                          :disabled="uploadMode"/>
                         </div>
 
                         <label>Форма добавления хештегов</label>
@@ -290,11 +297,13 @@
                                                 <div class="form-group row" style="padding-top: 30px">
 
                                                     <button type="button" style="margin-right: 20px; margin-left: 15px"
+                                                            :disabled="uploadMode"
                                                             @click="addHashtagToArticleList()"
                                                             class="btn btn-success">Add
                                                     </button>
 
                                                     <button type="button" class="btn btn-info"
+                                                            :disabled="uploadMode"
                                                             @click="clearAllSelectedTags()">Clear All
                                                     </button>
                                                 </div>
@@ -309,7 +318,7 @@
                         <label style="background-color: transparent">Хештеги</label>
                         <div class="col-12" style="background-color: transparent">
                             <div>
-                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys" :read-only="uploadMode"
                                            v-model="tags"></input-tag>
                             </div>
                         </div>
@@ -319,12 +328,15 @@
                         <div class="col-12 form-group green-border-focus">
 
                                     <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
-                                              background-color="palegreen" required/>
+                                              background-color="palegreen" :disabled="uploadMode"/>
                         </div>
                     </div>
 
                     <div v-if="uploadMode||editMode">
-                        <file-attachment @onChange="createAttachment" :userName="loggedName"
+                        <file-attachment @attachFiles="createAttachment"
+                                         @getAttachment="getAttachment"
+                                         @downloadAttachment="downloadAttachment"
+                                         :userName="loggedName"
                                          :already-uploaded-files="uploadedFiles"/>
                     </div>
                 </form>
@@ -457,24 +469,6 @@
         }),
 
         methods: {
-            // submitFile(file) {
-            //     let formData = new FormData();
-            //     formData.append('file', file);
-            //     axios.post('/api/v1/article/attachment/' + this.article.id,
-            //         formData,
-            //         {
-            //             headers: {
-            //                 'Content-Type': 'multipart/form-data'
-            //             }
-            //         }
-            //     ).then(function () {
-            //         console.log('SUCCESS!!');
-            //     })
-            //         .catch(function () {
-            //             console.log('FAILURE!!');
-            //         });
-            // },
-
             uploadFiles() {             //on button press
                 for (let i = 0; i < this.attachedFiles.length; i++) {
                     apiAttachment.uploadFile('article', this.article.id, this.attachedFiles[i], r => {
@@ -485,11 +479,19 @@
                 router.push('/article');
             },
 
-            createAttachment(files) {     //emit from FilesAttachment Component 'onChange'
+            createAttachment(files) {     //emit from FilesAttachment Component 'attachFiles'
                 console.log("files from COMPONENT", files);
                 for (let i = 0; i < files.length; i++) {
                     this.attachedFiles.push(files[i]);
                 }
+            },
+
+            downloadAttachment(file) {
+                document.getElementById('iframeToDownload').src = '/api/v1/article/downloadAttachment?entityId=' + this.article.id + '&id=' + file.id;
+            },
+
+            getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
+                apiAttachment.previewAttachment('article', this.article.id, file.id);
             },
 
             removeSelectedHashtag(hash) {
@@ -637,9 +639,11 @@
             },
 
             deleteAuthor(author) {
-                for (let i = 0; i < this.article.authorList.length; i++) {
-                    if (this.article.authorList[i].id === author.id) {
-                        this.article.authorList.splice(i, 1);
+                if (!this.uploadMode) {
+                    for (let i = 0; i < this.article.authorList.length; i++) {
+                        if (this.article.authorList[i].id === author.id) {
+                            this.article.authorList.splice(i, 1);
+                        }
                     }
                 }
             },

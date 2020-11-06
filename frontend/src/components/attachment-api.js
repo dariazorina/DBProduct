@@ -50,7 +50,12 @@ export default {
                     router.push('/login');
                 }
             });
+    },
+
+      previewAttachment(entity, entityd, id) {
+        let url = '/api/v1/' + entity + '/attachment?entityId=' + entityd + '&id=' + id;
+        console.log("PREVIEW ATTACHMENT", url);
+        window.open('/api/v1/' + entity + '/attachment?entityId=' + entityd + '&id=' + id, '_blank', `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no`);
     }
 }
-
 

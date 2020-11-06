@@ -1,14 +1,15 @@
 <template id="file-attachment">
 
     <b-card style="background-color: transparent">
-<!--        <label>Attach Files</label>-->
+        <!--        <label>Attach Files</label>-->
 
         <template v-if="alreadyUploadedFiles.length > 0">
-            <div class="col-12"  style="margin-bottom: 30px; background-color: transparent">
+            <div class="col-12" style="margin-bottom: 30px; background-color: transparent">
                 <label style="color: orange; font-size: 15px; font-weight: bold;">Already Uploaded Files</label>
                 <table class="greyGridTable" style="background-color: transparent" :key="componentKey">
                     <thead>
                     <tr>
+                        <th class='tdTitle'></th>
                         <th class='tdTitle'>Имя</th>
                         <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата создания</th>
                         <th class='tdTitle'>Автор</th>
@@ -18,7 +19,23 @@
                     <tbody>
                     <tr v-for="file in alreadyUploadedFiles">
                         <td>
-                            {{file.name}}
+                            <v-btn text icon x-small @click="downloadAttachment(file)">
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon
+                                                color="primary"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on">
+                                            mdi-download
+                                        </v-icon>
+                                    </template>
+                                    <span>download</span>
+                                </v-tooltip>
+                            </v-btn>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" @click="getAttachment(file)">{{file.name}}</a>
                         </td>
                         <td>
                             {{ formatDate(file.date) }}
@@ -39,7 +56,7 @@
         <div class="col-12">
             <label style="color: orange; font-size: 15px; font-weight: bold;">Attach Files</label>
             <div>
-                <input type="file" accept="*" multiple @change="onChange"/>
+                <input type="file" accept="*" multiple @change="attachFiles"/>
             </div>
         </div>
 
@@ -47,13 +64,13 @@
         <template v-if="attachedFiles.length>0">
             <div class="col-12" style="margin-top: 30px;">
                 <label style="color: orange; font-size: 15px; font-weight: bold;">Attachments</label>
-<!--                            <div style="margin-top: 30px; background-color: pink">-->
-<!--                                    <div v-for="node in attachedFiles">-->
-<!--                                        <v-btn text icon x-small @click="removeSelectedHashtag(node.name)">-->
-<!--                                            <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-<!--                                        </v-btn>-->
-<!--                                        {{ node.name }}-->
-<!--                                    </div>-->
+                <!--                            <div style="margin-top: 30px; background-color: pink">-->
+                <!--                                    <div v-for="node in attachedFiles">-->
+                <!--                                        <v-btn text icon x-small @click="removeSelectedHashtag(node.name)">-->
+                <!--                                            <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+                <!--                                        </v-btn>-->
+                <!--                                        {{ node.name }}-->
+                <!--                                    </div>-->
 
 
                 <table class="greyGridTable" style="background-color: transparent" :key="componentKey">
@@ -67,13 +84,13 @@
                     </thead>
                     <tbody>
                     <tr v-for="file in attachedFiles">
-<!--                        <td>-->
-<!--                            1111-->
-<!--                            <v-btn text icon x-small v-on:click="kkk">-->
-<!--&lt;!&ndash;                            <v-btn text icon x-small @click="removeSelectedFile(file.name)">&ndash;&gt;-->
-<!--                                <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-<!--                            </v-btn>-->
-<!--                        </td>-->
+                        <!--                        <td>-->
+                        <!--                            1111-->
+                        <!--                            <v-btn text icon x-small v-on:click="kkk">-->
+                        <!--&lt;!&ndash;                            <v-btn text icon x-small @click="removeSelectedFile(file.name)">&ndash;&gt;-->
+                        <!--                                <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+                        <!--                            </v-btn>-->
+                        <!--                        </td>-->
                         <td>
                             {{file.name}}
                         </td>
@@ -135,15 +152,23 @@
         }),
 
         methods: {
-            onChange(e) {
-                // console.log("files", e.target.files)
+            downloadAttachment(file) {
+                console.log("DOWNLD Attachment", file);
+                this.$emit('downloadAttachment', file);
+            },
 
+            getAttachment(file) {
+                console.log("get Attachment", file);
+                this.$emit('getAttachment', file);
+            },
+
+            attachFiles(e) {
+                // console.log("files", e.target.files)
                 for (let i = 0; i < e.target.files.length; i++) {
                     this.attachedFiles.push(e.target.files[i]);
                 }
-
-                console.log("ON CHANGE", this.attachedFiles);
-                this.$emit('onChange', this.attachedFiles);
+                console.log("attach Files", this.attachedFiles);
+                this.$emit('attachFiles', this.attachedFiles);
             },
 
             formatDate(date) {

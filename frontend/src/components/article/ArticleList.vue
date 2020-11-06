@@ -121,8 +121,8 @@
                 <th class='tdTitle'>Хештеги</th>
                 <th class='tdTitle'>Автор</th>
                 <th class='tdTitle'>Заголовок</th>
-                <th class='tdTitle' style="width:20%">Описание</th>
-                <th class='tdTitle' style="width:14%; color:lightgray">Комментарии</th>
+                <th class='tdTitle' style="width:25%">Описание</th>
+                <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
 
                 <!--                <template v-if="statusCheckBox.length!=1">-->
                 <!--            <span v-show="statusCheckBox.length!=1">-->

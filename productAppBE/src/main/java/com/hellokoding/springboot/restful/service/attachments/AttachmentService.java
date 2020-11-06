@@ -4,13 +4,9 @@ import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
 import com.hellokoding.springboot.restful.service.dto.EntityType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Service
 @Component
 @RequiredArgsConstructor
 public class AttachmentService {
@@ -119,9 +114,56 @@ public class AttachmentService {
      * @param id         attachment id
      * @return attachment content
      */
-    public byte[] getAttachment(EntityType entityType, Integer entityId, Integer id) {
+//    public Blob getAttachment(EntityType entityType, Integer entityId, Integer id) {
+//    public byte[] getAttachment(EntityType entityType, Integer entityId, Integer id) {
+    public AttachmentDTO getAttachment(EntityType entityType, Integer entityId, Integer id) {
         // build attachment path and return content from file system
+
+        AttachmentDTO attachmentDTO;
+        BasicFileAttributes attributes;
+        String stringsAfterSplit[];
+
+        Path entityPath = entityPathProvider.get(entityType, entityId);
+        List<Path> pathFilesInFolder = new ArrayList<>();
+
+        try {
+            pathFilesInFolder = Files.walk(entityPath)
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        attachmentDTO = new AttachmentDTO();
+        for (Path pathFile : pathFilesInFolder) {
+            try {
+                stringsAfterSplit = pathFile.getFileName().normalize().toString().split("#", 2);
+
+                int i = Integer.parseInt(stringsAfterSplit[0]);
+                if (i == id) {
+                    attributes = Files.getFileAttributeView(pathFile, BasicFileAttributeView.class).readAttributes();
+                    attachmentDTO.setDate(attributes.creationTime());
+                    attachmentDTO.setSize(attributes.size());
+                    attachmentDTO.setId(stringsAfterSplit[0]);
+                    attachmentDTO.setName(stringsAfterSplit[1]);
+
+//                    Blob blob = new SerialBlob(Files.readAllBytes(pathFile) );
+//                    System.out.println(blob.length());
+                    attachmentDTO.setContent(Files.readAllBytes(pathFile));
+                    return attachmentDTO;
+
+//                    return blob;
+//                    return Files.readAllBytes(pathFile);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            catch (SerialException e) {
+//                e.printStackTrace();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+        }
         return null;
     }
-
 }
