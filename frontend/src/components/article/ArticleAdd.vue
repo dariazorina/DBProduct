@@ -38,10 +38,10 @@
 
                 <form class="formCreation">
 
-                    <div v-if="editMode" class="row align-items-center">
-                        <label class="col-1 col-form-label labelInCreation">Status</label>
-                        <div class="col-6">
-                            <b-form-select v-model="selectedS" class="mb-3" id="status-selection">
+                    <div v-if="editMode" class="row align-items-center" style="background-color: transparent">
+                        <label class="col-1 col-form-label labelInCreation" style="vertical-align: center; background-color: transparent">Status</label>
+                        <div class="col-6" style="background-color: transparent">
+                            <b-form-select v-model="selectedS" class="mb-0" id="status-selection" style="background-color: transparent;">
                                 <option v-for="status in statusOptions" v-bind:value="status.value">
                                     {{status.text}}
                                 </option>
@@ -481,6 +481,7 @@
 
             createAttachment(files) {     //emit from FilesAttachment Component 'attachFiles'
                 console.log("files from COMPONENT", files);
+                this.attachedFiles = [];
                 for (let i = 0; i < files.length; i++) {
                     this.attachedFiles.push(files[i]);
                 }
