@@ -490,7 +490,7 @@
                 }
             },
 
-            updateOccupation(occupation) {
+            updateOccupation(occupation) {   //occupation was sent by Property
                 this.occupationWithIndexList.push(occupation);
                 console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
             },
@@ -659,7 +659,7 @@
 
             this.initYears();
 
-            if (this.editMode) {
+            if (this.editMode) {////////////////////////////////EDIT MODE//////////////////////////////////////
                 api.findById(this.$route.params.person_id, r => {
                     this.person = r.data;
                     // console.log("person EDIT!", this.person);

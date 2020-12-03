@@ -20,7 +20,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private Integer country_id;
     private Country country;
-    private String settlement;
     private String description;
     private String miscellany;
 
@@ -29,15 +28,18 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private List<UrlLink> linkList;
     private List<String> hashtagList;
-    private List<PositionDto> testList;
+    private List<PositionDto> testList; //todo rename
+    private List<ItemConnectionDto> locationList;
     private String photo;
 //    private byte[] photo;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear, String photo) {
-//    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus, String nameRus, String surnameEng, String nameEng, Integer country_id, String settlement, String description, String miscellany, List<UrlLink> linkList, List<String> hashtagList, List<PositionDto> testList, Integer bYear, Integer dYear, byte[] photo) {
+    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus,
+                        String nameRus, String surnameEng, String nameEng, String description,
+                        String miscellany, List<UrlLink> linkList, List<String> hashtagList,
+                        List<PositionDto> testList, List<ItemConnectionDto> locationList, Integer bYear, Integer dYear, String photo) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -46,13 +48,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameRus = nameRus;
         this.surnameEng = surnameEng;
         this.nameEng = nameEng;
-        this.country_id = country_id;
-        this.settlement = settlement;
         this.description = description;
         this.miscellany = miscellany;
         this.linkList = linkList;
         this.hashtagList = hashtagList;
         this.testList = testList;
+        this.locationList = locationList;
         this.birthYear = bYear;
         this.deathYear = dYear;
         this.photo = photo;
@@ -67,8 +68,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameRus = p.getNameRus();
         this.surnameEng = p.getSurnameEng();
         this.nameEng = p.getNameEng();
-        this.country = p.getCountry();
-        this.settlement = p.getSettlement();
         this.description = p.getDescription();
         this.miscellany = p.getMiscellany();
         this.linkList = p.getLinkList();
@@ -82,6 +81,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         }
 
         this.testList = new ArrayList<>();
+        this.locationList = new ArrayList<>();
 
         PositionDto posDto;
         for (Position pos : p.getOccupation()) {
@@ -93,11 +93,20 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             this.testList.add(posDto);
         }
 
+        ItemConnectionDto locationConnectionDto;
+        for (PersonLocationConnection connection : p.getLocationConnections()) {
+            locationConnectionDto = new ItemConnectionDto();
+            locationConnectionDto.setItemId(connection.getLocation().getId());
+            locationConnectionDto.setConnection(connection.getConnection());
+            locationConnectionDto.setComment(connection.getComment());
+
+            this.locationList.add(locationConnectionDto);
+        }
+
         if (p.getPhoto() != null) {
             String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
             this.photo = encodedString;
         }
-
     }
 
     public Integer getId() {
@@ -180,14 +189,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.country = country;
     }
 
-    public String getSettlement() {
-        return settlement;
-    }
-
-    public void setSettlement(String settlement) {
-        this.settlement = settlement;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -212,12 +213,18 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.hashtagList = hashtagList;
     }
 
-    public List<PositionDto> getTestList() {
-        return testList;
-    }
+    public List<PositionDto> getTestList() { return testList;  }
 
     public void setTestList(List<PositionDto> testList) {
         this.testList = testList;
+    }
+
+    public List<ItemConnectionDto> getLocationList() {
+        return locationList;
+    }
+
+    public void setLocationList(List<ItemConnectionDto> locationList) {
+        this.locationList = locationList;
     }
 
     public String getMiscellany() {

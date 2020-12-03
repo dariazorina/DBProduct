@@ -12,6 +12,8 @@ public interface PersonService {
 //    List<Person> findAll();
 
     Optional<NewPersonDto> findById(Integer id);
+
+    List<NewPersonDto> findByIds(List<Integer> idList);
 //    Optional<Person> findById(Integer id);
 
     void deleteById(Integer id);

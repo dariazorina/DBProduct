@@ -43,17 +43,31 @@ public class Person {
     @Column(name = "death_year")
     private Integer deathYear;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")//, insertable = false, updatable = false)
-//    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "location_id")//, insertable = false, updatable = false)
+////    @JoinColumn(name = "country_id", nullable = false)
+//    private Location location;
 
-    private String settlement;
+   // private String settlement;
+
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @ToString.Exclude
-//    @JsonIgnore
+    @ToString.Exclude //    @JsonIgnore
     private List<Position> occupation;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude //    @JsonIgnore
+    private List<ArticlePersonConnection> connections;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<PersonHashtag> hashtagList;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<PersonLocationConnection> locationConnections;
+
 
     @ManyToMany
     @JoinTable(
@@ -62,40 +76,13 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
-    private String description;
-//    @Column(name = "photo")
-//    private byte[] photo;
 
-//    columnDefinition="BLOB"
+    private String description;
+    private String miscellany;
+
+    //    columnDefinition="BLOB"
 //    @Lob  //was an error bytea - bigint
     @Column(name = "photo")//, columnDefinition="mediumblob")
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
-
-
-//    @Column(name = "image")
-//    private Blob image;
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "person_annex",
-//            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
-//            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
-//    private List<Annex> annexList;
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "person_hashtag",
-//            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
-//            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @JsonIgnore
-    private List<PersonHashtag> hashtagList;
-
-    private String miscellany;
 }

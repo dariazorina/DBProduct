@@ -21,12 +21,12 @@ public class Event {
 
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "location_id", nullable = false)
+//    private Location location;
 
     private String settlement;
-    private String location;
+//    private String location;
     private String type;
 
 

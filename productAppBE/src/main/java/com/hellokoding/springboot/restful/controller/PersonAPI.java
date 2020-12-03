@@ -39,6 +39,11 @@ public class PersonAPI {
         return ResponseEntity.ok(personService.save(person));
     }
 
+    @PostMapping("/ids")
+    public ResponseEntity getPersonsByIds(@Valid @RequestBody List<Integer> idList) {
+        return ResponseEntity.ok(personService.findByIds(idList));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<NewPersonDto> findById(@PathVariable Integer id) {
         Optional<NewPersonDto> stock = personService.findById(id);

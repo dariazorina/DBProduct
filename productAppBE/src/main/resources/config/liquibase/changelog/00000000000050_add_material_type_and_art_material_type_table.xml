@@ -1,0 +1,71 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="11112020-1">
+        <createTable remarks="тип материала" tableName="t_material_type">
+            <column autoIncrement="true" name="material_type_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_material_type_pkey"/>
+            </column>
+            <column name="content" remarks="Значение типа материала" type="TEXT"/>
+            <column name="miscellany" type="TEXT"/>
+            <column name="parent_id" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Даша" id="11112020-2">
+        <addNotNullConstraint columnDataType="INT"
+                              columnName="parent_id"
+                              schemaName="public"
+                              tableName="t_material_type"/>
+
+        <addUniqueConstraint columnNames="parent_id, content" tableName="t_material_type"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="11112020-3">
+        <createTable remarks="Таблица связка" tableName="art_material_type">
+            <column autoIncrement="true" name="art_material_type_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_art_material_type_pkey"/>
+            </column>
+            <column name="article_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="material_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assigned_material_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="article_id, material_type_id, level, assigned_material_type_id" tableName="art_material_type"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="11112020-4">
+        <addForeignKeyConstraint baseColumnNames="material_type_id"
+                                 baseTableName="art_material_type"
+                                 constraintName="t_material_type_article_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="material_type_id"
+                                 referencedTableName="t_material_type"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="11112020-5">
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="art_material_type"
+                                 constraintName="t_article_material_type_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="article_id"
+                                 referencedTableName="t_article"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="11112020-6">
+        <addForeignKeyConstraint baseColumnNames="assigned_material_type_id"
+                                 baseTableName="art_material_type"
+                                 constraintName="t_ass_material_type_art_material_type_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="material_type_id"
+                                 referencedTableName="t_material_type"/>
+    </changeSet>
+</databaseChangeLog>

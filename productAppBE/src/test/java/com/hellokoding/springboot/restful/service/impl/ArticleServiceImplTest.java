@@ -112,7 +112,7 @@ public class ArticleServiceImplTest {
         dtoBuilder.status(status);
         dtoBuilder.url(url);
         dtoBuilder.miscellany(miscellany);
-        dtoBuilder.authorList(new ArrayList<>());
+//        dtoBuilder.authorList(new ArrayList<>());
 
         article.setDescription(description);
         article.setHashtagList(hashtagList);
@@ -122,9 +122,9 @@ public class ArticleServiceImplTest {
         article.setLanguage(language);
         article.setDate(date);
         article.setStatus(status);
-        article.setUrl(url);
+//        article.setUrl(url);
         article.setMiscellany(miscellany);
-        article.setAuthorList(new ArrayList<>());
+//        article.setAuthorList(new ArrayList<>());
 
         when(hashTagRepository.getHashTagByContent(h1.getContent())).thenReturn(h1);
         when(articleRepository.save(any())).then(returnsFirstArg());

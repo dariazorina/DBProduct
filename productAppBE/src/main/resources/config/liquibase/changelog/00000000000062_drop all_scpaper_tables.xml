@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="18112020-1">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="t_scpaper"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="t_scpaper"/>
+
+    </changeSet>
+
+    <changeSet author="Даша" id="18112020-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="scpaper_author"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="scpaper_author"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="18112020-3">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="scpaper_link"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="scpaper_link"/>
+    </changeSet>
+</databaseChangeLog>

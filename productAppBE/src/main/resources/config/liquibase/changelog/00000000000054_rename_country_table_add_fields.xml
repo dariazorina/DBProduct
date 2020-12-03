@@ -1,0 +1,69 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="12112020-1">
+        <addColumn schemaName="public"
+                   tableName="t_country">
+            <column name="region" type="TEXT"/>
+        </addColumn>
+
+        <addColumn schemaName="public"
+                   tableName="t_country">
+            <column name="city" type="TEXT"/>
+        </addColumn>
+
+        <addColumn schemaName="public"
+                   tableName="t_country">
+            <column name="address" type="TEXT"/>
+        </addColumn>
+
+        <addColumn schemaName="public"
+                   tableName="t_country">
+            <column name="placement" type="TEXT"/>
+        </addColumn>
+
+        <renameColumn columnDataType="SERIAL"
+                      newColumnName="location_id"
+                      oldColumnName="country_id"
+                      schemaName="public"
+                      tableName="t_country"/>
+
+        <renameColumn columnDataType="TEXT"
+                      newColumnName="country"
+                      oldColumnName="name"
+                      schemaName="public"
+                      tableName="t_country"/>
+
+        <dropColumn
+                columnName="code"
+                schemaName="public"
+                tableName="t_country"/>
+
+        <addNotNullConstraint columnDataType="TEXT"
+                              columnName="country"
+                              schemaName="public"
+                              tableName="t_country"/>
+
+<!--        <dropPrimaryKey constraintName="t_country_pkey"-->
+<!--                        schemaName="public"-->
+<!--                        tableName="t_country"/>-->
+
+        <dropUniqueConstraint constraintName="unique_constr_name"
+                              schemaName="public"
+                              tableName="t_country"
+                              uniqueColumns="name"/>
+    </changeSet>
+
+<!--    <changeSet author="Даша" id="12112020-2">-->
+<!--        <renameTable newTableName="t_country"-->
+<!--                     oldTableName="t_location"-->
+<!--                     schemaName="public"/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet author="Даша" id="12112020-3">-->
+<!--        <addPrimaryKey columnNames="location_id" constraintName="t_location_pkey" tableName="t_location"/>-->
+<!--    </changeSet>-->
+
+</databaseChangeLog>

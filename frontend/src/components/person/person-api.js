@@ -20,22 +20,17 @@ export default {
             })
     },
 
-    // getAllCountries() {
-    //     return AXIOS.get(`/country`);
-    // },
-    //
-    // getAllMovements() {
-    //     return AXIOS.get(`/movement`);
-    // },
-
-    // getImage(data, config) {
-    //     AXIOS
-    //         .put('/person', data, config)
-    //         .then(response => {
-    //                 console.log('image upload response > ', response)
-    //             }
-    //         )
-    // },
+    getPersonsByIds(idList, fn) {
+        AXIOS
+            .post(`/person/ids`, idList)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
 
     create(person, fn) {
         AXIOS

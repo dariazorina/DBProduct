@@ -39,7 +39,8 @@
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Дата</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{ article.date }}</span>
+                <div class="col-sm-10" style="background-color:lavender;">
+                    <span class="float-left"> {{ article.date }}</span>
                 </div>
             </div>
 
@@ -50,7 +51,9 @@
                     </div>
                 </div>
                 <div class="col-sm-10"><span class="float-left">
-                <div v-for="author in article.authorList">{{author.surname}}</div>
+                     <div v-for="author in articlePersonEntities">
+                            {{author.surname}}
+                    </div>
                 </span>
                 </div>
             </div>
@@ -146,6 +149,7 @@
 
 <script>
     import api from "./article-api";
+    import apiPerson from "./../person/person-api";
     import moment from "moment";
 
     import "vue-scroll-table";
@@ -155,44 +159,13 @@
         data() {
             return {
                 articles: [],
-                article: {authorList: [], language: {}, movement: {}, hashtagList: [], linkList: []},
+                article: {personList: [], language: {}, movement: {}, hashtagList: [], linkList: []},
                 authors: [],
-                searchKey: '',
-                response: [],
-                errors: [],
-                showResponse: false,
+                articlePersonIds: [], //before request
+                articlePersonEntities: [], //after request
             }
         },
-        // computed: {
-        //     filteredArticles() {
-        //         return this.articles.filter((article) => {
-        //             return article.title.indexOf(this.searchKey) > -1
-        //                 || article.date.indexOf(this.searchKey) > -1
-        //                 || article.description.indexOf(this.searchKey) > -1
-        //         })
-        //     }
-        // },
         methods: {
-            // loadArticles() {
-            //     api.getAll().then(response => {
-            //         this.articles = response.data;
-            //         console.log(response.data)
-            //     })
-            //         .catch(error => {
-            //             this.errors.push(error)
-            //         })
-            // },
-
-            // formatAuthor(article) {
-            //     let surname = '';
-            //
-            //     for (let i = 0; i < article.authorList.length; i++) {
-            //         surname = surname + article.authorList[i].surname;
-            //         surname = surname + '\\10';
-            //     }
-            //     return surname;
-            // },
-
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
             },
@@ -201,21 +174,23 @@
                 location.href = url;
                 // console.log("123");
             },
-
         },
         mounted() {
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;
                 this.article.date = this.formatDate(this.article.date);
+
+                for (let j = 0; j < this.article.personList.length; j++) {
+                    this.articlePersonIds.push(this.article.personList[j].itemId);
+                }
+                console.log(this.articlePersonIds);
+
+                apiPerson.getPersonsByIds(this.articlePersonIds, response => {
+                    this.articlePersonEntities = response.data;
+                    console.log("apiPerson", this.articlePersonEntities);
+                });
+
             });
-
-            // document.addEventListener("DOMContentLoaded", function (event) {
-            //     // this.addLink("URL", "http://facebook.com")
-            //
-            //     let element = document.getElementById("URL");
-            //     element.href = "http://facebook.com";
-            // });
-
         },
 
         // dateFormat(value, row, index) {  //todo

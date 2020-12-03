@@ -39,9 +39,11 @@
                 <form class="formCreation">
 
                     <div v-if="editMode" class="row align-items-center" style="background-color: transparent">
-                        <label class="col-1 col-form-label labelInCreation" style="vertical-align: center; background-color: transparent">Status</label>
+                        <label class="col-1 col-form-label labelInCreation"
+                               style="vertical-align: center; background-color: transparent">Status</label>
                         <div class="col-6" style="background-color: transparent">
-                            <b-form-select v-model="selectedS" class="mb-0" id="status-selection" style="background-color: transparent;">
+                            <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
+                                           style="background-color: transparent;">
                                 <option v-for="status in statusOptions" v-bind:value="status.value">
                                     {{status.text}}
                                 </option>
@@ -52,8 +54,11 @@
 
                     <div class="form-row">
                         <div class="col-md-6">
-                            <label for="add-url"><b>URL*</b></label>
-                            <input class="form-control" id="add-url" :disabled="uploadMode" v-model="article.url"/>
+                            <label for="add-link"><b>Links*</b></label>
+                            <div>
+                                <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
+                                           placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
+                            </div>
                         </div>
 
                         <div class="col-md-3">
@@ -70,68 +75,46 @@
                                    v-model="article.date">
                         </div>
                     </div>
-
-
-                    <!--                        <div class="form-group row align-items-center">-->
-                    <!--                            <label for="date-input" class="col-1 col-form-label labelInCreation"><b>Date*</b></label>-->
-                    <!--                            <div class="col-4">-->
-                    <!--                                <input class="form-control" type="date" id="date-input" v-model="article.date">-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-
                 </form>
 
-                <form class="authorsFormCreation" style="background-color: transparent; padding-right: -10px">
-                    <div class="row align-items-center"
-                         style="background-color: transparent; ; padding-right: -10px; margin-right: -10px">
-                        <label for="author-autocomplete" class="col-1 col-form-label"> </label>
-                        <div class="col-6"
-                             style="background-color: transparent; padding-right: -30px; padding-left: -10px; margin-left: -55px; margin-right: 45px">
-                            <v-card-text>
-                                <v-autocomplete
+                <form class="authorsFormCreation form-row col-12"
+                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                        <v-card-text>
+                            <v-autocomplete
+                                    id="author-autocomplete"
+                                    label="Авторы"
 
-                                        id="author-autocomplete"
-                                        label="Авторы"
+                                    :items="items"
+                                    :loading="isLoading"
+                                    :search-input.sync="authorSearch"
+                                    color="green"
+                                    hide-no-data
+                                    hide-selected
 
-                                        :items="items"
-                                        :loading="isLoading"
-                                        :search-input.sync="authorSearch"
-                                        color="green"
-                                        hide-no-data
-                                        hide-selected
+                                    v-model="selected"
 
-                                        v-model="selected"
+                                    @change="addAuthor(selected)"
+                                    @focus="testFocus(selected)"
+                                    item-text="surname"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти автора"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
 
-                                        @change="addAuthor(selected)"
-                                        @focus="testFocus(selected)"
-                                        item-text="surname"
-                                        item-value="id"
-                                        placeholder="Начните печатать, чтобы найти автора"
-                                        prepend-icon="mdi-database-search"
-                                        return-object
-                                        :disabled="uploadMode"
-                                ></v-autocomplete>
-                            </v-card-text>
-                        </div>
-
-
-                        <!--                    <label class="col-1 col-form-label labelInCreation">Author</label>-->
-                        <!--                    <div class="">-->
-                        <ul class="list-group col-sm-5" order="1"
-                            style="background-color: transparent; padding-left: 0px; padding-right: 0px">
-                            <li v-for="author in this.article.authorList"
-                                class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ author.surname }}
-                                <span class="close" @click="deleteAuthor(author)">&times;</span>
-                            </li>
-                        </ul>
-                        <!--                    </div>-->
-
-
+                    <div v-if="personConnectionList.length>0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="personConnectionList"
+                                             style="background-color: transparent; padding:0px" class="col-12"
+                                             @update-item="updateItem"/>
                     </div>
                 </form>
+
                 <form class="formCreation">
-                    <!--                    <div class="row align-items-center">-->
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="add-title"><b>Заголовок в оригинале</b></label>
@@ -141,8 +124,6 @@
                                    v-model="article.title"/>
                         </div>
 
-
-                        <!--                        <div class="row align-items-center">-->
                         <div class="col-md-6">
                             <label for="add-title-rus"> <b>Заголовок на русском</b></label>
                             <input class="form-control" id="add-title-rus"
@@ -221,30 +202,6 @@
                                                 class="overflow-y-auto"
                                         >
 
-
-                                            <!--                                            <v-treeview-->
-                                            <!--                                                    v-model="selection"-->
-                                            <!--                                                    :items="tagItems"-->
-                                            <!--                                                    :selection-type="selectionType"-->
-                                            <!--                                                    :search="searchHashtag"-->
-                                            <!--                                                    dense-->
-                                            <!--                                                    open-on-click-->
-                                            <!--                                                    selectable-->
-                                            <!--                                                    return-object-->
-                                            <!--                                                    open-all-->
-                                            <!--                                            ></v-treeview>-->
-
-                                            <!--                                            @update:open="onSearchToOpen"-->
-
-
-                                            <!--                                            selectable-->
-                                            <!--                                            :selection-type="selectionType"-->
-                                            <!--                                            open-on-click-->
-                                            <!--                                            v-model="selectedHashtag"-->
-                                            <!--                                            :active="activeNode"-->
-
-
-                                            <!--                                            :items="tagItems"-->
                                             <v-treeview
                                                     :items="filteredElements"
                                                     :open="filteredKeys"
@@ -400,11 +357,13 @@
     import Vue from 'vue';
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
+    import ConnectionComponent from "../connection/ConnectionComponent";
 
     Vue.component('input-tag', InputTag);
 
     export default {
         components: {
+            ConnectionComponent,
             FileAttachment
             // HashtagList
         },
@@ -413,8 +372,8 @@
 
         data: () => ({
             test: "articleProp",
-            // addTagOnKeys: [13, 9],
-            addTagOnKeys: [],  //to prevent enter in input-tag))
+            addTagOnKeys: [13, 9],
+            // addTagOnKeys: [],  //to prevent enter in input-tag))
             descriptionLimit: 60,
             entries: [],
             isLoading: false,
@@ -431,6 +390,11 @@
             validationErrors: {},
             hasError: false,
 
+            inputPersonConnection: '',
+            inputPersonComment: '',
+            personConnectionList: [],
+            locationConnectionList: [],
+            links: [],
             tags: [],
             allTags: [],
             tagsTree: [],
@@ -442,7 +406,7 @@
             allLanguages: [],
             allMovements: [],
 
-            article: {authorList: [], hashtagList: []},
+            article: {personList: [], locationList: [], hashtagList: []},
             selected: [], //[''],
             status: ["statusProgress", "statusDone"],
             statusOptions: [
@@ -458,7 +422,6 @@
                 imageUrl: null,
                 imageBase64: null
             },
-
 
             attachedFiles: [],
             loggedInFlag: false,
@@ -619,24 +582,28 @@
 
             addAuthor(obj) {
                 // console.log("GET CHANGED");
+                if (this.editMode) {
 
-                let i = 0;
-                for (i = 0; i < this.article.authorList.length; i++) { //to exclude double values
-                    if (this.article.authorList[i].id === obj.id) {
-                        break;
+                } else {
+                    let i = 0;
+                    for (i = 0; i < this.personConnectionList.length; i++) { //to exclude double values
+                        if (this.personConnectionList[i].id === obj.id) {
+                            break;
+                        }
+                    }
+
+                    if (i === this.personConnectionList.length) {
+                        let connection = {
+                            "id": obj.id,
+                            "name": obj.surname, // + " " + this.article.authorList[i].name,
+                            "connection": '',
+                            "comment": '',
+                            "hasClicked": false
+                        };
+                        this.personConnectionList.push(connection);
+                        console.log("ADDED");
                     }
                 }
-
-                if (i === this.article.authorList.length) {
-                    this.article.authorList.push(obj);
-                    console.log("ADDED");
-                }
-
-                // if (typeof this.selected !== 'undefined') {
-                //     console.log("SELECTED");
-                //     console.log(this.selected);
-                //     this.selected = "";
-                // }
             },
 
             deleteAuthor(author) {
@@ -673,7 +640,7 @@
             },
 
             formValidate() {
-                this.addStatus('add-url', (!this.article.url));
+                this.addStatus('add-link', (!this.links));
                 if (this.hasError) {
                 } else {
                     this.addStatus('language-selection', (!this.selectedL));
@@ -695,6 +662,10 @@
                 if (this.hasError)
                     console.log('ERROROROR----------------------------');
                 return !this.hasError;
+            },
+
+            updateItem(item) {
+                console.log("ITEM AFTER COMPONENT", item);
             },
 
             createArticle(currentStatus) {
@@ -724,7 +695,26 @@
 
                 this.article.linkList = [];
 
+                for (let i = 0; i < this.links.length; i++) {
+                    this.article.linkList[i] = {
+                        "content": this.links[i]
+                    };
+                    console.log("CREATE PERS link: ", this.links[i]);
+                }
+
+                for (let i = 0; i < this.personConnectionList.length; i++) {
+                    let a = {
+                        "itemId": this.personConnectionList[i].id,
+                        "connection": this.personConnectionList[i].connection,
+                        "comment": this.personConnectionList[i].comment
+                    };
+                    // console.log("CREATE PERS ON A: ", a);
+                    this.article.personList.push(a);
+                    // console.log("CREATE PERS ON A: ", this.article.personList);
+                }
+
                 if (this.formValidate()) {
+                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
                     api.create(this.article, r => {
                         if (!this.uploadFilesCheckBoxValue) {
                             router.push('/article');
@@ -849,7 +839,7 @@
         },
 
         computed: {
-            items() {
+         items() {
                 return this.entries.map(entry => {
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
@@ -1072,7 +1062,7 @@
                         if (typeof this.selected !== 'undefined') {
                             console.log("SELECTED IN WATCH");
                             console.log(this.selected);
-                            if (this.article.authorList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.article.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selected = "";
                         }
 

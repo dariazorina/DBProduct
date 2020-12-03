@@ -19,13 +19,18 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private Integer status;
     private String titleRus;
 
-    private List<Person> authorList;
     private String description;
     private String url;
+    private List<UrlLink> linkList;
+    private List<ItemConnectionDto> personList;
+    private List<ItemConnectionDto> locationList;
     private List<String> hashtagList;
     private String miscellany;
 
-    public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status, String titleRus, List<Person> authorList, String description, String url, List<String> hashtagList, String miscellany) {
+    public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
+                      String titleRus, String description,
+                      String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
+                      List<String> hashtagList, String miscellany) {
         this.id = id;
         this.movement = movement;
         this.language = language;
@@ -33,9 +38,11 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.title = title;
         this.status = status;
         this.titleRus = titleRus;
-        this.authorList = authorList;
         this.description = description;
         this.url = url;
+        this.linkList = linkList;
+        this.personList = personList;
+        this.locationList = locationList;
         this.hashtagList = hashtagList;
         this.miscellany = miscellany;
     }
@@ -48,16 +55,40 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.title = article.getTitle();
         this.status = article.getStatus();
         this.titleRus = article.getTitleRus();
-        this.authorList = article.getAuthorList();
         this.description = article.getDescription();
-        this.url = article.getUrl();
-        this.miscellany = article.getMiscellany();
+        this.linkList = article.getLinkList();
+
+
+        this.personList = new ArrayList<>();
+        this.locationList = new ArrayList<>();
+
+        ItemConnectionDto personConnectionDto;
+        for (ArticlePersonConnection connection : article.getPersonConnections()) {
+            personConnectionDto = new ItemConnectionDto();
+            personConnectionDto.setItemId(connection.getPerson().getId());
+            personConnectionDto.setConnection(connection.getConnection());
+            personConnectionDto.setComment(connection.getComment());
+
+            this.personList.add(personConnectionDto);
+        }
+
+        ItemConnectionDto locationConnectionDto;
+        for (ArticleLocationConnection connection : article.getLocationConnections()) {
+            locationConnectionDto = new ItemConnectionDto();
+            locationConnectionDto.setItemId(connection.getLocation().getId());
+            locationConnectionDto.setConnection(connection.getConnection());
+            locationConnectionDto.setComment(connection.getComment());
+
+            this.locationList.add(locationConnectionDto);
+        }
 
         this.hashtagList = new ArrayList<>();
         for (ArticleHashtag articleHashtag : article.getHashtagList()) {
-            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag()))
+            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag())) {
                 this.hashtagList.add(articleHashtag.getHashtag().getContent());
+            }
         }
+        this.miscellany = article.getMiscellany();
     }
 
     public Integer getId() {
@@ -116,14 +147,6 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.titleRus = titleRus;
     }
 
-    public List<Person> getAuthorList() {
-        return authorList;
-    }
-
-    public void setAuthorList(List<Person> authorList) {
-        this.authorList = authorList;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -138,6 +161,30 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<UrlLink> getLinkList() {
+        return linkList;
+    }
+
+    public void setLinkList(List<UrlLink> linkList) {
+        this.linkList = linkList;
+    }
+
+    public List<ItemConnectionDto> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<ItemConnectionDto> personList) {
+        this.personList = personList;
+    }
+
+    public List<ItemConnectionDto> getLocationList() {
+        return locationList;
+    }
+
+    public void setLocationList(List<ItemConnectionDto> locationList) {
+        this.locationList = locationList;
     }
 
     public List<String> getHashtagList() {

@@ -44,9 +44,9 @@ public class Isource {
             inverseJoinColumns = @JoinColumn(name = "language_id", referencedColumnName = "language_id"))
     private List<Language> langList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "location_id", nullable = false)
+//    private Location location;
 
     @Column(name="year_create")
     private Integer yearCreate;

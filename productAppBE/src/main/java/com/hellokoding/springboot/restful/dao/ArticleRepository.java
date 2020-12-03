@@ -53,9 +53,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     //search in author surname and surnameRus, "starts with"
     @Query("select distinct a " +
             "from Article a " +
-            "join a.authorList aL " +
-            "where (lower(aL.surname) like lower(:author) " +
-            "or lower(aL.surnameRus) like lower(:author) ) " +
+            "join a.personConnections aL " +
+            "join aL.person aP " +
+            "where (lower(aP.surname) like lower(:author) " +
+            "or lower(aP.surnameRus) like lower(:author) ) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByAuthorAndDate(String author, Date startDate, Date endDate);
 
@@ -73,9 +74,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     //search status+author
     @Query("select distinct a " +
             "from Article a " +
-            "join a.authorList aL " +
-            "where (lower(aL.surname) like lower(:author) " +
-            "or lower(aL.surnameRus) like lower(:author)) " +
+            "join a.personConnections aL " +
+            "join aL.person aP " +
+            "where (lower(aP.surname) like lower(:author) " +
+            "or lower(aP.surnameRus) like lower(:author)) " +
             "and a.status = :status " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByAuthorAndStatusAndDate(String author, List<Integer> status, Date startDate, Date endDate);
@@ -83,9 +85,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     //search status+author
     @Query("select distinct a " +
             "from Article a " +
-            "join a.authorList aL " +
-            "where (lower(aL.surname) like lower(:author) " +
-            "or lower(aL.surnameRus) like lower(:author)) " +
+            "join a.personConnections aL " +
+            "join aL.person aP " +
+            "where (lower(aP.surname) like lower(:author) " +
+            "or lower(aP.surnameRus) like lower(:author)) " +
             "and a.status = :status ")
     List<Article> findByAuthorAndStatus(String author, List<Integer> status);
 

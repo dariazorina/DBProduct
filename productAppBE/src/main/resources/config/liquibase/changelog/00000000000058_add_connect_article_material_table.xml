@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="13112020-6">
+        <createTable tableName="t_connect_article_material">
+
+            <column autoIncrement="true" name="connection_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_connect_article_material_pkey"/>
+            </column>
+
+            <column name="article_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="material_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="connection_type_id" type="INT"/>
+
+            <column name="comment" type="TEXT"/>
+
+        </createTable>
+        <addUniqueConstraint columnNames="article_id, material_id, connection_type_id" tableName="t_connect_article_material"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="13112020-7">
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="t_connect_article_material"
+                                 constraintName="t_article_connect_article_material_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="article_id"
+                                 referencedTableName="t_article"/>
+
+        <addForeignKeyConstraint baseColumnNames="material_id"
+                                 baseTableName="t_connect_article_material"
+                                 constraintName="t_material_connect_article_material_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="article_id"
+                                 referencedTableName="t_article"/>
+
+        <addForeignKeyConstraint baseColumnNames="connection_type_id"
+                                 baseTableName="t_connect_article_material"
+                                 constraintName="t_material_connect_connection_type_ref_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="RESTRICT" onUpdate="NO ACTION"
+                                 referencedColumnNames="connection_type_id"
+                                 referencedTableName="t_connection_type"/>
+    </changeSet>
+    
+</databaseChangeLog>

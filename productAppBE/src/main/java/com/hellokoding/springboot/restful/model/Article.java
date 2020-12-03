@@ -1,5 +1,6 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -34,26 +35,37 @@ public class Article {
     @Column(name = "title_rus")
     private String titleRus;
 
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "art_author",
-            joinColumns = @JoinColumn(name = "art_id", referencedColumnName = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "person_id"))
-    private List<Person> authorList;
-
     private String description;
-    private String url;
+    private String text;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "art_hashtag",
-//            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
-//            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
+    @ManyToMany
+    @JoinTable(
+            name = "art_link",
+            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
+    private List<UrlLink> linkList;
+
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     //@ToString.Exclude
     private List<ArticleHashtag> hashtagList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ArticlePersonConnection> personConnections;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ArticleOrgConnection> orgConnections;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<ArticleMaterialConnection> materialConnections;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ArticleLocationConnection> locationConnections;
 
     private String miscellany;
 }

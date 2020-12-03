@@ -2,6 +2,7 @@ package com.hellokoding.springboot.restful.service.impl;
 
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
+import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.model.dto.PositionDto;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 //import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Random;
 
 import java.util.*;
 
@@ -29,6 +29,7 @@ public class PersonServiceImpl implements PersonService {
     private final HashTagRepository hashTagRepository;
     //    private final PersonHashtagRepository personHashtagRepository;
     private final UrlLinkRepository linkRepository;
+    private final LocationRepository locationRepository;
 
     @Override
 //    public List<Person> findAll() {
@@ -77,9 +78,21 @@ public class PersonServiceImpl implements PersonService {
         return newPersonDto;
     }
 
-//    public Person save(Person stock) {
-//        return personRepository.save(stock);
-//    }
+
+    public List<NewPersonDto> findByIds(List<Integer> idList) {
+
+        List<NewPersonDto> searchRes = new ArrayList<>();
+        for (Integer id : idList) {
+            Optional<Person> p = personRepository.findById(id);
+            NewPersonDto newPersonDto;
+
+            if (p!=null) {
+                newPersonDto = new NewPersonDto(p.get());
+                searchRes.add(newPersonDto);
+            }
+        }
+        return searchRes;
+    }
 
     @Override
     public void deleteById(Integer id) {
@@ -171,23 +184,28 @@ public class PersonServiceImpl implements PersonService {
 //        }
         //        person.setHashtagList(hashTagListWithID);
 
-        UrlLink linkByContent;
-        UrlLink linkWithID;
+
+//        UrlLink linkByContent;
+//        UrlLink linkWithID;
         List<UrlLink> linkList = personDto.getLinkList();
         List<UrlLink> linkListWithID = new ArrayList<>();
 
-        for (UrlLink link : linkList) {
-            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
-            if (linkByContent == null) {
-                linkRepository.save(link);
+//        for (UrlLink link : linkList) {
+//            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
+//            if (linkByContent == null) {
+//                linkRepository.save(link);
+//
+//                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
+//                linkListWithID.add(linkWithID);
+//
+//            } else {
+//                linkListWithID.add(linkByContent);
+//            }
+//        }
 
-                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
-                linkListWithID.add(linkWithID);
+        LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
+        ll.getLinkListID(linkList, linkListWithID);
 
-            } else {
-                linkListWithID.add(linkByContent);
-            }
-        }
 
         Person person;// = new Person();
 
@@ -198,11 +216,17 @@ public class PersonServiceImpl implements PersonService {
         } else
             return null;
 
+
+        //todo with Location when remember the sense))
         if (personDto.getCountry_id() != null) { //to avoid hiber error when country is empty (from user form)
-            Country c = new Country();
-            person.setCountry(c);
-            person.getCountry().setId(personDto.getCountry_id());
+//            Country c = new Country();
+//            person.setCountry(c);
+//            person.getCountry().setId(personDto.getCountry_id());
+
+            ItemConnectionDto l = new ItemConnectionDto();
+            List<ItemConnectionDto> locationList = new ArrayList<>();
         }
+
 
         if (person.getLinkList() != null) {
 //            for (UrlLink lnk : person.getLinkList()) {
@@ -230,10 +254,8 @@ public class PersonServiceImpl implements PersonService {
         person.setNameEng(personDto.getNameEng());
         person.setSurnameRus(personDto.getSurnameRus());
         person.setNameRus(personDto.getNameRus());
-        person.setSettlement(personDto.getSettlement());
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
-
 
 
         if (person.getOccupation() != null) {
@@ -262,6 +284,35 @@ public class PersonServiceImpl implements PersonService {
             person.setOccupation(occList);
         } else {
             person.getOccupation().addAll(occList);
+        }
+
+
+        if (person.getLocationConnections() != null) {
+            person.getLocationConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer locatonId;
+        PersonLocationConnection locationConnection;
+        List<PersonLocationConnection> locationConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : personDto.getLocationList()) {
+
+            locatonId = connectionDto.getItemId();
+            if (locationRepository.findById(locatonId).isPresent()) {
+                locationConnection = new PersonLocationConnection();
+                locationConnection.setLocation(locationRepository.findById(locatonId).get());
+                locationConnection.setPerson(person);
+                locationConnection.setConnection(connectionDto.getConnection());
+                locationConnection.setComment(connectionDto.getComment());
+
+                locationConnectionList.add(locationConnection);
+            }
+        }
+
+        if (person.getLocationConnections() == null) {
+            person.setLocationConnections(locationConnectionList);
+        } else {
+            person.getLocationConnections().addAll(locationConnectionList);
         }
 
         /////////////////////person-hashtag////////////////////////
@@ -377,7 +428,7 @@ public class PersonServiceImpl implements PersonService {
             String[] base64ImageParts = personDto.getPhoto().split(",");
             if (base64ImageParts.length > 1) {
                 base64Image = base64ImageParts[1];
-            } else  {
+            } else {
                 base64Image = base64ImageParts[0];
             }
 
@@ -408,10 +459,6 @@ public class PersonServiceImpl implements PersonService {
 
         return personRepository.save(person);
     }
-
-
-
-
 
 
     ///////////////////////////////////////utils///////////////////////////////////////////////////////

@@ -23,9 +23,13 @@ public class Org {
             inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
     private List<Movement> movementList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "location_id", nullable = false)
+//    private Location location;
+
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude //    @JsonIgnore
+    private List<ArticleOrgConnection> connections;
 
     private String settlement;
 

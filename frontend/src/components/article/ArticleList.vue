@@ -13,7 +13,7 @@
             </div>
 
 
-<!--            ////////////////////////////////date period/////////////////////////////////////-->
+            <!--            ////////////////////////////////date period/////////////////////////////////////-->
 
             <div class="form-group col-2"
                  style="margin-left:auto; background-color: white">
@@ -107,9 +107,9 @@
 
             </div>
         </div>
-        <!--///////////////////////////////////////////////////////////////////////////////////////////////-->
+        <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
 
-        <table class="redTable">
+        <table class="redTable" :key="authorComponentKey">
             <!--        <table class="table">-->
             <thead>
             <!--                <template slot="thead">-->
@@ -178,8 +178,10 @@
                     </div>
                 </td>
                 <td>
-                    <div v-for="author in article.authorList">
-                        {{createComplexCellValue(author.surname,author.surnameRus)}}
+                    <div v-for="author in article.personList">
+                        <div v-if="article.personList.length>0">
+                            {{createComplexCellValueById(author.itemId)}}
+                        </div>
                     </div>
                 </td>
 
@@ -353,6 +355,8 @@
 
     import Vue from 'vue';
     import api from "./article-api";
+    import apiPerson from "./../person/person-api";
+
     import moment from "moment";
     import router from "./../../router";
     import "vue-scroll-table";
@@ -368,9 +372,11 @@
         data() {
             return {
                 articles: [],
-                //hashtagList: {},//?
-                article: {status: 0, authorList: [], hashtagList: []},
+                article: {status: 0, personList: [], hashtagList: []},
                 authors: [],
+                articlePersonIds: [], //before request
+                articlePersonEntities: [], //after request
+                authorComponentKey: 0,
 
                 response: [],
                 errors: [],
@@ -405,10 +411,50 @@
 
         methods: {
 
+            createComplexCellValueById(id) {
+                let result = '';
+                let currentPerson = this.articlePersonEntities.find(x => x.id === id);
+
+                // for (let i = 0; i < this.articlePersonEntities.length; i++ ){
+                //     if (this.articlePersonEntities[i].id === id){
+                //         currentPerson = this.articlePersonEntities[i];
+                //         break;
+                //     }
+                // }
+
+
+                console.log("createComplexCellValue(id)", currentPerson);
+
+                // if (typeof selected !== 'undefined') {  //todo
+
+                // this.authorComponentKey += 1;
+
+                let valueOrig = currentPerson.surname;// + " " + currentPerson.name;
+                let valueRus = currentPerson.surnameRus;// + " " + currentPerson.nameRus;
+
+                if (this.isArrayValidAndNotEmpty(currentPerson.name)) {
+                    valueOrig += " " + currentPerson.name;
+                }
+
+                if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
+                    valueRus += " " + currentPerson.nameRus;
+                }
+
+                if (this.isArrayValidAndNotEmpty(valueRus)) {
+                    result = valueRus;
+                    if (this.isArrayValidAndNotEmpty(valueOrig)) {
+                        if (valueRus.localeCompare(valueOrig) !== 0)
+                            result += " / " + valueOrig;
+                    }
+                } else if (this.isArrayValidAndNotEmpty(valueOrig))
+                    result += valueOrig;
+                // }
+                return result;
+            },
+
             createComplexCellValue(valueRus, valueOrig) {
 
                 let result = '';//"Hello \n World";
-
                 // console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
 
                 if (this.isArrayValidAndNotEmpty(valueRus)) {
@@ -418,9 +464,7 @@
                     // result += "\n" + valueOrig;
                 } else if (this.isArrayValidAndNotEmpty(valueOrig))
                     result += valueOrig;
-
                 return result;
-
             },
 
             updateArticleStatus(id, status) {
@@ -645,6 +689,18 @@
 
             api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
                 this.entries = r.data;
+                console.log(this.entries);
+                for (let i = 0; i < this.entries.length; i++) {
+                    for (let j = 0; j < this.entries[i].personList.length; j++) {
+                        this.articlePersonIds.push(this.entries[i].personList[j].itemId);
+                    }
+                }
+                console.log(this.articlePersonIds);
+
+                apiPerson.getPersonsByIds(this.articlePersonIds, response => {
+                    this.articlePersonEntities = response.data;
+                    console.log("apiPerson", this.articlePersonEntities);
+                });
             });
         },
 

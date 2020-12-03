@@ -1,7 +1,8 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Country;
-import com.hellokoding.springboot.restful.service.CountryService;
+import com.hellokoding.springboot.restful.model.Location;
+import com.hellokoding.springboot.restful.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,31 +13,31 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/country11")
+@RequestMapping("/api/v1/country")
 @Slf4j
 @RequiredArgsConstructor
-public class CountryAPI {
+public class LocationAPI {
 
     public static final String COUNTRY_CODE_OR_NAME_IS_NOT_UNIQUE = "Country code or name is not unique.";
-    private final CountryService countryService;
+    private final LocationService locationService;
 
     @GetMapping
-    public ResponseEntity<List<Country>> findAll() {
-        return ResponseEntity.ok(countryService.findAll());
+    public ResponseEntity<List<Location>> findAll() {
+        return ResponseEntity.ok(locationService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Country country) {
+    public ResponseEntity create(@Valid @RequestBody Location location) {
         try {
-            return ResponseEntity.ok(countryService.save(country));
+            return ResponseEntity.ok(locationService.save(location));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(COUNTRY_CODE_OR_NAME_IS_NOT_UNIQUE);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> findById(@PathVariable Integer id) {
-        Optional<Country> stock = countryService.findById(id);
+    public ResponseEntity<Location> findById(@PathVariable Integer id) {
+        Optional<Location> stock = locationService.findById(id);
         if (!stock.isPresent()) {
             log.error("Id " + id + " is not existed");
             ResponseEntity.badRequest().build();
@@ -45,13 +46,13 @@ public class CountryAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Country country) {
-        if (!countryService.findById(id).isPresent()) {
+    public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody Location location) {
+        if (!locationService.findById(id).isPresent()) {
             log.error("Id {} is not existed", id);
             ResponseEntity.badRequest().build();
         }
         try {
-            return ResponseEntity.ok(countryService.save(country));
+            return ResponseEntity.ok(locationService.save(location));
         } catch (UniqueConstraintViolationException ex) {
             return ResponseEntity.badRequest().body(COUNTRY_CODE_OR_NAME_IS_NOT_UNIQUE);
         }
@@ -59,11 +60,11 @@ public class CountryAPI {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Integer id) {
-        if (!countryService.findById(id).isPresent()) {
+        if (!locationService.findById(id).isPresent()) {
             log.error("Id {} is not existed", id);
             ResponseEntity.badRequest().build();
         }
-        countryService.deleteById(id);
+        locationService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

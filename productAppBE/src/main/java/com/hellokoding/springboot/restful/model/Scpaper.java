@@ -19,8 +19,8 @@ public class Scpaper {
     private Movement movement;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
 
     private String lang;
     private Integer year;

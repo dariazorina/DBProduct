@@ -1,10 +1,9 @@
 package com.hellokoding.springboot.restful.service.impl;
 
-import com.hellokoding.springboot.restful.dao.ArticleRepository;
-import com.hellokoding.springboot.restful.dao.HashTagRepository;
-import com.hellokoding.springboot.restful.dao.UrlLinkRepository;
+import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
+import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final HashTagRepository hashTagRepository;
+    private final UrlLinkRepository linkRepository;
+    private final LocationRepository locationRepository;
+    private final PersonRepository personRepository;
 
     @Override
     public List<ArticleDto> findAll() {
@@ -49,6 +48,27 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public Article save(ArticleDto articleDto) {
 
+//        UrlLink linkByContent;
+//        UrlLink linkWithID;
+        List<UrlLink> linkList = articleDto.getLinkList();
+        List<UrlLink> linkListWithID = new ArrayList<>();
+
+//        for (UrlLink link : linkList) {
+//            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
+//            if (linkByContent == null) {
+//                linkRepository.save(link);
+//
+//                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
+//                linkListWithID.add(linkWithID);
+//
+//            } else {
+//                linkListWithID.add(linkByContent);
+//            }
+//        }
+
+        LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
+        ll.getLinkListID(linkList, linkListWithID);
+
         Article article;
         if (articleDto.getId() == null) {
             article = new Article();
@@ -57,16 +77,87 @@ public class ArticleServiceImpl implements ArticleService {
         } else
             return null;
 
+        if (article.getLinkList() != null) {
+            article.getLinkList().clear();
+            articleRepository.flush();
+        } else {
+            article.setLinkList(new ArrayList<>());
+        }
+
+        if (article.getLinkList() == null) {
+            article.setLinkList(linkListWithID);
+        } else {
+            article.getLinkList().addAll(linkListWithID);
+        }
+
+
         article.setTitle(articleDto.getTitle());
         article.setTitleRus(articleDto.getTitleRus());
         article.setMovement(articleDto.getMovement());
         article.setLanguage(articleDto.getLanguage());
         article.setDate(articleDto.getDate());
         article.setStatus(articleDto.getStatus());
-        article.setUrl(articleDto.getUrl());
         article.setDescription(articleDto.getDescription());
         article.setMiscellany(articleDto.getMiscellany());
-        article.setAuthorList(articleDto.getAuthorList());
+//        article.setAuthorList(articleDto.getAuthorList());
+
+
+        if (article.getPersonConnections() != null) {
+            article.getPersonConnections().clear();
+            articleRepository.flush();
+        }
+
+        Integer personId;
+        ArticlePersonConnection personConnection;
+        List<ArticlePersonConnection> personConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : articleDto.getPersonList()) {
+
+            personId = connectionDto.getItemId();
+            if (personRepository.findById(personId).isPresent()) {
+                personConnection = new ArticlePersonConnection();
+                personConnection.setPerson(personRepository.findById(personId).get());
+                personConnection.setArticle(article);
+                personConnection.setConnection(connectionDto.getConnection());
+                personConnection.setComment(connectionDto.getComment());
+
+                personConnectionList.add(personConnection);
+            }
+        }
+        if (article.getPersonConnections() == null) {
+            article.setPersonConnections(personConnectionList);
+        } else {
+            article.getPersonConnections().addAll(personConnectionList);
+        }
+
+
+        if (article.getLocationConnections() != null) {
+            article.getLocationConnections().clear();
+            articleRepository.flush();
+        }
+
+        Integer locatonId;
+        ArticleLocationConnection locationConnection;
+        List<ArticleLocationConnection> locationConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : articleDto.getLocationList()) {
+
+            locatonId = connectionDto.getItemId();
+            if (locationRepository.findById(locatonId).isPresent()) {
+                locationConnection = new ArticleLocationConnection();
+                locationConnection.setLocation(locationRepository.findById(locatonId).get());
+                locationConnection.setArticle(article);
+                locationConnection.setConnection(connectionDto.getConnection());
+                locationConnection.setComment(connectionDto.getComment());
+
+                locationConnectionList.add(locationConnection);
+            }
+        }
+
+        if (article.getLocationConnections() == null) {
+            article.setLocationConnections(locationConnectionList);
+        } else {
+            article.getLocationConnections().addAll(locationConnectionList);
+        }
+
 
         /////////////////////article-hashtag////////////////////////
         ArticleHashtag articleHashtag, previousArticleHashtag, previousPreviousArticleHashtag;
