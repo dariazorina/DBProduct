@@ -218,7 +218,7 @@ public class PersonServiceImpl implements PersonService {
 
 
         //todo with Location when remember the sense))
-        if (personDto.getCountry_id() != null) { //to avoid hiber error when country is empty (from user form)
+        if (personDto.getLocation_id() != null) { //to avoid hiber error when country is empty (from user form)
 //            Country c = new Country();
 //            person.setCountry(c);
 //            person.getCountry().setId(personDto.getCountry_id());
