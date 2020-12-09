@@ -18,8 +18,8 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private String surnameEng;
     private String nameEng;
 
-    private Integer country_id;
-    private Country country;
+    private Integer location_id;
+    private Location location;
     private String description;
     private String miscellany;
 
@@ -173,20 +173,20 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameEng = nameEng;
     }
 
-    public Integer getCountry_id() {
-        return country_id;
+    public Integer getLocation_id() {
+        return location_id;
     }
 
-    public void setCountry_id(Integer country_id) {
-        this.country_id = country_id;
+    public void setLocation_id(Integer location_id) {
+        this.location_id = location_id;
     }
 
-    public Country getCountry() {
-        return country;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getDescription() {

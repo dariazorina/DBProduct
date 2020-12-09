@@ -1,7 +1,6 @@
 package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.controller.UniqueConstraintViolationException;
-import com.hellokoding.springboot.restful.model.Country;
 import com.hellokoding.springboot.restful.model.Location;
 
 import java.util.List;

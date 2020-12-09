@@ -64,6 +64,8 @@
     <include file="config/liquibase/changelog/00000000000062_drop all_scpaper_tables.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000064_add_connect_article_location_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000065_add_connect_person_location_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000066_t_location1_create.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000067_drop_t_location.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>

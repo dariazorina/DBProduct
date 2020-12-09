@@ -1,6 +1,5 @@
 package com.hellokoding.springboot.restful.controller;
 
-import com.hellokoding.springboot.restful.model.Country;
 import com.hellokoding.springboot.restful.model.Location;
 import com.hellokoding.springboot.restful.service.LocationService;
 import lombok.RequiredArgsConstructor;

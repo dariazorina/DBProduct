@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="08122020-1">
+        <createTable remarks="Таблица локаций" tableName="t_location1">
+            <column autoIncrement="true" name="location_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_location1_pkey"/>
+            </column>
+
+            <column name="country" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="region" type="TEXT"/>
+            <column name="city" type="TEXT"/>
+            <column name="address" type="TEXT"/>
+            <column name="placement" type="TEXT"/>
+            <column name="miscellany" type="TEXT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="t_connect_person_location"
+                                 constraintName="t_location_connect_person_location1_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="location_id"
+                                 referencedTableName="t_location1"/>
+
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="t_connect_article_location"
+                                 constraintName="t_location_connect_article_location1_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="location_id"
+                                 referencedTableName="t_location1"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -50,12 +50,20 @@
                         <span class="float-left">Авторы</span>
                     </div>
                 </div>
+
                 <div class="col-sm-10"><span class="float-left">
                      <div v-for="author in articlePersonEntities">
-                            {{author.surname}}
+                            {{createComplexCellValueById(author.id)}}
                     </div>
                 </span>
                 </div>
+
+<!--                <div class="col-sm-10"><span class="float-left">-->
+<!--                     <div v-for="author in articlePersonEntities">-->
+<!--                            {{author.surname}} {{author.id}}-->
+<!--                    </div>-->
+<!--                </span>-->
+<!--                </div>-->
             </div>
 
             <div class="row">
@@ -174,7 +182,57 @@
                 location.href = url;
                 // console.log("123");
             },
+
+            isArrayValidAndNotEmpty(array) {
+
+                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                    return false;
+                }
+                return true;
+            },
+
+            createComplexCellValueById(id) {
+                let result = '';
+                let currentPerson = this.articlePersonEntities.find(x => x.id === id);
+
+                // for (let i = 0; i < this.articlePersonEntities.length; i++ ){
+                //     if (this.articlePersonEntities[i].id === id){
+                //         currentPerson = this.articlePersonEntities[i];
+                //         break;
+                //     }
+                // }
+
+
+                console.log("createComplexCellValue(id)", currentPerson);
+
+                // if (typeof selected !== 'undefined') {  //todo
+
+                // this.authorComponentKey += 1;
+
+                let valueOrig = currentPerson.surname;// + " " + currentPerson.name;
+                let valueRus = currentPerson.surnameRus;// + " " + currentPerson.nameRus;
+
+                if (this.isArrayValidAndNotEmpty(currentPerson.name)) {
+                    valueOrig += " " + currentPerson.name;
+                }
+
+                if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
+                    valueRus += " " + currentPerson.nameRus;
+                }
+
+                if (this.isArrayValidAndNotEmpty(valueRus)) {
+                    result = valueRus;
+                    if (this.isArrayValidAndNotEmpty(valueOrig)) {
+                        if (valueRus.localeCompare(valueOrig) !== 0)
+                            result += " / " + valueOrig;
+                    }
+                } else if (this.isArrayValidAndNotEmpty(valueOrig))
+                    result += valueOrig;
+                // }
+                return result;
+            },
         },
+
         mounted() {
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;

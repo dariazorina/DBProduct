@@ -57,14 +57,14 @@ public class Person {
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude //    @JsonIgnore
-    private List<ArticlePersonConnection> connections;
+    private List<ArticlePersonConnection> articleConnections;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonIgnore
     private List<PersonHashtag> hashtagList;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude
     private List<PersonLocationConnection> locationConnections;
 

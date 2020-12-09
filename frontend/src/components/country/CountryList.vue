@@ -22,8 +22,11 @@
             <thead>
             <tr>
                 <th class='tdAlignLeft'>Id</th>
-                <th class='tdAlignLeft'>Код</th>
-                <th class='tdAlignLeft'>Название</th>
+                <th class='tdAlignLeft'>Страна</th>
+                <th class='tdAlignLeft'>Регион</th>
+                <th class='tdAlignLeft'>Город</th>
+                <th class='tdAlignLeft'>Адрес</th>
+                <th class='tdAlignLeft'>Местоположение</th>
 
                 <th style="width:10%" class="col-sm-2"></th>
             </tr>
@@ -33,8 +36,11 @@
 
             <tr v-for="country in filteredCountries">
                 <td class='tdAlignLeft'> {{ country.id }} </td>
-                <td class='tdAlignLeft'> {{ country.code }}</td>
-                <td class='tdAlignLeft'> {{ country.name }}
+                <td class='tdAlignLeft'> {{ country.country }}</td>
+                <td class='tdAlignLeft'> {{ country.region }}
+                <td class='tdAlignLeft'> {{ country.city }}
+                <td class='tdAlignLeft'> {{ country.address }}
+                <td class='tdAlignLeft'> {{ country.placement }}
                     <!--                    <a>-->
                     <!--                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}-->
                     <!--                        </router-link>-->
@@ -80,8 +86,8 @@
         computed: {
             filteredCountries() {
                 return this.countries.filter((country) => {
-                    return country.code.indexOf(this.searchKey) > -1
-                        || country.name.indexOf(this.searchKey) > -1
+                    return country.country.indexOf(this.searchKey) > -1
+                        || country.city.indexOf(this.searchKey) > -1
                 })
             }
         },

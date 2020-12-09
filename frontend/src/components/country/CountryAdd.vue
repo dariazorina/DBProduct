@@ -3,7 +3,7 @@
 
         <div class="form-group row">
             <div class="col-2 col-form-label">
-                <p class="pageCreateTitle">Add New Country</p>
+                <p class="pageCreateTitle">Add New Location</p>
             </div>
         </div>
 
@@ -15,18 +15,43 @@
         </div>
 
 
-        <form>
+        <form class="formCreation">
             <div class="form-group row  align-items-center">
-                <label for="add-code" class="col-1 col-form-label labelInCreation">Код</label>
+                <label for="add-code" class="col-2 col-form-label labelInCreation"><b>Страна*</b></label>
                 <div class="col-4">
-                    <input type="number" class="form-control" id="add-code" v-model ="country.code" placeholder="Three digits only" min="1" max="999"/>
+                    <input class="form-control" id="add-code" v-model ="location.country"/>
                 </div>
             </div>
 
             <div class="form-group row  align-items-center">
-                <label for="add-name" class="col-1 col-form-label labelInCreation">Название</label>
+                <label for="add-name" class="col-2 col-form-label labelInCreation">Регион</label>
                 <div class="col-4">
-                    <input class="form-control" id="add-name" v-model="country.name" required/>
+                    <input class="form-control" id="add-name" v-model="location.region" required/>
+                </div>
+            </div>
+
+            <div class="form-group row  align-items-center">
+                <label class="col-2 col-form-label labelInCreation">Город/Населенный пункт</label>
+                <div class="col-4">
+                    <input class="form-control" v-model="location.city" required/>
+                </div>
+            </div>
+            <div class="form-group row  align-items-center">
+                <label class="col-2 col-form-label labelInCreation">Адрес</label>
+                <div class="col-4">
+                    <input class="form-control" v-model="location.address" required/>
+                </div>
+            </div>
+            <div class="form-group row  align-items-center">
+                <label class="col-2 col-form-label labelInCreation">Расположение</label>
+                <div class="col-4">
+                    <input class="form-control" v-model="location.placement" required/>
+                </div>
+            </div>
+            <div class="form-group row  align-items-center">
+                <label class="col-2 col-form-label labelInCreation">Комментарии</label>
+                <div class="col-4">
+                    <input class="form-control" v-model="location.miscellany" required/>
                 </div>
             </div>
 
@@ -38,6 +63,7 @@
                     </a>
                 </div>
             </div>
+
         </form>
     </div>
 </template>
@@ -54,7 +80,7 @@
                 errors: [],
                 name: null, //'name1', //country.name,
                 code: null, //'666', //country.code,
-                country: {}
+                location: {}
             }
         },
         methods: {
@@ -63,18 +89,10 @@
                 this.errors = [];
                 this.errorFlag = false;
 
-                if (!this.country.name) {
+                if (!this.location.country) {
                     this.errorFlag = true;
                     this.errors.push('Укажите имя'); //todo ? оставлять ли (Или сделать проверку на уровне поля)
                 }
-                if (!this.country.code) {
-                    this.errorFlag = true;
-                    this.errors.push('Укажите код страны'); //todo //? оставлять ли  (Или сделать проверку на уровне поля)
-                } else if (!this.validCode(this.country.code)) {
-                    this.errorFlag = true;
-                    this.errors.push('Укажите код страны из трех цифр');
-                }
-
                 if (!this.errors.length) {
                     this.errorFlag = false;
                     this.createCountry();
@@ -83,21 +101,10 @@
                 e.preventDefault();
             },
 
-            validCode: function (code) {
-                var re = /^[0-9]*$/;
-                var r1 = re.test(code);
-                var r2 = code.length;
-
-                if (r1)
-                    if (r2 == 3) {
-                        return true;
-                    }
-
-                return false;
-                // return (re.test(code)&&this.code.length()==3);
-            },
             createCountry() {
-                api.create(this.country, r => {
+                console.log(this.location);
+
+                api.create(this.location, r => {
                     router.push('/country')
                 }, r => {
                     this.errorFlag = true;
@@ -105,12 +112,6 @@
                     console.log(r);
                 });
             },
-
-            // handleError:function (error) {
-            //     console.log(error);
-            //
-            // }
-
         },
     }
 </script>
