@@ -102,6 +102,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        article.setAuthorList(articleDto.getAuthorList());
 
 
+        /////////////////////PERSON CONNECTIONS///////////////////
         if (article.getPersonConnections() != null) {
             article.getPersonConnections().clear();
             articleRepository.flush();
@@ -135,6 +136,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleRepository.flush();
         }
 
+        /////////////////////LOCATION CONNECTIONS///////////////////
         Integer locatonId;
         ArticleLocationConnection locationConnection;
         List<ArticleLocationConnection> locationConnectionList = new ArrayList<>();

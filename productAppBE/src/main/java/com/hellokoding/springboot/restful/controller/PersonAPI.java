@@ -40,7 +40,7 @@ public class PersonAPI {
     }
 
     @PostMapping("/ids")
-    public ResponseEntity getPersonsByIds(@Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<NewPersonDto>> getPersonsByIds(@Valid @RequestBody List<Integer> idList) {
         return ResponseEntity.ok(personService.findByIds(idList));
     }
 

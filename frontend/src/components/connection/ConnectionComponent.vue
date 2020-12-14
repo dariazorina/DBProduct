@@ -17,9 +17,10 @@
 
                                     :item="item"
                                     :hasClicked="item.hasClicked"
+                                    :isEditMode="isEditMode"
                                     @remove="removeItem"
-                                    @get-input-text="addItem"/>
-                <!--                    :key="componentKey"-->
+                                    @get-input-text="addItem"
+                                    @save-input-text="saveItem"/>
             </li>
         </ul>
     </div>
@@ -37,28 +38,34 @@
                 type: Array,
                 required: true
             },
+            isEditMode: {
+                type: Boolean,
+                required: true
+            },
         },
-        // data() {
-        //     return {
-        // componentKey: 0,
-        // }
-        // },
         methods: {
             addItem(item) {
-                console.log("------addItem CONN-COMP---------", item);
+                // console.log("------addItem CONN-COMP---------", item);
                 item.connection = item.connection.trim();
                 item.comment = item.comment.trim();
                 item.hasClicked = true;
 
-                // this.componentKey += 1;  //to rerender
+                this.$emit("update-item", item);
+            },
+
+            saveItem(item) {
+                // console.log("------SAVE item CONN-COMP---------", item);
+                item.connection = item.connection.trim();
+                item.comment = item.comment.trim();
+
                 this.$emit("update-item", item);
             },
 
             removeItem(idToRemove) {
-                console.log("------idToRemove---------", idToRemove);
+                // console.log("------idToRemove---------", idToRemove);
                 for (let i = 0; i < this.itemsList.length; i++) {
                     if (this.itemsList[i].id === idToRemove) {
-                        console.log("------idtem To R e m o v e ---------", this.itemsList[i]);
+                        // console.log("------idtem To R e m o v e ---------", this.itemsList[i]);
                         this.itemsList.splice(i, 1);
                     }
                 }
@@ -67,11 +74,7 @@
 
         computed: {
             connections() {
-                // for (let i = 0; i < this.itemsList.length; i++) {
-                //     this.itemsList[i].connection = "author";
-                //     this.itemsList[i].comment = "comment";
-                // }
-                console.log("COMPUTED CONN-COMP", this.itemsList);
+                console.log("COMPUTED CONN-COMP", this.isEditMode);
                 return this.itemsList;
             }
         },

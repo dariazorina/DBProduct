@@ -107,8 +107,9 @@
                     </div>
 
                     <div v-if="personConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0">
+                         style="background-color: transparent; padding:0; margin: 0px">
                         <ConnectionComponent :itemsList="personConnectionList"
+                                             :isEditMode="editMode"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"/>
                     </div>
@@ -280,6 +281,51 @@
                             </div>
                         </div>
 
+                    </div>
+                </form>
+
+
+                <form class="authorsFormCreation form-row col-12"
+                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                        <v-card-text>
+                            <v-autocomplete
+                                    id="location-autocomplete"
+                                    label="Локации"
+
+                                    :items="itemsLocation"
+                                    :loading="isLoadingLocation"
+                                    :search-input.sync="locationSearch"
+                                    color="blue"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedLocation"
+
+                                    @change="addLocation(selectedLocation)"
+                                    @focus="testFocus(selectedLocation)"
+                                    item-text="country"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти локацию"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="locationConnectionList.length>0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="locationConnectionList"
+                                             :isEditMode="editMode"
+                                             style="background-color: transparent; padding:0px" class="col-12"
+                                             @update-item="updateItem"/>
+                    </div>
+                </form>
+
+                <form class="formCreation">
+
+                    <div class="form-row align-items-center">
                         <!--                        <div class="form-group green-border-focus">-->
                         <label for="add-misc">Комментарии</label>
                         <div class="col-12 form-group green-border-focus">
@@ -344,6 +390,7 @@
 
 <script>
     import apiPerson from "./../person/person-api";
+    import apiCountry from "./../country/country-api";
     import apiLanguage from "./../language/language-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiAttachment from "./../attachment-api";
@@ -377,8 +424,10 @@
             descriptionLimit: 60,
             entries: [],
             isLoading: false,
+            isLoadingLocation: false,
             isLoadingHashtag: false,
             authorSearch: null,
+            locationSearch: null,
             searchHashtag: '',
 
             selectedM: null,
@@ -408,6 +457,13 @@
 
             article: {personList: [], locationList: [], hashtagList: []},
             selected: [], //[''],
+
+            selectedLocation: [], //[''],
+            articlePersonIds: [], //before request
+            articlePersonEntities: [], //after request
+            articleLocationIds: [], //before request
+            articleLocationEntities: [], //after request
+
             status: ["statusProgress", "statusDone"],
             statusOptions: [
                 {text: 'In Progress', value: 0},
@@ -581,28 +637,22 @@
             },
 
             addAuthor(obj) {
-                // console.log("GET CHANGED");
-                if (this.editMode) {
-
-                } else {
-                    let i = 0;
-                    for (i = 0; i < this.personConnectionList.length; i++) { //to exclude double values
-                        if (this.personConnectionList[i].id === obj.id) {
-                            break;
-                        }
+                let i = 0;
+                for (i = 0; i < this.personConnectionList.length; i++) { //to exclude double values
+                    if (this.personConnectionList[i].id === obj.id) {
+                        break;
                     }
-
-                    if (i === this.personConnectionList.length) {
-                        let connection = {
-                            "id": obj.id,
-                            "name": obj.surname, // + " " + this.article.authorList[i].name,
-                            "connection": '',
-                            "comment": '',
-                            "hasClicked": false
-                        };
-                        this.personConnectionList.push(connection);
-                        console.log("ADDED");
-                    }
+                }
+                if (i === this.personConnectionList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.surname,// + " " + obj.name,
+                        "connection": '',
+                        "comment": '',
+                        "hasClicked": false
+                    };
+                    this.personConnectionList.push(connection);
+                    console.log("ADDED");
                 }
             },
 
@@ -613,6 +663,28 @@
                             this.article.authorList.splice(i, 1);
                         }
                     }
+                }
+            },
+
+            addLocation(obj) {
+                console.log("GET CHANGED LOCATION");
+                let i = 0;
+                for (i = 0; i < this.locationConnectionList.length; i++) { //to exclude double values
+                    if (this.locationConnectionList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.locationConnectionList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.country,
+                        "connection": '',
+                        "comment": '',
+                        "hasClicked": false
+                    };
+                    this.locationConnectionList.push(connection);
+                    console.log("ADDED");
                 }
             },
 
@@ -658,7 +730,6 @@
                         }
                     }
                 }
-
                 if (this.hasError)
                     console.log('ERROROROR----------------------------');
                 return !this.hasError;
@@ -666,6 +737,7 @@
 
             updateItem(item) {
                 console.log("ITEM AFTER COMPONENT", item);
+                console.log("LIST AFTER COMPONENT", this.personConnectionList);
             },
 
             createArticle(currentStatus) {
@@ -699,19 +771,37 @@
                     this.article.linkList[i] = {
                         "content": this.links[i]
                     };
-                    console.log("CREATE PERS link: ", this.links[i]);
+                    // console.log("CREATE PERS link: ", this.links[i]);
                 }
 
-                for (let i = 0; i < this.personConnectionList.length; i++) {
+                // for (let i = 0; i < this.personConnectionList.length; i++) {
+                //     let a = {
+                //         "itemId": this.personConnectionList[i].id,
+                //         "connection": this.personConnectionList[i].connection,
+                //         "comment": this.personConnectionList[i].comment
+                //     };
+                //     // console.log("CREATE PERS ON A: ", a);
+                //
+                //     if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                //         // console.log("PUSH PERS ON A: ", a);
+                //         this.article.personList.push(a);
+                //     }
+                //     // console.log("CREATE PERS ON A: ", this.article.personList);
+                // }
+
+                for (let i = 0; i < this.locationConnectionList.length; i++) {
                     let a = {
-                        "itemId": this.personConnectionList[i].id,
-                        "connection": this.personConnectionList[i].connection,
-                        "comment": this.personConnectionList[i].comment
+                        "itemId": this.locationConnectionList[i].id,
+                        "connection": this.locationConnectionList[i].connection,
+                        "comment": this.locationConnectionList[i].comment
                     };
-                    // console.log("CREATE PERS ON A: ", a);
-                    this.article.personList.push(a);
-                    // console.log("CREATE PERS ON A: ", this.article.personList);
+                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                        this.article.locationList.push(a);
+                    }
                 }
+
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
+                // this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
 
                 if (this.formValidate()) {
                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
@@ -734,7 +824,6 @@
                 //     "id": this.selectedM
                 // }; todo
 
-
                 //todo!!! если id языков в таблице будут не подряд и не с 1 - будет ошибка
                 this.article.language = {
                     "id": this.selectedL
@@ -743,17 +832,52 @@
                 this.article.status = this.selectedS;
                 this.hasError = false;
 
-                // this.article.linkList = [];
-                // for (let i = 0; i < this.links.length; i++) {
-                //     this.article.linkList[i] = {
-                //         "content": this.links[i]
-                //     };
-                // }
+                this.article.linkList = [];
+                for (let i = 0; i < this.links.length; i++) {
+                    this.article.linkList[i] = {
+                        "content": this.links[i]
+                    };
+                }
 
                 this.article.hashtagList = [];
                 for (let i = 0; i < this.tags.length; i++) {
                     this.article.hashtagList[i] = this.tags[i];
                 }
+
+                console.log(" BEFORE [] this.article.person: ", this.article.personList);
+                console.log(" BEFORE [] this.article.person: ", this.article.locationList);
+
+                // while(this.article.personList.length > 0) {                //     this.article.personList.pop();                // }
+                // while(this.article.locationList.length > 0) {this.article.locationList.pop();}
+
+                this.article.personList.splice(0);
+                this.article.locationList.splice(0);
+
+                // this.article.personList = [];
+                // this.article.locationListList = [];
+
+                console.log(" after [] this.article.person: ", this.article.personList);
+                console.log(" after [] this.article.locationList: ", this.article.locationList);
+
+                // for (let i = 0; i < this.locationConnectionList.length; i++) {
+                //     let a = {
+                //         "itemId": this.locationConnectionList[i].id,
+                //         "connection": this.locationConnectionList[i].connection,
+                //         "comment": this.locationConnectionList[i].comment
+                //     };
+                //
+                //     if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                //         console.log("PUSH PERS ON A: ", a);
+                //         this.article.locationList.push(a);
+                //     }
+                // }
+
+                console.log(" this.article.locationList: ", this.article.locationList);
+                console.log(" this.locationConnectionList: ", this.locationConnectionList);
+
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
+                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
+
 
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
@@ -771,7 +895,57 @@
                 this.loggedInFlag = this.$store.getters.isLoggedIn;
                 this.loggedName = this.$store.getters.getUserName;
             },
+
+            finalConnectionListCreation(list, finalList) {
+
+                console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
+
+                for (let i = 0; i < list.length; i++) {
+                    let a = {
+                        "itemId": list[i].id,
+                        "connection": list[i].connection,
+                        "comment": list[i].comment
+                    };
+                    // console.log("CREATE PERS ON A: ", a);
+
+                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                        // console.log("PUSH PERS ON A: ", a);
+                        finalList.push(a);
+                    }
+                    // console.log("CREATE PERS ON A: ", this.article.personList);
+                }
+            },
+
+            isArrayValidAndNotEmpty(array) {
+
+                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                    return false;
+                }
+                return true;
+            },
+
+            locationEditConnectionTitleCreation(location) {
+
+                let returnedTitle = location.country;
+
+                if (this.isArrayValidAndNotEmpty(location.region)) {
+                    returnedTitle += ", " + location.region;
+                }
+                if (this.isArrayValidAndNotEmpty(location.city)) {
+                    returnedTitle += ", " + location.city;
+                }
+                if (this.isArrayValidAndNotEmpty(location.address)) {
+                    returnedTitle += ", " + location.address;
+                }
+                if (this.isArrayValidAndNotEmpty(location.placement)) {
+                    returnedTitle += ", " + location.placement;
+                }
+
+                return returnedTitle;
+            }
+
         },
+
         mounted() {
 
             this.getLoggedIn();
@@ -829,20 +1003,82 @@
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
                         this.tags.push(this.article.hashtagList[i]);
                     }
+
+                    // console.log("LINK LIST", this.article.linkList);
+                    for (let i = 0; i < this.article.linkList.length; i++) {
+                        this.links.push(this.article.linkList[i].content);
+                    }
+
                     apiAttachment.getAttachments('article', this.article.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
                             this.uploadedFiles.push(r.data[i]);
                         }
-                    })
+                    });
+
+
+                    for (let j = 0; j < this.article.personList.length; j++) {
+                        this.articlePersonIds.push(this.article.personList[j].itemId);
+                    }
+                    console.log(this.articlePersonIds);
+
+                    for (let j = 0; j < this.article.locationList.length; j++) {
+                        this.articleLocationIds.push(this.article.locationList[j].itemId);
+                    }
+
+                    apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
+                        this.articlePersonEntities = response.data;
+                        console.log("apiPerson", this.articlePersonEntities);
+
+                        for (let i = 0; i < this.article.personList.length; i++) {
+                            let element = this.article.personList[i];
+                            let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.personConnectionList.push(connection);
+                        }
+                    });
+
+                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {  ///returns List<Location>
+                        this.articleLocationEntities = response.data;
+                        console.log("apiLocation", this.articleLocationEntities);
+
+                        for (let i = 0; i < this.article.locationList.length; i++) {
+                            let element = this.article.locationList[i];
+                            let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.locationEditConnectionTitleCreation(currentLocationEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.locationConnectionList.push(connection);
+                        }
+                        console.log("locationConnectionList: ", this.locationConnectionList);
+                    });
                 });
             }
         },
 
         computed: {
-         items() {
+            items() {
                 return this.entries.map(entry => {
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
+                })
+            },
+
+            itemsLocation() {
+                return this.entries.map(entry => {
+                    const country = entry.country;
+                    return Object.assign({}, entry, {country})
                 })
             },
 
@@ -1005,10 +1241,8 @@
             }
         },
 
-
         ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
-
             searchHashtag() {
                 this.$nextTick(() => {
                     if (this.searchLength === 0) {
@@ -1020,7 +1254,6 @@
             },
 
             authorSearch(val) {
-
                 console.log("SEARCH ACTIVATED");
 
 //                 // Get the input field
@@ -1060,7 +1293,7 @@
 
 
                         if (typeof this.selected !== 'undefined') {
-                            console.log("SELECTED IN WATCH");
+                            console.log("SELECTED IN WATCH", this.selected);
                             console.log(this.selected);
                             if (this.article.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selected = "";
@@ -1095,7 +1328,34 @@
                         //     })
                         //     .finally(() => (this.isLoading = false))
                     }
-            }
+            },
+
+            locationSearch(val) {
+                console.log("SEARCH ACTIVATED");
+                if (val !== null)
+                    if (val.length > 2) {
+                        console.log("SEARCH STARTED");
+
+                        if (typeof this.selectedLocation !== 'undefined') {
+                            console.log("SELECTED IN WATCH");
+                            console.log(this.selectedLocation);
+                            if (this.article.locationList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedLocation = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingLocation) return;
+                        this.isLoadingLocation = true;
+
+                        apiCountry.searchLocation(val, r => {
+                            this.entries = r;
+                            //  console.log("****", this.entries);
+                            this.isLoadingLocation = false;
+                        });
+
+                    }
+
+            },
         },
     }
 </script>

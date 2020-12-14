@@ -1,6 +1,7 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Location;
+import com.hellokoding.springboot.restful.model.dto.LocationDto;
 import com.hellokoding.springboot.restful.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,19 @@ public class LocationAPI {
     public static final String COUNTRY_CODE_OR_NAME_IS_NOT_UNIQUE = "Country code or name is not unique.";
     private final LocationService locationService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<LocationDto>> search(@RequestParam(name = "q", required = true) String q) {
+        List<LocationDto> search = locationService.search(q);
+        return ResponseEntity.ok(search);
+    }
     @GetMapping
     public ResponseEntity<List<Location>> findAll() {
         return ResponseEntity.ok(locationService.findAll());
+    }
+
+    @PostMapping("/ids")
+    public ResponseEntity<List<Location>> getLocationsByIds(@Valid @RequestBody List<Integer> idList) {
+        return ResponseEntity.ok(locationService.findByIds(idList));
     }
 
     @PostMapping

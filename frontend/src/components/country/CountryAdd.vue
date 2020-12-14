@@ -91,7 +91,7 @@
 
                 if (!this.location.country) {
                     this.errorFlag = true;
-                    this.errors.push('Укажите имя'); //todo ? оставлять ли (Или сделать проверку на уровне поля)
+                    this.errors.push('Укажите название страны'); //todo ? оставлять ли (Или сделать проверку на уровне поля)
                 }
                 if (!this.errors.length) {
                     this.errorFlag = false;
