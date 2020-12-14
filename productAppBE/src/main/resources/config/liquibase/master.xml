@@ -52,7 +52,7 @@
     <include file="config/liquibase/changelog/00000000000048_add_attachment_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000050_add_material_type_and_art_material_type_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000051_remove_url_add_text_fields_article_table.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/00000000000052_add_art_link_table.xml" relativeToChangelogFile="false"/>
+<!--    <include file="config/liquibase/changelog/00000000000052_add_art_link_table.xml" relativeToChangelogFile="false"/>-->
     <include file="config/liquibase/changelog/00000000000053_drop_art_author_jointable.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000054_rename_country_table_add_fields.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000055_add_connect_article_person_table.xml" relativeToChangelogFile="false"/>
