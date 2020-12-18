@@ -21,6 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
     private final PersonRepository personRepository;
+    private final MTypeRepository materialTypeRepository;
 
     @Override
     public List<ArticleDto> findAll() {
@@ -90,17 +91,21 @@ public class ArticleServiceImpl implements ArticleService {
             article.getLinkList().addAll(linkListWithID);
         }
 
-
         article.setTitle(articleDto.getTitle());
         article.setTitleRus(articleDto.getTitleRus());
         article.setMovement(articleDto.getMovement());
         article.setLanguage(articleDto.getLanguage());
+
+
+        Optional<MaterialType> byId = materialTypeRepository.findById(articleDto.getMtype().getId());
+        if (byId!=null) {
+            article.setMtype(byId.get());
+        }
+
         article.setDate(articleDto.getDate());
         article.setStatus(articleDto.getStatus());
         article.setDescription(articleDto.getDescription());
         article.setMiscellany(articleDto.getMiscellany());
-//        article.setAuthorList(articleDto.getAuthorList());
-
 
         /////////////////////PERSON CONNECTIONS///////////////////
         if (article.getPersonConnections() != null) {
@@ -129,7 +134,6 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             article.getPersonConnections().addAll(personConnectionList);
         }
-
 
         if (article.getLocationConnections() != null) {
             article.getLocationConnections().clear();

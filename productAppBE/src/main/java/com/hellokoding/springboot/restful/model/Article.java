@@ -27,6 +27,10 @@ public class Article {
     @JoinColumn(name = "language_id", nullable = false)
     private Language language;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_type_id", nullable = false)
+    private MaterialType mtype;
+
     private Date date;
     private String title;
     private Integer status;
@@ -44,7 +48,6 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
-
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     //@ToString.Exclude

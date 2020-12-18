@@ -148,50 +148,11 @@
                         <label>Форма добавления хештегов</label>
                         <div class="col-12" style="background-color: transparent">
                             <b-card style="background-color: transparent">
-                                <!--                                <hashtag-list :commonProp="test"-->
-                                <!--                                              @addHashtagToList="addHashtagToArticleList($event)"/>-->
-
-
-                                <!--                                <v-treeview-->
-                                <!--                                        dense-->
-                                <!--                                        :items="items"-->
-                                <!--                                ></v-treeview>-->
-
-                                <!--                                <v-treeview-->
-                                <!--                                        selectable-->
-                                <!--                                        selected-color="red"-->
-                                <!--                                        :items="items"-->
-                                <!--                                ></v-treeview>-->
-
-                                <!--                                <v-select v-model="selectionType" :items="['leaf', 'independent']" label="Selection type"></v-select>-->
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
                                         <v-sheet
                                                 style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
-                                            <!--                                                <v-text-field-->
-                                            <!--                                                        v-model="searchHashtag"-->
-                                            <!--                                                        label="Type To Search Hashtag..."-->
-                                            <!--                                                        dark-->
-                                            <!--                                                        flat-->
-                                            <!--                                                        solo-inverted-->
-                                            <!--                                                        hide-details-->
-                                            <!--                                                        box-->
-                                            <!--                                                        clearable-->
-                                            <!--                                                        clear-icon="mdi-close-circle-outline"-->
-                                            <!--                                                ></v-text-field>-->
-                                            <!--                                            </v-sheet>-->
-
-                                            <!--                                                v-text-field with clear icon-->
-                                            <!--                                                <v-text-field label="search"-->
-                                            <!--                                                              v-model="searchHashtag"-->
-                                            <!--                                                              @click:clear="searchFieldChanged()"-->
-                                            <!--                                                              @input="testSearch()"-->
-                                            <!--                                                              clearable-->
-                                            <!--                                                              clear-icon="mdi-close"-->
-                                            <!--                                                              filled>-->
-                                            <!--                                                </v-text-field>-->
-
-                                            <v-text-field label="search"
+                                            <v-text-field label="search hashtag"
                                                           v-model="searchHashtag"
                                                           filled>
                                             </v-text-field>
@@ -204,8 +165,8 @@
                                         >
 
                                             <v-treeview
-                                                    :items="filteredElements"
-                                                    :open="filteredKeys"
+                                                    :items="filteredHashtags"
+                                                    :open="filteredOpenHashtags"
                                                     item-key="name"
 
                                                     activatable
@@ -228,7 +189,6 @@
                                     <v-divider vertical
                                                style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
 
-                                    <!--                                    <v-col class="pa-6" cols="6"-->
                                     <v-col
                                             style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
 
@@ -242,24 +202,18 @@
                                             </template>
 
                                             <template v-else>
-                                                <!--                                                <div v-for="node in selectedHashtag" :key="node.id">-->
-                                                <!--                                                    {{  node.name }}-->
-
                                                 <div v-for="node in selectedHashtag">
                                                     <v-btn text icon x-small @click="removeSelectedHashtag(node)">
                                                         <v-icon style="color: red">mdi-delete-forever</v-icon>
                                                     </v-btn>
                                                     {{ node }}
                                                 </div>
-
                                                 <div class="form-group row" style="padding-top: 30px">
-
                                                     <button type="button" style="margin-right: 20px; margin-left: 15px"
                                                             :disabled="uploadMode"
                                                             @click="addHashtagToArticleList()"
                                                             class="btn btn-success">Add
                                                     </button>
-
                                                     <button type="button" class="btn btn-info"
                                                             :disabled="uploadMode"
                                                             @click="clearAllSelectedTags()">Clear All
@@ -269,7 +223,6 @@
                                         </v-container>
                                     </v-col>
                                 </v-row>
-
                             </b-card>
                         </div>
 
@@ -320,6 +273,82 @@
                                              :isEditMode="editMode"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"/>
+                    </div>
+                </form>
+
+                <!--                //////////////////////////MTYPE//////////////////////////-->
+                <form class="formCreation">
+                    <div class="form-row align-items-center">
+                        <label>Форма выбора типа материала</label>
+                        <div class="col-12" style="background-color: transparent">
+                            <b-card style="background-color: transparent">
+                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
+                                    <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
+                                        <v-sheet
+                                                style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
+                                            <v-text-field label="search material type"
+                                                          v-model="searchMType"
+                                                          filled>
+                                            </v-text-field>
+                                        </v-sheet>
+
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
+                                                class="overflow-y-auto"
+                                        >
+
+                                            <v-treeview
+                                                    :items="filteredMTypes"
+                                                    :open="filteredOpenMTypes"
+                                                    item-key="name"
+
+                                                    activatable
+                                                    color="warning"
+                                                    dense
+                                                    :open-all="true"
+
+                                                    return-object
+                                                    hoverable
+                                                    ref="mtypetreeviewref">
+
+                                                <template slot="label" slot-scope="{ item }">
+                                                    <a @click="onMTypeSelect(item)">{{ item.name }}</a>
+                                                </template>
+
+                                            </v-treeview>
+                                        </v-container>
+                                    </v-col>
+
+                                    <v-divider vertical
+                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
+
+                                    <v-col
+                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"
+                                                class="overflow-y-auto">
+
+                                            <template v-if="!isObjectValidAndNotEmpty(selectedMType)">
+                                                Notihing selected.
+                                            </template>
+
+                                            <template v-else>
+                                                <label style="background-color: transparent">Выбранный тип материала</label>
+                                                <div>
+                                                    <v-btn text icon x-small @click="removeSelectedMType">
+                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>
+                                                    </v-btn>
+                                                    {{selectedMType.name}}
+                                                </div>
+                                            </template>
+                                        </v-container>
+                                    </v-col>
+                                </v-row>
+                            </b-card>
+                        </div>
                     </div>
                 </form>
 
@@ -393,6 +422,7 @@
     import apiCountry from "./../country/country-api";
     import apiLanguage from "./../language/language-api";
     import apiHashtag from "./../hashtag/hashtag-api";
+    import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
     import FileAttachment from "./../FileAttachment";
 
@@ -429,6 +459,7 @@
             authorSearch: null,
             locationSearch: null,
             searchHashtag: '',
+            searchMType: '',
 
             selectedM: null,
             selectedL: null,
@@ -444,13 +475,16 @@
             personConnectionList: [],
             locationConnectionList: [],
             links: [],
-            tags: [],
-            allTags: [],
-            tagsTree: [],
+            tags: [],    //connected with hashtag input
+            mtype: '',
+
             selectionType: 'independent',
+
             selectedHashtag: [],
-            hashtagTree: [],
+            selectedMType: {},
+
             hashtagFlatTree: [],
+            mtypeFlatTree: [],
 
             allLanguages: [],
             allMovements: [],
@@ -521,6 +555,10 @@
                 }
             },
 
+            removeSelectedMType() {
+                this.selectedMType = '';
+            },
+
             onHashtagSelect(item) {
                 const index = this.selectedHashtag.indexOf(item.name);
                 if (index === -1) {
@@ -528,49 +566,8 @@
                 }
             },
 
-            // testSearch() {
-            //     console.log("v-text-field - input ~===~~~~", this.selectedHashtag.length);
-            //     //  this.selection = [];
-            // },
-
-            // searchFieldChanged() {
-            //     //v-text-field - clear
-            //     console.log("v-text-field - clear ~===~~~~");
-            //     this.searchHashtag = '';
-            //     //  this.buildTree();
-            // },
-
-            // onSearchToOpen() {
-            //     //v-treeview - open - update
-            //     console.log("v-treeview - open - update ~===~~~~");
-            //     //return this.filteredKeys;
-            // },
-
-            // createTree(treeData, parent_id) {
-            //     let tree = [];
-            //
-            //     treeData.forEach((item, id) => {
-            //             if (item.parentId === parent_id) {
-            //
-            //                 let newItem = {
-            //                     id: id,
-            //                     name: item.content,
-            //                     children: [],
-            //                 };
-            //
-            //                 newItem.children = this.createTree(treeData, item.id);
-            //                 tree.push(newItem);
-            //             }
-            //         }
-            //     );
-            //     return tree;
-            // },
-
-            buildTree() {
-                //this.hashtagTree = this.createTree(this.allTags, 0);
-                this.hashtagFlatTree = this.createFlatTree(this.allTags);
-                // console.log("CREATED TREE", this.hashtagTree);
-                // console.log("FLAT TREE", this.hashtagFlatTree);
+            onMTypeSelect(item) {  //todo?
+                this.selectedMType = item;//.name;
             },
 
             createFlatTree(treeData) {
@@ -601,21 +598,8 @@
                 this.selectedHashtag = [];
             },
 
-            addHashtagToArticleList(hashtag) {//from HashtagList
-                this.tags = hashtag;
-            },
-
-            // addHashtagToArticleList() {
-            //     let tagAlreadyAdded = 0;
-            //     this.selectedHashtag.forEach((item, i) => {
-            //         this.tags.forEach((tag, j) => {
-            //             if (tag === item.name)
-            //                 tagAlreadyAdded = 1;
-            //         });
-            //         if (tagAlreadyAdded == 0)
-            //             this.tags.push(item.name);
-            //     });
-            //     this.selectedHashtag = [];
+            // addHashtagToArticleList(hashtag) {//from HashtagList
+            //     this.tags = hashtag;
             // },
 
             addHashtagToArticleList() {
@@ -679,8 +663,8 @@
                     let connection = {
                         "id": obj.id,
                         "name": obj.country,
-                        "connection": '',
                         "comment": '',
+                        "connection": '',
                         "hasClicked": false
                     };
                     this.locationConnectionList.push(connection);
@@ -771,37 +755,22 @@
                     this.article.linkList[i] = {
                         "content": this.links[i]
                     };
-                    // console.log("CREATE PERS link: ", this.links[i]);
                 }
 
-                // for (let i = 0; i < this.personConnectionList.length; i++) {
-                //     let a = {
-                //         "itemId": this.personConnectionList[i].id,
-                //         "connection": this.personConnectionList[i].connection,
-                //         "comment": this.personConnectionList[i].comment
-                //     };
-                //     // console.log("CREATE PERS ON A: ", a);
-                //
-                //     if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                //         // console.log("PUSH PERS ON A: ", a);
-                //         this.article.personList.push(a);
-                //     }
-                //     // console.log("CREATE PERS ON A: ", this.article.personList);
-                // }
+                //mtype has structure (from t_material_type)
+                // id, content, misc, parentId
+                //but here mtype is a leaf of tree, that has structure
+                //id, name, children
 
-                for (let i = 0; i < this.locationConnectionList.length; i++) {
-                    let a = {
-                        "itemId": this.locationConnectionList[i].id,
-                        "connection": this.locationConnectionList[i].connection,
-                        "comment": this.locationConnectionList[i].comment
-                    };
-                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                        this.article.locationList.push(a);
-                    }
-                }
+                this.article.mtype = {
+                    "id": this.selectedMType.id,
+                    // "content": this.selectedMType.name,
+                    // "miscellany":"123",
+                    // "parentId": 1
+                };
 
                 this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
-                // this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
+                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
 
                 if (this.formValidate()) {
                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
@@ -844,11 +813,15 @@
                     this.article.hashtagList[i] = this.tags[i];
                 }
 
+                this.article.mtype = {
+                    "id": this.selectedMType.id,
+                    // "content": this.selectedMType.name,
+                    // "miscellany":"123",
+                    // "parentId": 1
+                };
+
                 console.log(" BEFORE [] this.article.person: ", this.article.personList);
                 console.log(" BEFORE [] this.article.person: ", this.article.locationList);
-
-                // while(this.article.personList.length > 0) {                //     this.article.personList.pop();                // }
-                // while(this.article.locationList.length > 0) {this.article.locationList.pop();}
 
                 this.article.personList.splice(0);
                 this.article.locationList.splice(0);
@@ -856,28 +829,8 @@
                 // this.article.personList = [];
                 // this.article.locationListList = [];
 
-                console.log(" after [] this.article.person: ", this.article.personList);
-                console.log(" after [] this.article.locationList: ", this.article.locationList);
-
-                // for (let i = 0; i < this.locationConnectionList.length; i++) {
-                //     let a = {
-                //         "itemId": this.locationConnectionList[i].id,
-                //         "connection": this.locationConnectionList[i].connection,
-                //         "comment": this.locationConnectionList[i].comment
-                //     };
-                //
-                //     if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                //         console.log("PUSH PERS ON A: ", a);
-                //         this.article.locationList.push(a);
-                //     }
-                // }
-
-                console.log(" this.article.locationList: ", this.article.locationList);
-                console.log(" this.locationConnectionList: ", this.locationConnectionList);
-
                 this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
-
 
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
@@ -897,9 +850,7 @@
             },
 
             finalConnectionListCreation(list, finalList) {
-
                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
-
                 for (let i = 0; i < list.length; i++) {
                     let a = {
                         "itemId": list[i].id,
@@ -924,6 +875,18 @@
                 return true;
             },
 
+            isObjectValidAndNotEmpty(obj) {
+
+                if (typeof obj === 'undefined' || obj === null) {
+                    return false;
+                }
+                if (typeof obj.name === 'undefined'){
+                    return false;
+                }
+
+                return true;
+            },
+
             locationEditConnectionTitleCreation(location) {
 
                 let returnedTitle = location.country;
@@ -940,201 +903,32 @@
                 if (this.isArrayValidAndNotEmpty(location.placement)) {
                     returnedTitle += ", " + location.placement;
                 }
-
                 return returnedTitle;
-            }
-
-        },
-
-        mounted() {
-
-            this.getLoggedIn();
-
-            //   console.log("MOUNTED_ART_ADD");
-            // api.getAllAuthors().then(response => {
-            //     this.authorListForAutocomplete = response.data;
-            //     console.log(response.data);
-            // });
-
-            apiLanguage.getAllLanguages(response => {
-                this.allLanguages = response.data;
-                console.log(response.data)
-            });
-
-            apiHashtag.getAllHashtags(response => {
-                this.allTags = response.data;
-                this.buildTree();
-                // console.log(response.data)
-            })
-                .catch(error => {
-                    this.errors.push(error)
-                });
-
-
-            // api.getAllMovements().then(response => {
-            //     this.allMovements = response.data;
-            //     console.log(response.data)
-            // }).catch(error => {
-            //     //this.errors.push(error)
-            //     console.log(error);
-            // })
-
-            if (this.$route.params.article_id != null) {
-                console.log("EDIT MODE");
-                this.editMode = true;
-                this.uploadFilesCheckBoxValue = true;
-
-            } //else console.log("ADD MODE");
-
-            //  console.log("article!", this.article);
-
-            if (this.editMode) {
-                api.findById(this.$route.params.article_id, r => {
-                    this.article = r.data;
-                    //  console.log("article EDIT!", this.article);
-
-                    // this.selectedM = this.article.movement.id; //to select necessary value from article
-                    this.selectedL = this.article.language.id;
-                    this.selectedS = this.article.status;
-                    // console.log("STATUS", this.article.status);
-                    this.article.date = this.formatDate(this.article.date);
-
-                    // this.tags = this.article.hashtagList;
-                    for (let i = 0; i < this.article.hashtagList.length; i++) {
-                        this.tags.push(this.article.hashtagList[i]);
-                    }
-
-                    // console.log("LINK LIST", this.article.linkList);
-                    for (let i = 0; i < this.article.linkList.length; i++) {
-                        this.links.push(this.article.linkList[i].content);
-                    }
-
-                    apiAttachment.getAttachments('article', this.article.id, r => {
-                        for (let i = 0; i < r.data.length; i++) {
-                            this.uploadedFiles.push(r.data[i]);
-                        }
-                    });
-
-
-                    for (let j = 0; j < this.article.personList.length; j++) {
-                        this.articlePersonIds.push(this.article.personList[j].itemId);
-                    }
-                    console.log(this.articlePersonIds);
-
-                    for (let j = 0; j < this.article.locationList.length; j++) {
-                        this.articleLocationIds.push(this.article.locationList[j].itemId);
-                    }
-
-                    apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
-                        this.articlePersonEntities = response.data;
-                        console.log("apiPerson", this.articlePersonEntities);
-
-                        for (let i = 0; i < this.article.personList.length; i++) {
-                            let element = this.article.personList[i];
-                            let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
-                            let connection = {
-                                "id": element.itemId,
-                                "name": currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
-                                "connection": element.connection,
-                                "comment": element.comment,
-                                "hasClicked": false
-                            };
-                            // console.log("CREATE PERS ON A: ", a);
-                            this.personConnectionList.push(connection);
-                        }
-                    });
-
-                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {  ///returns List<Location>
-                        this.articleLocationEntities = response.data;
-                        console.log("apiLocation", this.articleLocationEntities);
-
-                        for (let i = 0; i < this.article.locationList.length; i++) {
-                            let element = this.article.locationList[i];
-                            let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
-                            let connection = {
-                                "id": element.itemId,
-                                "name": this.locationEditConnectionTitleCreation(currentLocationEntity),
-                                "connection": element.connection,
-                                "comment": element.comment,
-                                "hasClicked": false
-                            };
-                            // console.log("CREATE PERS ON A: ", a);
-                            this.locationConnectionList.push(connection);
-                        }
-                        console.log("locationConnectionList: ", this.locationConnectionList);
-                    });
-                });
-            }
-        },
-
-        computed: {
-            items() {
-                return this.entries.map(entry => {
-                    const surname = entry.surname;
-                    return Object.assign({}, entry, {surname})
-                })
             },
 
-            itemsLocation() {
-                return this.entries.map(entry => {
-                    const country = entry.country;
-                    return Object.assign({}, entry, {country})
-                })
-            },
-
-            searchLength() {
-                return this.searchHashtag.length
-            },
-
-            filteredElements() {
-                let tree = [];
-                let resultIds = [];
-
+            //////////////////tree/////////////////////////////////////
+            searchTree(flatTree, searchEntity) {
                 let touched = false;
-                let resultSearchTree = []; //this.hashtagFlatTree.slice(); //this.hashtagFlatTree.map((x) => x);
+                let resultSearchTree = [];
 
-                // let treeSize = this.hashtagFlatTree.length;
-                // for (let i = 0; i < treeSize; i++){
-                //     let item = this.hashtagFlatTree[i];
-                //     resultSearchTree.push(item);
-                // }
-
-                //the way for deep copy
-                resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree));
-
-                // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
-                // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
-                //console.log("do while flatTree", resultSearchTree);
-
-
+                resultSearchTree = JSON.parse(JSON.stringify(flatTree)); //the way for deep copy
+                // resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree)); //the way for deep copy
                 do {
-                    // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                    // console.log("do while this.hashtagORIGINFlatTree", this.hashtagOriginalFlatTree);
-                    // console.log("do while this.hashtagFlatTree", this.hashtagFlatTree);
-                    // console.log("do while flatTree", resultSearchTree);
-
-
                     // remove leaves which do not match search string
                     let toRemove = [];
                     touched = false;
 
                     resultSearchTree.forEach((node, id) => {
-                        const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+                        const index = node.name.toLowerCase().indexOf(searchEntity.toLowerCase()) >= 0;
                         if ((index === false) && (node.children.length === 0)) {
-                            // console.log("node.children.length (to remove)", node.children.length, node.name);
+                            console.log("node.children.length (to remove)", node.children.length, node.name);
                             toRemove.push(node.id);
                             touched = true;
-                        } else {
-                            // console.log("node.children.length (to stay)", node.children.length, node.name);
                         }
                     });
 
-                    // console.log("toRemove", toRemove);
-                    //  console.log("this.searchHashtag", this.searchHashtag);
-
                     for (let i = 0; i < toRemove.length; i++) {
                         let index = resultSearchTree.findIndex(x => x.id === toRemove[i]);
-                        //   console.log("INDEX * * * * *", index, toRemove[i]);
                         if (index >= 0) {
                             resultSearchTree.splice(index, 1);
                         }
@@ -1147,8 +941,8 @@
                         let currentItem = resultSearchTree[i];
 
                         for (let j = 0; j < currentItem.children.length; j++) {
-
                             let childWasFound = false;
+
                             for (let k = 0; k < treeSize; k++) {
                                 if ((resultSearchTree[k].id === currentItem.children[j].id)) {
                                     newChildren.push(currentItem.children[j]);
@@ -1163,15 +957,16 @@
                         }//for j
                         resultSearchTree[i].children = newChildren;
                     }
-
                 } while (touched);
 
-                // resultSearchTree.forEach((item, id) => {
-                //     console.log("FLAT SEARCH TREE", item.name, item.id);
-                // });
+                return resultSearchTree;
+            },
 
+            flatTreeToTree(resultSearchTree) {
+                let tree = [];
+                let resultIds = [];
+                let touched = false;
 
-                //create normal tree from flat tree
                 let movedChildren = [];
                 do {
                     movedChildren = [];
@@ -1228,15 +1023,309 @@
                 } while (movedChildren.length > 0);
                 return resultSearchTree;
             },
+        },
 
-            filteredKeys() {
+        mounted() {
+            this.getLoggedIn();
+            //   console.log("MOUNTED_ART_ADD");
+            // api.getAllAuthors().then(response => {
+            //     this.authorListForAutocomplete = response.data;
+            //     console.log(response.data);
+            // });
+
+            apiLanguage.getAllLanguages(response => {
+                this.allLanguages = response.data;
+                console.log(response.data)
+            });
+
+            apiHashtag.getAllHashtags(response => {
+                // this.allTags = response.data;
+                this.hashtagFlatTree = this.createFlatTree(response.data);
+
+            })
+                .catch(error => {
+                    this.errors.push(error)
+                });
+
+            apiMType.getAll(response => {
+                // this.allMTypes = response.data;
+                this.mtypeFlatTree = this.createFlatTree(response.data);
+
+            })
+                .catch(error => {
+                    this.errors.push(error)
+                });
+
+            if (this.$route.params.article_id != null) {
+                console.log("EDIT MODE");
+                this.editMode = true;
+                this.uploadFilesCheckBoxValue = true;
+
+            }
+
+            if (this.editMode) {
+                api.findById(this.$route.params.article_id, r => {
+                    this.article = r.data;
+                    //  console.log("article EDIT!", this.article);
+
+                    // this.selectedM = this.article.movement.id; //to select necessary value from article
+                    this.selectedL = this.article.language.id;
+                    this.selectedS = this.article.status;
+                    // console.log("STATUS", this.article.status);
+                    this.article.date = this.formatDate(this.article.date);
+
+                    //mtype has structure (from t_material_type)
+                    // id, content, misc, parentId
+                    //but here mtype is a leaf of tree, that has structure
+                    //id, name, children
+
+                    this.selectedMType = {
+                        "id": this.article.mtype.id,
+                        "name": this.article.mtype.content,
+                    };
+                    // console.log("selectedMTYPE", this.selectedMType, this.article);
+
+                    for (let i = 0; i < this.article.hashtagList.length; i++) {
+                        this.tags.push(this.article.hashtagList[i]);
+                    }
+
+                    // console.log("LINK LIST", this.article.linkList);
+                    for (let i = 0; i < this.article.linkList.length; i++) {
+                        this.links.push(this.article.linkList[i].content);
+                    }
+
+                    apiAttachment.getAttachments('article', this.article.id, r => {
+                        for (let i = 0; i < r.data.length; i++) {
+                            this.uploadedFiles.push(r.data[i]);
+                        }
+                    });
+
+                    for (let j = 0; j < this.article.personList.length; j++) {
+                        this.articlePersonIds.push(this.article.personList[j].itemId);
+                    }
+                    console.log(this.articlePersonIds);
+
+                    for (let j = 0; j < this.article.locationList.length; j++) {
+                        this.articleLocationIds.push(this.article.locationList[j].itemId);
+                    }
+
+                    apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
+                        this.articlePersonEntities = response.data;
+                        console.log("apiPerson", this.articlePersonEntities);
+
+                        for (let i = 0; i < this.article.personList.length; i++) {
+                            let element = this.article.personList[i];
+                            let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.personConnectionList.push(connection);
+                        }
+                    });
+
+                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {  ///returns List<Location>
+                        this.articleLocationEntities = response.data;
+                        console.log("apiLocation", this.articleLocationEntities);
+
+                        for (let i = 0; i < this.article.locationList.length; i++) {
+                            let element = this.article.locationList[i];
+                            let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.locationEditConnectionTitleCreation(currentLocationEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.locationConnectionList.push(connection);
+                        }
+                        console.log("locationConnectionList: ", this.locationConnectionList);
+                    });
+                });
+            }
+        },
+
+        ///////////////////////////COMPUTED/////////////////////////////////
+        computed: {
+            items() {
+                return this.entries.map(entry => {
+                    const surname = entry.surname;
+                    return Object.assign({}, entry, {surname})
+                })
+            },
+
+            itemsLocation() {
+                return this.entries.map(entry => {
+                    const country = entry.country;
+                    return Object.assign({}, entry, {country})
+                })
+            },
+
+            searchHashtagLength() {
+                return this.searchHashtag.length
+            },
+
+            searchMTypeLength() {
+                return this.searchMType.length
+            },
+
+            filteredHashtags() {
+                // console.log("COMPUTED FLAT", this.hashtagFlatTree);
+                let resultSearchTree = this.searchTree(this.hashtagFlatTree, this.searchHashtag);
+                // console.log("COMPUTED AFTER SEARCH", resultSearchTree);
+                return this.flatTreeToTree(resultSearchTree);
+            },
+
+            filteredMTypes() {
+                let resultSearchTree = this.searchTree(this.mtypeFlatTree, this.searchMType);
+                return this.flatTreeToTree(resultSearchTree);
+                // console.log("COMPUTED", resultSearchTree);
+            },
+
+            // filteredHashtags1() {
+            //     let tree = [];
+            //     let resultIds = [];
+            //     let touched = false;
+            //     let resultSearchTree = [];
+            //
+            //     resultSearchTree = JSON.parse(JSON.stringify(this.hashtagFlatTree)); //the way for deep copy
+            //     do {
+            //         // remove leaves which do not match search string
+            //         let toRemove = [];
+            //         touched = false;
+            //
+            //         resultSearchTree.forEach((node, id) => {
+            //             const index = node.name.toLowerCase().indexOf(this.searchHashtag) >= 0;
+            //             if ((index === false) && (node.children.length === 0)) {
+            //                 console.log("node.children.length (to remove)", node.children.length, node.name);
+            //                 toRemove.push(node.id);
+            //                 touched = true;
+            //             }
+            //         });
+            //
+            //         for (let i = 0; i < toRemove.length; i++) {
+            //             let index = resultSearchTree.findIndex(x => x.id === toRemove[i]);
+            //             if (index >= 0) {
+            //                 resultSearchTree.splice(index, 1);
+            //             }
+            //         }
+            //
+            //         // remove references to deleted leaves
+            //         let treeSize = resultSearchTree.length;
+            //         for (let i = 0; i < treeSize; i++) {
+            //             let newChildren = [];
+            //             let currentItem = resultSearchTree[i];
+            //
+            //             for (let j = 0; j < currentItem.children.length; j++) {
+            //                 let childWasFound = false;
+            //
+            //                 for (let k = 0; k < treeSize; k++) {
+            //                     if ((resultSearchTree[k].id === currentItem.children[j].id)) {
+            //                         newChildren.push(currentItem.children[j]);
+            //                         childWasFound = true;
+            //                     }
+            //                 }//for k
+            //
+            //                 if (!childWasFound) {
+            //                     touched = true;
+            //                     //   console.log("deleted ref", currentItem.children[j].id);
+            //                 }
+            //             }//for j
+            //             resultSearchTree[i].children = newChildren;
+            //         }
+            //     } while (touched);
+            //
+            //     // resultSearchTree.forEach((item, id) => {
+            //     //     console.log("FLAT SEARCH TREE", item.name, item.id);
+            //     // });
+            //
+            //     //create normal tree from flat tree
+            //     let movedChildren = [];
+            //     do {
+            //         movedChildren = [];
+            //
+            //         let treeSize = resultSearchTree.length;
+            //         for (let i = 0; i < treeSize; i++) {
+            //
+            //             let currentItem = resultSearchTree[i];
+            //             let removedChildrenAlreadyContains = false;
+            //             let childrenQ = currentItem.children.length;
+            //
+            //             for (let j = 0; j < movedChildren.length; j++) {
+            //                 if (movedChildren[j] === currentItem.id)
+            //                     removedChildrenAlreadyContains = true;
+            //             }
+            //
+            //             if (!removedChildrenAlreadyContains) {
+            //                 for (let j = 0; j < childrenQ; j++) {
+            //                     let child = currentItem.children[j];
+            //
+            //                     if ((child.name == null)) {
+            //                         let index = resultSearchTree.findIndex(x => x.id === child.id);
+            //                         if (index >= 0) {
+            //                             //if (resultSearchTree[index].children.length === 0) {
+            //                             let isChildrenNull = false;
+            //
+            //                             if (resultSearchTree[index].children !== null) {
+            //                                 for (let k = 0; k < resultSearchTree[index].children.length; k++) {
+            //                                     if (resultSearchTree[index].children[k].name === null) {
+            //                                         isChildrenNull = true;
+            //                                     }
+            //                                 }//for k
+            //
+            //                                 if (!isChildrenNull) {
+            //                                     child.name = resultSearchTree[index].name;
+            //                                     child.children = resultSearchTree[index].children;
+            //                                     movedChildren.push(child.id);
+            //                                 }
+            //                             }//if child.children
+            //                         }
+            //                     }
+            //                 }//for j
+            //             }//if contains
+            //         }
+            //
+            //         for (let j = 0; j < movedChildren.length; j++) {
+            //             let index = resultSearchTree.findIndex(x => x.id === movedChildren[j]);
+            //             // console.log("I-N-D-E-X-======", index, movedChildren[j]);
+            //             if (index >= 0) {
+            //                 resultSearchTree.splice(index, 1);
+            //             }
+            //         }
+            //         //console.log("-----------------------------------------------");
+            //     } while (movedChildren.length > 0);
+            //     return resultSearchTree;
+            // },
+
+            filteredOpenHashtags() {
+                // console.log("filteredOpenHashtags", this.filteredHashtags);
+
                 if (this.searchHashtag != null)   //for start view without search
-                    if (this.searchLength === 0) {
-                        return this.filteredElements.map((top) => {
+                    if (this.searchHashtagLength === 0) {
+                        return this.filteredHashtags.map((top) => {
                             return top.name
                         })
                     } else {
-                        return this.filteredElements;
+                        return this.filteredHashtags;
+                    }
+            },
+
+            filteredOpenMTypes() {
+                // console.log("filteredOpenMTypes", this.filteredMTypes);
+
+                if (this.searchMType != null)   //for start view without search
+                    if (this.searchMTypeLength === 0) {
+                        return this.filteredMTypes.map((top) => {
+                            return top.name
+                        })
+                    } else {
+                        return this.filteredMTypes;
                     }
             }
         },
@@ -1245,7 +1334,7 @@
         watch: {
             searchHashtag() {
                 this.$nextTick(() => {
-                    if (this.searchLength === 0) {
+                    if (this.searchHashtagLength === 0) {
                         this.$refs.treeviewref.updateAll(false);
                     } else {
                         this.$refs.treeviewref.updateAll(true);
@@ -1253,48 +1342,25 @@
                 });
             },
 
+            searchMType() {
+                this.$nextTick(() => {
+                    if (this.searchMTypeLength === 0) {
+                        this.$refs.mtypetreeviewref.updateAll(false);
+                    } else {
+                        this.$refs.mtypetreeviewref.updateAll(true);
+                    }
+                });
+            },
+
             authorSearch(val) {
-                console.log("SEARCH ACTIVATED");
-
-//                 // Get the input field
-//                 var input = document.getElementById("author-autocomplete");
-//                 // let input1 = document.querySelector("#author-autocomplete");
-//
-//                   // Execute a function when the user releases a key on the keyboard
-//                 input.addEventListener("keyup", function (event) {
-//
-//                     console.log("SOMETHING WAS PRESSED!");
-//
-//                     // Number 13 is the "Enter" key on the keyboard
-//                     if (event.keyCode === 13) {
-//
-//                         console.log("ENTER PRESSED!");
-//                         console.log(event);
-//
-//
-//                         if (typeof this.selected !== 'undefined') {
-//                             console.log("SELECTED IN WATCH");
-//                             console.log(this.selected);
-//                             this.selected = "";
-//                         }
-//
-//
-//                         // Cancel the default action, if needed
-// //                        event.preventDefault();
-//                         // Trigger the button element with a click
-//  //                       function foo() { alert('Hi!'); }
-//                     }
-//                 });
-
-
+                // console.log("SEARCH ACTIVATED");
                 if (val !== null)
                     if (val.length > 2) {
-                        console.log("SEARCH STARTED");
-
+                        // console.log("SEARCH STARTED");
 
                         if (typeof this.selected !== 'undefined') {
-                            console.log("SELECTED IN WATCH", this.selected);
-                            console.log(this.selected);
+                            // console.log("SELECTED IN WATCH", this.selected);
+                            // console.log(this.selected);
                             if (this.article.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selected = "";
                         }
@@ -1306,39 +1372,23 @@
                         if (this.isLoading) return;
                         this.isLoading = true;
 
-
                         apiPerson.searchPerson(val, r => {
                             this.entries = r;
                             //  console.log("****", this.entries);
                             this.isLoading = false;
                         });
-
-                        // Lazily load input items
-                        //  fetch('https://api.publicapis.org/entries')  //todo
-                        // fetch('../api/v1/person/search?q=' + encodeURIComponent(val))
-                        //     .then(res => res.json())
-                        //     .then(res => {
-                        //         this.entries = res;
-                        //         // const {count, entries} = res;
-                        //         // this.count = count;
-                        //         // this.entries = entries;
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err)
-                        //     })
-                        //     .finally(() => (this.isLoading = false))
                     }
             },
 
             locationSearch(val) {
-                console.log("SEARCH ACTIVATED");
+                // console.log("SEARCH ACTIVATED");
                 if (val !== null)
                     if (val.length > 2) {
-                        console.log("SEARCH STARTED");
+                        // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedLocation !== 'undefined') {
-                            console.log("SELECTED IN WATCH");
-                            console.log(this.selectedLocation);
+                            // console.log("SELECTED IN WATCH");
+                            // console.log(this.selectedLocation);
                             if (this.article.locationList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedLocation = "";
                         }
@@ -1352,9 +1402,7 @@
                             //  console.log("****", this.entries);
                             this.isLoadingLocation = false;
                         });
-
                     }
-
             },
         },
     }

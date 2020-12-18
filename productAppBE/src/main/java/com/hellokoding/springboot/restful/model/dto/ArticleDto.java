@@ -27,13 +27,16 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private List<String> hashtagList;
     private String miscellany;
 
+    private MaterialType mtype;
+
     public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
                       String titleRus, String description,
                       String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
-                      List<String> hashtagList, String miscellany) {
+                      List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movement = movement;
         this.language = language;
+        this.mtype = mtype;
         this.date = date;
         this.title = title;
         this.status = status;
@@ -51,13 +54,13 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.id = article.getId();
         this.movement = article.getMovement();
         this.language = article.getLanguage();
+        this.mtype = article.getMtype();
         this.date = article.getDate();
         this.title = article.getTitle();
         this.status = article.getStatus();
         this.titleRus = article.getTitleRus();
         this.description = article.getDescription();
         this.linkList = article.getLinkList();
-
 
         this.personList = new ArrayList<>();
         this.locationList = new ArrayList<>();
@@ -201,6 +204,14 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setMiscellany(String miscellany) {
         this.miscellany = miscellany;
+    }
+
+    public MaterialType getMtype() {
+        return mtype;
+    }
+
+    public void setMtype(MaterialType mtype) {
+        this.mtype = mtype;
     }
 
     @Override

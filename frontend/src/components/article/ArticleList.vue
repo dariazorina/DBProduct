@@ -415,53 +415,45 @@
                 let result = '';
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
 
-                // for (let i = 0; i < this.articlePersonEntities.length; i++ ){
-                //     if (this.articlePersonEntities[i].id === id){
-                //         currentPerson = this.articlePersonEntities[i];
-                //         break;
-                //     }
-                // }
+                let valueOrig = '', valueRus = '';
 
+                if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
+                    // if (this.isArrayValidAndNotEmpty(currentPerson.surname)) { //mandatory field in Person
+                        valueOrig = currentPerson.surname;
+                    // }
 
-                console.log("createComplexCellValue(id)", currentPerson);
-
-                // if (typeof selected !== 'undefined') {  //todo
-
-                // this.authorComponentKey += 1;
-
-                let valueOrig = currentPerson.surname;// + " " + currentPerson.name;
-                let valueRus = currentPerson.surnameRus;// + " " + currentPerson.nameRus;
-
-                if (this.isArrayValidAndNotEmpty(currentPerson.name)) {
-                    valueOrig += " " + currentPerson.name;
-                }
-
-                if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
-                    valueRus += " " + currentPerson.nameRus;
-                }
-
-                if (this.isArrayValidAndNotEmpty(valueRus)) {
-                    result = valueRus;
-                    if (this.isArrayValidAndNotEmpty(valueOrig)) {
-                        if (valueRus.localeCompare(valueOrig) !== 0)
-                            result += " / " + valueOrig;
+                    if (this.isArrayValidAndNotEmpty(currentPerson.surname)) {
+                        valueRus = currentPerson.surnameRus;
                     }
-                } else if (this.isArrayValidAndNotEmpty(valueOrig))
-                    result += valueOrig;
-                // }
-                return result;
+
+                    // if (this.isArrayValidAndNotEmpty(currentPerson.name)) { //mandatory field in Person
+                        valueOrig += " " + currentPerson.name;
+                    // }
+
+                    if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
+                        valueRus += " " + currentPerson.nameRus;
+                    }
+
+                    if (this.isArrayValidAndNotEmpty(valueRus)) {
+                        result = valueRus;
+                        if (this.isArrayValidAndNotEmpty(valueOrig)) {
+                            if (valueRus.localeCompare(valueOrig) !== 0)
+                                result += " / " + valueOrig;
+                        }
+                    } else if (this.isArrayValidAndNotEmpty(valueOrig))
+                        result += valueOrig;
+                    return result;
+                }
             },
 
             createComplexCellValue(valueRus, valueOrig) {
-
-                let result = '';//"Hello \n World";
+                let result = '';
                 // console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
 
                 if (this.isArrayValidAndNotEmpty(valueRus)) {
                     result = valueRus;
                     if (this.isArrayValidAndNotEmpty(valueOrig))
                         result += " / " + valueOrig;
-                    // result += "\n" + valueOrig;
                 } else if (this.isArrayValidAndNotEmpty(valueOrig))
                     result += valueOrig;
                 return result;

@@ -6,7 +6,7 @@
             <a class="btn btn-default">
                 <router-link :to="{name: 'country-add'}">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Add country
+                    Add location
                 </router-link>
             </a>
         </div>

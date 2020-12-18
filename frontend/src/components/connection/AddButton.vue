@@ -40,7 +40,7 @@
         computed: {
             isDisable() {
                 // console.log("this.item.connection", this.item.connection);
-                return (this.item.connection.length <= 0) || (this.hasClicked);
+                return (this.item.connection.length === 0) || (this.hasClicked);
             }
         }
     }
