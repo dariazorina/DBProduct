@@ -34,13 +34,24 @@
             item: {
                 type: Object,
                 required: true
-            }
+            },
+            isSelectionMode: {
+                type: Boolean,
+                required: true
+            },
+        },
+
+        mounted(){
+           // console.log("mounted BUTTON", this.item);
         },
 
         computed: {
             isDisable() {
-                // console.log("this.item.connection", this.item.connection);
-                return (this.item.connection.length === 0) || (this.hasClicked);
+                //console.log("button computed this.item.connection", this.item.connection, this.isSelectionMode);
+                if (this.isSelectionMode&&!this.hasClicked){
+                    return false;
+                }
+                return (this.item.connection.length === 0) || (this.hasClicked);// || (this.item.comment.length === 0);
             }
         }
     }

@@ -42,6 +42,42 @@ export default {
                     router.push('/login');
                 }
             })
+    },
+    getOrgsByIds(idList, fn) {
+        AXIOS
+            .post(`/org/ids`, idList)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+    searchOrg(searchKey, fn) {
+        AXIOS.get(`/org/search?q=` + encodeURIComponent(searchKey))
+            .then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response;
+
+                } else {
+                    let error = new Error(response.statusText);
+                    error.response = response;
+                    throw error
+                }
+            }).then((response) => {
+            return response.data;
+
+        }).then((json) => {
+            fn(json);
+
+        }).catch((error) => {
+            console.log(error);
+            if (error.response.status === 401) {
+                router.push('/login');
+            }
+        })
     }
 }
 

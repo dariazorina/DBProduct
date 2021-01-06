@@ -17,10 +17,16 @@
 
                                     :item="item"
                                     :hasClicked="item.hasClicked"
+                                    :allTypes = "allTypes"
                                     :isEditMode="isEditMode"
+                                    :isSelectionMode="isSelectionMode"
                                     @remove="removeItem"
                                     @get-input-text="addItem"
-                                    @save-input-text="saveItem"/>
+                                    @save-input-text="saveItem"
+                                    @update-selection="updateSelection"
+                                  />
+
+
             </li>
         </ul>
     </div>
@@ -42,8 +48,21 @@
                 type: Boolean,
                 required: true
             },
+            isSelectionMode: {
+                type: Boolean,
+                required: true
+            },
+            allTypes: {
+                type: Array,
+                required: true
+            },
         },
         methods: {
+            updateSelection(item){
+                console.log("upd selection ConnCompomemt", item);
+                this.$emit("update-selection", item);
+            },
+
             addItem(item) {
                 // console.log("------addItem CONN-COMP---------", item);
                 item.connection = item.connection.trim();

@@ -57,6 +57,31 @@ export default {
             });
     },
 
+    getMaterialsByIds(idList, fn) {
+        AXIOS
+            .post(`/article/ids`, idList)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+    getConnectionTypes(fn) {
+        AXIOS
+            .post(`/article/connectionTypes`)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+
     update(id, article, fn) {
         AXIOS
             .put('/article/' + id, article)
@@ -80,6 +105,38 @@ export default {
                 }
             });
     },
+
+
+    searchMaterial(searchKey, fn) {
+            AXIOS.get(
+                `/article/searchMaterial?q=` + encodeURIComponent(searchKey)
+            ).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response;
+
+                } else {
+                    let error = new Error(response.statusText);
+                    error.response = response;
+                    throw error
+                }
+            }).then((response) => {
+                // if (response.headers['content-type'] !== 'application/json') {
+                //     let error = new Error('Некорректный ответ от сервера');
+                //     error.response = response;
+                //     throw error
+                // }
+                return response.data;
+
+            }).then((json) => {
+                fn(json);
+
+            }).catch((error) => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            })
+        },
 
     searchTitle(searchKey, status, start, end, fn) {
         AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)

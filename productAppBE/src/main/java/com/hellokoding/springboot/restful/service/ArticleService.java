@@ -9,12 +9,10 @@ import java.util.Optional;
 
 public interface ArticleService {
     List<ArticleDto> search(String title, String hash, String author, String lang, String descr, List<Integer> status, String startDate, String endDate) throws ParseException;
-
+    List<Article> searchMaterial(String q);
     List<ArticleDto> findAll();
-
     Optional<ArticleDto> findById(Integer id);
-
     Article save(ArticleDto stock);
-
     void deleteById(Integer id);
+    List<Article> findByIds(List<Integer> idList);
 }

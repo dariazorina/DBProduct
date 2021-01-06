@@ -3,12 +3,12 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.EventRepository;
 import com.hellokoding.springboot.restful.dao.OrgRepository;
 import com.hellokoding.springboot.restful.model.Org;
+import com.hellokoding.springboot.restful.model.dto.OrgDto;
 import com.hellokoding.springboot.restful.service.OrgService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,67 @@ public class OrgServiceImpl implements OrgService {
     public List<Org> findAll() {
         List<Org> all = orgRepository.findAll();
         return all;
+    }
+
+    @Override
+    public List<OrgDto> search(String q) {
+
+        Set<OrgDto> fooSet = new TreeSet<>();
+        String dtoName;
+        List<Org> orgSearchList = new ArrayList<>();
+
+        orgSearchList = orgRepository.findByOrgName("%" + q + "%"); //findByNameRusStartsWithIgnoreCase(q);
+
+        System.out.println("=====================================");
+        System.out.println(orgSearchList);
+
+        if (orgSearchList.size() > 0) {
+            for (Org org : orgSearchList) {
+
+                dtoName = org.getNameRus();  //nameRus - mandatory field
+
+                if (org.getAbbrRus() != null) {
+                    dtoName += ", " + org.getAbbrRus();
+                }
+                if (org.getName() != null) {
+                    dtoName += ", " + org.getName();
+                }
+                if (org.getAbbr() != null) {
+                    dtoName += ", " + org.getAbbr();
+                }
+                if (org.getNameEng() != null) {
+                    dtoName += ", " + org.getNameEng();
+                }
+                if (org.getAbbrEng() != null) {
+                    dtoName += ", " + org.getAbbrEng();
+                }
+                if (org.getFounded() != null) {
+                    dtoName += ", " + org.getFounded();
+                }
+
+                //todo add another fields
+
+                OrgDto orgDto = new OrgDto(org.getId(), dtoName);
+                fooSet.add(orgDto);
+            }
+
+            List<OrgDto> finalList = new ArrayList<>(fooSet);
+            return finalList;
+        }
+        return null;
+    }
+
+    public List<Org> findByIds(List<Integer> idList) {
+
+        List<Org> searchRes = new ArrayList<>();
+        for (Integer id : idList) {
+            Optional<Org> l = orgRepository.findById(id);
+
+            if (l != null) {
+                searchRes.add(l.get());
+            }
+        }
+        return searchRes;
     }
 
     @Override

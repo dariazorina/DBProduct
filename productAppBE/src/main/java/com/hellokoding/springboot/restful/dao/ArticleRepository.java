@@ -10,6 +10,11 @@ import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
+    @Query("from Article as a " +
+            "where (lower(a.title) like lower(:title) " +
+            "or lower(a.titleRus) like lower(:title))")
+    List<Article> findMaterialByTitle(String title);
+//    List<Article> findByTitleStartsWithIgnoreCase(String title);
 
     //search in title (title, titleRus simultaneously), "contains"
     @Query("from Article as a " +

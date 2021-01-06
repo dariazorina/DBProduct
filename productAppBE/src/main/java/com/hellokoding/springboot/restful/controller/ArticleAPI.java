@@ -1,9 +1,10 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Article;
-import com.hellokoding.springboot.restful.model.Attachment;
+import com.hellokoding.springboot.restful.model.ConnectionType;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
+import com.hellokoding.springboot.restful.service.ConnectionTypeService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
 import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
 import com.hellokoding.springboot.restful.service.dto.EntityType;
@@ -38,6 +39,7 @@ public class ArticleAPI {
 
     private final ArticleService articleService;
     private final AttachmentService attachmentService;
+    private final ConnectionTypeService ctypeService;
 
     //api/v1/article/search?title=title&hash=hash
     @GetMapping("/search")
@@ -58,6 +60,22 @@ public class ArticleAPI {
     public ResponseEntity<List<ArticleDto>> findAll() {
         List<ArticleDto> all = articleService.findAll();
         return ResponseEntity.ok(all);
+    }
+
+    @GetMapping("/searchMaterial")
+    public ResponseEntity<List<Article>> searchMaterial(@RequestParam(name = "q", required = true) String q) {
+        List<Article> search = articleService.searchMaterial(q);
+        return ResponseEntity.ok(search);
+    }
+
+    @PostMapping("/ids")
+    public ResponseEntity<List<Article>> getMaterialsByIds(@Valid @RequestBody List<Integer> idList) {
+        return ResponseEntity.ok(articleService.findByIds(idList));
+    }
+
+    @PostMapping("/connectionTypes")
+    public ResponseEntity<List<ConnectionType>> getConnectionTypes() {
+        return ResponseEntity.ok(ctypeService.findAll());
     }
 
     @PostMapping

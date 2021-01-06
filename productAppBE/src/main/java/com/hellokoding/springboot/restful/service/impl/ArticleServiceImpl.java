@@ -21,7 +21,9 @@ public class ArticleServiceImpl implements ArticleService {
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
     private final PersonRepository personRepository;
+    private final OrgRepository orgRepository;
     private final MTypeRepository materialTypeRepository;
+    private final ConnectionTypeRepository ctypeRepository;
 
     @Override
     public List<ArticleDto> findAll() {
@@ -31,6 +33,8 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleDto articleDto;
         for (Article article : all) {
             articleDto = new ArticleDto(article);
+            articleDto.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
+
             dtoAllArticleList.add(articleDto);
         }
         return dtoAllArticleList;
@@ -42,7 +46,30 @@ public class ArticleServiceImpl implements ArticleService {
         Optional<ArticleDto> byIdDto;
 
         byIdDto = Optional.of(new ArticleDto(byId.get()));
+        byIdDto.get().setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(byId.get()));
         return byIdDto;
+    }
+
+
+    public ArrayList<ItemConnectionDto> createMaterialConnectionsListForArticleDtoFromArticle(Article article) {
+
+        ArrayList<ItemConnectionDto> materialList = new ArrayList<>();
+        if (article.getMaterialConnections().size() > 0) {
+            ItemConnectionDto materialConnectionDto;
+
+            for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
+                materialConnectionDto = new ItemConnectionDto();
+
+                Optional<ConnectionType> ct = (ctypeRepository.findById(connection.getConnection()));
+                if (ct.isPresent()) {
+                    materialConnectionDto.setItemId(connection.getMaterial().getId());
+                    materialConnectionDto.setConnection(ct.get().getType());
+                    materialConnectionDto.setComment(connection.getComment());
+                }
+                materialList.add(materialConnectionDto);
+            }
+        }
+        return materialList;
     }
 
     @Override
@@ -97,9 +124,14 @@ public class ArticleServiceImpl implements ArticleService {
         article.setLanguage(articleDto.getLanguage());
 
 
-        Optional<MaterialType> byId = materialTypeRepository.findById(articleDto.getMtype().getId());
-        if (byId!=null) {
-            article.setMtype(byId.get());
+        MaterialType mT = articleDto.getMtype();
+        if (mT != null) {
+            if (mT.getId() != null) {
+                Optional<MaterialType> byId = materialTypeRepository.findById(mT.getId());
+                if (byId != null) {
+                    article.setMtype(byId.get());
+                }
+            }
         }
 
         article.setDate(articleDto.getDate());
@@ -140,7 +172,41 @@ public class ArticleServiceImpl implements ArticleService {
             articleRepository.flush();
         }
 
+        /////////////////////ORG CONNECTIONS///////////////////
+        if (article.getOrgConnections() != null) {
+            article.getOrgConnections().clear();
+            articleRepository.flush();
+        }
+
+        Integer orgId;
+        ArticleOrgConnection orgConnection;
+        List<ArticleOrgConnection> orgConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : articleDto.getOrgList()) {
+
+            orgId = connectionDto.getItemId();
+            if (orgRepository.findById(orgId).isPresent()) {
+                orgConnection = new ArticleOrgConnection();
+                orgConnection.setOrg(orgRepository.findById(orgId).get());
+                orgConnection.setArticle(article);
+                orgConnection.setConnection(connectionDto.getConnection());
+                orgConnection.setComment(connectionDto.getComment());
+
+                orgConnectionList.add(orgConnection);
+            }
+        }
+
+        if (article.getOrgConnections() == null) {
+            article.setOrgConnections(orgConnectionList);
+        } else {
+            article.getOrgConnections().addAll(orgConnectionList);
+        }
+
         /////////////////////LOCATION CONNECTIONS///////////////////
+        if (article.getLocationConnections() != null) {
+            article.getLocationConnections().clear();
+            articleRepository.flush();
+        }
+
         Integer locatonId;
         ArticleLocationConnection locationConnection;
         List<ArticleLocationConnection> locationConnectionList = new ArrayList<>();
@@ -162,6 +228,37 @@ public class ArticleServiceImpl implements ArticleService {
             article.setLocationConnections(locationConnectionList);
         } else {
             article.getLocationConnections().addAll(locationConnectionList);
+        }
+
+        /////////////////////MATERIAL CONNECTIONS///////////////////
+        if (article.getMaterialConnections() != null) {
+            article.getMaterialConnections().clear();
+            articleRepository.flush();
+        }
+        Integer materialId;
+        ArticleMaterialConnection materialConnection;
+        List<ArticleMaterialConnection> materialConnectionList = new ArrayList<>();
+
+
+        for (ItemConnectionDto connectionDto : articleDto.getMaterialList()) {
+            materialId = connectionDto.getItemId();
+            if (articleRepository.findById(materialId).isPresent()) {
+                Optional<ConnectionType> ct = (ctypeRepository.findByType(connectionDto.getConnection()));
+                if (ct.isPresent()) {
+                    materialConnection = new ArticleMaterialConnection();
+                    materialConnection.setMaterial(articleRepository.findById(materialId).get());
+                    materialConnection.setArticle(article);
+                    materialConnection.setConnection(ct.get().getId());
+                    materialConnection.setComment(connectionDto.getComment());
+                    materialConnectionList.add(materialConnection);
+                }
+            }
+        }
+
+        if (article.getMaterialConnections() == null) {
+            article.setMaterialConnections(materialConnectionList);
+        } else {
+            article.getMaterialConnections().addAll(materialConnectionList);
         }
 
 
@@ -248,7 +345,25 @@ public class ArticleServiceImpl implements ArticleService {
 //        return article;
     }
 
+    public List<Article> findByIds(List<Integer> idList) {
+
+        List<Article> searchRes = new ArrayList<>();
+        for (Integer id : idList) {
+            Optional<Article> l = articleRepository.findById(id);
+
+            if (l != null) {
+                searchRes.add(l.get());
+            }
+        }
+        return searchRes;
+    }
+
     @Override
+    public List<Article> searchMaterial(String q) {
+        List<Article> rrr = articleRepository.findMaterialByTitle("%" + q + "%");
+        return rrr;
+    }
+
     public List<ArticleDto> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -333,10 +448,12 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleDto dtoArticle;
         for (Article article : searchList) {
             dtoArticle = new ArticleDto(article);
+            dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
             dtoSearchList.add(dtoArticle);
         }
         return dtoSearchList;
     }
+
 
     @Override
     public void deleteById(Integer id) {

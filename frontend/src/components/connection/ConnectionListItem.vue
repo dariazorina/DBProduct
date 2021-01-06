@@ -2,20 +2,40 @@
     <div style="padding-left: 0px; padding-top: 10px; background-color: gold">
         <b>{{item.name}}</b>
 
-        <span class="close" style="background-color: transparent; padding-right: 10px" @click="$emit('remove', item.id)">&times;</span>
+        <span class="close" style="background-color: transparent; padding-right: 10px"
+              @click="$emit('remove', item.id)">&times;</span>
 
+        <!--            <div class="form-row col-6"-->
         <div class="form-row col-12" style="background-color: transparent; padding:0px">
-            <div class="form-row col-6"
-                 style="background-color: transparent; margin-right: 0px; padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+            <div v-if="isSelectionMode" class="form-row col-6"
+                 style="background-color: transparent;
+                 margin-right: 0px; padding-right: 0px;
+                 padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+
+                <ConnectionTypeSelection :allTypes="allTypes"
+                                         v-model="item.connection"
+                                         :existedComment="item.connection"
+                                         @update-selectedOrg="updateOrg"/>
+            </div>
+            <div v-else class="form-row col-6" style="background-color: transparent;
+                                               margin-right: 0px;
+                                               padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+
                 <InputConnectionText v-model="item.connection" :existedConnection="item.connection"/>
             </div>
+
             <div class="form-row col-5"
                  style="background-color: transparent; padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
                 <InputCommentText v-model="item.comment" :existedComment="item.comment"/>
             </div>
             <div class="form-row col-1"
                  style="background-color: transparent; padding-right: 0px; padding-left:25px; padding-top: 5px; padding-bottom: 0px">
-                <AddButton :item="item" :hasClicked="hasClicked" :isEditMode="isEditMode" @add="addItem" @save="saveItem" />
+                <AddButton :item="item"
+                           :hasClicked="hasClicked"
+                           :isEditMode="isEditMode"
+                           :isSelectionMode="isSelectionMode"
+                           @add="addItem"
+                           @save="saveItem"/>
             </div>
         </div>
     </div>
@@ -25,12 +45,17 @@
     import InputConnectionText from "./InputConnectionText";
     import InputCommentText from "./InputCommentText";
     import AddButton from "./AddButton";
+    import ConnectionTypeSelection from "./ConnectionTypeSelection";
 
     export default {
-        components: {AddButton, InputCommentText, InputConnectionText},
+        components: {ConnectionTypeSelection, AddButton, InputCommentText, InputConnectionText},
         props: {
             item: {
                 type: Object,
+                required: true
+            },
+            allTypes: {
+                type: Array,
                 required: true
             },
             hasClicked: {
@@ -40,12 +65,31 @@
             isEditMode: {
                 type: Boolean,
                 required: true
-            }
+            },
+            isSelectionMode: {
+                type: Boolean,
+                required: true
+            },
+
         },
 
         methods: {
+            updateOrg(selectedOrg) {
+                // this.selectedOrg = selectedOrg;
+
+                // let index = this.allTypes.findIndex(x => x.id === selectedOrg);
+                // if (index > 0) {
+                //     this.item.connection = this.allTypes[index].name;
+                //     console.log("-------SELECTION-----", selectedOrg);
+                //     this.$emit("update-selection", selectedOrg); //newText
+                // }
+
+                this.item.connection = selectedOrg;
+                console.log("--LIST ITEM-----SELECTION-----", selectedOrg);
+            },
+
             addItem(item) {
-                // console.log("--------addItem--CONN-LISTITEM-----", item);
+                 console.log("--------addItem--CONN-LIST--ITEM-----", item);
                 this.$emit("get-input-text", item); //newText
             },
             saveItem(item) {

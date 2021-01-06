@@ -54,10 +54,11 @@
 
                     <div class="form-row">
                         <div class="col-md-6">
-                            <label for="add-link"><b>Links*</b></label>
+                            <label for="add-linkS"><b>Links*</b></label>
                             <div>
-                                <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
-                                           placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
+                                <textarea class="form-control" id="add-linkS"
+                                          placeholder="enter links with 'return'"
+                                          v-model="links"/>
                             </div>
                         </div>
 
@@ -110,6 +111,8 @@
                          style="background-color: transparent; padding:0; margin: 0px">
                         <ConnectionComponent :itemsList="personConnectionList"
                                              :isEditMode="editMode"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"/>
                     </div>
@@ -144,7 +147,53 @@
                                 <textarea class="form-control" id="add-descr" rows="11" v-model="article.description"
                                           :disabled="uploadMode"/>
                         </div>
+                    </div>
+                </form>
 
+
+                <form class="authorsFormCreation form-row col-12"
+                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                        <v-card-text>
+                            <v-autocomplete
+                                    id="org-autocomplete"
+                                    label="Организации"
+
+                                    :items="itemsOrg"
+                                    :loading="isLoadingOrg"
+                                    :search-input.sync="orgSearch"
+                                    color="blue"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedOrg"
+
+                                    @change="addOrg(selectedOrg)"
+                                    @focus="testFocus(selectedOrg)"
+                                    item-text="org"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти организацию"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="orgConnectionList.length>0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="orgConnectionList"
+                                             :isEditMode="editMode"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"
+                                             @update-item="updateItem"/>
+                    </div>
+                </form>
+
+
+                <form class="formCreation">
+                    <div class="form-row align-items-center">
                         <label>Форма добавления хештегов</label>
                         <div class="col-12" style="background-color: transparent">
                             <b-card style="background-color: transparent">
@@ -249,7 +298,7 @@
                                     :items="itemsLocation"
                                     :loading="isLoadingLocation"
                                     :search-input.sync="locationSearch"
-                                    color="blue"
+                                    color="orange"
                                     hide-no-data
                                     hide-selected
 
@@ -271,12 +320,56 @@
                          style="background-color: transparent; padding:0">
                         <ConnectionComponent :itemsList="locationConnectionList"
                                              :isEditMode="editMode"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"/>
                     </div>
                 </form>
 
                 <!--                //////////////////////////MTYPE//////////////////////////-->
+                <form class="authorsFormCreation form-row col-12"
+                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                        <v-card-text>
+                            <v-autocomplete
+                                    id="material-autocomplete"
+                                    label="Материалы"
+
+                                    :items="itemsMaterial"
+                                    :loading="isLoadingMaterial"
+                                    :search-input.sync="materialSearch"
+                                    color="purple"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedMaterial"
+
+                                    @change="addMaterial(selectedMaterial)"
+                                    @focus="testFocus(selectedMaterial)"
+                                    item-text="material"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы материал"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="materialConnectionList.length>0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="materialConnectionList"
+                                             :isEditMode="editMode"
+                                             :isSelectionMode="true"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"
+                                             @update-item="updateItem"
+                                             @update-selection="updateSelection"   />
+                    </div>
+                </form>
+
+
                 <form class="formCreation">
                     <div class="form-row align-items-center">
                         <label>Форма выбора типа материала</label>
@@ -331,12 +424,13 @@
                                                 style="max-height: 300px; background-color: transparent; margin-top: -10px;"
                                                 class="overflow-y-auto">
 
-                                            <template v-if="!isObjectValidAndNotEmpty(selectedMType)">
-                                                Notihing selected.
+                                            <template v-if="!isObjectValidAndNotEmpty(selectedMType.name)">
+                                                Nothing selected.
                                             </template>
 
                                             <template v-else>
-                                                <label style="background-color: transparent">Выбранный тип материала</label>
+                                                <label style="background-color: transparent">Выбранный тип
+                                                    материала</label>
                                                 <div>
                                                     <v-btn text icon x-small @click="removeSelectedMType">
                                                         <v-icon style="color: red">mdi-delete-forever</v-icon>
@@ -418,16 +512,16 @@
 </template>
 
 <script>
+    import api from "./article-api";
     import apiPerson from "./../person/person-api";
     import apiCountry from "./../country/country-api";
+    import apiOrg from "./../org/org-api";
     import apiLanguage from "./../language/language-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
-    import FileAttachment from "./../FileAttachment";
 
-    // import HashtagList from "./../hashtag/HashtagList.vue";
-    import api from "./article-api";
+    import FileAttachment from "./../FileAttachment";
     import moment from "moment";
     import InputTag from 'vue-input-tag';
     import router from "./../../router";
@@ -452,31 +546,47 @@
             addTagOnKeys: [13, 9],
             // addTagOnKeys: [],  //to prevent enter in input-tag))
             descriptionLimit: 60,
-            entries: [],
+
+            personEntries: [],
+            locationEntries: [],
+            orgEntries: [],
+            materialEntries: [],
+
             isLoading: false,
             isLoadingLocation: false,
-            isLoadingHashtag: false,
+            isLoadingOrg: false,
+            isLoadingMaterial: false,
+
             authorSearch: null,
             locationSearch: null,
+            orgSearch: null,
+            materialSearch: null,
+
             searchHashtag: '',
             searchMType: '',
 
             selectedM: null,
-            selectedL: null,
-            selectedS: null,
+            selectedL: null,  //language
+            selectedS: null,  //status
 
             errorFlag: false,
             errors: [],
-            validationErrors: {},
             hasError: false,
 
-            inputPersonConnection: '',
-            inputPersonComment: '',
             personConnectionList: [],
             locationConnectionList: [],
+            orgConnectionList: [],
+            materialConnectionList: [],
+
             links: [],
             tags: [],    //connected with hashtag input
             mtype: '',
+            connectionTypes: [],
+            //     {name: '1-1', id: 1},
+            //     {name: '1-2', id: 2},
+            //     {name: '2-1', id: 3},
+            // ],
+            // connectionTypes : ["1-1", "1-2", "2-1"],
 
             selectionType: 'independent',
 
@@ -489,14 +599,21 @@
             allLanguages: [],
             allMovements: [],
 
-            article: {personList: [], locationList: [], hashtagList: []},
-            selected: [], //[''],
+            article: {personList: [], locationList: [], hashtagList: [], orgList: [], materialList: []},
 
-            selectedLocation: [], //[''],
+            selected: [],
+            selectedLocation: [],
+            selectedOrg: [],
+            selectedMaterial: [],
+
             articlePersonIds: [], //before request
             articlePersonEntities: [], //after request
             articleLocationIds: [], //before request
             articleLocationEntities: [], //after request
+            articleOrgIds: [], //before request
+            articleOrgEntities: [], //after request
+            articleMaterialIds: [], //before request
+            articleMaterialEntities: [], //after request
 
             status: ["statusProgress", "statusDone"],
             statusOptions: [
@@ -640,15 +757,15 @@
                 }
             },
 
-            deleteAuthor(author) {
-                if (!this.uploadMode) {
-                    for (let i = 0; i < this.article.authorList.length; i++) {
-                        if (this.article.authorList[i].id === author.id) {
-                            this.article.authorList.splice(i, 1);
-                        }
-                    }
-                }
-            },
+            // deleteAuthor(author) {
+            //     if (!this.uploadMode) {
+            //         for (let i = 0; i < this.article.authorList.length; i++) {
+            //             if (this.article.authorList[i].id === author.id) {
+            //                 this.article.authorList.splice(i, 1);
+            //             }
+            //         }
+            //     }
+            // },
 
             addLocation(obj) {
                 console.log("GET CHANGED LOCATION");
@@ -669,6 +786,65 @@
                     };
                     this.locationConnectionList.push(connection);
                     console.log("ADDED");
+                }
+            },
+
+            addOrg(obj) {
+                // console.log("GET CHANGED LOCATION");
+                let i = 0;
+                for (i = 0; i < this.orgConnectionList.length; i++) { //to exclude double values
+                    if (this.orgConnectionList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.orgConnectionList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.name,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.orgConnectionList.push(connection);
+                    console.log("ADDED");
+                }
+            },
+
+            addMaterial(obj) {
+                // console.log("GET CHANGED LOCATION");
+                let i = 0;
+                for (i = 0; i < this.materialConnectionList.length; i++) { //to exclude double values
+                    if (this.materialConnectionList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.materialConnectionList.length) {
+
+                    let t = '';
+                    if (obj.title != null) {
+                        if (obj.title.length != 0) {
+                            t = obj.title;
+                            if (obj.titleRus != null) {
+                                if (obj.titleRus.length != 0)
+                                    t += " / " + obj.titleRus;
+                            }
+                        }
+                    } else {                    ///one of the two titles is mandatory
+                        t = obj.titleRus;
+                    }
+
+
+                    let connection = {
+                        "id": obj.id,
+                        "name": t,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.materialConnectionList.push(connection);
+                   // console.log("ADDED");
                 }
             },
 
@@ -696,7 +872,7 @@
             },
 
             formValidate() {
-                this.addStatus('add-link', (!this.links));
+                this.addStatus('add-linkS', (!this.links.length));
                 if (this.hasError) {
                 } else {
                     this.addStatus('language-selection', (!this.selectedL));
@@ -719,9 +895,56 @@
                 return !this.hasError;
             },
 
+            //////todo delete/////
             updateItem(item) {
-                console.log("ITEM AFTER COMPONENT", item);
+                console.log("<3 ITEM AFTER COMPONENT", item);
                 console.log("LIST AFTER COMPONENT", this.personConnectionList);
+            },
+
+            updateSelection(item){
+                let index = this.connectionTypes.findIndex(x => x.id === item);
+                console.log("<3 <3 ITEM AFTER COMPONENT", item, this.connectionTypes.id===item);
+            },
+            ///////////////////
+
+            // actOnEachLine(textarea, func) {
+            //     let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
+            //     let newLines, i;
+            //
+            //     // Use the map() method of Array where available
+            //     if (typeof lines.map != "undefined") {
+            //         newLines = lines.map(func);
+            //     } else {
+            //         newLines = [];
+            //         i = lines.length;
+            //         while (i--) {
+            //             newLines[i] = func(lines[i]);
+            //         }
+            //     }
+            //     textarea.value = newLines.join("\r\n");
+            // },
+
+            actOnEachLine(textarea, func) {
+                let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
+                console.log("777777777777777777", lines);
+
+                let newLines, i;
+
+                // Use the map() method of Array where available
+                if (typeof lines.map != "undefined") {
+                    newLines = lines.map(func);
+                    console.log("IF 7878787878787", newLines);
+                } else {
+
+                    newLines = [];
+                    i = lines.length;
+                    while (i--) {
+                        newLines[i] = func(lines[i]);
+                    }
+                    console.log("ELSE 7878787878787", newLines);
+                }
+                // textarea.value = newLines.join("\r\n");
+                return newLines;
             },
 
             createArticle(currentStatus) {
@@ -751,9 +974,27 @@
 
                 this.article.linkList = [];
 
-                for (let i = 0; i < this.links.length; i++) {
+                let textarea = document.getElementById("add-linkS");
+                let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
+
+                // this.actOnEachLine(textarea, function (line) {
+                //     console.log(line);
+                //    // return "[START]" + line + "[END]";
+                //    //  this.article.linkList.push({
+                //    //      "content": line});
+                //
+                //     ttt = {
+                //         "content": line,
+                //     };
+                //
+                //     this.article.linkList.push(ttt);
+                //     console.log(this.article.linkList);
+                //
+                // });
+
+                for (let i = 0; i < lines.length; i++) {
                     this.article.linkList[i] = {
-                        "content": this.links[i]
+                        "content": lines[i]
                     };
                 }
 
@@ -771,6 +1012,8 @@
 
                 this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
+                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList);
 
                 if (this.formValidate()) {
                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
@@ -825,12 +1068,13 @@
 
                 this.article.personList.splice(0);
                 this.article.locationList.splice(0);
-
-                // this.article.personList = [];
-                // this.article.locationListList = [];
+                this.article.orgList.splice(0);
+                this.article.materialList.splice(0);
 
                 this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
+                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList);
 
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
@@ -880,10 +1124,6 @@
                 if (typeof obj === 'undefined' || obj === null) {
                     return false;
                 }
-                if (typeof obj.name === 'undefined'){
-                    return false;
-                }
-
                 return true;
             },
 
@@ -903,6 +1143,35 @@
                 if (this.isArrayValidAndNotEmpty(location.placement)) {
                     returnedTitle += ", " + location.placement;
                 }
+                return returnedTitle;
+            },
+
+            materialEditConnectionTitleCreation(material) {
+                let returnedTitle = '';
+
+                if (this.isArrayValidAndNotEmpty(material.title)) {
+                    returnedTitle += material.title;
+
+                    if (this.isArrayValidAndNotEmpty(material.titleRus)) {
+                        returnedTitle += "/ " + material.titleRus;
+                    }
+                } else {
+                    returnedTitle = material.titleRus;
+                }
+                return returnedTitle;
+            },
+
+            orgEditConnectionTitleCreation(org) {
+                let returnedTitle = org.nameRus;
+
+                if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
+                    returnedTitle += ", " + org.abbrRus;
+                }
+                if (this.isArrayValidAndNotEmpty(org.name)) {
+                    returnedTitle += ", " + org.name;
+                }
+                //todo add fields
+
                 return returnedTitle;
             },
 
@@ -1033,6 +1302,11 @@
             //     console.log(response.data);
             // });
 
+            api.getConnectionTypes(response => {
+                this.connectionTypes = response.data;
+                console.log("connectionTypes---------------", response.data)
+            });
+
             apiLanguage.getAllLanguages(response => {
                 this.allLanguages = response.data;
                 console.log(response.data)
@@ -1066,7 +1340,7 @@
             if (this.editMode) {
                 api.findById(this.$route.params.article_id, r => {
                     this.article = r.data;
-                    //  console.log("article EDIT!", this.article);
+                    console.log("article EDIT!", this.article);
 
                     // this.selectedM = this.article.movement.id; //to select necessary value from article
                     this.selectedL = this.article.language.id;
@@ -1079,11 +1353,14 @@
                     //but here mtype is a leaf of tree, that has structure
                     //id, name, children
 
-                    this.selectedMType = {
-                        "id": this.article.mtype.id,
-                        "name": this.article.mtype.content,
-                    };
-                    // console.log("selectedMTYPE", this.selectedMType, this.article);
+                    //console.log("selectedMTYPE", this.article.mtype);
+                    if (this.isObjectValidAndNotEmpty(this.article.mtype)) {
+                        this.selectedMType = {
+                            "id": this.article.mtype.id,
+                            "name": this.article.mtype.content,
+                        };
+                       // console.log("selectedMTYPE", this.selectedMType, this.article);
+                    }
 
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
                         this.tags.push(this.article.hashtagList[i]);
@@ -1103,10 +1380,18 @@
                     for (let j = 0; j < this.article.personList.length; j++) {
                         this.articlePersonIds.push(this.article.personList[j].itemId);
                     }
-                    console.log(this.articlePersonIds);
+                    // console.log(this.articlePersonIds);
 
                     for (let j = 0; j < this.article.locationList.length; j++) {
                         this.articleLocationIds.push(this.article.locationList[j].itemId);
+                    }
+
+                    for (let j = 0; j < this.article.orgList.length; j++) {
+                        this.articleOrgIds.push(this.article.orgList[j].itemId);
+                    }
+
+                    for (let j = 0; j < this.article.materialList.length; j++) {
+                        this.articleMaterialIds.push(this.article.materialList[j].itemId);
                     }
 
                     apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
@@ -1145,7 +1430,54 @@
                             // console.log("CREATE PERS ON A: ", a);
                             this.locationConnectionList.push(connection);
                         }
-                        console.log("locationConnectionList: ", this.locationConnectionList);
+                        // console.log("locationConnectionList: ", this.locationConnectionList);
+                    });
+
+                    apiOrg.getOrgsByIds(this.articleOrgIds, response => {  ///returns List<Location>
+                        this.articleOrgEntities = response.data;   //returns List<Org>
+                        console.log("apiOrg", this.articleOrgEntities);
+
+                        for (let i = 0; i < this.article.orgList.length; i++) {
+                            let element = this.article.orgList[i];
+                            let currentOrgEntity = this.articleOrgEntities.find(org => org.id === element.itemId);
+                            console.log("currentOrgEntity", currentOrgEntity);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.orgConnectionList.push(connection);
+                        }
+                        //console.log("orgConnectionList: ", this.orgConnectionList);
+                    });
+
+
+                    api.getMaterialsByIds(this.articleMaterialIds, response => {  ///returns List<Location>
+                        this.articleMaterialEntities = response.data;
+                        // console.log("articleMaterialEntities", this.articleMaterialEntities);
+
+                        for (let i = 0; i < this.article.materialList.length; i++) {
+                            let element = this.article.materialList[i];
+                            let currentMaterialEntity = this.articleMaterialEntities.find(material => material.id === element.itemId);
+                            // console.log("currentMaterialEntity", currentMaterialEntity);
+
+                          //  let connectionType = this.connectionTypes.find(x => x.id === Number.parseInt(element.connection));
+                          //  console.log("connectionTypes@@@@@@@@@@@@@@@@@@@@@@@@@@@", this.connectionTypes, element, connectionType);
+
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.materialEditConnectionTitleCreation(currentMaterialEntity),
+                                "connection": element.connection, //connectionType.type,
+                                "comment": element.comment,
+                                "hasClicked": false
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.materialConnectionList.push(connection);
+                        }
+                        console.log("materialConnectionList: ", this.materialConnectionList);
                     });
                 });
             }
@@ -1154,17 +1486,58 @@
         ///////////////////////////COMPUTED/////////////////////////////////
         computed: {
             items() {
-                return this.entries.map(entry => {
+                return this.personEntries.map(entry => {
                     const surname = entry.surname;
                     return Object.assign({}, entry, {surname})
                 })
             },
 
             itemsLocation() {
-                return this.entries.map(entry => {
+                //console.log("itemsLocation", this.locationEntries.map);
+               // console.log("itemsLocation", this.locationEntries);
+
+                return this.locationEntries.map(entry => {
                     const country = entry.country;
                     return Object.assign({}, entry, {country})
                 })
+            },
+
+            itemsOrg() {
+                //console.log("itemsOrg", this.orgEntries.map);
+                //console.log("itemsOrg", this.orgEntries);
+
+                if (this.orgEntries) {      ///todo analyze why undefined (after selection in the search list)
+                    return this.orgEntries.map(entry => {
+                        const org = entry.name;
+                        return Object.assign({}, entry, {org})
+                    })
+                }
+                // return this.orgEntries;
+            },
+
+            itemsMaterial() {
+               // console.log("itemsMaterial", this.materialEntries.map);
+               // console.log("itemsMaterial", this.materialEntries);
+
+                if (this.materialEntries) {
+                    return this.materialEntries.map(entry => {
+                        let t = '';
+                        if (entry.title != null) {
+                            if (entry.title.length != 0) {
+                                t = entry.title;
+                                if (entry.titleRus != null) {
+                                    if (entry.titleRus.length != 0)
+                                        t += " / " + entry.titleRus;
+                                }
+                            }
+                        } else {
+                            t = entry.titleRus;  ///one of the two titles is mandatory
+                        }
+
+                        const material = t;
+                        return Object.assign({}, entry, {material})
+                    })
+                }
             },
 
             searchHashtagLength() {
@@ -1373,7 +1746,7 @@
                         this.isLoading = true;
 
                         apiPerson.searchPerson(val, r => {
-                            this.entries = r;
+                            this.personEntries = r;
                             //  console.log("****", this.entries);
                             this.isLoading = false;
                         });
@@ -1398,9 +1771,54 @@
                         this.isLoadingLocation = true;
 
                         apiCountry.searchLocation(val, r => {
-                            this.entries = r;
-                            //  console.log("****", this.entries);
+                            this.locationEntries = r;
+                            console.log("****", this.locationEntries);
                             this.isLoadingLocation = false;
+                        });
+                    }
+            },
+
+            orgSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedOrg !== 'undefined') {
+                            if (this.article.orgList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedOrg = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingOrg) return;
+                        this.isLoadingOrg = true;
+
+                        //console.log("seracg org", val);
+
+                        apiOrg.searchOrg(val, r => {
+                            this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
+                           // console.log("****", this.orgEntries);
+                            this.isLoadingOrg = false;
+                        });
+                    }
+            },
+
+            materialSearch(val) {
+                // console.log("SEARCH ACTIVATED");
+                if (val !== null)
+                    if (val.length > 2) {
+                        // console.log("SEARCH STARTED");
+
+                        if (typeof this.selectedMaterial !== 'undefined') {
+                            if (this.article.materialList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedMaterial = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingMaterial) return;
+                        this.isLoadingMaterial = true;
+
+                        api.searchMaterial(val, r => {
+                            this.materialEntries = r;
+                           // console.log("*№*№*№*", this.materialEntries);
+                            this.isLoadingMaterial = false;
                         });
                     }
             },

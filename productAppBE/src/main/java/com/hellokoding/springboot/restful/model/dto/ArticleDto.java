@@ -24,6 +24,8 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private List<UrlLink> linkList;
     private List<ItemConnectionDto> personList;
     private List<ItemConnectionDto> locationList;
+    private List<ItemConnectionDto> orgList;
+    private List<ItemConnectionDto> materialList;
     private List<String> hashtagList;
     private String miscellany;
 
@@ -32,6 +34,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
     public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
                       String titleRus, String description,
                       String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
+                      List<ItemConnectionDto> orgList, List<ItemConnectionDto> materialList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movement = movement;
@@ -46,6 +49,8 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.linkList = linkList;
         this.personList = personList;
         this.locationList = locationList;
+        this.orgList = orgList;
+        this.materialList = materialList;
         this.hashtagList = hashtagList;
         this.miscellany = miscellany;
     }
@@ -64,6 +69,8 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
         this.personList = new ArrayList<>();
         this.locationList = new ArrayList<>();
+        this.orgList = new ArrayList<>();
+        this.materialList = new ArrayList<>();
 
         ItemConnectionDto personConnectionDto;
         for (ArticlePersonConnection connection : article.getPersonConnections()) {
@@ -84,6 +91,27 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
             this.locationList.add(locationConnectionDto);
         }
+
+        ItemConnectionDto orgConnectionDto;
+        for (ArticleOrgConnection connection : article.getOrgConnections()) {
+            orgConnectionDto = new ItemConnectionDto();
+            orgConnectionDto.setItemId(connection.getOrg().getId());
+            orgConnectionDto.setConnection(connection.getConnection());
+            orgConnectionDto.setComment(connection.getComment());
+
+            this.orgList.add(orgConnectionDto);
+        }
+
+        //replaced to article service (connection types there)
+//        ItemConnectionDto materialConnectionDto;
+//        for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
+//            materialConnectionDto = new ItemConnectionDto();
+//            materialConnectionDto.setItemId(connection.getMaterial().getId());
+//            materialConnectionDto.setConnection(connection.getConnection().toString());
+//            materialConnectionDto.setComment(connection.getComment());
+//
+//            this.materialList.add(materialConnectionDto);
+//        }
 
         this.hashtagList = new ArrayList<>();
         for (ArticleHashtag articleHashtag : article.getHashtagList()) {
@@ -190,6 +218,22 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.locationList = locationList;
     }
 
+    public List<ItemConnectionDto> getOrgList() {
+        return orgList;
+    }
+
+    public void setOrgList(List<ItemConnectionDto> orgList) {
+        this.orgList = orgList;
+    }
+
+    public List<ItemConnectionDto> getMaterialList() {
+        return materialList;
+    }
+
+    public void setMaterialList(List<ItemConnectionDto> materialList) {
+        this.materialList = materialList;
+    }
+
     public List<String> getHashtagList() {
         return hashtagList;
     }
@@ -228,5 +272,4 @@ public class ArticleDto implements Comparable<ArticleDto> {
     public int compareTo(ArticleDto obj) {
         return title.compareToIgnoreCase(obj.getTitle());
     }
-
 }

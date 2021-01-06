@@ -91,9 +91,11 @@
                         <span class="float-left">Организации</span></div>
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;">
-                                       <span class="float-left"> <div>
-<!--                                           {{createComplexTitle()}}-->
-                                       </div></span>
+                                       <span class="float-left">
+                                           <div v-for="org in articleOrgEntities">
+                                                {{createComplexOrgById(org.id)}}
+                                           </div>
+                                       </span>
                 </div>
             </div>
 
@@ -118,7 +120,7 @@
                 </div>
             </div>
 
-           <div class="row">
+            <div class="row">
                 <div class="col-sm-2">
                     <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                 </div>
@@ -133,7 +135,9 @@
                     <div class="cellTitle"><span class="float-left">Материалы</span></div>
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-<!--                    {{article.miscellany}}-->
+                    <div v-for="material in articleMaterialEntities">
+                            {{createComplexMaterialById(material.id)}}
+                    </div>
                 </span>
                 </div>
             </div>
@@ -165,6 +169,7 @@
     import api from "./article-api";
     import apiPerson from "./../person/person-api";
     import apiLocation from "./../country/country-api";
+    import apiOrg from "./../org/org-api";
     import moment from "moment";
 
     import "vue-scroll-table";
@@ -173,13 +178,19 @@
         name: 'article-details',
         data() {
             return {
-                article: {personList: [], language: {}, movement: {}, hashtagList: [], linkList: []},
+                article: {personList: [], language: {}, movement: {}, hashtagList: [], linkList: [], locationList:[], orgList:[]},
 
                 articlePersonIds: [], //before request
                 articlePersonEntities: [], //after request
 
                 articleLocationIds: [], //before request
                 articleLocationEntities: [], //after request
+
+                articleOrgIds: [], //before request
+                articleOrgEntities: [], //after request
+
+                articleMaterialIds: [], //before request
+                articleMaterialEntities: [], //after request
             }
         },
         methods: {
@@ -224,16 +235,16 @@
                     result = valueRus;
                     if (this.isObjectValidAndNotEmpty(valueOrig)) {
                         if (valueRus.localeCompare(valueOrig) !== 0)
-                            result += " / " + valueOrig;
+                            result += "/ " + valueOrig;
                     }
                 } else if (this.isObjectValidAndNotEmpty(valueOrig))
                     result += valueOrig;
 
                 if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += " / " + connection.connection;
+                    result += "/ " + connection.connection;
 
                 if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += " / " + connection.comment;
+                    result += "/ " + connection.comment;
 
                 return result;
             },
@@ -265,15 +276,63 @@
                 }
 
                 if (this.isObjectValidAndNotEmpty(currentLocation.miscellany)) {
-                    result += " / " + currentLocation.miscellany;
+                    result += "/ " + currentLocation.miscellany;
                 }
 
-
                 if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += " / " + connection.connection;
+                    result += "/ " + connection.connection;
 
                 if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += " / " + connection.comment;
+                    result += "/ " + connection.comment;
+
+                return result;
+            },
+
+            createComplexMaterialById(id) {
+                let currentMaterial = this.articleMaterialEntities.find(x => x.id === id);
+                let result;
+
+                let connection = this.article.materialList.find(x => x.itemId === id);
+
+                if (this.isObjectValidAndNotEmpty(currentMaterial.title)) {
+                    result = currentMaterial.title;
+                } else {
+                    result = currentMaterial.titleRus;
+                }
+
+                if (this.isObjectValidAndNotEmpty(connection.connection))
+                    result += "/ " + connection.connection;
+
+                if (this.isObjectValidAndNotEmpty(connection.comment))
+                    result += "/ " + connection.comment;
+
+                return result;
+            },
+
+            createComplexOrgById(id) {
+                let currentOrg = this.articleOrgEntities.find(x => x.id === id);
+                let connection = this.article.orgList.find(x => x.itemId === id);
+                let result;
+
+                if (this.isObjectValidAndNotEmpty(currentOrg.name)) {
+                    result = currentOrg.name + "/ " + currentOrg.nameRus;
+                } else {
+                    result = currentOrg.nameRus;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentOrg.abbr)) {
+                    result += "/ " + currentOrg.abbr;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentOrg.abbrRus)) {
+                    result += "/ " + currentOrg.abbrRus;
+                }
+
+                if (this.isObjectValidAndNotEmpty(connection.connection))
+                    result += "/ " + connection.connection;
+
+                if (this.isObjectValidAndNotEmpty(connection.comment))
+                    result += "/ " + connection.comment;
 
                 return result;
             },
@@ -308,13 +367,21 @@
                 for (let j = 0; j < this.article.personList.length; j++) {
                     this.articlePersonIds.push(this.article.personList[j].itemId);
                 }
-                // console.log(this.articlePersonIds);
-
 
                 for (let j = 0; j < this.article.locationList.length; j++) {
                     this.articleLocationIds.push(this.article.locationList[j].itemId);
                 }
                 console.log("mounted locations", this.articleLocationIds);
+
+                for (let j = 0; j < this.article.orgList.length; j++) {
+                    this.articleOrgIds.push(this.article.orgList[j].itemId);
+                }
+                console.log("mounted org", this.articleOrgIds);
+
+                for (let j = 0; j < this.article.materialList.length; j++) {
+                    this.articleMaterialIds.push(this.article.materialList[j].itemId);
+                }
+                console.log("mounted material", this.articleMaterialIds);
 
                 apiPerson.getPersonsByIds(this.articlePersonIds, response => {
                     this.articlePersonEntities = response.data;
@@ -324,6 +391,16 @@
                 apiLocation.getLocationsByIds(this.articleLocationIds, response => {
                     this.articleLocationEntities = response.data;
                     console.log("apiLoca", this.articleLocationEntities);
+                });
+
+                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
+                    this.articleOrgEntities = response.data;
+                    console.log("apiOrga", this.articleOrgEntities);
+                });
+
+                api.getMaterialsByIds(this.articleMaterialIds, response => {
+                    this.articleMaterialEntities = response.data;
+                    console.log("apiMater", this.articleMaterialEntities);
                 });
             });
         },

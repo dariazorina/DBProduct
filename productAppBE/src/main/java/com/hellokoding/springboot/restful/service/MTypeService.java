@@ -1,8 +1,6 @@
 package com.hellokoding.springboot.restful.service;
 
-import com.hellokoding.springboot.restful.model.HashTag;
 import com.hellokoding.springboot.restful.model.MaterialType;
-import javafx.scene.transform.MatrixType;
 
 import java.util.List;
 import java.util.Optional;

@@ -106,6 +106,37 @@ export default {
                 }
             });
     },
+
+    // searchMaterial(searchKey, fn) {
+    //     AXIOS.get(
+    //         `/mtype/search?q=` + encodeURIComponent(searchKey)
+    //     ).then((response) => {
+    //         if (response.status >= 200 && response.status < 300) {
+    //             return response;
+    //
+    //         } else {
+    //             let error = new Error(response.statusText);
+    //             error.response = response;
+    //             throw error
+    //         }
+    //     }).then((response) => {
+    //         // if (response.headers['content-type'] !== 'application/json') {
+    //         //     let error = new Error('Некорректный ответ от сервера');
+    //         //     error.response = response;
+    //         //     throw error
+    //         // }
+    //         return response.data;
+    //
+    //     }).then((json) => {
+    //         fn(json);
+    //
+    //     }).catch((error) => {
+    //         console.log(error);
+    //         if (error.response.status === 401) {
+    //             router.push('/login');
+    //         }
+    //     })
+    // },
 }
 
 

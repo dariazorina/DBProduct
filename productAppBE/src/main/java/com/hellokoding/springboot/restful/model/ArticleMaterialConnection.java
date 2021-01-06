@@ -28,7 +28,9 @@ public class ArticleMaterialConnection {
     @ToString.Exclude
     private Article material;
 
-    private String connection;
+    @Column(name = "connection_type_id")
+    private Integer connection;
+
     private String comment;
 
 

@@ -1,6 +1,7 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Org;
+import com.hellokoding.springboot.restful.model.dto.OrgDto;
 import com.hellokoding.springboot.restful.service.OrgService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,17 @@ public class OrgAPI {
     @GetMapping
     public ResponseEntity<List<Org>> findAll() {
         return ResponseEntity.ok(orgService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<OrgDto>> search(@RequestParam(name = "q", required = true) String q) {
+        List<OrgDto> search = orgService.search(q);
+        return ResponseEntity.ok(search);
+    }
+
+    @PostMapping("/ids")
+    public ResponseEntity<List<Org>> getLocationsByIds(@Valid @RequestBody List<Integer> idList) {
+        return ResponseEntity.ok(orgService.findByIds(idList));
     }
 
     @PostMapping
