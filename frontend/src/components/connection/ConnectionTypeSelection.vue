@@ -1,7 +1,7 @@
 <template>
     <div class="col-12" style="background-color: transparent; margin-top: -12px; margin-bottom: -12px">
         <!--        <label>Тип связи</label>-->
-<!--        @change.native="tt"-->
+        <!--        @change.native="tt"-->
 
         <b-form-select v-model="currentItem" selected="existedCommit" class="mb-3">
             <option v-for="type in allTypes" v-bind:value="type.type">{{type.type}}</option>
@@ -27,17 +27,11 @@
 
 
         methods: {
-
-            // tt() {
-            //     console.log("ttttttttttttt exis", this.existedComment);
-            //     console.log("ttttttttttttt currIt", this.currentItem);
-            // },
-
         },
 
         mounted() {
-            console.log("mounted SELCTION this.existedComment", this.existedComment);
-            console.log("mounted SELCTION this.currentItem", this.currentItem);
+            // console.log("mounted SELCTION this.existedComment", this.existedComment);
+            // console.log("mounted SELCTION this.currentItem", this.currentItem);
             this.itemMap = this.existedComment;
         },
         computed: {
@@ -46,26 +40,14 @@
                     return this.itemMap
                 },
                 set(v) {
-                    this.itemMap = v
+                    // console.log("-------------------+++++++-----computed: currentItem: { currentItem, watch", this.itemMap, v);
+                    if (v !== this.itemMap) {
+                        this.itemMap = v;
+                        // console.log("*********************************SELECTION EMIT", this.currentItem, v);
+                        this.$emit("update-selectedConnection", v);
+                    }
                 }
             }
-        },
-        watch: {
-            existedComment:function(v) {
-                console.log("SELCTION existedComment, watch");
-                this.itemMap = v;
-                // selectedOrg: function () {
-                // this.$emit("update-selectedOrg", this.selectedOrg);
-            },
-
-            currentItem:function(v) {
-                console.log("SELECTION currentItem, watch", this.currentItem);
-                this.itemMap = v;
-                // selectedOrg: function () {
-                // this.$emit("update-selectedOrg", this.selectedOrg);
-
-                this.$emit("update-selectedOrg", v);
-            },
         },
     }
 </script>

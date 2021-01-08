@@ -76,6 +76,7 @@
                 // console.log("------SAVE item CONN-COMP---------", item);
                 item.connection = item.connection.trim();
                 item.comment = item.comment.trim();
+                item.hasClicked = true;
 
                 this.$emit("update-item", item);
             },

@@ -15,13 +15,15 @@
                 <ConnectionTypeSelection :allTypes="allTypes"
                                          v-model="item.connection"
                                          :existedComment="item.connection"
-                                         @update-selectedOrg="updateOrg"/>
+                                         @update-selectedConnection="updateConnection"/>
             </div>
             <div v-else class="form-row col-6" style="background-color: transparent;
                                                margin-right: 0px;
                                                padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
 
-                <InputConnectionText v-model="item.connection" :existedConnection="item.connection"/>
+                <InputConnectionText v-model="item.connection"
+                                     :existedConnection="item.connection"
+                                     @has-clicked="hasClickedChanged(item)"/>
             </div>
 
             <div class="form-row col-5"
@@ -30,6 +32,7 @@
             </div>
             <div class="form-row col-1"
                  style="background-color: transparent; padding-right: 0px; padding-left:25px; padding-top: 5px; padding-bottom: 0px">
+<!--                :hasClicked="item.hasClicked"-->
                 <AddButton :item="item"
                            :hasClicked="hasClicked"
                            :isEditMode="isEditMode"
@@ -74,22 +77,19 @@
         },
 
         methods: {
-            updateOrg(selectedOrg) {
-                // this.selectedOrg = selectedOrg;
+            hasClickedChanged(item){
+                item.hasClicked = false;
+                // console.log("hasClickedChanged", item);
+            },
 
-                // let index = this.allTypes.findIndex(x => x.id === selectedOrg);
-                // if (index > 0) {
-                //     this.item.connection = this.allTypes[index].name;
-                //     console.log("-------SELECTION-----", selectedOrg);
-                //     this.$emit("update-selection", selectedOrg); //newText
-                // }
-
-                this.item.connection = selectedOrg;
-                console.log("--LIST ITEM-----SELECTION-----", selectedOrg);
+            updateConnection(selected) {
+                this.item.connection = selected;
+                this.item.hasClicked = false;
+                // console.log("--LIST ITEM---updateOrg--SELECTION-----", this.item);
             },
 
             addItem(item) {
-                 console.log("--------addItem--CONN-LIST--ITEM-----", item);
+                 // console.log("--------addItem--CONN-LIST--ITEM-----", item);
                 this.$emit("get-input-text", item); //newText
             },
             saveItem(item) {

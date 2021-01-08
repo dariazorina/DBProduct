@@ -1045,6 +1045,7 @@
                 this.hasError = false;
 
                 this.article.linkList = [];
+                //console.log("#*#*#*#*#*#*#*#*#*#*#*#*#    LINKS", this.links, this.links.length);
                 for (let i = 0; i < this.links.length; i++) {
                     this.article.linkList[i] = {
                         "content": this.links[i]
@@ -1063,8 +1064,8 @@
                     // "parentId": 1
                 };
 
-                console.log(" BEFORE [] this.article.person: ", this.article.personList);
-                console.log(" BEFORE [] this.article.person: ", this.article.locationList);
+                // console.log(" BEFORE [] this.article.person: ", this.article.personList);
+                // console.log(" BEFORE [] this.article.person: ", this.article.locationList);
 
                 this.article.personList.splice(0);
                 this.article.locationList.splice(0);
@@ -1075,6 +1076,8 @@
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
                 this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList);
                 this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList);
+
+                //console.log("SAVE SAVE SAVE SAVE SAVE SAVE SAVE this.article", this.article);
 
                 if (this.formValidate()) {
                     api.update(this.article.id, this.article, r => {
@@ -1406,7 +1409,7 @@
                                 "name": currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": false
+                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.personConnectionList.push(connection);
@@ -1425,7 +1428,7 @@
                                 "name": this.locationEditConnectionTitleCreation(currentLocationEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": false
+                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.locationConnectionList.push(connection);
@@ -1446,7 +1449,7 @@
                                 "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": false
+                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.orgConnectionList.push(connection);
@@ -1472,9 +1475,9 @@
                                 "name": this.materialEditConnectionTitleCreation(currentMaterialEntity),
                                 "connection": element.connection, //connectionType.type,
                                 "comment": element.comment,
-                                "hasClicked": false
+                                "hasClicked": true
                             };
-                            // console.log("CREATE PERS ON A: ", a);
+                            console.log("CREATE MATERIALS: ", connection);
                             this.materialConnectionList.push(connection);
                         }
                         console.log("materialConnectionList: ", this.materialConnectionList);

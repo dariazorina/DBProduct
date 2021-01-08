@@ -47,11 +47,11 @@
 
         computed: {
             isDisable() {
-                //console.log("button computed this.item.connection", this.item.connection, this.isSelectionMode);
-                if (this.isSelectionMode&&!this.hasClicked){
-                    return false;
+                if (this.isSelectionMode) {
+                    console.log("isDisabled addButton", this.item.connection, this.item.connection.length);
+                    console.log("isDisabled addButton hasClicked", this.item.connection, this.item.hasClicked);
                 }
-                return (this.item.connection.length === 0) || (this.hasClicked);// || (this.item.comment.length === 0);
+                return (this.item.connection.length === 0) || (this.hasClicked);
             }
         }
     }

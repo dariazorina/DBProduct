@@ -43,7 +43,9 @@
         watch: {
             existedConnection(v) {
                 this.itemMap = v;
-                console.log("WATCH", this.itemMap);
+//                console.log("WATCH", this.itemMap);
+
+                this.$emit("has-clicked", v);
             }
         }
 
