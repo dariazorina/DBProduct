@@ -26,20 +26,22 @@
                                      @has-clicked="hasClickedChanged(item)"/>
             </div>
 
-            <div class="form-row col-5"
+            <div class="form-row col-6"
                  style="background-color: transparent; padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
                 <InputCommentText v-model="item.comment" :existedComment="item.comment"/>
             </div>
-            <div class="form-row col-1"
-                 style="background-color: transparent; padding-right: 0px; padding-left:25px; padding-top: 5px; padding-bottom: 0px">
+
+<!--            //todo remove button code after testing-->
+<!--            <div class="form-row col-1"-->
+<!--                 style="background-color: transparent; padding-right: 0px; padding-left:25px; padding-top: 5px; padding-bottom: 0px">-->
 <!--                :hasClicked="item.hasClicked"-->
-                <AddButton :item="item"
-                           :hasClicked="hasClicked"
-                           :isEditMode="isEditMode"
-                           :isSelectionMode="isSelectionMode"
-                           @add="addItem"
-                           @save="saveItem"/>
-            </div>
+<!--                <AddButton :item="item"-->
+<!--                           :hasClicked="hasClicked"-->
+<!--                           :isEditMode="isEditMode"-->
+<!--                           :isSelectionMode="isSelectionMode"-->
+<!--                           @add="addItem"-->
+<!--                           @save="saveItem"/>-->
+<!--            </div>-->
         </div>
     </div>
 </template>

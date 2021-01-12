@@ -82,7 +82,7 @@
             },
 
             removeItem(idToRemove) {
-                // console.log("------idToRemove---------", idToRemove);
+                // console.log("------full list -- toRemove---------", this.itemsList);
                 for (let i = 0; i < this.itemsList.length; i++) {
                     if (this.itemsList[i].id === idToRemove) {
                         // console.log("------idtem To R e m o v e ---------", this.itemsList[i]);

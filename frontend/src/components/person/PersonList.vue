@@ -113,7 +113,7 @@
 <script>
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
-    import OccupationList from "./OccupationList";
+    import OccupationList from "../components/person-occupation/OccupationList";
 
     export default {
         components: {

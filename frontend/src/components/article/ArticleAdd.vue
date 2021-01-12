@@ -56,9 +56,13 @@
                         <div class="col-md-6">
                             <label for="add-linkS"><b>Links*</b></label>
                             <div>
-                                <textarea class="form-control" id="add-linkS"
-                                          placeholder="enter links with 'return'"
-                                          v-model="links"/>
+                                <!--                                <textarea class="form-control" id="add-linkS"-->
+                                <!--                                          placeholder="enter links with 'return'"-->
+                                <!--                                          v-model="links"/>-->
+
+                                <CreatedList :items="links"
+                                             @update-item="updateLink"/>
+
                             </div>
                         </div>
 
@@ -365,7 +369,7 @@
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"
-                                             @update-selection="updateSelection"   />
+                                             @update-selection="updateSelection"/>
                     </div>
                 </form>
 
@@ -528,12 +532,14 @@
     import Vue from 'vue';
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
-    import ConnectionComponent from "../connection/ConnectionComponent";
+    import ConnectionComponent from "../components/connection/ConnectionComponent";
+    import CreatedList from "../components/multiply-enter-list/CreatedList";
 
     Vue.component('input-tag', InputTag);
 
     export default {
         components: {
+            CreatedList,
             ConnectionComponent,
             FileAttachment
             // HashtagList
@@ -844,7 +850,7 @@
                         "hasClicked": false
                     };
                     this.materialConnectionList.push(connection);
-                   // console.log("ADDED");
+                    // console.log("ADDED");
                 }
             },
 
@@ -901,11 +907,17 @@
                 console.log("LIST AFTER COMPONENT", this.personConnectionList);
             },
 
-            updateSelection(item){
+            updateSelection(item) {
                 let index = this.connectionTypes.findIndex(x => x.id === item);
-                console.log("<3 <3 ITEM AFTER COMPONENT", item, this.connectionTypes.id===item);
+                console.log("<3 <3 ITEM AFTER COMPONENT", item, this.connectionTypes.id === item);
             },
             ///////////////////
+
+            updateLink(link) {
+                //   this.links.push(link.content);
+                this.links.push(link);
+                //console.log("ADDED LINK", link, this.links);
+            },
 
             // actOnEachLine(textarea, func) {
             //     let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
@@ -974,8 +986,20 @@
 
                 this.article.linkList = [];
 
-                let textarea = document.getElementById("add-linkS");
-                let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
+                for (let i = 0; i < this.links.length; i++) {
+                    this.article.linkList[i] = {
+                        "content": this.links[i].content
+                    };
+                }
+
+                // let textarea = document.getElementById("add-linkS");
+                // let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
+                // for (let i = 0; i < lines.length; i++) {
+                //     this.article.linkList[i] = {
+                //         "content": lines[i]
+                //     };
+                // }
+
 
                 // this.actOnEachLine(textarea, function (line) {
                 //     console.log(line);
@@ -992,11 +1016,6 @@
                 //
                 // });
 
-                for (let i = 0; i < lines.length; i++) {
-                    this.article.linkList[i] = {
-                        "content": lines[i]
-                    };
-                }
 
                 //mtype has structure (from t_material_type)
                 // id, content, misc, parentId
@@ -1048,7 +1067,7 @@
                 //console.log("#*#*#*#*#*#*#*#*#*#*#*#*#    LINKS", this.links, this.links.length);
                 for (let i = 0; i < this.links.length; i++) {
                     this.article.linkList[i] = {
-                        "content": this.links[i]
+                        "content": this.links[i].content
                     };
                 }
 
@@ -1116,7 +1135,7 @@
 
             isArrayValidAndNotEmpty(array) {
 
-                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                if (typeof array === 'undefined' || array === null || array.length === 0) {
                     return false;
                 }
                 return true;
@@ -1124,10 +1143,8 @@
 
             isObjectValidAndNotEmpty(obj) {
 
-                if (typeof obj === 'undefined' || obj === null) {
-                    return false;
-                }
-                return true;
+                return !(typeof obj === 'undefined' || obj === null);
+
             },
 
             locationEditConnectionTitleCreation(location) {
@@ -1362,17 +1379,20 @@
                             "id": this.article.mtype.id,
                             "name": this.article.mtype.content,
                         };
-                       // console.log("selectedMTYPE", this.selectedMType, this.article);
+                        // console.log("selectedMTYPE", this.selectedMType, this.article);
                     }
 
                     for (let i = 0; i < this.article.hashtagList.length; i++) {
                         this.tags.push(this.article.hashtagList[i]);
                     }
 
-                    // console.log("LINK LIST", this.article.linkList);
                     for (let i = 0; i < this.article.linkList.length; i++) {
-                        this.links.push(this.article.linkList[i].content);
+                        this.links.push(this.article.linkList[i]);
                     }
+
+//                    console.log("::::::::::::::::LINK LIST", this.article.linkList);
+//                    console.log("::::::::::::::::LINKS", this.links);
+
 
                     apiAttachment.getAttachments('article', this.article.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
@@ -1467,8 +1487,8 @@
                             let currentMaterialEntity = this.articleMaterialEntities.find(material => material.id === element.itemId);
                             // console.log("currentMaterialEntity", currentMaterialEntity);
 
-                          //  let connectionType = this.connectionTypes.find(x => x.id === Number.parseInt(element.connection));
-                          //  console.log("connectionTypes@@@@@@@@@@@@@@@@@@@@@@@@@@@", this.connectionTypes, element, connectionType);
+                            //  let connectionType = this.connectionTypes.find(x => x.id === Number.parseInt(element.connection));
+                            //  console.log("connectionTypes@@@@@@@@@@@@@@@@@@@@@@@@@@@", this.connectionTypes, element, connectionType);
 
                             let connection = {
                                 "id": element.itemId,
@@ -1497,7 +1517,7 @@
 
             itemsLocation() {
                 //console.log("itemsLocation", this.locationEntries.map);
-               // console.log("itemsLocation", this.locationEntries);
+                // console.log("itemsLocation", this.locationEntries);
 
                 return this.locationEntries.map(entry => {
                     const country = entry.country;
@@ -1519,8 +1539,8 @@
             },
 
             itemsMaterial() {
-               // console.log("itemsMaterial", this.materialEntries.map);
-               // console.log("itemsMaterial", this.materialEntries);
+                // console.log("itemsMaterial", this.materialEntries.map);
+                // console.log("itemsMaterial", this.materialEntries);
 
                 if (this.materialEntries) {
                     return this.materialEntries.map(entry => {
@@ -1797,7 +1817,7 @@
 
                         apiOrg.searchOrg(val, r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
-                           // console.log("****", this.orgEntries);
+                            // console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
                         });
                     }
@@ -1820,7 +1840,7 @@
 
                         api.searchMaterial(val, r => {
                             this.materialEntries = r;
-                           // console.log("*№*№*№*", this.materialEntries);
+                            // console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;
                         });
                     }

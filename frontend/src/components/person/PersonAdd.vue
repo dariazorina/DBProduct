@@ -328,7 +328,7 @@
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
     //  import HashtagList from "./../hashtag/HashtagList.vue";
-    import OccupationList from "./OccupationList";
+    import OccupationList from "../components/person-occupation/OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
 
     import CKEditor from 'ckeditor4-vue';
