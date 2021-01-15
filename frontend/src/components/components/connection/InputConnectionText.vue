@@ -1,7 +1,7 @@
 <template>
     <div class="col-12" style="background-color: transparent; margin-top: -12px; margin-bottom: -12px">
         <input class="form-control" type="text" v-model="currentItem" v-on="listeners"
-               placeholder="Связь с материалом"/>
+               placeholder="Связь"/>
     </div>
 </template>
 

@@ -73,26 +73,31 @@
 
                     <div class="row">
                         <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Страна</span></div>
+                            <div class="cellTitle"><span class="float-left">Местонахождение</span></div>
                         </div>
-                        <div class="col-sm-10 back1"><span
-                                class="float-left"> {{showCountry(person.country)}} </span>
+                        <!--                        <div class="col-sm-10 back1"><span-->
+                        <!--                                class="float-left"> {{showCountry(person.country)}} </span>-->
+                        <!--                        </div>-->
+                        <div class="col-sm-10 back1">
+                            <div v-for="location in personLocationEntities">
+                                {{createComplexLocationById(location.id)}}
+                            </div>
                         </div>
                     </div>
+
+                    <!--                    <div class="row">-->
+                    <!--                        <div class="col-sm-2">-->
+                    <!--                            <div class="cellTitle"><span class="float-left">Город</span></div>-->
+                    <!--                        </div>-->
+                    <!--                        <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                     <div class="row">
                         <div class="col-sm-2">
-                            <div class="cellTitle"><span class="float-left">Город</span></div>
-                        </div>
-                        <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Организация / Должность</span></div>
                         </div>
-                        <div class="col-sm-10 back1" style="text-align: left;">
+                        <div class="col-sm-10" style="text-align: left;">
                             <div>
                                 <a v-for="test in person.testList">{{showOrgAndPosition(test)}}</a>
                             </div>
@@ -101,20 +106,20 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Описание</span></div>
                         </div>
 
-                        <div class="col-sm-10" style="text-align: left">
+                        <div class="col-sm-10 back1" style="text-align: left">
                             <span v-html="person.description"></span>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2 back1">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                         </div>
-                        <div class="col-sm-10 back1"><span class="float-left">
+                        <div class="col-sm-10"><span class="float-left">
                             <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}
                             </div></span>
                         </div>
@@ -131,18 +136,18 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10">
-                    <span class="float-left">
-                        <div class="linkButton" v-for="link in person.linkList">
+                        <div class="col-sm-10 back1">
                             <span class="float-left">
-                                <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">{{link.content}}</button>
+                                <div class="linkButton" v-for="link in person.linkList">
+                                    <span class="float-left">
+                                        <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">{{link.content}}</button>
+                                    </span>
+                                </div>
                             </span>
-                        </div>
-                    </span>
                         </div>
                     </div>
                 </div>
@@ -205,26 +210,32 @@
 
                     <div class="row">
                         <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Страна</span></div>
+                            <div class="cellTitle"><span class="float-left">Местонахождение</span></div>
                         </div>
-                        <div class="col-sm-10 back1"><span
-                                class="float-left"> {{showCountry(person.country)}} </span>
+                        <!--                        <div class="col-sm-10 back1"><span-->
+                        <!--                                class="float-left"> {{showCountry(person.country)}} </span>-->
+                        <!--                        </div>-->
+
+                        <div class="col-sm-10 back1">
+                            <div v-for="location in personLocationEntities">
+                                {{createComplexLocationById(location.id)}}
+                            </div>
                         </div>
                     </div>
+
+                    <!--                    <div class="row">-->
+                    <!--                        <div class="col-sm-2">-->
+                    <!--                            <div class="cellTitle"><span class="float-left">Город</span></div>-->
+                    <!--                        </div>-->
+                    <!--                        <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                     <div class="row">
                         <div class="col-sm-2">
-                            <div class="cellTitle"><span class="float-left">Город</span></div>
-                        </div>
-                        <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Организация / Должность</span></div>
                         </div>
-                        <div class="col-sm-10 back1" style="text-align: left;">
+                        <div class="col-sm-10" style="text-align: left;">
                             <div>
                                 <a v-for="test in person.testList">{{showOrgAndPosition(test)}}</a>
                             </div>
@@ -233,20 +244,20 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Описание</span></div>
                         </div>
 
-                        <div class="col-sm-10" style="text-align: left">
+                        <div class="col-sm-10 back1" style="text-align: left">
                             <span v-html="person.description"></span>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2 back1">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                         </div>
-                        <div class="col-sm-10 back1"><span class="float-left">
+                        <div class="col-sm-10"><span class="float-left">
                 <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}</div></span>
                         </div>
                     </div>
@@ -262,11 +273,11 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10">
+                        <div class="col-sm-10 back1">
                     <span class="float-left">
                         <div class="linkButton" v-for="link in person.linkList">
                             <span class="float-left">
@@ -305,6 +316,7 @@
 <script>
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
+    import apiLocation from "./../country/country-api";
     import "vue-scroll-table";
 
     export default {
@@ -312,10 +324,10 @@
         data() {
             return {
                 persons: [],
-                person: {country: {}, hashtagList: [], linkList: []},
-                hashtagList: [],
-                linkList: [],
-                allOrg: [],
+                person: {country: {}, hashtagList: [], linkList: [], locationList: []},
+
+                personLocationIds: [], //before request
+                personLocationEntities: [], //after request
 
                 searchKey: '',
                 response: [],
@@ -387,16 +399,75 @@
                 }
                 return "";
             },
+
+            createComplexLocationById(id) {
+                let currentLocation = this.personLocationEntities.find(x => x.id === id);
+                let result = currentLocation.country;
+
+                // console.log("00000000000000000000", currentPerson);
+
+                let connection = this.person.locationList.find(x => x.itemId === id);
+                // console.log("1111111111", connection);
+
+
+                if (this.isObjectValidAndNotEmpty(currentLocation.region)) {
+                    result += ", " + currentLocation.region;
+                }
+                if (this.isObjectValidAndNotEmpty(currentLocation.city)) {
+                    result += ", " + currentLocation.city;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentLocation.address)) {
+                    result += ", " + currentLocation.address;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentLocation.placement)) {
+                    result += ", " + currentLocation.placement;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentLocation.miscellany)) {
+                    result += "/ " + currentLocation.miscellany;
+                }
+
+                if (this.isObjectValidAndNotEmpty(connection.connection))
+                    result += "/ " + connection.connection;
+
+                if (this.isObjectValidAndNotEmpty(connection.comment))
+                    result += "/ " + connection.comment;
+
+                return result;
+            },
+
+            isObjectValidAndNotEmpty(obj) {
+                // console.log("VALID", obj);
+                if (typeof obj === 'undefined' || obj === null || obj.length === 0) {
+                    return false;
+                }
+                return true;
+            },
         },
         mounted() {
             api.findById(this.$route.params.person_id, r => {
-                // console.log(r.data);
+                console.log(r.data);
 
-                apiOrg.getAllOrgs(response => {
+                apiOrg.getAllOrgs(response => {  //todo - get only actual orgs
                     this.person = r.data;
                     this.allOrgs = response.data;
                     // console.log(" O R G A ", response.data)
+
+                    for (let j = 0; j < this.person.locationList.length; j++) {
+                        this.personLocationIds.push(this.person.locationList[j].itemId);
+                        console.log("+", j);
+                    }
+                    console.log("mountedmountedmountedmountedmounted locations", this.personLocationIds);
+
+                    apiLocation.getLocationsByIds(this.personLocationIds, response => {
+                        this.personLocationEntities = response.data;
+                        console.log("getLocationsByIds getLocationsByIds getLocationsByIds", this.personLocationEntities);
+                    });
                 });
+
+
             });
         },
     }

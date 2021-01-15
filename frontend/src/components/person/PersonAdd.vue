@@ -86,52 +86,27 @@
                         </div>
                     </div>
 
-                    <div class="form-row" style="background-color: transparent">
-                        <div class="col-md-3">
-                            <label>Страна</label>
-                            <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">
-                                <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}
-                                </option>
-                            </b-form-select>
-                            <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
-                        </div>
-
-                        <div class="col-md-3">
-                            <label for="add-settlement">Город</label>
-                            <input class="form-control" id="add-settlement" v-model="person.settlement">
-                        </div>
-                    </div>
+                    <!--                    <div class="form-row" style="background-color: transparent">-->
+                    <!--                        <div class="col-md-8">-->
+                    <!--                            <label>Местонахождение</label>-->
+                    <!--                            <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">-->
+                    <!--                                <option v-for="country in allCountries" v-bind:value="country.id">{{countryTitleCreation(country)}}-->
+                    <!--                                </option>-->
+                    <!--                            </b-form-select>-->
+                    <!--                            &lt;!&ndash;                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>&ndash;&gt;-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                 </div>
                 <div class="col-md-2" style="margin-top: 10px; background-color: transparent">
-                    <!--                    <img src="data:image/jpeg;base64,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"-->
-                    <!--                         alt="person photo">-->
-                    <!--                    <img src="KB.jpg" alt="person photo" width="500" height="333">-->
-
-                    <!--                    <input type="file" accept="image/*" @change="uploadImage($event)" id="file-input">-->
-
-
-                    <!--                    <div>-->
-                    <!--                        <img src="previewImage" class="uploading-image" />-->
-                    <!--                        <input type="file" accept="image/jpeg" @change="uploadImage">-->
-                    <!--                    </div>-->
-
-<!--                    <div v-if="person.photo" class="col-sm-2" style="background-color: transparent">-->
-
-<!--&lt;!&ndash;                        <div id="preview" style="background-color: transparent">&ndash;&gt;-->
-<!--                            <img v-bind:src="'data:image/jpeg;base64,'+person.photo" :style="{ width: 250+'px' }"/>-->
-<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
-<!--                    </div>-->
-
-
-
                     <div id="preview">
                         <div v-if="avatar.imageUrl">
                             <img :src="avatar.imageUrl" @load="setHeight"
-                             :style="{ height: imageHeight + 'px' }"/>
+                                 :style="{ height: imageHeight + 'px' }"/>
                         </div>
                         <div v-else>
-                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo" :style="{ width: 250+'px' }"/>
+                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"
+                                 :style="{ width: 250+'px' }"/>
                         </div>
                     </div>
                     <div v-if="avatar.imageUrl" style="margin-top: 5px">
@@ -142,40 +117,99 @@
                     </div>
                 </div>
             </div>
+        </form>
+        <form class="authorsFormCreation form-row col-12"
+              style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+            <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                <v-card-text>
+                    <v-autocomplete
+                            id="location-autocomplete"
+                            label="Местонахождение"
 
-            <!--            //////////////////////////////////////////////////////////////////////////////////////////////-->
-            <!--            <div class="form-row" style="background-color: #ffe87c">-->
-            <!--                <div class="col-md-3">-->
-            <!--                    <label>Страна</label>-->
-            <!--                    <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">-->
-            <!--                        <option v-for="country in allCountries" v-bind:value="country.id">{{country.name}}</option>-->
-            <!--                    </b-form-select>-->
-            <!--                    &lt;!&ndash;                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>&ndash;&gt;-->
-            <!--                </div>-->
+                            :items="locationItems"
+                            :loading="isLoadingLocation"
+                            :search-input.sync="locationSearch"
+                            color="orange"
+                            hide-no-data
+                            hide-selected
 
-            <!--                <div class="col-md-3">-->
-            <!--                    <label for="add-settlement">Город</label>-->
-            <!--                    <input class="form-control" id="add-settlement" v-model="person.settlement">-->
-            <!--                </div>-->
-            <!--            </div>-->
+                            v-model="selectedLocation"
+
+                            @change="addLocation(selectedLocation)"
+                            item-text="country"
+                            item-value="id"
+                            placeholder="Начните печатать, чтобы найти локацию"
+                            prepend-icon="mdi-database-search"
+                            return-object
+                    ></v-autocomplete>
+                </v-card-text>
+            </div>
+
+            <div v-if="locationList.length>0" class="col-9"
+                 style="background-color: transparent; padding:0">
+                <ConnectionComponent :itemsList="locationList"
+                                     :isEditMode="editMode"
+                                     :isSelectionMode="false"
+                                     :allTypes="connectionTypes"
+                                     style="background-color: transparent; padding:0px" class="col-12"/>
+            </div>
         </form>
 
-        <div style="background-color: transparent; margin-left: 30px">
-            <b-card class="col-md-9" style="background-color: #f8f8f8; font-size: small; text-align: left">
-<!--                <OccupationList v-if="!editMode" :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>-->
-                <OccupationList :allOrgs="allOrgs"
-                                :selected="selected"
-                                :todos="occupationWithIndexList"
-                                @update-occupation="updateOccupation"/>
-            </b-card>
-        </div>
+        <form class="authorsFormCreation form-row col-12"
+              style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+            <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                <v-card-text>
+                    <v-autocomplete
+                            id="author-autocomplete"
+                            label="Организации"
+
+                            :items="orgItems"
+                            :loading="isLoadingOrg"
+                            :search-input.sync="orgSearch"
+                            color="green"
+                            hide-no-data
+                            hide-selected
+
+                            v-model="selectedOrg"
+
+                            @change="addOrg(selectedOrg)"
+                            item-text="name"
+                            item-value="id"
+                            placeholder="Начните печатать, чтобы найти организацию"
+                            prepend-icon="mdi-database-search"
+                            return-object
+                    ></v-autocomplete>
+                </v-card-text>
+            </div>
+
+            <div v-if="occupationList.length>0" class="col-9"
+                 style="background-color: transparent; padding:0; margin: 0px">
+                <ConnectionComponent :itemsList="occupationList"
+                                     :isEditMode="editMode"
+                                     :isSelectionMode="false"
+                                     :allTypes="connectionTypes"
+                                     style="background-color: transparent; padding:0px" class="col-12"
+                                     @update-item="updateOccupation"/>
+            </div>
+        </form>
+
+
+        <!--        <div style="background-color: transparent; margin-left: 30px">-->
+        <!--            <b-card class="col-md-9" style="background-color: #f8f8f8; font-size: small; text-align: left">-->
+        <!--                &lt;!&ndash;                <OccupationList v-if="!editMode" :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>&ndash;&gt;-->
+        <!--                <OccupationList :allOrgs="allOrgs"-->
+        <!--                                :selected="selected"-->
+        <!--                                :todos="occupationWithIndexList"-->
+        <!--                                @update-occupation="updateOccupation"/>-->
+        <!--            </b-card>-->
+        <!--        </div>-->
         <!--        component doesn't work correctly in form 'formCreation;-->
         <form class="formCreation">
             <div class="form-row">
                 <div class="col-md-6">
 
-<!--                    <label for="add-description">Описание</label>-->
-<!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
+                    <!--                    <label for="add-description">Описание</label>-->
+                    <!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
 
                     <ckeditor :editor="editor" v-model="person.description" :config="editorConfig"></ckeditor>
                 </div>
@@ -253,7 +287,8 @@
 
                                             <div class="form-group row" style="padding-top: 30px">
 
-                                                <button type="button" style="margin-right: 20px; margin-left: 15px"
+                                                <button type="button"
+                                                        style="margin-right: 20px; margin-left: 15px"
                                                         @click="addHashtagToArticleList()"
                                                         class="btn btn-success">Add
                                                 </button>
@@ -305,7 +340,16 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div v-if="editMode" class="form-group row align-items-center align-items-center">
+                <div class="offset-sm-4 col-sm-3">
+
+                    <button type="button" @click="createPerson" class="btn btn-primary">Update</button>
+                    <a class="btn btn-default">
+                        <router-link to="/article">Cancel</router-link>
+                    </a>
+                </div>
+            </div>
+            <div v-else class="form-group row">
                 <div class="col-sm-4">
 
                     <button type="button" @click="createPerson" class="btn btn-primary">Save</button>
@@ -318,25 +362,27 @@
     </v-app>
 </template>
 
+<style lang="scss">
+    @import '../dbnm.css';
+</style>
+
 <script>
-    //  require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
     import apiCountry from "./../country/country-api";
 
     import router from "./../../router";
     import Vuetify from 'vuetify';
-    // import 'vuetify/dist/vuetify.min.css';
-    //  import HashtagList from "./../hashtag/HashtagList.vue";
     import OccupationList from "../components/person-occupation/OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
 
     import CKEditor from 'ckeditor4-vue';
+    import ConnectionComponent from "../components/connection/ConnectionComponent";
 
     export default {
         components: {
             OccupationList,
-            //HashtagList,
+            ConnectionComponent,
             ckeditor: CKEditor.component, // to use the component locally
         },
         name: 'person-add',
@@ -347,11 +393,13 @@
             addTagOnKeys: [13, 9],
             descriptionLimit: 60,
             entries: [],
-            isLoading: false,
+
+            isLoadingLocation: false,
+            isLoadingOrg: false,
+
             model: null,
             search: null,
             searchHashtag: '',
-            tags: [],
             allTags: [],
             tagsTree: [],
             selectionType: 'independent',
@@ -360,8 +408,10 @@
             hashtagFlatTree: [],
 
             selected: '',
+            selectedLocation: [],
+            selectedOrg: [],
             selectedM: null,
-            selectedCountry: null,
+            // selectedCountry: null,
             selectedBYear: null,
             selectedDYear: null,
 
@@ -373,9 +423,14 @@
             validationErrors: {},
             hasError: false,
 
-            allCountries: [],
-            allOrgs: [],
+            // allCountries: [],
+            // allOrgs: [],
             // allMovements: [],
+
+            locationEntries: [],
+            orgEntries: [],
+            connectionTypes: [],
+
             previewImage: null,
             avatar: {
                 image: null,
@@ -385,15 +440,22 @@
 
             imageHeight: null,
 
-
             linkList: [],
             hashtagList: [],
 
-            position: '',
-            orgId: null,
-            occupationWithIndexList: [],
+            locationSearch: null,
+            locationList: [],
+
+            orgSearch: null,
+            occupationList: [],
+
+            personLocationIds: [], //before request
+            personLocationEntities: [], //after request
+            personOrgIds: [], //before request
+            personOrgEntities: [], //after request
+
             testList: [],
-            person: {hashtagList: [], linkList: [], testList: []},
+            person: {hashtagList: [], linkList: [], testList: [], locationList: []},
             years: [],
             editMode: false,
 
@@ -490,9 +552,85 @@
                 }
             },
 
-            updateOccupation(occupation) {   //occupation was sent by Property
-                this.occupationWithIndexList.push(occupation);
+            updateOccupation(occupation) {   //occupation was sent by Property //todo to delete
+                //this.occupationList.push(occupation);
                 console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
+            },
+
+            addLocation(obj) {
+                console.log("GET CHANGED LOCATION", obj);
+                let i = 0;
+                for (i = 0; i < this.locationList.length; i++) { //to exclude double values
+                    if (this.locationList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.locationList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.country,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.locationList.push(connection);
+                    console.log("ADDED", this.locationList);
+                }
+            },
+
+            addOrg(obj) {
+                 console.log("GET CHANGED ORG", obj);
+                let i = 0;
+                for (i = 0; i < this.occupationList.length; i++) { //to exclude double values
+                    if (this.occupationList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.occupationList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.name,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.occupationList.push(connection);
+                    console.log("ADDED");
+                }
+            },
+
+            finalPositionListCreation(list, finalList) {
+                // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
+                for (let i = 0; i < list.length; i++) {
+                    let a = {
+                        "orgId": list[i].id,
+                        "position": list[i].connection,
+                        "comment": list[i].comment
+                    };
+                    // console.log("CREATE PERS ON A: ", a);
+
+                    if (a.position.length > 0) { //to avoid add empty connections (wasn't entered)
+                        // console.log("PUSH PERS ON A: ", a);
+                        finalList.push(a);
+                    }
+                    // console.log("CREATE PERS ON A: ", this.article.personList);
+                }
+            },
+
+            finalConnectionListCreation(list, finalList) {
+                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
+                for (let i = 0; i < list.length; i++) {
+                    let a = {
+                        "itemId": list[i].id,
+                        "connection": list[i].connection,
+                        "comment": list[i].comment
+                    };
+                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                        finalList.push(a);
+                    }
+                }
             },
 
             removeSelectedHashtag(hash) {
@@ -551,7 +689,7 @@
                         if (tag === item)
                             tagAlreadyAdded = 1;
                     });
-                    if (tagAlreadyAdded == 0)
+                    if (tagAlreadyAdded === 0)
                         this.tags.push(item);
                 });
                 this.selectedHashtag = [];
@@ -602,9 +740,9 @@
                     this.person.deathYear = this.selectedDYear;
                 }
 
-                if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
-                    this.person.country_id = this.selectedCountry;
-                }
+                // if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
+                //     this.person.location_id = this.selectedCountry;
+                // }
 
                 for (let i = 0; i < this.links.length; i++) {
                     this.person.linkList[i] = {
@@ -618,22 +756,27 @@
                 }
 
                 this.hasError = false;
-                this.person.testList = [];
+                // this.person.testList = [];
 
-                for (let i = 0; i < this.occupationWithIndexList.length; i++) {
-                    let a = {
-                        "orgId": this.occupationWithIndexList[i].orgId,
-                        "position": this.occupationWithIndexList[i].position,
-                        "comment": this.occupationWithIndexList[i].comment
-                    };
-                    //console.log("CREATE PERS    ON A: ", a);
-                    this.person.testList.push(a);
-                }
+                // for (let i = 0; i < this.occupationWithIndexList.length; i++) {
+                //     let a = {
+                //         "orgId": this.occupationWithIndexList[i].orgId,
+                //         "position": this.occupationWithIndexList[i].position,
+                //         "comment": this.occupationWithIndexList[i].comment
+                //     };
+                //     //console.log("CREATE PERS    ON A: ", a);
+                //     this.person.testList.push(a);
+                // }
+
+                this.person.locationList.splice(0);
+                this.person.testList.splice(0);
+                this.finalConnectionListCreation(this.locationList, this.person.locationList);
+                this.finalPositionListCreation(this.occupationList, this.person.testList);
 
                 this.person.photo = this.avatar.imageBase64;
 
                 if (this.editMode) {
-                    // console.log("PERSON BEFORE UPDATING", this.person);
+                    console.log("PERSON BEFORE UPDATING", this.person);
                     if (this.formValidate()) {
                         api.update(this.person.id, this.person, r => {
                             console.log(r);
@@ -641,7 +784,7 @@
                         });
                     }
                 } else {
-                    // console.log("PERSON BEFORE SAVING", this.person);
+                    console.log("PERSON BEFORE SAVING", this.person);
                     if (this.formValidate()) {
                         api.create(this.person, r => {
                             console.log(r);
@@ -649,6 +792,44 @@
                         });
                     }
                 }
+            },
+
+            orgEditConnectionTitleCreation(org) {
+                let returnedTitle = org.nameRus;
+
+                if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
+                    returnedTitle += ", " + org.abbrRus;
+                }
+                if (this.isArrayValidAndNotEmpty(org.name)) {
+                    returnedTitle += ", " + org.name;
+                }
+                //todo add fields
+
+                return returnedTitle;
+            },
+
+            countryTitleCreation(country) {
+                let returnedTitle = country.country;
+
+                if (this.isArrayValidAndNotEmpty(country.region)) {
+                    returnedTitle += ", " + country.region;
+                }
+                if (this.isArrayValidAndNotEmpty(country.city)) {
+                    returnedTitle += ", " + country.city;
+                }
+                if (this.isArrayValidAndNotEmpty(country.address)) {
+                    returnedTitle += ", " + country.address;
+                }
+                //placement?
+
+                return returnedTitle;
+            },
+
+            isArrayValidAndNotEmpty(array) {
+                if (typeof array === 'undefined' || array === null || array.length === 0) {
+                    return false;
+                }
+                return true;
             },
         },
         mounted() {
@@ -664,9 +845,9 @@
                     this.person = r.data;
                     // console.log("person EDIT!", this.person);
 
-                    if (this.person.country != null) {
-                        this.selectedCountry = this.person.country.id;
-                    }
+                    // if (this.person.location != null) {
+                    //     this.selectedCountry = this.person.location.id;
+                    // }
                     this.selectedBYear = this.person.birthYear;
                     this.selectedDYear = this.person.deathYear;
 
@@ -679,58 +860,111 @@
                         // console.log("links!", this.person.linkList[i].content);
                     }
 
-                    apiOrg.getAllOrgs(response => {
-                        this.allOrgs = response.data;
+                    for (let j = 0; j < this.person.locationList.length; j++) {
+                        this.personLocationIds.push(this.person.locationList[j].itemId);
+                    }
 
-                        for (let i = 0; i < this.person.testList.length; i++) {
-                            let a = {
-                                "id": i,
-                                "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
-                                "orgId": this.person.testList[i].orgId,
-                                "position": this.person.testList[i].position,
-                                "comment": this.person.testList[i].comment
+                    for (let j = 0; j < this.person.testList.length; j++) {
+                        this.personOrgIds.push(this.person.testList[j].orgId);
+                    }
+
+                    // apiOrg.getAllOrgs(response => {
+                    //     this.allOrgs = response.data;
+                    //
+                    //     for (let i = 0; i < this.person.testList.length; i++) {
+                    //         let a = {
+                    //             "id": i,
+                    //             "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
+                    //             "orgId": this.person.testList[i].orgId,
+                    //             "position": this.person.testList[i].position,
+                    //             "comment": this.person.testList[i].comment
+                    //         };
+                    //         // console.log("GET PERS    ON A: ", a);
+                    //         this.occupationWithIndexList.push(a);
+                    //     }
+                    // });
+
+
+                    apiCountry.getLocationsByIds(this.personLocationIds, response => {  ///returns List<Location>
+                        this.personLocationEntities = response.data;   //returns List<Org>
+                        console.log("getLocationsBy#Entities locaList", this.personLocationEntities, this.person.locationList);
+
+                        for (let i = 0; i < this.person.locationList.length; i++) {
+                            let element = this.person.locationList[i];
+                            let currentLocationEntity = this.personLocationEntities.find(l => l.id === element.itemId);
+                            console.log("--------------------------> currentLocationEntity", currentLocationEntity);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.countryTitleCreation(currentLocationEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": true
                             };
-                            // console.log("GET PERS    ON A: ", a);
-                            this.occupationWithIndexList.push(a);
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.locationList.push(connection);
                         }
                     });
+
+                    apiOrg.getOrgsByIds(this.personOrgIds, response => {  ///returns List<Location>
+                        this.personOrgEntities = response.data;   //returns List<Org>
+                        console.log("apiOrg", this.personOrgEntities);
+
+                        for (let i = 0; i < this.person.testList.length; i++) {
+                            let element = this.person.testList[i];
+                            let currentOrgEntity = this.personOrgEntities.find(org => org.id === element.orgId);
+                            console.log("currentOrgEntity", currentOrgEntity);
+                            let connection = {
+                                "id": element.orgId,
+                                "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "connection": element.position,
+                                "comment": element.comment,
+                                "hasClicked": true
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.occupationList.push(connection);
+                        }
+                        //console.log("occupationWithIndexList: ", this.occupationWithIndexList);
+                    });
+
                     this.avatar.imageBase64 = this.person.photo;
                 });
-
-                apiCountry.getAllCountries(response => {
-                    this.allCountries = response.data;
-                    // console.log(response.data)
-                });
-
-                apiHashtag.getAllHashtags(response => {
-                    this.allTags = response.data;
-                    this.buildTree();
-                    // console.log(response.data)
-                });
-
-                // api.getAllMovements().then(response => {
-                //     this.allMovements = response.data;
-                //     console.log(response.data)
-                // }).catch(error => {
-                //     //this.errors.push(error)
-                //     console.log(error);
-                // })
-            } else {
-                apiOrg.getAllOrgs(response => {
-                    this.allOrgs = response.data;
-                });
-
-                apiCountry.getAllCountries(response => {
-                    this.allCountries = response.data;
-                });
-
-                apiHashtag.getAllHashtags(response => {
-                    this.allTags = response.data;
-                    this.buildTree();
-                });
             }
+
+            // apiCountry.getAllCountries(response => {
+            //     this.allCountries = response.data;
+            //     console.log("****************************locations", response.data)
+            // });
+
+            apiHashtag.getAllHashtags(response => {
+                this.allTags = response.data;
+                this.buildTree();
+                // console.log(response.data)
+            });
         },
         computed: {
+            locationItems() {
+                if (this.locationEntries) {      ///todo analyze why undefined (after selection in the search list)
+                    return this.locationEntries.map(entry => {
+                       // const org = entry.name;
+                       //  return Object.assign({}, entry, {org})
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
+            orgItems() {
+                if (this.orgEntries) {      ///todo analyze why undefined (after selection in the search list)
+                    // console.log("####################", this.orgEntries);
+
+                    return this.orgEntries;
+                    //     .map(entry => {
+                    //     const id = entry.id;
+                    //     const org = entry.name;
+                    //     return Object.assign({}, {id}, {org})
+                    // })
+                }
+                // return this.orgEntries;
+            },
             items() {
                 return this.entries.map(entry => {
                     // const Description = entry.Description.length > this.descriptionLimit
@@ -888,6 +1122,53 @@
                         this.$refs.treeviewref.updateAll(true);
                     }
                 });
+            },
+
+            locationSearch(val) {
+                // console.log("SEARCH ACTIVATED");
+                if (val !== null)
+                    if (val.length > 2) {
+                        // console.log("SEARCH STARTED");
+
+                        if (typeof this.selectedLocation !== 'undefined') {
+                            // console.log("SELECTED IN WATCH");
+                            // console.log(this.selectedLocation);
+                            if (this.person.locationList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedLocation = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingLocation) return;
+                        this.isLoadingLocation = true;
+
+                        apiCountry.searchLocation(val, r => {
+                            this.locationEntries = r;
+                            console.log("****", this.locationEntries);
+                            this.isLoadingLocation = false;
+                        });
+                    }
+            },
+
+            orgSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedOrg !== 'undefined') {
+                            if (this.person.testList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedOrg = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingOrg) return;
+                        this.isLoadingOrg = true;
+
+                        //console.log("seracg org", val);
+
+                        apiOrg.searchOrg(val, r => {
+                            this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
+                            // console.log("****", this.orgEntries);
+                            this.isLoadingOrg = false;
+                        });
+                    }
             },
         },
     }
