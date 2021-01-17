@@ -9,15 +9,15 @@
                 <div v-if="editMode" class="col-5 col-form-label">
 
                     <div v-if="article.titleRus == null">
-                        <p class="pageEditTitle">Edit <i>"{{article.title}}"</i></p>
+                        <p class="pageEditTitle">Редактирование <i>"{{article.title}}"</i></p>
                     </div>
                     <div v-else>
-                        <p class="pageEditTitle">Edit <i>"{{article.titleRus}}"</i></p>
+                        <p class="pageEditTitle">Редактирование <i>"{{article.titleRus}}"</i></p>
                     </div>
                 </div>
 
                 <div v-else="editMode" class="col-3 col-form-label">
-                    <p class="pageCreateTitle">Add New Article</p>
+                    <p class="pageCreateTitle">Добавление нового материала</p>
                 </div>
 
                 <div class="unprotected" v-if="errorFlag">
@@ -37,24 +37,85 @@
             <div class="col-lg-10" style="background-color: transparent; padding-top: 0">
 
                 <form class="formCreation">
+                    <div class="form-row align-items-center">
+                        <label>Выберите тип материала</label>
+                        <div class="col-12" style="background-color: transparent">
+                            <b-card style="background-color: transparent">
+                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
+                                    <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
+                                        <v-sheet
+                                                style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
+                                            <v-text-field label="search material type"
+                                                          v-model="searchMType"
+                                                          filled>
+                                            </v-text-field>
+                                        </v-sheet>
 
-                    <div v-if="editMode" class="row align-items-center" style="background-color: transparent">
-                        <label class="col-1 col-form-label labelInCreation"
-                               style="vertical-align: center; background-color: transparent">Status</label>
-                        <div class="col-6" style="background-color: transparent">
-                            <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
-                                           style="background-color: transparent;">
-                                <option v-for="status in statusOptions" v-bind:value="status.value">
-                                    {{status.text}}
-                                </option>
-                            </b-form-select>
-                            <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
+                                                class="overflow-y-auto"
+                                        >
+
+                                            <v-treeview
+                                                    :items="filteredMTypes"
+                                                    :open="filteredOpenMTypes"
+                                                    item-key="name"
+
+                                                    activatable
+                                                    color="warning"
+                                                    dense
+                                                    :open-all="true"
+
+                                                    return-object
+                                                    hoverable
+                                                    ref="mtypetreeviewref">
+
+                                                <template slot="label" slot-scope="{ item }">
+                                                    <a @click="onMTypeSelect(item)">{{ item.name }}</a>
+                                                </template>
+
+                                            </v-treeview>
+                                        </v-container>
+                                    </v-col>
+
+                                    <v-divider vertical
+                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
+
+                                    <v-col
+                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+
+                                        <v-container
+                                                id="scroll-target"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"
+                                                class="overflow-y-auto">
+
+                                            <template v-if="!isObjectValidAndNotEmpty(selectedMType.name)">
+                                                Ничего не выбрано
+                                            </template>
+
+                                            <template v-else>
+                                                <label style="background-color: transparent">Выбранный тип
+                                                    материала</label>
+                                                <div>
+                                                    <v-btn text icon x-small @click="removeSelectedMType">
+                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>
+                                                    </v-btn>
+                                                    {{selectedMType.name}}
+                                                </div>
+                                            </template>
+                                        </v-container>
+                                    </v-col>
+                                </v-row>
+                            </b-card>
                         </div>
                     </div>
+                </form>
 
+                <form class="formCreation">
                     <div class="form-row">
                         <div class="col-md-6">
-                            <label for="add-linkS"><b>Links*</b></label>
+                            <label for="add-linkS"><b>URL’s*</b></label>
                             <div>
                                 <!--                                <textarea class="form-control" id="add-linkS"-->
                                 <!--                                          placeholder="enter links with 'return'"-->
@@ -81,6 +142,25 @@
                         </div>
                     </div>
                 </form>
+                <form class="formCreation">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="add-title"><b>Заголовок в оригинале</b></label>
+                            <input class="form-control" id="add-title"
+                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   :disabled="uploadMode"
+                                   v-model="article.title"/>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="add-title-rus"> <b>Заголовок на русском</b></label>
+                            <input class="form-control" id="add-title-rus"
+                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   :disabled="uploadMode"
+                                   v-model="article.titleRus"/>
+                        </div>
+                    </div>
+                </form>
 
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
@@ -88,7 +168,7 @@
                         <v-card-text>
                             <v-autocomplete
                                     id="author-autocomplete"
-                                    label="Авторы"
+                                    label="Связанные лица"
 
                                     :items="items"
                                     :loading="isLoading"
@@ -114,7 +194,7 @@
                     <div v-if="personConnectionList.length>0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
                         <ConnectionComponent :itemsList="personConnectionList"
-                                             :isEditMode="editMode"
+                                             :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
@@ -122,46 +202,56 @@
                     </div>
                 </form>
 
-                <form class="formCreation">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <label for="add-title"><b>Заголовок в оригинале</b></label>
-                            <input class="form-control" id="add-title"
-                                   placeholder="Должно быть заполнено одно из полей заголовка"
-                                   :disabled="uploadMode"
-                                   v-model="article.title"/>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="add-title-rus"> <b>Заголовок на русском</b></label>
-                            <input class="form-control" id="add-title-rus"
-                                   placeholder="Должно быть заполнено одно из полей заголовка"
-                                   :disabled="uploadMode"
-                                   v-model="article.titleRus"/>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-lg-10" style="background-color: transparent">
-
-                <form class="formCreation">
-                    <div class="form-row align-items-center">
-                        <label for="add-descr">Описание</label>
-                        <div class="col-12">
-                                <textarea class="form-control" id="add-descr" rows="11" v-model="article.description"
-                                          :disabled="uploadMode"/>
-                        </div>
-                    </div>
-                </form>
-
 
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                        <v-card-text>
+                            <v-autocomplete
+                                    id="location-autocomplete"
+                                    label="Местонахождение"
+
+                                    :items="itemsLocation"
+                                    :loading="isLoadingLocation"
+                                    :search-input.sync="locationSearch"
+                                    color="orange"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedLocation"
+
+                                    @change="addLocation(selectedLocation)"
+                                    @focus="testFocus(selectedLocation)"
+                                    item-text="country"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти локацию"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="locationConnectionList.length>0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="locationConnectionList"
+                                             :isLinkMode="false"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"
+                                             @update-item="updateItem"/>
+                    </div>
+                </form>
+
+                <form class="authorsFormCreation form-row col-12"
+                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
                         <v-card-text>
                             <v-autocomplete
                                     id="org-autocomplete"
-                                    label="Организации"
+                                    label="Связанные организации"
 
                                     :items="itemsOrg"
                                     :loading="isLoadingOrg"
@@ -187,15 +277,13 @@
                     <div v-if="orgConnectionList.length>0" class="col-9"
                          style="background-color: transparent; padding:0">
                         <ConnectionComponent :itemsList="orgConnectionList"
-                                             :isEditMode="editMode"
+                                             :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
                                              @update-item="updateItem"/>
                     </div>
                 </form>
-
-
                 <form class="formCreation">
                     <div class="form-row align-items-center">
                         <label>Форма добавления хештегов</label>
@@ -256,13 +344,15 @@
 
                                             <template v-else>
                                                 <div v-for="node in selectedHashtag">
-                                                    <v-btn text icon x-small @click="removeSelectedHashtag(node)">
+                                                    <v-btn text icon x-small
+                                                           @click="removeSelectedHashtag(node)">
                                                         <v-icon style="color: red">mdi-delete-forever</v-icon>
                                                     </v-btn>
                                                     {{ node }}
                                                 </div>
                                                 <div class="form-group row" style="padding-top: 30px">
-                                                    <button type="button" style="margin-right: 20px; margin-left: 15px"
+                                                    <button type="button"
+                                                            style="margin-right: 20px; margin-left: 15px"
                                                             :disabled="uploadMode"
                                                             @click="addHashtagToArticleList()"
                                                             class="btn btn-success">Add
@@ -282,63 +372,22 @@
                         <label style="background-color: transparent">Хештеги</label>
                         <div class="col-12" style="background-color: transparent">
                             <div>
-                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys" :read-only="uploadMode"
+                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                           :read-only="uploadMode"
                                            v-model="tags"></input-tag>
                             </div>
                         </div>
 
                     </div>
                 </form>
-
-
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
-                        <v-card-text>
-                            <v-autocomplete
-                                    id="location-autocomplete"
-                                    label="Локации"
-
-                                    :items="itemsLocation"
-                                    :loading="isLoadingLocation"
-                                    :search-input.sync="locationSearch"
-                                    color="orange"
-                                    hide-no-data
-                                    hide-selected
-
-                                    v-model="selectedLocation"
-
-                                    @change="addLocation(selectedLocation)"
-                                    @focus="testFocus(selectedLocation)"
-                                    item-text="country"
-                                    item-value="id"
-                                    placeholder="Начните печатать, чтобы найти локацию"
-                                    prepend-icon="mdi-database-search"
-                                    return-object
-                                    :disabled="uploadMode"
-                            ></v-autocomplete>
-                        </v-card-text>
-                    </div>
-
-                    <div v-if="locationConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="locationConnectionList"
-                                             :isEditMode="editMode"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"
-                                             @update-item="updateItem"/>
-                    </div>
-                </form>
-
-                <!--                //////////////////////////MTYPE//////////////////////////-->
-                <form class="authorsFormCreation form-row col-12"
-                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
                         <v-card-text>
                             <v-autocomplete
                                     id="material-autocomplete"
-                                    label="Материалы"
+                                    label="Связанные материалы"
 
                                     :items="itemsMaterial"
                                     :loading="isLoadingMaterial"
@@ -364,7 +413,7 @@
                     <div v-if="materialConnectionList.length>0" class="col-9"
                          style="background-color: transparent; padding:0">
                         <ConnectionComponent :itemsList="materialConnectionList"
-                                             :isEditMode="editMode"
+                                             :isLinkMode="true"
                                              :isSelectionMode="true"
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0px" class="col-12"
@@ -372,93 +421,47 @@
                                              @update-selection="updateSelection"/>
                     </div>
                 </form>
-
-
                 <form class="formCreation">
                     <div class="form-row align-items-center">
-                        <label>Форма выбора типа материала</label>
-                        <div class="col-12" style="background-color: transparent">
-                            <b-card style="background-color: transparent">
-                                <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
-                                    <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
-                                        <v-sheet
-                                                style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
-                                            <v-text-field label="search material type"
-                                                          v-model="searchMType"
-                                                          filled>
-                                            </v-text-field>
-                                        </v-sheet>
+                        <label for="add-descr">Описание</label>
+                        <div class="col-12">
+                            <ckeditor :editor="editor" id="add-descr" v-model="article.description"
+                                      :config="editorConfig" :disabled="uploadMode"></ckeditor>
 
-                                        <v-container
-                                                id="scroll-target"
-                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
-                                                class="overflow-y-auto"
-                                        >
-
-                                            <v-treeview
-                                                    :items="filteredMTypes"
-                                                    :open="filteredOpenMTypes"
-                                                    item-key="name"
-
-                                                    activatable
-                                                    color="warning"
-                                                    dense
-                                                    :open-all="true"
-
-                                                    return-object
-                                                    hoverable
-                                                    ref="mtypetreeviewref">
-
-                                                <template slot="label" slot-scope="{ item }">
-                                                    <a @click="onMTypeSelect(item)">{{ item.name }}</a>
-                                                </template>
-
-                                            </v-treeview>
-                                        </v-container>
-                                    </v-col>
-
-                                    <v-divider vertical
-                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
-
-                                    <v-col
-                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
-
-                                        <v-container
-                                                id="scroll-target"
-                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"
-                                                class="overflow-y-auto">
-
-                                            <template v-if="!isObjectValidAndNotEmpty(selectedMType.name)">
-                                                Nothing selected.
-                                            </template>
-
-                                            <template v-else>
-                                                <label style="background-color: transparent">Выбранный тип
-                                                    материала</label>
-                                                <div>
-                                                    <v-btn text icon x-small @click="removeSelectedMType">
-                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>
-                                                    </v-btn>
-                                                    {{selectedMType.name}}
-                                                </div>
-                                            </template>
-                                        </v-container>
-                                    </v-col>
-                                </v-row>
-                            </b-card>
                         </div>
                     </div>
-                </form>
 
-                <form class="formCreation">
+                    <div class="form-row align-items-center">
+                        <label for="add-text">Текст</label>
+                        <div class="col-12">
+                            <ckeditor :editor="editor" id="add-text" v-model="article.text"
+                                      :config="editorConfig"></ckeditor>
+                        </div>
+                    </div>
 
                     <div class="form-row align-items-center">
                         <!--                        <div class="form-group green-border-focus">-->
                         <label for="add-misc">Комментарии</label>
-                        <div class="col-12 form-group green-border-focus">
+                        <div class="col-12 green-border-focus">
 
                                     <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
                                               background-color="palegreen" :disabled="uploadMode"/>
+                        </div>
+                    </div>
+
+                    <div v-if="editMode" class="form-row align-items-center"
+                         style="background-color: transparent">
+                        <label class="col-1 col-form-label labelInCreation"
+                               style="vertical-align: center; background-color: transparent">Текущий
+                            статус</label>
+                        <div class="col-5" style="background-color: transparent">
+                            <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
+                                           style="background-color: transparent;">
+                                <option v-for="status in statusOptions" v-bind:value="status.value">
+                                    {{status.text}}
+                                </option>
+                            </b-form-select>
+                            <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
                     </div>
 
@@ -470,45 +473,47 @@
                                          :already-uploaded-files="uploadedFiles"/>
                     </div>
                 </form>
-            </div>
+                <!--                </div>-->
 
-            <div v-if="editMode" class="form-group row align-items-center align-items-center">
-                <div class="offset-sm-4 col-sm-3">
+                <div v-if="editMode" class="form-group row align-items-center">
+                    <div class="offset-sm-4 col-sm-3">
 
-                    <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
-                    <a class="btn btn-default">
-                        <router-link to="/article">Cancel</router-link>
-                    </a>
-                </div>
-            </div>
-
-            <div v-else class="form-group row" style="padding-top: 30px">
-
-                <div v-if="!uploadMode" class="offset-sm-4 col-sm-3">
-                    <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
-                    <label for="checkbox">Check if you want to upload files after article creation</label>
-
-
-                    <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
-                            class="btn btn-warning">In Progress
-                    </button>
-                    <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
-                            class="btn btn-success">Done
-                    </button>
-
-                    <button type="button" class="btn btn-info">
-                        <router-link to="/article" style="color: white">Cancel</router-link>
-                    </button>
+                        <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
+                        <a class="btn btn-default">
+                            <router-link to="/article">Cancel</router-link>
+                        </a>
+                    </div>
                 </div>
 
-                <div v-else class="offset-sm-4 col-sm-3">
-                    <button type="button" style="margin-right: 20px" @click="uploadFiles"
-                            class="btn btn-info">Upload Files
-                    </button>
-                    <button type="button" class="btn btn-info">
-                        <router-link to="/article" style="color: white">Cancel</router-link>
+                <div v-else class="form-group row" style="padding-top: 30px">
 
-                    </button>
+                    <div v-if="!uploadMode" class="form-group align-items-center col-sm-12" style="background-color: transparent">
+                        <div class="form-group align-items-center col-sm-12" style="background-color: transparent">
+                            <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
+                            <label for="checkbox">Check if you want to upload files after article creation</label>
+                        </div>
+
+                        <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
+                                class="btn btn-warning">In Progress
+                        </button>
+                        <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
+                                class="btn btn-success">Done
+                        </button>
+
+                        <button type="button" class="btn btn-info">
+                            <router-link to="/article" style="color: white">Cancel</router-link>
+                        </button>
+                    </div>
+
+                    <div v-else class="offset-sm-4 col-sm-3">
+                        <button type="button" style="margin-right: 20px" @click="uploadFiles"
+                                class="btn btn-info">Upload Files
+                        </button>
+                        <button type="button" class="btn btn-info">
+                            <router-link to="/article" style="color: white">Cancel</router-link>
+
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -534,6 +539,7 @@
     import 'vuetify/dist/vuetify.min.css';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
     import CreatedList from "../components/multiply-enter-list/CreatedList";
+    import CKEditor from 'ckeditor4-vue';
 
     Vue.component('input-tag', InputTag);
 
@@ -541,8 +547,8 @@
         components: {
             CreatedList,
             ConnectionComponent,
-            FileAttachment
-            // HashtagList
+            FileAttachment,
+            ckeditor: CKEditor.component
         },
         name: 'article-add',
         vuetify: new Vuetify(),
@@ -642,6 +648,10 @@
             uploadFilesCheckBoxValue: false,
             uploadMode: false,
             uploadedFiles: [],
+            editor: CKEditor, // to use the component locally
+            editorConfig: {
+                // The configuration of the editor.
+            }
         }),
 
         methods: {
@@ -774,24 +784,26 @@
             // },
 
             addLocation(obj) {
-                console.log("GET CHANGED LOCATION");
-                let i = 0;
-                for (i = 0; i < this.locationConnectionList.length; i++) { //to exclude double values
-                    if (this.locationConnectionList[i].id === obj.id) {
-                        break;
+                console.log("GET CHANGED LOCATION", obj);
+                if (this.isObjectValidAndNotEmpty(obj)) {
+                    let i = 0;
+                    for (i = 0; i < this.locationConnectionList.length; i++) { //to exclude double values
+                        if (this.locationConnectionList[i].id === obj.id) {
+                            break;
+                        }
                     }
-                }
 
-                if (i === this.locationConnectionList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.country,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.locationConnectionList.push(connection);
-                    console.log("ADDED");
+                    if (i === this.locationConnectionList.length) {
+                        let connection = {
+                            "id": obj.id,
+                            "name": obj.country,
+                            "comment": '',
+                            "connection": '',
+                            "hasClicked": false
+                        };
+                        this.locationConnectionList.push(connection);
+                        //console.log("ADDED");
+                    }
                 }
             },
 
@@ -818,7 +830,7 @@
             },
 
             addMaterial(obj) {
-                // console.log("GET CHANGED LOCATION");
+                //console.log("addMaterial addMaterial addMaterial", obj);
                 let i = 0;
                 for (i = 0; i < this.materialConnectionList.length; i++) { //to exclude double values
                     if (this.materialConnectionList[i].id === obj.id) {
@@ -828,23 +840,23 @@
 
                 if (i === this.materialConnectionList.length) {
 
-                    let t = '';
-                    if (obj.title != null) {
-                        if (obj.title.length != 0) {
-                            t = obj.title;
-                            if (obj.titleRus != null) {
-                                if (obj.titleRus.length != 0)
-                                    t += " / " + obj.titleRus;
-                            }
-                        }
-                    } else {                    ///one of the two titles is mandatory
-                        t = obj.titleRus;
-                    }
+                    // let t = '';
+                    // if (obj.title != null) {
+                    //     if (obj.title.length != 0) {
+                    //         t = obj.title;
+                    //         if (obj.titleRus != null) {
+                    //             if (obj.titleRus.length != 0)
+                    //                 t += " / " + obj.titleRus;
+                    //         }
+                    //     }
+                    // } else {                    ///one of the two titles is mandatory
+                    //     t = obj.titleRus;
+                    // }
 
 
                     let connection = {
                         "id": obj.id,
-                        "name": t,
+                        "name": obj.content,  //title was created in ArticleServiceImpl
                         "comment": '',
                         "connection": '',
                         "hasClicked": false
@@ -1028,6 +1040,11 @@
                     // "miscellany":"123",
                     // "parentId": 1
                 };
+
+                this.article.personList.splice(0);
+                this.article.locationList.splice(0);
+                this.article.orgList.splice(0);
+                this.article.materialList.splice(0);
 
                 this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
@@ -1479,7 +1496,7 @@
 
 
                     api.getMaterialsByIds(this.articleMaterialIds, response => {  ///returns List<Location>
-                        this.articleMaterialEntities = response.data;
+                        this.articleMaterialEntities = response.data;  //returns list<Article>
                         // console.log("articleMaterialEntities", this.articleMaterialEntities);
 
                         for (let i = 0; i < this.article.materialList.length; i++) {
@@ -1540,25 +1557,27 @@
 
             itemsMaterial() {
                 // console.log("itemsMaterial", this.materialEntries.map);
-                // console.log("itemsMaterial", this.materialEntries);
+                console.log("itemsMaterial", this.materialEntries);
 
                 if (this.materialEntries) {
-                    return this.materialEntries.map(entry => {
-                        let t = '';
-                        if (entry.title != null) {
-                            if (entry.title.length != 0) {
-                                t = entry.title;
-                                if (entry.titleRus != null) {
-                                    if (entry.titleRus.length != 0)
-                                        t += " / " + entry.titleRus;
-                                }
-                            }
-                        } else {
-                            t = entry.titleRus;  ///one of the two titles is mandatory
-                        }
+                    // return this.materialEntries;
 
-                        const material = t;
-                        return Object.assign({}, entry, {material})
+                    return this.materialEntries.map(entry => {
+                         let t = '';
+                    //     if (entry.title != null) {
+                    //         if (entry.title.length != 0) {
+                    //             t = entry.title;
+                    //             if (entry.titleRus != null) {
+                    //                 if (entry.titleRus.length != 0)
+                    //                     t += " / " + entry.titleRus;
+                    //             }
+                    //         }
+                    //     } else {
+                            t = entry.content;//titleRus;  ///one of the two titles is mandatory
+                    //     }
+                    //
+                         const material = t;
+                         return Object.assign({}, entry, {material})
                     })
                 }
             },
@@ -1840,7 +1859,7 @@
 
                         api.searchMaterial(val, r => {
                             this.materialEntries = r;
-                            // console.log("*№*№*№*", this.materialEntries);
+                            console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;
                         });
                     }

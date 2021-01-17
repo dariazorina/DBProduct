@@ -20,6 +20,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private String titleRus;
 
     private String description;
+    private String text;
     private String url;
     private List<UrlLink> linkList;
     private List<ItemConnectionDto> personList;
@@ -32,7 +33,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private MaterialType mtype;
 
     public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
-                      String titleRus, String description,
+                      String titleRus, String description, String text,
                       String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
                       List<ItemConnectionDto> orgList, List<ItemConnectionDto> materialList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
@@ -45,6 +46,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.status = status;
         this.titleRus = titleRus;
         this.description = description;
+        this.text = text;
         this.url = url;
         this.linkList = linkList;
         this.personList = personList;
@@ -65,6 +67,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.status = article.getStatus();
         this.titleRus = article.getTitleRus();
         this.description = article.getDescription();
+        this.text = article.getText();
         this.linkList = article.getLinkList();
 
         this.personList = new ArrayList<>();
@@ -184,6 +187,14 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getUrl() {

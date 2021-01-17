@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.controller;
 import com.hellokoding.springboot.restful.model.Article;
 import com.hellokoding.springboot.restful.model.ConnectionType;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
+import com.hellokoding.springboot.restful.model.dto.IdContentDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import com.hellokoding.springboot.restful.service.ConnectionTypeService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
@@ -63,8 +64,8 @@ public class ArticleAPI {
     }
 
     @GetMapping("/searchMaterial")
-    public ResponseEntity<List<Article>> searchMaterial(@RequestParam(name = "q", required = true) String q) {
-        List<Article> search = articleService.searchMaterial(q);
+    public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q) {
+        List<IdContentDto> search = articleService.searchMaterial(q);
         return ResponseEntity.ok(search);
     }
 

@@ -148,7 +148,7 @@
             <div v-if="locationList.length>0" class="col-9"
                  style="background-color: transparent; padding:0">
                 <ConnectionComponent :itemsList="locationList"
-                                     :isEditMode="editMode"
+                                     :isLinkMode="false"
                                      :isSelectionMode="false"
                                      :allTypes="connectionTypes"
                                      style="background-color: transparent; padding:0px" class="col-12"/>
@@ -185,7 +185,7 @@
             <div v-if="occupationList.length>0" class="col-9"
                  style="background-color: transparent; padding:0; margin: 0px">
                 <ConnectionComponent :itemsList="occupationList"
-                                     :isEditMode="editMode"
+                                     :isLinkMode="false"
                                      :isSelectionMode="false"
                                      :allTypes="connectionTypes"
                                      style="background-color: transparent; padding:0px" class="col-12"

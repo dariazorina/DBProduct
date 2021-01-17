@@ -1,6 +1,16 @@
 <template>
     <div style="padding-left: 0px; padding-top: 10px; background-color: gold">
-        <b>{{item.name}}</b>
+
+        <div v-if="isLinkMode">
+            <a>
+                <router-link :to="{name: 'article-details', params: {article_id: item.id}}" target="_blank">
+                    {{item.name}}
+                </router-link>
+            </a>
+        </div>
+        <div v-else>
+            <b>{{item.name}}</b>
+        </div>
 
         <span class="close" style="background-color: transparent; padding-right: 10px"
               @click="$emit('remove', item.id)">&times;</span>
@@ -30,18 +40,6 @@
                  style="background-color: transparent; padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
                 <InputCommentText v-model="item.comment" :existedComment="item.comment"/>
             </div>
-
-<!--            //todo remove button code after testing-->
-<!--            <div class="form-row col-1"-->
-<!--                 style="background-color: transparent; padding-right: 0px; padding-left:25px; padding-top: 5px; padding-bottom: 0px">-->
-<!--                :hasClicked="item.hasClicked"-->
-<!--                <AddButton :item="item"-->
-<!--                           :hasClicked="hasClicked"-->
-<!--                           :isEditMode="isEditMode"-->
-<!--                           :isSelectionMode="isSelectionMode"-->
-<!--                           @add="addItem"-->
-<!--                           @save="saveItem"/>-->
-<!--            </div>-->
         </div>
     </div>
 </template>
@@ -67,7 +65,7 @@
                 type: Boolean,
                 required: true
             },
-            isEditMode: {
+            isLinkMode: {
                 type: Boolean,
                 required: true
             },
@@ -91,7 +89,7 @@
             },
 
             addItem(item) {
-                 // console.log("--------addItem--CONN-LIST--ITEM-----", item);
+                // console.log("--------addItem--CONN-LIST--ITEM-----", item);
                 this.$emit("get-input-text", item); //newText
             },
             saveItem(item) {

@@ -23,9 +23,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<LocationDto> search(String q) {
 
-        List<Location> countrySearchList = locationRepository.findByCountryStartsWithIgnoreCase(q);
-//        List<Person> surnameRusSearchList = locationRepository.findBySurnameRusStartsWithIgnoreCase(q);
-//        List<Person> surnameEngSearchList = locationRepository.findBySurnameEngStartsWithIgnoreCase(q);
+        List<Location> countrySearchList = locationRepository.findLocation("%" + q + "%");
 
         Set<LocationDto> fooSet = new TreeSet<>();
         String dtoName;

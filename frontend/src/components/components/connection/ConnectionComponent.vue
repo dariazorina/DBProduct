@@ -18,7 +18,7 @@
                                     :item="item"
                                     :hasClicked="item.hasClicked"
                                     :allTypes = "allTypes"
-                                    :isEditMode="isEditMode"
+                                    :isLinkMode="isLinkMode"
                                     :isSelectionMode="isSelectionMode"
                                     @remove="removeItem"
                                     @get-input-text="addItem"
@@ -44,7 +44,7 @@
                 type: Array,
                 required: true
             },
-            isEditMode: {
+            isLinkMode: {
                 type: Boolean,
                 required: true
             },
@@ -94,7 +94,6 @@
 
         computed: {
             connections() {
-                console.log("COMPUTED CONN-COMP", this.isEditMode);
                 return this.itemsList;
             }
         },

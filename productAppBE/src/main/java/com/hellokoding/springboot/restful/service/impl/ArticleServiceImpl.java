@@ -3,14 +3,18 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
+import com.hellokoding.springboot.restful.model.dto.IdContentDto;
 import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -137,6 +141,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDate(articleDto.getDate());
         article.setStatus(articleDto.getStatus());
         article.setDescription(articleDto.getDescription());
+        article.setText(articleDto.getText());
         article.setMiscellany(articleDto.getMiscellany());
 
         /////////////////////PERSON CONNECTIONS///////////////////
@@ -359,9 +364,42 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> searchMaterial(String q) {
+    public List<IdContentDto> searchMaterial(String q) {
         List<Article> rrr = articleRepository.findMaterialByTitle("%" + q + "%");
-        return rrr;
+
+
+        Set<IdContentDto> fooSet = new TreeSet<>();
+        String dtoName = "";
+
+        for (Article article : rrr) {
+            if (article.getTitle() != null) {
+                if (article.getTitle().length() > 0) {
+                    dtoName += article.getTitle();
+
+                    if (article.getTitleRus() != null) {
+                        dtoName += "/ " + article.getTitleRus();
+                    }
+                }
+            } else if (article.getTitleRus() != null) {
+                dtoName += article.getTitleRus();
+            }
+
+            LocalDate dateWithZeroTime = article.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            if (dateWithZeroTime != null) {
+                dtoName += ", " + dateWithZeroTime; //article.getDate().;
+            } else {
+                dtoName += "," + article.getLinkList().get(0);  //as the first help in fail with date
+            }
+
+            IdContentDto articleDto = new IdContentDto(article.getId(), dtoName);
+            dtoName = "";
+            fooSet.add(articleDto);
+        }
+        List<IdContentDto> finalList = new ArrayList<>(fooSet);
+        return finalList;
     }
 
     public List<ArticleDto> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {
