@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface ArticleService {
     List<ArticleDto> search(String title, String hash, String author, String lang, String descr, List<Integer> status, String startDate, String endDate) throws ParseException;
-    List<IdContentDto> searchMaterial(String q);// throws ParseException;
+    List<IdContentDto> searchMaterial(String q);
+    List<IdContentDto> searchMaterialById(Integer id);
     List<ArticleDto> findAll();
     Optional<ArticleDto> findById(Integer id);
     Article save(ArticleDto stock);

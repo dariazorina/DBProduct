@@ -1367,6 +1367,28 @@
                     this.errors.push(error)
                 });
 
+            //console.log("==================PARAMS", this.$route.params);
+
+            if (this.$route.params.id != null) {
+                //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MATERIAL MODE");
+
+                api.searchMaterialById(this.$route.params.id, r => {  //for the case with article creation with parent/child/equal
+                    this.materialEntries = r;
+                    //console.log("search by Id*№*№*№*", this.materialEntries);
+
+                    if (this.materialEntries.length > 0) {
+                        let connection = {
+                            "id": this.materialEntries[0].id,
+                            "name": this.materialEntries[0].content,
+                            "comment": '',
+                            "connection": this.$route.params.connectionType.text,
+                            "hasClicked": false
+                        };
+                        this.materialConnectionList.push(connection);
+                    }
+                });
+            }
+
             if (this.$route.params.article_id != null) {
                 console.log("EDIT MODE");
                 this.editMode = true;
@@ -1563,21 +1585,21 @@
                     // return this.materialEntries;
 
                     return this.materialEntries.map(entry => {
-                         let t = '';
-                    //     if (entry.title != null) {
-                    //         if (entry.title.length != 0) {
-                    //             t = entry.title;
-                    //             if (entry.titleRus != null) {
-                    //                 if (entry.titleRus.length != 0)
-                    //                     t += " / " + entry.titleRus;
-                    //             }
-                    //         }
-                    //     } else {
-                            t = entry.content;//titleRus;  ///one of the two titles is mandatory
-                    //     }
-                    //
-                         const material = t;
-                         return Object.assign({}, entry, {material})
+                        let t = '';
+                        //     if (entry.title != null) {
+                        //         if (entry.title.length != 0) {
+                        //             t = entry.title;
+                        //             if (entry.titleRus != null) {
+                        //                 if (entry.titleRus.length != 0)
+                        //                     t += " / " + entry.titleRus;
+                        //             }
+                        //         }
+                        //     } else {
+                        t = entry.content;//titleRus;  ///one of the two titles is mandatory
+                        //     }
+                        //
+                        const material = t;
+                        return Object.assign({}, entry, {material})
                     })
                 }
             },

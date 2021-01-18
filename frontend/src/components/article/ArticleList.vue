@@ -110,11 +110,8 @@
         <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
 
         <table class="redTable" :key="authorComponentKey">
-            <!--        <table class="table">-->
             <thead>
-            <!--                <template slot="thead">-->
             <tr>
-                <!--                <th class='tdTitle'>Id</th>-->
                 <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
                 <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
                 <th class='tdTitle'>Язык</th>
@@ -123,28 +120,13 @@
                 <th class='tdTitle'>Заголовок</th>
                 <th class='tdTitle' style="width:25%">Описание</th>
                 <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
-
-                <!--                <template v-if="statusCheckBox.length!=1">-->
-                <!--            <span v-show="statusCheckBox.length!=1">-->
-
-                <!--                    </span>-->
-                <!--                </template>-->
-                <!--                <th style="width:10%">Links</th>-->
-
-                <th class="tdTitle" style="width:4%"></th>
-                <th class="tdTitle" style="width:4%"></th>
+                <th class="tdTitle" style="width:4%">Действия</th>
+                <th class="tdTitle" style="width:4%">Смена статуса</th>
+                <th class="tdTitle" style="width:4%">Добавить материал..</th>
             </tr>
             </thead>
             <tbody>
-            <!--            <tr v-for="article in articles" class="ListCellStyleHot">-->
-            <!--                        <tr v-for="article in articles">-->
             <tr v-for="article in filteredArticles">
-
-                <!-- tr v-for="product in products | filterBy searchKey in 'name'" -->
-
-                <!--                <td>-->
-                <!--                    <span id=t>{{article.id }}</span>-->
-                <!--                </td>-->
                 <td :key="article.status">
                     <div v-if="article.status==0">
                         <v-icon style="color: orange">mdi-pencil-plus</v-icon>
@@ -152,7 +134,6 @@
 
                     <div v-if="article.status==1">
                         <v-icon style="color: orange">mdi-check</v-icon>
-                        <!--                                                <v-icon style="color: green">mdi-pencil-lock</v-icon>-->
                     </div>
 
                     <div v-if="article.status==2">
@@ -161,11 +142,8 @@
 
                     <div v-if="article.status==3">
                         <v-icon style="color: green">mdi-check</v-icon>
-                        <!--                        <v-icon style="color: green">mdi-pencil-lock</v-icon> -->
                     </div>
-
                 </td>
-
                 <td>
                     {{ formatDate(article.date) }}
                 </td>
@@ -242,20 +220,6 @@
                         {{article.miscellany }}
                     </div>
                 </td>
-
-
-                <!--                <template v-if="statusCheckBox.length!=1">-->
-                <!--            <span v-show="statusCheckBox.length!=1">-->
-
-                <!--                    </span>-->
-                <!--                </template>-->
-                <!--                </div>-->
-
-                <!--                <td>-->
-                <!--                    <div v-for="link in article.linkList">{{link.content}}</div>-->
-                <!--                </td>-->
-
-
                 <td>
                     <v-btn text icon x-small>
                         <a>
@@ -281,12 +245,35 @@
 
                     <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
                         <v-icon style="color: green">mdi-check</v-icon>
-
+                    </v-btn>
+                </td>
+                <td>
+                    <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
+                        <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
                     </v-btn>
                 </td>
             </tr>
             </tbody>
         </table>
+        <b-modal id="modal-scoped" hide-footer=true hide-header=true>
+            <template>
+                <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle()}}" как</p><br></b>
+                <div align="center">
+                    <b-button size="sm" variant="success"
+                              @click="createArticleWithMaterial(currentArticle.id, connectionType[2])">
+                        Родитель
+                    </b-button>
+                    <b-button size="sm" variant="danger"
+                              @click="createArticleWithMaterial(currentArticle.id, connectionType[0])">
+                        Ребенок
+                    </b-button>
+                    <b-button size="sm" variant="info"
+                              @click="createArticleWithMaterial(currentArticle.id, connectionType[1])">
+                        Равноправные
+                    </b-button>
+                </div>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -302,54 +289,43 @@
     @import '../dbnm.css';
 </style>
 
-<style>
+<!--<style>-->
 
-    .ListCellStyle {
-        /*padding: 5px; !* Поля вокруг текста *!*/
-        text-align: left;
-        font-size: small;
-        /*height: 25px;*/
-        max-height: 85px;
-        overflow: hidden;
-        /*border: solid 1px;*/
-        /*border-color: #eceaea;*/
-        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/
+<!--    .ListCellStyle {-->
+<!--        /*padding: 5px; !* Поля вокруг текста *!*/-->
+<!--        text-align: left;-->
+<!--        font-size: small;-->
+<!--        /*height: 25px;*/-->
+<!--        max-height: 85px;-->
+<!--        overflow: hidden;-->
+<!--        /*border: solid 1px;*/-->
+<!--        /*border-color: #eceaea;*/-->
+<!--        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/-->
 
-    }
+<!--    }-->
 
-    .ListCellStyleHot {
-        /*padding: 5px; !* Поля вокруг текста *!*/
-        text-align: left;
-        font-size: small;
-        max-height: 35px;
-        height: 25px;
-        /*overflow: hidden;*/
-        /*border: solid 1px;*/
-        /*border-color: #eceaea;*/
-        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/
-        /*background-color: #eceaea;*/
+<!--    .ListCellStyleHot {-->
+<!--        /*padding: 5px; !* Поля вокруг текста *!*/-->
+<!--        text-align: left;-->
+<!--        font-size: small;-->
+<!--        max-height: 35px;-->
+<!--        height: 25px;-->
+<!--        /*overflow: hidden;*/-->
+<!--        /*border: solid 1px;*/-->
+<!--        /*border-color: #eceaea;*/-->
+<!--        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/-->
+<!--        /*background-color: #eceaea;*/-->
 
-    }
+<!--    }-->
 
-    .ListCellStyleForButton {
-        border: solid 1px;
-        border-color: #eceaea;
-        /*height: 85px;*/
-        overflow: hidden;
+<!--    .ListCellStyleForButton {-->
+<!--        border: solid 1px;-->
+<!--        border-color: #eceaea;-->
+<!--        /*height: 85px;*/-->
+<!--        overflow: hidden;-->
 
-    }
-
-    /*.layer12 {*/
-    /*    background: #fc3; !* Цвет фона *!*/
-    /*    border: 2px solid black; !* Параметры рамки *!*/
-    /*    padding: 5px; !* Поля вокруг текста *!*/
-    /*}*/
-
-    /*div{*/
-    /*    white-space: pre-wrap;*/
-    /*}*/
-
-</style>
+<!--    }-->
+<!--</style>-->
 
 <script>
 
@@ -363,7 +339,6 @@
     import Vuetify from 'vuetify';
     // import 'vuetify/dist/vuetify.min.css';
     import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
-    // import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 
     export default {
@@ -399,6 +374,14 @@
                     {text: 'Completed', value: 3},
 
                 ],
+                connectionType: [
+                    {text: 'родитель-ребенок', value: 0},
+                    {text: 'равноправные', value: 1},
+                    {text: 'ребенок-родитель', value: 2},
+
+                ],
+                // currentArticleId: 0,
+                currentArticle: [],
                 message: 'One Line,\nTwo Lines.',
             }
         },
@@ -411,6 +394,42 @@
 
         methods: {
 
+            complexArticleTitle() {
+                let title = '';
+
+                if (this.currentArticle.title != null) {
+                    if (this.currentArticle.title.length > 0) {
+                        title = this.currentArticle.title;
+
+                        if (this.currentArticle.titleRus != null) {
+                            if (this.currentArticle.titleRus.length > 0) {
+                                title += " / " + this.currentArticle.titleRus;
+                            }
+                        }
+                    }
+                } else {
+                    title = this.currentArticle.titleRus;
+                }
+                // console.log("complexArticleTitle", title);
+                return title;
+            },
+
+            setCurrentAricle(id) {
+                // console.log("setCurrentAricle", id);
+                // this.currentArticleId = id;
+                this.currentArticle = this.filteredArticles.find(x => x.id === id);
+            },
+
+            createArticleWithMaterial(id, connectionType) {
+                console.log("createMateril", id, connectionType);
+                // <router-link :to="{name: 'article-add'}">Add article</router-link>
+                // <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
+                // <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
+                //     router.push({ name: 'user', params: { userId } })
+                this.$router.push({name: 'article-add', params: {id: id, connectionType: connectionType}});
+                // this.$router.push({path: '/add/$id/$connectionType'});
+            },
+
             createComplexCellValueById(id) {
                 let result = '';
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
@@ -419,7 +438,7 @@
 
                 if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
                     // if (this.isArrayValidAndNotEmpty(currentPerson.surname)) { //mandatory field in Person
-                        valueOrig = currentPerson.surname;
+                    valueOrig = currentPerson.surname;
                     // }
 
                     if (this.isArrayValidAndNotEmpty(currentPerson.surname)) {
@@ -427,7 +446,7 @@
                     }
 
                     // if (this.isArrayValidAndNotEmpty(currentPerson.name)) { //mandatory field in Person
-                        valueOrig += " " + currentPerson.name;
+                    valueOrig += " " + currentPerson.name;
                     // }
 
                     if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {

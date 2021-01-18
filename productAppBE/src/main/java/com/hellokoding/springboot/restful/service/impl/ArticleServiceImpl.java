@@ -366,12 +366,27 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<IdContentDto> searchMaterial(String q) {
         List<Article> rrr = articleRepository.findMaterialByTitle("%" + q + "%");
+        return createResultSearchNameAndDate(rrr);
+    }
 
+    @Override
+    public List<IdContentDto> searchMaterialById(Integer id) {
+        Optional<Article> rrr = articleRepository.findById(id);
+        if (rrr != null) {
+            List<Article> finalList = new ArrayList<>();
+            finalList.add(rrr.get());
+            return createResultSearchNameAndDate(finalList);
+        }
+        return null;
+    }
+
+
+    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch){
 
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
 
-        for (Article article : rrr) {
+        for (Article article : resultSearch) {
             if (article.getTitle() != null) {
                 if (article.getTitle().length() > 0) {
                     dtoName += article.getTitle();
@@ -400,6 +415,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         List<IdContentDto> finalList = new ArrayList<>(fooSet);
         return finalList;
+
     }
 
     public List<ArticleDto> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {

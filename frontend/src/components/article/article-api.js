@@ -108,35 +108,66 @@ export default {
 
 
     searchMaterial(searchKey, fn) {
-            AXIOS.get(
-                `/article/searchMaterial?q=` + encodeURIComponent(searchKey)
-            ).then((response) => {
-                if (response.status >= 200 && response.status < 300) {
-                    return response;
+        AXIOS.get(
+            `/article/searchMaterial?q=` + encodeURIComponent(searchKey)
+        ).then((response) => {
+            if (response.status >= 200 && response.status < 300) {
+                return response;
 
-                } else {
-                    let error = new Error(response.statusText);
-                    error.response = response;
-                    throw error
-                }
-            }).then((response) => {
-                // if (response.headers['content-type'] !== 'application/json') {
-                //     let error = new Error('Некорректный ответ от сервера');
-                //     error.response = response;
-                //     throw error
-                // }
-                return response.data;
+            } else {
+                let error = new Error(response.statusText);
+                error.response = response;
+                throw error
+            }
+        }).then((response) => {
+            // if (response.headers['content-type'] !== 'application/json') {
+            //     let error = new Error('Некорректный ответ от сервера');
+            //     error.response = response;
+            //     throw error
+            // }
+            return response.data;
 
-            }).then((json) => {
-                fn(json);
+        }).then((json) => {
+            fn(json);
 
-            }).catch((error) => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    router.push('/login');
-                }
-            })
-        },
+        }).catch((error) => {
+            console.log(error);
+            if (error.response.status === 401) {
+                router.push('/login');
+            }
+        })
+    },
+
+    searchMaterialById(id, fn) {  //for the case with article creation with parent/child/equal
+        AXIOS.get(
+            `/article/searchMaterialById?id=` + encodeURIComponent(id))
+        .then((response) => {
+            if (response.status >= 200 && response.status < 300) {
+                return response;
+
+            } else {
+                let error = new Error(response.statusText);
+                error.response = response;
+                throw error
+            }
+        }).then((response) => {
+            // if (response.headers['content-type'] !== 'application/json') {
+            //     let error = new Error('Некорректный ответ от сервера');
+            //     error.response = response;
+            //     throw error
+            // }
+            return response.data;
+
+        }).then((json) => {
+            fn(json);
+
+        }).catch((error) => {
+            console.log(error);
+            if (error.response.status === 401) {
+                router.push('/login');
+            }
+        })
+    },
 
     searchTitle(searchKey, status, start, end, fn) {
         AXIOS.get(`article/search?title=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)

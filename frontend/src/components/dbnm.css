@@ -144,6 +144,16 @@
     padding-left: 75px;
     background-color: palegreen;
 }
+
+.myHeader{
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    font-size: larger;
+    /*margin-left: 55px;*/
+    padding-left: 0px;
+    background-color: transparent;
+}
 /*********************************************/
 
 .pageLoginForm{

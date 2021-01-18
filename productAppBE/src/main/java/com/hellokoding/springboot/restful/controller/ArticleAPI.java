@@ -69,6 +69,13 @@ public class ArticleAPI {
         return ResponseEntity.ok(search);
     }
 
+    @GetMapping("/searchMaterialById")
+    public ResponseEntity<List<IdContentDto>> searchMaterialById(@RequestParam(name = "id", required = true) String id) {
+        Integer intId = Integer.parseInt(id);
+        List<IdContentDto> search = articleService.searchMaterialById(intId);
+        return ResponseEntity.ok(search);
+    }
+
     @PostMapping("/ids")
     public ResponseEntity<List<Article>> getMaterialsByIds(@Valid @RequestBody List<Integer> idList) {
         return ResponseEntity.ok(articleService.findByIds(idList));
