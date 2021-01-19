@@ -21,6 +21,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     private String description;
     private String text;
+    private String rowColor;
     private String url;
     private List<UrlLink> linkList;
     private List<ItemConnectionDto> personList;
@@ -33,7 +34,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private MaterialType mtype;
 
     public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
-                      String titleRus, String description, String text,
+                      String titleRus, String description, String text, String rowColor,
                       String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
                       List<ItemConnectionDto> orgList, List<ItemConnectionDto> materialList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
@@ -47,6 +48,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.titleRus = titleRus;
         this.description = description;
         this.text = text;
+        this.rowColor = rowColor;
         this.url = url;
         this.linkList = linkList;
         this.personList = personList;
@@ -68,6 +70,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.titleRus = article.getTitleRus();
         this.description = article.getDescription();
         this.text = article.getText();
+        this.rowColor = article.getRgbSelection();
         this.linkList = article.getLinkList();
 
         this.personList = new ArrayList<>();
@@ -195,6 +198,14 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getRowColor() {
+        return rowColor;
+    }
+
+    public void setRowColor(String rowColor) {
+        this.rowColor = rowColor;
     }
 
     public String getUrl() {

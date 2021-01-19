@@ -69,6 +69,7 @@
     <include file="config/liquibase/changelog/00000000000069_add_mtype_field_article.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000071_drop_art_material_type.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000073_insert_value_connection_type_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000075_add_color_field_article.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>

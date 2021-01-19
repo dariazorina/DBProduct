@@ -142,6 +142,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setStatus(articleDto.getStatus());
         article.setDescription(articleDto.getDescription());
         article.setText(articleDto.getText());
+        article.setRgbSelection(articleDto.getRowColor());
         article.setMiscellany(articleDto.getMiscellany());
 
         /////////////////////PERSON CONNECTIONS///////////////////

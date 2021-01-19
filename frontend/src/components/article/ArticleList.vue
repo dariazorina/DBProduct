@@ -107,9 +107,9 @@
 
             </div>
         </div>
-        <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
 
-        <table class="redTable" :key="authorComponentKey">
+        <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
+        <table class="redTable" :key="authorComponentKey" id="mainListTable">
             <thead>
             <tr>
                 <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
@@ -123,6 +123,7 @@
                 <th class="tdTitle" style="width:4%">Действия</th>
                 <th class="tdTitle" style="width:4%">Смена статуса</th>
                 <th class="tdTitle" style="width:4%">Добавить материал..</th>
+                <th class="tdTitle" style="width:4%">Цвет</th>
             </tr>
             </thead>
             <tbody>
@@ -162,41 +163,6 @@
                         </div>
                     </div>
                 </td>
-
-                <!--                <td class='tdAlignLeft'>{{ article.movement.name}}</td>-->
-                <!--                <td class='tdAlignLeft'><a>-->
-                <!--                    <router-link :to="{name: 'article-details', params: {article_id: article.id}}">{{ article.title }}-->
-                <!--                    </router-link>-->
-                <!--                </a></td>-->
-
-                <!--            <td>-->
-                <!--                {{article.titleRus }}-->
-                <!--            </td>-->
-
-
-                <!--                <td>-->
-                <!--                    <div v-if="article.titleRus">-->
-                <!--                        <a>-->
-                <!--                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">-->
-                <!--                                {{article.titleRus }}-->
-                <!--                            </router-link>-->
-                <!--                        </a>-->
-                <!--                    </div>-->
-                <!--                </td>-->
-
-                <!--                <td>-->
-                <!--                    <div v-if="article.titleRus">-->
-                <!--                        {{article.title}}-->
-                <!--                    </div>-->
-                <!--                    <div v-else>-->
-                <!--                        <a>-->
-                <!--                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">-->
-                <!--                                {{article.title }}-->
-                <!--                            </router-link>-->
-                <!--                        </a>-->
-                <!--                    </div>-->
-                <!--                </td>-->
-
                 <td>
                     <div>
                         <!--                    <div style="white-space:pre-line">-->
@@ -252,6 +218,47 @@
                         <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
                     </v-btn>
                 </td>
+                <td>
+                    <!--                    <v-swatches v-model="color"></v-swatches>-->
+                    <!--                    <v-btn text icon x-small v-b-modal="'modal-color'" @click="setCurrentAricle(article.id)">-->
+                    <!--                        <v-icon style="color: mediumvioletred">mdi-account-multiple-plus</v-icon>-->
+                    <!--                    </v-btn>-->
+
+                    <!--                    <b-form-select v-model="color" class="mb-3" id="color-selection">-->
+                    <!--                        <option v-for="lang in swatches" v-bind:value="lang">{{lang}}</option>-->
+                    <!--                    </b-form-select>-->
+
+                    <!--                    <select v-model="color" selected="123">-->
+                    <!--                        <option style="background-color: purple">purple</option>-->
+                    <!--                        <option style="background-color: yellow">yellow</option>-->
+                    <!--                        <option style="background-color: #cccccc">cccccc</option>-->
+                    <!--                        <option style="background-color: #fc8c84">fc8c84</option>-->
+                    <!--                        <option style="background-color: red">red</option>-->
+                    <!--                    </select>-->
+
+                    <!--                    <input type="color" :id=idRowColorCreate(article) name="head" @click="setCurrentAricle(article)"-->
+
+                    <!--                    <input type="color" id="rowColor" name="head" @click="setCurrentAricle(article.id)"-->
+                    <!--                           value="#e66465">-->
+
+                    <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">
+                        красный
+                    </b-button>
+
+                    <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">
+                        желтый
+                    </b-button>
+
+                    <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">
+                        зеленый
+                    </b-button>
+
+                    <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">
+                        голубой
+                    </b-button>
+
+
+                </td>
             </tr>
             </tbody>
         </table>
@@ -274,61 +281,38 @@
                 </div>
             </template>
         </b-modal>
+
+        <b-modal id="modal-color" hide-footer=true hide-header=true>
+            <template>
+                <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>
+                <div align="center">
+                    <v-swatches v-model="color"></v-swatches>
+                </div>
+            </template>
+        </b-modal>
+
+        <!--        <v-swatches v-model="color"></v-swatches>-->
+
+        <!--        <input type="color" id="rowColor" name="head" @click="setCurrentAricle(article.id)"-->
+        <!--               value="#e66465">-->
+
     </div>
 </template>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
-
-<!--<link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>-->
-<!--<link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.css"/>-->
-<!--&lt;!&ndash; Load Vue followed by BootstrapVueIcons &ndash;&gt;-->
-<!--<script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>-->
-<!--<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>-->
-
 <style lang="scss">
     @import '../dbnm.css';
 </style>
+<style>
+    .odd {
+        background-color: white;
+    }
 
-<!--<style>-->
-
-<!--    .ListCellStyle {-->
-<!--        /*padding: 5px; !* Поля вокруг текста *!*/-->
-<!--        text-align: left;-->
-<!--        font-size: small;-->
-<!--        /*height: 25px;*/-->
-<!--        max-height: 85px;-->
-<!--        overflow: hidden;-->
-<!--        /*border: solid 1px;*/-->
-<!--        /*border-color: #eceaea;*/-->
-<!--        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/-->
-
-<!--    }-->
-
-<!--    .ListCellStyleHot {-->
-<!--        /*padding: 5px; !* Поля вокруг текста *!*/-->
-<!--        text-align: left;-->
-<!--        font-size: small;-->
-<!--        max-height: 35px;-->
-<!--        height: 25px;-->
-<!--        /*overflow: hidden;*/-->
-<!--        /*border: solid 1px;*/-->
-<!--        /*border-color: #eceaea;*/-->
-<!--        /*padding: 5px 15px 5px 10px; !*top right bottom left*!*/-->
-<!--        /*background-color: #eceaea;*/-->
-
-<!--    }-->
-
-<!--    .ListCellStyleForButton {-->
-<!--        border: solid 1px;-->
-<!--        border-color: #eceaea;-->
-<!--        /*height: 85px;*/-->
-<!--        overflow: hidden;-->
-
-<!--    }-->
-<!--</style>-->
-
+    .even {
+        background-color: gray;
+    }
+</style>
 <script>
-
     import Vue from 'vue';
     import api from "./article-api";
     import apiPerson from "./../person/person-api";
@@ -337,15 +321,21 @@
     import router from "./../../router";
     import "vue-scroll-table";
     import Vuetify from 'vuetify';
-    // import 'vuetify/dist/vuetify.min.css';
     import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
 
+    // import VSwatches from 'vue-swatches'
+
+    // Import the styles too, typically in App.vue or main.js
+    import 'vue-swatches/dist/vue-swatches.css'
 
     export default {
         name: 'article',
+        //components: {VSwatches},
         vuetify: new Vuetify(),
         data() {
             return {
+                color: '#1CA085',
+
                 articles: [],
                 article: {status: 0, personList: [], hashtagList: []},
                 authors: [],
@@ -382,18 +372,67 @@
                 ],
                 // currentArticleId: 0,
                 currentArticle: [],
-                message: 'One Line,\nTwo Lines.',
+                // message: 'One Line,\nTwo Lines.',
+
+                swatches: [
+                    '#FF0000', '#AA0000', '#550000',
+                    '#FFFF00', '#AAAA00', '#555500',
+                    '#00FF00', '#00AA00', '#005500',
+                    '#00FFFF', '#00AAAA', '#005555',
+                    '#0000FF', '#0000AA', '#000055'
+                ],
+
+                colors: [
+                    '#D90D0D',
+                    '#FBFF1F',
+                    '#01A722',
+                    '#01D3EF'
+                ],
             }
         },
         computed: {
             filteredArticles() {
-                // console.log("FILTERED ARTICLES");
+                // console.log("FILTERED ARTICLES", this.entries);
                 return this.entries;
             },
         },
 
         methods: {
 
+            setColor(currentArticle, color) {
+                // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", currentArticle, color);
+                currentArticle.rowColor = color;
+
+                api.update(currentArticle.id, currentArticle, r => {
+                    console.log("DONEEEEEE SAVE");
+                });
+
+                this.alternate('mainListTable');
+            },
+
+            // idRowColorCreate(aticle) {
+            //     return "rowColor" + article.id;
+            // },
+
+            alternate(id) {
+                if (document.getElementsByTagName) {
+                    var table = document.getElementById(id);
+                    var rows = table.getElementsByTagName("tr");
+                    for (let i = 0; i < rows.length - 1; i++) {
+                        if (this.filteredArticles[i] !== null) {
+                            rows[i + 1].style.backgroundColor = this.filteredArticles[i].rowColor;//'#888888';
+                            // console.log("--++++++++++------WE IN", this.filteredArticles[i].title, this.filteredArticles[i].id, i);
+                        }
+                        //console.log("-----------------WE IN", i, this.filteredArticles[i].id, this.filteredArticles[i].rowColor);
+                        //manipulate rows
+                        //if (i % 2 == 0) {
+                        // rows[i].className = "even";
+                        // } else {
+                        //    rows[i].className = "odd";
+                        //}
+                    }
+                }
+            },
             complexArticleTitle() {
                 let title = '';
 
@@ -415,9 +454,21 @@
             },
 
             setCurrentAricle(id) {
-                // console.log("setCurrentAricle", id);
+               // console.log("setCurrentAricleId", id);
                 // this.currentArticleId = id;
                 this.currentArticle = this.filteredArticles.find(x => x.id === id);
+
+               // console.log("+++++++++++++++++++setCurrentAricle", this.currentArticle);
+
+                let c = document.getElementById("rowColor");
+               // console.log("+++++++++++++++++++getElementById", c);
+
+                if (c) {
+                    c.addEventListener("input", (event) => {
+                       // console.log("INPUT addEventListener", this.currentArticle);
+                        this.currentArticle.rowColor = c.value;
+                    }, false);
+                }
             },
 
             createArticleWithMaterial(id, connectionType) {
@@ -688,7 +739,6 @@
 
         mounted() {
             this.getLoggedIn();
-
             // api.getAll().then(response => {
             //     this.articles = response.data;
             //     this.entries = this.articles;
@@ -711,11 +761,17 @@
                 apiPerson.getPersonsByIds(this.articlePersonIds, response => {
                     this.articlePersonEntities = response.data;
                     console.log("apiPerson", this.articlePersonEntities);
+
+                    this.alternate('mainListTable');
                 });
             });
         },
 
         watch: {
+            // currentArticle: function () {
+            //     console.log("CURRENT ARTICLE WATCH", this.currentArticle);
+            // },
+
             searchKey: function () {
                 //If empty search to renew the table
                 console.log("WATCH");

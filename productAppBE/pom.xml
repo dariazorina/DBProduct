@@ -244,6 +244,14 @@
                         <web>java -jar target/productAppBE-1.0-SNAPSHOT.jar</web>
                     </processTypes>
                 </configuration>
+
+<!--                <version>3.0.4</version>-->
+<!--                <configuration>-->
+<!--                    <processTypes>-->
+<!--                        <web>java -jar target/productAppBE-1.0-SNAPSHOT.jar</web>-->
+<!--                    </processTypes>-->
+<!--                    <appName>dbproduct</appName>-->
+<!--                </configuration>-->
             </plugin>
 
 

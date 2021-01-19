@@ -42,6 +42,9 @@ public class Article {
     private String description;
     private String text;
 
+    @Column(name = "rgb_selection")
+    private String rgbSelection;
+
     @ManyToMany
     @JoinTable(
             name = "art_link",

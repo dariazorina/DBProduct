@@ -8,11 +8,15 @@
 
                 <div v-if="editMode" class="col-5 col-form-label">
 
-                    <div v-if="article.titleRus == null">
-                        <p class="pageEditTitle">Редактирование <i>"{{article.title}}"</i></p>
-                    </div>
-                    <div v-else>
-                        <p class="pageEditTitle">Редактирование <i>"{{article.titleRus}}"</i></p>
+                    <!--                    <div v-if="article.titleRus == null">-->
+                    <!--                        <p class="pageEditTitle">Редактирование <i>"{{article.title}}"</i></p>-->
+                    <!--                    </div>-->
+                    <!--                    <div v-else>-->
+                    <!--                        <p class="pageEditTitle">Редактирование <i>"{{article.titleRus}}"</i></p>-->
+                    <!--                    </div>-->
+
+                    <div>
+                        <p class="pageEditTitle">Редактирование материала</p>
                     </div>
                 </div>
 
@@ -34,11 +38,11 @@
             <!--            <form>-->
 
             <!--            <div class="row" style="background-color: black">-->
-            <div class="col-lg-10" style="background-color: transparent; padding-top: 0">
+            <div class="col-lg-12" style="background-color: transparent; padding-top: 0">
 
                 <form class="formCreation">
                     <div class="form-row align-items-center">
-                        <label>Выберите тип материала</label>
+                        <label>Тип материала</label>
                         <div class="col-12" style="background-color: transparent">
                             <b-card style="background-color: transparent">
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
@@ -210,7 +214,7 @@
                         <v-card-text>
                             <v-autocomplete
                                     id="location-autocomplete"
-                                    label="Местонахождение"
+                                    label="Связанные страны/н.п./места"
 
                                     :items="itemsLocation"
                                     :loading="isLoadingLocation"
@@ -285,9 +289,15 @@
                     </div>
                 </form>
                 <form class="formCreation">
-                    <div class="form-row align-items-center">
-                        <label>Форма добавления хештегов</label>
-                        <div class="col-12" style="background-color: transparent">
+                    <div class="form-row align-items-md-start" style="background-color: transparent">
+                        <div class="col-4" style="background-color: transparent">
+                                <label style="background-color: transparent">Хештеги</label>
+                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                           :read-only="uploadMode"
+                                           v-model="tags"></input-tag>
+                        </div>
+                        <div class="col-8" style="background-color: transparent">
+                            <label>Форма добавления хештегов</label>
                             <b-card style="background-color: transparent">
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
@@ -368,16 +378,6 @@
                                 </v-row>
                             </b-card>
                         </div>
-
-                        <label style="background-color: transparent">Хештеги</label>
-                        <div class="col-12" style="background-color: transparent">
-                            <div>
-                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
-                                           :read-only="uploadMode"
-                                           v-model="tags"></input-tag>
-                            </div>
-                        </div>
-
                     </div>
                 </form>
                 <form class="authorsFormCreation form-row col-12"
@@ -487,7 +487,8 @@
 
                 <div v-else class="form-group row" style="padding-top: 30px">
 
-                    <div v-if="!uploadMode" class="form-group align-items-center col-sm-12" style="background-color: transparent">
+                    <div v-if="!uploadMode" class="form-group align-items-center col-sm-12"
+                         style="background-color: transparent">
                         <div class="form-group align-items-center col-sm-12" style="background-color: transparent">
                             <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
                             <label for="checkbox">Check if you want to upload files after article creation</label>
