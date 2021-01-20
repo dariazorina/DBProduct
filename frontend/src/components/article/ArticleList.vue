@@ -262,7 +262,7 @@
             </tr>
             </tbody>
         </table>
-        <b-modal id="modal-scoped" hide-footer=true hide-header=true>
+        <b-modal id="modal-scoped" :hide-footer="true" :hide-header="true">
             <template>
                 <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle()}}" как</p><br></b>
                 <div align="center">
@@ -282,14 +282,14 @@
             </template>
         </b-modal>
 
-        <b-modal id="modal-color" hide-footer=true hide-header=true>
-            <template>
-                <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>
-                <div align="center">
-                    <v-swatches v-model="color"></v-swatches>
-                </div>
-            </template>
-        </b-modal>
+<!--        <b-modal id="modal-color" :hide-footer=true :hide-header=true>-->
+<!--            <template>-->
+<!--                <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>-->
+<!--                <div align="center">-->
+<!--                    <v-swatches v-model="color"></v-swatches>-->
+<!--                </div>-->
+<!--            </template>-->
+<!--        </b-modal>-->
 
         <!--        <v-swatches v-model="color"></v-swatches>-->
 
@@ -326,7 +326,7 @@
     // import VSwatches from 'vue-swatches'
 
     // Import the styles too, typically in App.vue or main.js
-    import 'vue-swatches/dist/vue-swatches.css'
+   // import 'vue-swatches/dist/vue-swatches.css'
 
     export default {
         name: 'article',
