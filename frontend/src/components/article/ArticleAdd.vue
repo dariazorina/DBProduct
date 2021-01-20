@@ -539,7 +539,7 @@
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
-    import CreatedList from "../components/multiply-enter-list/CreatedList";
+    import CreatedList from "../components/multiple-enter-list/CreatedList";
     import CKEditor from 'ckeditor4-vue';
 
     Vue.component('input-tag', InputTag);

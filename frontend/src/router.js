@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
+import Hello from '@/components/Hello'
 
 import PersonList from '@/components/person/PersonList'
 import PersonAdd from '@/components/person/PersonAdd'
@@ -54,21 +55,18 @@ const router = new Router({
         //         requiresAuth: true
         //     }
         // },
-        {
-            path: '/login', component: Login,
-            meta: {
-                isLoginPage: true
-            }
-        },
+
+        {path: '/login', component: Login, meta: {isLoginPage: true}},
+
+        {path: '/', component: Hello},
 
         {path: '/person', component: PersonList},
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/edit', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/delete', component: PersonDelete, name: 'person-delete'},
+
         {path: '/person/:person_id/details', component: PersonDetails, name: 'person-details'},
-
-
-        {path: '/', component: ArticleList},
+        {path: '/article', component: ArticleList},
         {path: '/article/:article_id/details', component: ArticleDetails, name: 'article-details'},
         {path: '/article/add', component: ArticleAdd, name: 'article-add'},
         {path: '/article/:article_id/edit', component: ArticleAdd, name: 'article-add'},
@@ -98,7 +96,6 @@ const router = new Router({
 
         {path: '/org', component: OrgList},
         {path: '/org/add', component: OrgAdd, name: 'org-add'},
-
 
         // otherwise redirect to home
         {path: '*', redirect: '/'}

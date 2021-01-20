@@ -1,12 +1,8 @@
 <template>
     <div id="app">
         <div id="nav" style="margin-top: -30px">
-            <!--      <router-link to="/">Hello</router-link> |-->
-            <!--      <router-link to="/callservice">Service</router-link> |-->
-            <!--      <router-link to="/bootstrap">Bootstrap</router-link> |-->
-            <!--      <router-link to="/user">User</router-link> |-->
 
-            <!--      <router-link to="/protected">Protected</router-link> |-->
+            <!-----------------------------            the header------------------------------------------->
             <router-link to="/person">Person</router-link>
             |
             <router-link to="/article">Article</router-link>
@@ -26,9 +22,9 @@
 
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
-<!--        <button v-if="loggedInFlag" v-on:click="logout">LOGOUT</button>-->
-
-        <router-view :hellomsg="msg"></router-view>
+        <!--        <button v-if="loggedInFlag" v-on:click="logout">LOGOUT</button>-->
+        <router-view/>
+        <!--        <router-view :hellomsg="msg"></router-view>-->
     </div>
 </template>
 
@@ -85,8 +81,8 @@
             font-weight: bold;
             color: #2c3e50;
 
-            &.router-link-exact-active {
-                color: #42b983;
+            &.router-link-active {
+                color: #0074D9;
             }
         }
     }

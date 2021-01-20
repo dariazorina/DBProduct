@@ -2,11 +2,11 @@
   <div class="hello">
     <img src="./../assets/spring-boot-vuejs-logo.png">
     <h1>{{ hellomsg }}</h1>
-    <h2>See the sources here: </h2>
-    <ul>
-      <li><a href="https://github.com/dariazorina/DBProduct/commits/vuejsFramework" target="_blank">https://github.com/dariazorina/DBProduct/commits/vuejsFramework</a></li>
-    </ul>
-    <h3>First Version :)</h3>
+<!--    <h2>See the sources here: </h2>-->
+<!--    <ul>-->
+<!--      <li><a href="https://github.com/dariazorina/DBProduct/commits/vuejsFramework" target="_blank">https://github.com/dariazorina/DBProduct/commits/vuejsFramework</a></li>-->
+<!--    </ul>-->
+<!--    <h3>First Version :)</h3>-->
 <!--    <ul>-->
 <!--        <li>HowTo call REST-Services:</li>-->
 <!--        <li><router-link to="/callservice">/callservice</router-link></li>-->
