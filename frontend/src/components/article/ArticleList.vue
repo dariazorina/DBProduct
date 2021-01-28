@@ -109,159 +109,137 @@
         </div>
 
         <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
-        <table class="redTable" :key="authorComponentKey" id="mainListTable">
-            <thead>
-            <tr>
-                <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
-                <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
-                <th class='tdTitle'>Язык</th>
-                <th class='tdTitle'>Хештеги</th>
-                <th class='tdTitle'>Автор</th>
-                <th class='tdTitle'>Заголовок</th>
-                <th class='tdTitle' style="width:25%">Описание</th>
-                <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
-                <th class="tdTitle" style="width:4%">Действия</th>
-                <th class="tdTitle" style="width:4%">Смена статуса</th>
-                <th class="tdTitle" style="width:4%">Добавить материал..</th>
-                <th class="tdTitle" style="width:4%">Цвет</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="article in filteredArticles">
-                <td :key="article.status">
-                    <div v-if="article.status==0">
-                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
-                    </div>
+<!--        <div style="height:50%; background-color: #b5d592">-->
+            <table class="redTable" :key="authorComponentKey" id="mainListTable">
+                <thead>
+                <tr>
+                    <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
+                    <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
+                    <th class='tdTitle'>Язык</th>
+                    <th class='tdTitle'>Хештеги</th>
+                    <th class='tdTitle'>Автор</th>
+                    <th class='tdTitle'>Заголовок</th>
+                    <th class='tdTitle' style="width:25%">Описание</th>
+                    <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
+                    <th class="tdTitle" style="width:4%">Действия</th>
+                    <th class="tdTitle" style="width:4%">Смена статуса</th>
+                    <th class="tdTitle" style="width:4%">Добавить материал..</th>
+                    <!--                    <th class="tdTitle" style="width:4%">Цвет</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="article in filteredArticles"
+                    @contextmenu.prevent="handler($event, article.id)"
+                    :key="article.id"
+                    :id="article.id"
+                    :class="{'active': ((article.id === selectedArticle)&&(previousSelectedArticle!==selectedArticle))}">
 
-                    <div v-if="article.status==1">
-                        <v-icon style="color: orange">mdi-check</v-icon>
-                    </div>
-
-                    <div v-if="article.status==2">
-                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
-                    </div>
-
-                    <div v-if="article.status==3">
-                        <v-icon style="color: green">mdi-check</v-icon>
-                    </div>
-                </td>
-                <td>
-                    {{ formatDate(article.date) }}
-                </td>
-                <td>
-                    {{article.language.name}}
-                </td>
-                <td>
-                    <div v-for="hashtag in article.hashtagList">
-                        {{hashtag}}
-                    </div>
-                </td>
-                <td>
-                    <div v-for="author in article.personList">
-                        <div v-if="article.personList.length>0">
-                            {{createComplexCellValueById(author.itemId)}}
+                    <td :key="article.status">
+                        <div v-if="article.status==0">
+                            <v-icon style="color: orange">mdi-pencil-plus</v-icon>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <!--                    <div style="white-space:pre-line">-->
-                        <a>
-                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{createComplexCellValue(article.titleRus, article.title)}}
-                            </router-link>
-                        </a>
-                    </div>
-                </td>
+
+                        <div v-if="article.status==1">
+                            <v-icon style="color: orange">mdi-check</v-icon>
+                        </div>
+
+                        <div v-if="article.status==2">
+                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                        </div>
+
+                        <div v-if="article.status==3">
+                            <v-icon style="color: green">mdi-check</v-icon>
+                        </div>
+                    </td>
+                    <td>
+                        {{ formatDate(article.date) }}
+                    </td>
+                    <td>
+                        {{article.language.name}}
+                    </td>
+                    <td>
+                        <div v-for="hashtag in article.hashtagList">
+                            {{hashtag}}
+                        </div>
+                    </td>
+                    <td>
+                        <div v-for="author in article.personList">
+                            <div v-if="article.personList.length>0">
+                                {{createComplexCellValueById(author.itemId)}}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <!--                    <div style="white-space:pre-line">-->
+                            <a>
+                                <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                                    {{createComplexCellValue(article.titleRus, article.title)}}
+                                </router-link>
+                            </a>
+                        </div>
+                    </td>
+                    <td style="height: 50px">
+                        <div style="height:60px; overflow:hidden">
+                            {{article.description }}
+                        </div>
+                    </td> <!--todo dots? if cut-->
+
+                    <td style="height: 50px">
+                        <div style="height:60px; overflow:hidden">
+                            {{article.miscellany }}
+                        </div>
+                    </td>
+                    <td>
+                        <v-btn text icon x-small>
+                            <a>
+                                <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
+                                    <v-icon style="color: green">mdi-pencil</v-icon>
+                                </router-link>
+                            </a>
+                        </v-btn>
 
 
-                <td style="height: 50px">
-                    <div style="height:60px; overflow:hidden">
-                        {{article.description }}
-                    </div>
-                </td> <!--todo dots? if cut-->
+                        <v-btn text icon x-small>
+                            <a>
+                                <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
+                                    <v-icon style="color: red">mdi-delete-forever</v-icon>
+                                </router-link>
+                            </a>
+                        </v-btn>
+                    </td>
+                    <td>
+                        <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
+                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                        </v-btn>
 
-                <td style="height: 50px">
-                    <div style="height:60px; overflow:hidden">
-                        {{article.miscellany }}
-                    </div>
-                </td>
-                <td>
-                    <v-btn text icon x-small>
-                        <a>
-                            <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
-                                <v-icon style="color: green">mdi-pencil</v-icon>
-                            </router-link>
-                        </a>
-                    </v-btn>
-
-
-                    <v-btn text icon x-small>
-                        <a>
-                            <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
-                                <v-icon style="color: red">mdi-delete-forever</v-icon>
-                            </router-link>
-                        </a>
-                    </v-btn>
-                </td>
-                <td>
-                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
-                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
-                    </v-btn>
-
-                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
-                        <v-icon style="color: green">mdi-check</v-icon>
-                    </v-btn>
-                </td>
-                <td>
-                    <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
-                        <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
-                    </v-btn>
-                </td>
-                <td>
-                    <!--                    <v-swatches v-model="color"></v-swatches>-->
-                    <!--                    <v-btn text icon x-small v-b-modal="'modal-color'" @click="setCurrentAricle(article.id)">-->
-                    <!--                        <v-icon style="color: mediumvioletred">mdi-account-multiple-plus</v-icon>-->
-                    <!--                    </v-btn>-->
-
-                    <!--                    <b-form-select v-model="color" class="mb-3" id="color-selection">-->
-                    <!--                        <option v-for="lang in swatches" v-bind:value="lang">{{lang}}</option>-->
-                    <!--                    </b-form-select>-->
-
-                    <!--                    <select v-model="color" selected="123">-->
-                    <!--                        <option style="background-color: purple">purple</option>-->
-                    <!--                        <option style="background-color: yellow">yellow</option>-->
-                    <!--                        <option style="background-color: #cccccc">cccccc</option>-->
-                    <!--                        <option style="background-color: #fc8c84">fc8c84</option>-->
-                    <!--                        <option style="background-color: red">red</option>-->
-                    <!--                    </select>-->
-
-                    <!--                    <input type="color" :id=idRowColorCreate(article) name="head" @click="setCurrentAricle(article)"-->
-
-                    <!--                    <input type="color" id="rowColor" name="head" @click="setCurrentAricle(article.id)"-->
-                    <!--                           value="#e66465">-->
-
-                    <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">
-                        красный
-                    </b-button>
-
-                    <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">
-                        желтый
-                    </b-button>
-
-                    <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">
-                        зеленый
-                    </b-button>
-
-                    <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">
-                        голубой
-                    </b-button>
-
-
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
+                            <v-icon style="color: green">mdi-check</v-icon>
+                        </v-btn>
+                    </td>
+                    <td>
+                        <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
+                            <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
+                        </v-btn>
+                    </td>
+                    <!--                    <td>-->
+                    <!--                        <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">-->
+                    <!--                            красный-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">-->
+                    <!--                            желтый-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">-->
+                    <!--                            зеленый-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">-->
+                    <!--                            голубой-->
+                    <!--                        </b-button>-->
+                    <!--                    </td>-->
+                </tr>
+                </tbody>
+            </table>
+<!--        </div>-->
         <b-modal id="modal-scoped" :hide-footer="true" :hide-header="true">
             <template>
                 <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle()}}" как</p><br></b>
@@ -282,20 +260,19 @@
             </template>
         </b-modal>
 
-<!--        <b-modal id="modal-color" :hide-footer=true :hide-header=true>-->
-<!--            <template>-->
-<!--                <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>-->
-<!--                <div align="center">-->
-<!--                    <v-swatches v-model="color"></v-swatches>-->
-<!--                </div>-->
-<!--            </template>-->
-<!--        </b-modal>-->
+        <context-menu id="context-menu" ref="ctxMenu">
+            <li class="ctx-item" v-b-modal="'modal-color'">выделить...</li>
+            <li class="ctx-item" @click="cancelRowSelection">отменить выделение</li>
+        </context-menu>
 
-        <!--        <v-swatches v-model="color"></v-swatches>-->
-
-        <!--        <input type="color" id="rowColor" name="head" @click="setCurrentAricle(article.id)"-->
-        <!--               value="#e66465">-->
-
+        <b-modal id="modal-color" :hide-footer=true :hide-header=true>
+            <template>
+                <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>
+                <div align="center">
+                    <v-swatches v-model="color"></v-swatches>
+                </div>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -311,6 +288,19 @@
     .even {
         background-color: gray;
     }
+
+    /*.highlight {*/
+    /*    background-color: tomato;*/
+    /*}*/
+    /*tr:hover{*/
+    /*    cursor: pointer;*/
+    /*}*/
+
+    .active {
+        color: blue;
+        font-weight: bold;
+        border: 3px solid #1C6EA4;
+    }
 </style>
 <script>
     import Vue from 'vue';
@@ -322,20 +312,21 @@
     import "vue-scroll-table";
     import Vuetify from 'vuetify';
     import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
+    import contextMenu from 'vue-context-menu'
 
-    // import VSwatches from 'vue-swatches'
-
-    // Import the styles too, typically in App.vue or main.js
-   // import 'vue-swatches/dist/vue-swatches.css'
+    import VSwatches from 'vue-swatches'
+    import 'vue-swatches/dist/vue-swatches.css'
 
     export default {
         name: 'article',
-        //components: {VSwatches},
+        components: {
+            contextMenu,
+            VSwatches,
+        },
         vuetify: new Vuetify(),
         data() {
             return {
                 color: '#1CA085',
-
                 articles: [],
                 article: {status: 0, personList: [], hashtagList: []},
                 authors: [],
@@ -374,62 +365,103 @@
                 currentArticle: [],
                 // message: 'One Line,\nTwo Lines.',
 
-                swatches: [
-                    '#FF0000', '#AA0000', '#550000',
-                    '#FFFF00', '#AAAA00', '#555500',
-                    '#00FF00', '#00AA00', '#005500',
-                    '#00FFFF', '#00AAAA', '#005555',
-                    '#0000FF', '#0000AA', '#000055'
-                ],
-
-                colors: [
-                    '#D90D0D',
-                    '#FBFF1F',
-                    '#01A722',
-                    '#01D3EF'
-                ],
+                selectedArticle: null,
+                previousSelectedArticle: null,
+                // swatches: [
+                //     '#FF0000', '#AA0000', '#550000',
+                //     '#FFFF00', '#AAAA00', '#555500',
+                //     '#00FF00', '#00AA00', '#005500',
+                //     '#00FFFF', '#00AAAA', '#005555',
+                //     '#0000FF', '#0000AA', '#000055'
+                // ],
+                //
+                // colors: [
+                //     '#D90D0D',
+                //     '#FBFF1F',
+                //     '#01A722',
+                //     '#01D3EF'
+                // ],
             }
         },
         computed: {
             filteredArticles() {
-                // console.log("FILTERED ARTICLES", this.entries);
+                // console.log("*************************************FILTERED ARTICLES", this.entries);
                 return this.entries;
             },
         },
-
         methods: {
+            handler: function (event, id) {
+                // console.log("RIGHT BUTTON", event, event.target, id);
+
+                this.selectRow(id);
+                if (this.previousSelectedArticle !== this.selectedArticle) {
+                    document.getElementById('context-menu').setAttribute('style', 'display');
+                    this.$refs.ctxMenu.open(event);
+                }
+                else {
+                    // console.log("CNTXT MENU", document.getElementById('context-menu'));
+                    document.getElementById('context-menu').setAttribute('style', 'display:none');
+                    //classList.add('hidden');
+                }
+            },
+
+            // optionClicked(event) {
+            //     window.alert(JSON.stringify(event))
+            // },
+
+            cancelRowSelection() {
+                let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
+                this.setColor(currentArticle, null);
+            },
+
+            selectRow(articleId) {
+                if (this.previousSelectedArticle === this.selectedArticle) { //to set ability to check again after unchecking the same row
+                    this.previousSelectedArticle = -1;
+                } else {
+                    this.previousSelectedArticle = this.selectedArticle;
+                }
+
+                this.selectedArticle = articleId;
+                // console.log("====================selected row, prev", this.selectedArticle, this.previousSelectedArticle);
+            },
 
             setColor(currentArticle, color) {
-                // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", currentArticle, color);
+                // console.log("set color", currentArticle, color);
                 currentArticle.rowColor = color;
 
                 api.update(currentArticle.id, currentArticle, r => {
                     console.log("DONEEEEEE SAVE");
                 });
-
                 this.alternate('mainListTable');
             },
-
-            // idRowColorCreate(aticle) {
-            //     return "rowColor" + article.id;
-            // },
-
             alternate(id) {
                 if (document.getElementsByTagName) {
-                    var table = document.getElementById(id);
-                    var rows = table.getElementsByTagName("tr");
-                    for (let i = 0; i < rows.length - 1; i++) {
-                        if (this.filteredArticles[i] !== null) {
-                            rows[i + 1].style.backgroundColor = this.filteredArticles[i].rowColor;//'#888888';
-                            // console.log("--++++++++++------WE IN", this.filteredArticles[i].title, this.filteredArticles[i].id, i);
+                    let table = document.getElementById(id);
+                    if (table !== null) {
+
+                        let rows = table.getElementsByTagName("tr");
+                        // console.log("<<<<<<<<<<<<<<<<<<<<<< ROWS", rows.length);
+                        for (let i = 0; i < rows.length - 1; i++) {
+
+                            if (this.entries[i] !== null && typeof this.entries[i] !== 'undefined') {
+                                if (this.entries[i].rowColor !== null) {
+                                    // console.log("this.entries[i].rowColor", this.entries[i], this.entries[i].rowColor);
+                                    //let a = document.getElementsByClassName("redTable");
+                                    //let a = document.getElementById('mainListTable');//.style;//.backgroundColor;
+                                    // let element = document.getElementById('mainListTable');
+                                    // console.log("********************CSS COLOR", a);
+                                    rows[i + 1].style.backgroundColor = this.entries[i].rowColor;//'#888888';//+1 because of title
+
+                                } else { //todo - get colors from css, not consts
+                                    // let id = this.entries[i].id;
+                                    // let element = document.getElementById(id.toString());
+                                    // let style = window.getComputedStyle(element);
+                                    // let top = style.getPropertyValue('background-color');
+                                    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$css color null");
+                                    rows[i + 1].style.backgroundColor = (i % 2) ? "#EEEEEE" : '#D0E4F5';//'#888888';//+1 because of title
+                                }
+                            }
                         }
-                        //console.log("-----------------WE IN", i, this.filteredArticles[i].id, this.filteredArticles[i].rowColor);
-                        //manipulate rows
-                        //if (i % 2 == 0) {
-                        // rows[i].className = "even";
-                        // } else {
-                        //    rows[i].className = "odd";
-                        //}
                     }
                 }
             },
@@ -453,22 +485,10 @@
                 return title;
             },
 
-            setCurrentAricle(id) {
-               // console.log("setCurrentAricleId", id);
+            setCurrentAricle(id) {             ////set current article before new article creation with connected material
+                // console.log("setCurrentAricleId", id);
                 // this.currentArticleId = id;
                 this.currentArticle = this.filteredArticles.find(x => x.id === id);
-
-               // console.log("+++++++++++++++++++setCurrentAricle", this.currentArticle);
-
-                let c = document.getElementById("rowColor");
-               // console.log("+++++++++++++++++++getElementById", c);
-
-                if (c) {
-                    c.addEventListener("input", (event) => {
-                       // console.log("INPUT addEventListener", this.currentArticle);
-                        this.currentArticle.rowColor = c.value;
-                    }, false);
-                }
             },
 
             createArticleWithMaterial(id, connectionType) {
@@ -484,7 +504,6 @@
             createComplexCellValueById(id) {
                 let result = '';
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-
                 let valueOrig = '', valueRus = '';
 
                 if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
@@ -775,7 +794,7 @@
             searchKey: function () {
                 //If empty search to renew the table
                 console.log("WATCH");
-                if (this.searchKey == "") {
+                if (this.searchKey === "") {
                     // if (this.statusCheckBox.length > 0) {
                     this.search();
                     // } else {
@@ -791,7 +810,7 @@
                 console.log("WATCH SCB!");
                 console.log(this.statusCheckBox);
 
-                if (this.statusCheckBox[this.statusCheckBox.length - 1] == 3) {
+                if (this.statusCheckBox[this.statusCheckBox.length - 1] === 3) {
                     console.log("this.statusCheckBox!!! == 3");
 
                     document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
@@ -802,7 +821,7 @@
                     document.getElementById("refreshButton").disabled = true;
 
                     for (let i = 0; i < this.statusCheckBox.length; i++) {
-                        if (this.statusCheckBox[i] != 3) {
+                        if (this.statusCheckBox[i] !== 3) {
                             this.statusCheckBox.shift();
                             console.log("SHIFT");
                             // document.getElementById("startdate-input").style.backgroundColor = "green";
@@ -819,7 +838,7 @@
                     document.getElementById("refreshButton").disabled = false;
 
                     for (let i = 0; i < this.statusCheckBox.length; i++) {
-                        if (this.statusCheckBox[i] == 3) {
+                        if (this.statusCheckBox[i] === 3) {
                             this.statusCheckBox.splice(i, 1);
                             console.log("SPLICE");
 
@@ -832,9 +851,16 @@
             },
 
             selected: function () {
-                if (this.searchKey != "") {
+                if (this.searchKey !== "") {
                     this.search();
                 }
+            },
+
+            color: function () {   //calls when color picking is done
+                console.log("----------------------COLOR");
+                let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
+                this.setColor(currentArticle, this.color);
+                this.$root.$emit('bv::hide::modal', 'modal-color');
             },
         },
     }
