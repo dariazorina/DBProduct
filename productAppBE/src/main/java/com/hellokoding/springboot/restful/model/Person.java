@@ -61,7 +61,7 @@ public class Person {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @JsonIgnore
+    @JsonIgnore  //todo? JsonManagedReference and JsonBackReference https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
     private List<PersonHashtag> hashtagList;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)

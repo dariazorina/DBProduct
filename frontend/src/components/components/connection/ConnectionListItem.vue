@@ -1,21 +1,35 @@
 <template>
     <div style="padding-left: 0px; padding-top: 10px; background-color: gold">
 
-        <div v-if="isLinkMode">
-            <a>
-                <router-link :to="{name: 'article-details', params: {article_id: item.id}}" target="_blank">
+        <div class="form-row">
+            <div class="col-11" style="background-color: transparent;
+                                               margin-right: 0px; margin-bottom: 0px;
+                                               padding-right: 0px; padding-left:0px;
+                                               padding-top: 0px; padding-bottom: 10px">
+                <div v-if="isLinkMode"
+                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0px; background-color: transparent">
+                    <a>
+                        <router-link :to="{name: 'article-details', params: {article_id: item.id}}" target="_blank">
+                            {{item.name}}
+                        </router-link>
+                    </a>
+                </div>
+                <div v-else
+                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0px; background-color: transparent">
                     {{item.name}}
-                </router-link>
-            </a>
-        </div>
-        <div v-else>
-            <b>{{item.name}}</b>
-        </div>
+                </div>
+            </div>
 
-        <span class="close" style="background-color: transparent; padding-right: 10px"
-              @click="$emit('remove', item.id)">&times;</span>
+            <div class="col-1" style="background-color: transparent;
+                                               margin-right: 0px; margin-bottom: 0px;
+                                               padding-right: 0px; padding-left:0px;
+                                               padding-top: 0px; padding-bottom: 0px">
+            <span class="close" style="background-color: transparent; padding-right: 10px"
+                  @click="$emit('remove', item.id)">&times;</span>
 
-        <!--            <div class="form-row col-6"-->
+                <!--            <div class="form-row col-6"-->
+            </div>
+        </div>
         <div class="form-row col-12" style="background-color: transparent; padding:0px">
             <div v-if="isSelectionMode" class="form-row col-6"
                  style="background-color: transparent;
@@ -28,7 +42,7 @@
                                          @update-selectedConnection="updateConnection"/>
             </div>
             <div v-else class="form-row col-6" style="background-color: transparent;
-                                               margin-right: 0px;
+                                               margin-right: 0px; margin-bottom: 0px;
                                                padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
 
                 <InputConnectionText v-model="item.connection"

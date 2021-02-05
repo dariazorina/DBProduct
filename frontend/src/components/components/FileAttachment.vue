@@ -51,7 +51,7 @@
             </div>
         </template>
 
-        <div class="col-12">
+        <div v-if="!isDetailsMode" class="col-12">
             <label style="color: orange; font-size: 15px; font-weight: bold;">Загрузить файлы</label>
             <div>
                 <input type="file" id="inputFile" accept="*" multiple @change="attachFiles"/>
@@ -127,6 +127,9 @@
             alreadyUploadedFiles: {
                 type: Array
             },
+            isDetailsMode: {
+                type: Boolean
+            }
         },
         data: () => ({
             attachedFiles: [],

@@ -90,17 +90,22 @@
 }
 
 .authorsFormCreation{
-    padding-left: 0px;
+    padding-left: 30px;
     padding-top: 0px;
+    margin-left: 30px;
     /*margin-left: 0px;*/
-    font-size: small;
+    font-size: medium;
+    font-weight: bold;
+    text-align: left;
 }
 
 /*Titles in pages of different content*/
 .pageCreateTitle{
     text-align: left;
     /*margin-left: 55px;*/
-    padding-left: 110px;
+    padding-left: 30px;
+    font-weight: bold;
+    /*font-size: larger;*/
     background-color: orange;
 }
 
@@ -108,13 +113,17 @@
     text-align: left;
     /*margin-left: 55px;*/
     padding-left: 30px;
+    font-weight: bold;
+    /*font-size: larger;*/
     background-color: aquamarine;
 }
 
 .pageDeleteTitle{
     text-align: left;
     /*margin-left: 55px;*/
-    padding-left: 110px;
+    padding-left: 30px;
+    font-weight: bold;
+    /*font-size: larger;*/
     background-color: darksalmon;
 }
 
@@ -263,6 +272,17 @@ table.redTable tfoot .links a{
     color: #FFFFFF;
     padding: 2px 8px;
     border-radius: 5px;
+}
+
+.headerLink {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.headerLink:hover {
+    color: lightblue;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 

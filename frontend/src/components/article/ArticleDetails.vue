@@ -136,7 +136,14 @@
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
                     <div v-for="material in articleMaterialEntities">
-                            {{createComplexMaterialById(material.id)}}
+                       <a><router-link
+                               :to="{name: 'article-details', params: {article_id: material.id}}" target="_blank">
+                              {{createComplexMaterialById(material.id)}} </router-link></a>
+
+                        <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
+                        <!--                            {{createComplexMaterialById(material.id)}}-->
+                        <!--                        </a>-->
+                        <!--                        <a :href="$router.resolve({name: 'article-details', params: {article_id: material.id}}).href">link</a>-->
                     </div>
                 </span>
                 </div>
@@ -150,6 +157,10 @@
                 </div>
             </div>
 
+            <file-attachment @getAttachment="getAttachment"
+                             :userName="loggedName"
+                             :already-uploaded-files="uploadedFiles"
+                             :is-details-mode="true"/>
         </div>
 
         <div class="offset-sm-1 col-sm-3">
@@ -170,15 +181,30 @@
     import apiPerson from "./../person/person-api";
     import apiLocation from "./../country/country-api";
     import apiOrg from "./../org/org-api";
+    import apiAttachment from "./../attachment-api";
     import moment from "moment";
 
     import "vue-scroll-table";
+    import FileAttachment from "../components/FileAttachment";
+
 
     export default {
+        components: {
+            FileAttachment,
+            // ckeditor: CKEditor.component
+        },
         name: 'article-details',
         data() {
             return {
-                article: {personList: [], language: {}, movement: {}, hashtagList: [], linkList: [], locationList:[], orgList:[]},
+                article: {
+                    personList: [],
+                    language: {},
+                    movement: {},
+                    hashtagList: [],
+                    linkList: [],
+                    locationList: [],
+                    orgList: []
+                },
 
                 articlePersonIds: [], //before request
                 articlePersonEntities: [], //after request
@@ -191,9 +217,31 @@
 
                 articleMaterialIds: [], //before request
                 articleMaterialEntities: [], //after request
+
+                uploadedFiles: [],
+                loggedInFlag: false,  //todo to remove
+                loggedName: null,    //should be file's author, not logged user
             }
         },
         methods: {
+
+            getLoggedIn() {
+                this.loggedInFlag = this.$store.getters.isLoggedIn;
+                this.loggedName = this.$store.getters.getUserName;
+            },
+
+            updateNav(id) {  //todo  invest. of route opening in the same view
+                // https://forum.vuejs.org/t/router-link-to-the-same-page-needs-to-force-refresh/54622/2
+                //  https://forum.vuejs.org/t/router-link-to-the-same-page-needs-to-force-refresh/54622
+
+                let data = Object.assign({}, this.$route.query);
+                console.log("updNav", data);
+                // data['scrollto'] = query;
+                // outer-link :to="{name: 'article-details', params: {article_id: material.id}
+                this.$router.push({name: 'article-details', params: {article_id: id}});
+                // document.location.reload();
+            },
+
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
             },
@@ -342,7 +390,7 @@
                 let valueOrig = this.article.title;
                 let valueRus = this.article.titleRus;
 
-                console.log("COMPLEX TITLE", this.article.title, this.article.titleRus);
+                // console.log("COMPLEX TITLE", this.article.title, this.article.titleRus);
 
                 if (this.isObjectValidAndNotEmpty(valueRus)) {
                     result = valueRus;
@@ -353,12 +401,18 @@
                 } else if (this.isObjectValidAndNotEmpty(valueOrig))
                     result += valueOrig;
 
-                console.log("COMPLEX TITLE", result);
+                // console.log("COMPLEX TITLE", result);
                 return result;
+            },
+
+            getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
+                // console.log("get attachm");
+                apiAttachment.previewAttachment('article', this.article.id, file.id);
             },
         },
 
         mounted() {
+            this.getLoggedIn();
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;
                 console.log("-------------------", this.article);
@@ -402,8 +456,33 @@
                     this.articleMaterialEntities = response.data;
                     console.log("apiMater", this.articleMaterialEntities);
                 });
+
+                apiAttachment.getAttachments('article', this.article.id, r => {
+                    for (let i = 0; i < r.data.length; i++) {
+                        this.uploadedFiles.push(r.data[i]);
+                    }
+                });
             });
         },
+
+        // watch: {
+        //     $route(to, from) {
+        //         console.log(to, from);
+        //     }
+        // }
+
+        // https://github.com/vuejs/vue-router/issues/311
+        // watch: {
+        //     '$route' (to, from) {
+        //         if (to.path === '/article/56/details') {
+        //             this.$store.dispatch('getAllPromotions')
+        //         } else if (to.path === '/promotions/coupon') {
+        //             this.$store.dispatch('getAllPromotions', {
+        //                 type: 'coupon'
+        //             })
+        //         }
+        //     }
+        // }
 
         // dateFormat(value, row, index) {  //todo
         //     moment(this.article.date).format('DD/MM/YYYY').then(response => {

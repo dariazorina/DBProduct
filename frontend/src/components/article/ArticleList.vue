@@ -1,7 +1,7 @@
 <template id="article">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-        <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px">
+        <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px; background-color: transparent">
             <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
                     <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
@@ -15,43 +15,72 @@
 
             <!--            ////////////////////////////////date period/////////////////////////////////////-->
 
-            <div class="form-group col-2"
-                 style="margin-left:auto; background-color: white">
+            <!--            <div class="col-4"-->
+            <!--                 style="margin-left:auto; background-color: yellow">-->
 
 
-                <div class="row align-items-lg-baseline"
-                     style="margin-top: -20px;  margin-bottom: -5px; background-color: white">
+            <!--                <div class="align-items-lg-baseline"-->
+            <!--                     style="margin-top: -20px;  margin-bottom: -5px; background-color: #b5d592">-->
 
-                    <label for="startdate-input" class="col-form-label">Начало</label>
+            <!--&lt;!&ndash;                    <label for="startdate-input" class="col-form-label">Начало</label>&ndash;&gt;-->
 
-                    <div class="col-9"
-                         style="margin-bottom: -15px">
+            <!--                    <div class="col-4"-->
+            <!--                         style="margin-bottom: -15px; background-color: khaki">-->
+            <!--                        <input class="form-control" id="startdate-input" type="date" v-model="startDate"-->
+            <!--                               style="background-color: lightcyan"/>-->
+            <!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+            <!--                    &lt;!&ndash;                                        <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                                            <v-icon style="color: green">mdi-pencil</v-icon>&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                                        </v-btn>&ndash;&gt;-->
+            <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+            <!--&lt;!&ndash;                <div class="row align-items-lg-baseline" style="background-color: #ba68c8">&ndash;&gt;-->
+            <!--&lt;!&ndash;                    <label for="enddate-input" class="col-form-label">Конец</label>&ndash;&gt;-->
+
+            <!--&lt;!&ndash;                    <div class="col-7" style="margin-left: 10px; margin-bottom: -15px; background-color: #4183c4">&ndash;&gt;-->
+            <!--                        <input class="form-control" type="date" id="enddate-input" v-model="endDate"/>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+
+            <div class="form-group row col-9"
+                 style="margin: auto; background-color: transparent; padding-right: 0px; padding: 0;">
+
+                <div class="col-5"
+                     style="margin-top: 0px; background-color: transparent; padding-top: 0px; padding-bottom:0px; padding-left: 280px">
+                    <a class="btn btn-default">
+                        <router-link :to="{name: 'article-add'}">Add article</router-link>
+                    </a>
+                    <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
+                </div>
+
+                <div class="form-group row col-3" style="margin-left: 32%; padding:0; background-color: transparent">
+
+                    <div class="col-5"
+                         style="background-color: transparent; padding-left: 2px; padding-right: 2px; margin-left: 0px; padding-bottom: 0px; padding-top: 0px">
                         <input class="form-control" id="startdate-input" type="date" v-model="startDate"
-                               style="background-color: white"/>
+                               style="background-color: transparent;padding-left: 5px; padding-right: 2px;"/>
                     </div>
 
-                    <!--                                        <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">-->
-                    <!--                                            <v-icon style="color: green">mdi-pencil</v-icon>-->
-                    <!--                                        </v-btn>-->
-                </div>
-
-                <div class="row align-items-lg-baseline" style="background-color: white">
-                    <label for="enddate-input" class="col-form-label">Конец</label>
-
-                    <div class="col-9" style="margin-left: 10px; margin-bottom: -15px">
-                        <input class="form-control" type="date" id="enddate-input" v-model="endDate"/>
+                    <div class="col-5"
+                         style="background-color: transparent; padding-left: 2px; padding-right: 2px; padding-bottom: 0px; padding-top: 0px">
+                        <input class="form-control" type="date" id="enddate-input" v-model="endDate"
+                               style="padding-left: 5px; padding-right: 2px; "/>
                     </div>
-                </div>
+                    <!--            </div>-->
 
-                <div>
+                    <!--            <div>-->
                     <!--                    <a class="btn btn-default" onclick="refreshPeriod">-->
-                    <button id="refreshButton" type="button" class="btn btn-link" @click="refreshPeriod">
-                        Refresh period
-                        <!--                    </a>-->
-                    </button>
-                    <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
-                </div>
+                    <div class="col-2"
+                         style="background-color: transparent; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; margin-left: 0px">
+                        <button id="refreshButton" type="button" class="btn" @click="refreshPeriod">
+                            <!--                    Refresh period-->
+                            <!--                    </a>-->
+                            <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
+                        </button>
+                    </div>
 
+                </div>
             </div>
         </div>
 
@@ -62,13 +91,6 @@
         <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
         <!--        </div>-->
 
-
-        <div style="margin-top: -50px">
-            <a class="btn btn-default">
-                <router-link :to="{name: 'article-add'}">Add article</router-link>
-            </a>
-            <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
-        </div>
 
         <!--        ////////////////////////////////////////search//////////////////////////////////-->
         <div class="row">
@@ -90,171 +112,187 @@
                 <button type="button" @click="search" class="btn btn-primary">Search</button>
             </div>
 
-            <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////            -->
+            <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////-->
 
-            <div class="col-2" style="margin-left:auto; margin-right:0; background-color: white">
-                <b-form-group label="" style="text-align: left; margin-left: -15px">
-                    <b-form-checkbox
-                            v-for="option in options"
-                            v-model="statusCheckBox"
-                            :key="option.key"
-                            :value="option.value"
-                            name="statusSelection"
-                    >
-                        {{ option.text }}
-                    </b-form-checkbox>
-                </b-form-group>
-
+            <div class="form-group row col-2"
+                 style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
+                <div class="col-6">
+                    <b-form-group label="" style="text-align: left; margin-left: -15px; background-color: transparent">
+                        <b-form-checkbox
+                                v-for="option in options1"
+                                v-model="statusCheckBox"
+                                :key="option.key"
+                                :value="option.value"
+                                name="statusSelection">
+                            {{ option.text }}
+                        </b-form-checkbox>
+                    </b-form-group>
+                </div>
+                <div class="col-6">
+                    <b-form-group label="" style="text-align: left; margin-left: -15px; background-color: transparent">
+                        <b-form-checkbox
+                                v-for="option in options2"
+                                v-model="statusCheckBox"
+                                :key="option.key"
+                                :value="option.value"
+                                name="statusSelection">
+                            {{ option.text }}
+                        </b-form-checkbox>
+                    </b-form-group>
+                </div>
             </div>
         </div>
 
         <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
-<!--        <div style="height:50%; background-color: #b5d592">-->
-            <table class="redTable" :key="authorComponentKey" id="mainListTable">
-                <thead>
-                <tr>
-                    <th class='tdTitle' style="color:lightgray; width: 3%">Статус</th>
-                    <th class='tdTitle' data-field="createdAt" data-formatter="dateFormat">Дата</th>
-                    <th class='tdTitle'>Язык</th>
-                    <th class='tdTitle'>Хештеги</th>
-                    <th class='tdTitle'>Автор</th>
-                    <th class='tdTitle'>Заголовок</th>
-                    <th class='tdTitle' style="width:25%">Описание</th>
-                    <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
-                    <th class="tdTitle" style="width:4%">Действия</th>
-                    <th class="tdTitle" style="width:4%">Смена статуса</th>
-                    <th class="tdTitle" style="width:4%">Добавить материал..</th>
-                    <!--                    <th class="tdTitle" style="width:4%">Цвет</th>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="article in filteredArticles"
-                    @contextmenu.prevent="handler($event, article.id)"
-                    :key="article.id"
-                    :id="article.id"
-                    :class="{'active': ((article.id === selectedArticle)&&(previousSelectedArticle!==selectedArticle))}">
+        <!--        <div style="height:50%; background-color: #b5d592">-->
+        <table class="redTable" :key="authorComponentKey" id="mainListTable">
+            <thead>
+            <tr>
+                <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
+                <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
+                    Дата
+                </th>
+                <th class='tdTitle'>Язык</th>
+                <th class='tdTitle'>Хештеги</th>
+                <th class='tdTitle'>Автор</th>
+                <th class='tdTitle headerLink' @click="sort('title')">Заголовок</th>
+                <th class='tdTitle' style="width:25%">Описание</th>
+                <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
+                <th class="tdTitle" style="width:4%">Действия</th>
+                <th class="tdTitle" style="width:4%">Смена статуса</th>
+                <th class="tdTitle" style="width:4%">Добавить материал..</th>
+                <!--                    <th class="tdTitle" style="width:4%">Цвет</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <!--            <tr v-for="article in filteredArticles"-->
+            <tr v-for="article in sortedArticles"
+                @contextmenu.prevent="handler($event, article.id)"
+                :key="article.id"
+                :id="article.id"
+                :class="{'active': ((article.id === selectedArticle)&&(previousSelectedArticle!==selectedArticle))}">
 
-                    <td :key="article.status">
-                        <div v-if="article.status==0">
-                            <v-icon style="color: orange">mdi-pencil-plus</v-icon>
-                        </div>
+                <td :key="article.status">
+                    <div v-if="article.status==0">
+                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                    </div>
 
-                        <div v-if="article.status==1">
-                            <v-icon style="color: orange">mdi-check</v-icon>
-                        </div>
+                    <div v-if="article.status==1">
+                        <v-icon style="color: orange">mdi-check</v-icon>
+                    </div>
 
-                        <div v-if="article.status==2">
-                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
-                        </div>
+                    <div v-if="article.status==2">
+                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    </div>
 
-                        <div v-if="article.status==3">
-                            <v-icon style="color: green">mdi-check</v-icon>
+                    <div v-if="article.status==3">
+                        <v-icon style="color: green">mdi-check</v-icon>
+                    </div>
+                </td>
+                <td>
+                    {{ formatDate(article.date) }}
+                </td>
+                <td>
+                    {{article.language.name}}
+                </td>
+                <td>
+                    <div v-for="hashtag in article.hashtagList">
+                        {{hashtag}}
+                    </div>
+                </td>
+                <td>
+                    <div v-for="author in article.personList">
+                        <div v-if="article.personList.length>0">
+                            {{createComplexCellValueById(author.itemId)}}
                         </div>
-                    </td>
-                    <td>
-                        {{ formatDate(article.date) }}
-                    </td>
-                    <td>
-                        {{article.language.name}}
-                    </td>
-                    <td>
-                        <div v-for="hashtag in article.hashtagList">
-                            {{hashtag}}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-for="author in article.personList">
-                            <div v-if="article.personList.length>0">
-                                {{createComplexCellValueById(author.itemId)}}
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <!--                    <div style="white-space:pre-line">-->
-                            <a>
-                                <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                    {{createComplexCellValue(article.titleRus, article.title)}}
-                                </router-link>
-                            </a>
-                        </div>
-                    </td>
-                    <td style="height: 50px">
-                        <div style="height:60px; overflow:hidden">
-                            {{article.description }}
-                        </div>
-                    </td> <!--todo dots? if cut-->
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <!--                    <div style="white-space:pre-line">-->
+                        <a>
+                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                                {{createComplexCellValue(article.titleRus, article.title)}}
+                            </router-link>
+                        </a>
+                    </div>
+                </td>
+                <td style="height: 50px">
+                    <div style="height:60px; overflow:hidden">
+                        {{article.description }}
+                    </div>
+                </td> <!--todo dots? if cut-->
 
-                    <td style="height: 50px">
-                        <div style="height:60px; overflow:hidden">
-                            {{article.miscellany }}
-                        </div>
-                    </td>
-                    <td>
-                        <v-btn text icon x-small>
-                            <a>
-                                <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
-                                    <v-icon style="color: green">mdi-pencil</v-icon>
-                                </router-link>
-                            </a>
-                        </v-btn>
+                <td style="height: 50px">
+                    <div style="height:60px; overflow:hidden">
+                        {{article.miscellany }}
+                    </div>
+                </td>
+                <td>
+                    <v-btn text icon x-small>
+                        <a>
+                            <router-link :to="{name: 'article-add', params: {article_id: article.id}}">
+                                <v-icon style="color: green">mdi-pencil</v-icon>
+                            </router-link>
+                        </a>
+                    </v-btn>
 
 
-                        <v-btn text icon x-small>
-                            <a>
-                                <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
-                                    <v-icon style="color: red">mdi-delete-forever</v-icon>
-                                </router-link>
-                            </a>
-                        </v-btn>
-                    </td>
-                    <td>
-                        <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
-                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
-                        </v-btn>
+                    <v-btn text icon x-small>
+                        <a>
+                            <router-link :to="{name: 'article-delete', params: {article_id: article.id}}">
+                                <v-icon style="color: red">mdi-delete-forever</v-icon>
+                            </router-link>
+                        </a>
+                    </v-btn>
+                </td>
+                <td>
+                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
+                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    </v-btn>
 
-                        <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
-                            <v-icon style="color: green">mdi-check</v-icon>
-                        </v-btn>
-                    </td>
-                    <td>
-                        <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
-                            <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
-                        </v-btn>
-                    </td>
-                    <!--                    <td>-->
-                    <!--                        <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">-->
-                    <!--                            красный-->
-                    <!--                        </b-button>-->
-                    <!--                        <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">-->
-                    <!--                            желтый-->
-                    <!--                        </b-button>-->
-                    <!--                        <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">-->
-                    <!--                            зеленый-->
-                    <!--                        </b-button>-->
-                    <!--                        <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">-->
-                    <!--                            голубой-->
-                    <!--                        </b-button>-->
-                    <!--                    </td>-->
-                </tr>
-                </tbody>
-            </table>
-<!--        </div>-->
+                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
+                        <v-icon style="color: green">mdi-check</v-icon>
+                    </v-btn>
+                </td>
+                <td>
+                    <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
+                        <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
+                    </v-btn>
+                </td>
+                <!--                    <td>-->
+                <!--                        <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">-->
+                <!--                            красный-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">-->
+                <!--                            желтый-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">-->
+                <!--                            зеленый-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">-->
+                <!--                            голубой-->
+                <!--                        </b-button>-->
+                <!--                    </td>-->
+            </tr>
+            </tbody>
+        </table>
+        <!--        </div>-->
         <b-modal id="modal-scoped" :hide-footer="true" :hide-header="true">
             <template>
                 <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle()}}" как</p><br></b>
                 <div align="center">
                     <b-button size="sm" variant="success"
                               @click="createArticleWithMaterial(currentArticle.id, connectionType[2])">
-                        Родитель
+                        родителя
                     </b-button>
                     <b-button size="sm" variant="danger"
                               @click="createArticleWithMaterial(currentArticle.id, connectionType[0])">
-                        Ребенок
+                        потомка
                     </b-button>
                     <b-button size="sm" variant="info"
                               @click="createArticleWithMaterial(currentArticle.id, connectionType[1])">
-                        Равноправные
+                        равноправный
                     </b-button>
                 </div>
             </template>
@@ -269,7 +307,8 @@
             <template>
                 <b><p class="myHeader">Выберите цвет для выделения текущей записи</p><br></b>
                 <div align="center">
-                    <v-swatches v-model="color"></v-swatches>
+                    <v-swatches v-model="color" inline></v-swatches>
+                    <!--                    <v-swatches v-model="color" inline :swatches="swatches"></v-swatches>-->
                 </div>
             </template>
         </b-modal>
@@ -314,7 +353,7 @@
     import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
     import contextMenu from 'vue-context-menu'
 
-    import VSwatches from 'vue-swatches'
+    import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'
 
     export default {
@@ -348,18 +387,18 @@
                 searchKey: '',
 
                 statusCheckBox: [],
-                options: [
-                    {text: 'In Progress', value: 0},
-                    {text: 'Done', value: 1},
-                    {text: 'Returned', value: 2},
-                    {text: 'Completed', value: 3},
-
+                options1: [
+                    {text: 'В работе', value: 0},
+                    {text: 'Внесены', value: 1},
+                ],
+                options2: [
+                    {text: 'На доработке', value: 2},
+                    {text: 'Отработаны', value: 3},
                 ],
                 connectionType: [
-                    {text: 'родитель-ребенок', value: 0},
+                    {text: 'потомок', value: 0},
                     {text: 'равноправные', value: 1},
-                    {text: 'ребенок-родитель', value: 2},
-
+                    {text: 'родитель', value: 2},
                 ],
                 // currentArticleId: 0,
                 currentArticle: [],
@@ -367,6 +406,10 @@
 
                 selectedArticle: null,
                 previousSelectedArticle: null,
+
+                currentSort: 'date',
+                currentSortDir: 'asc'
+
                 // swatches: [
                 //     '#FF0000', '#AA0000', '#550000',
                 //     '#FFFF00', '#AAAA00', '#555500',
@@ -388,8 +431,46 @@
                 // console.log("*************************************FILTERED ARTICLES", this.entries);
                 return this.entries;
             },
+
+            sortedArticles() {
+                console.log("sorted articles");
+                this.authorComponentKey++; //for zebra after sorting
+
+                // if (this.currentSort === 'author'){  //
+                //     return this.entries;
+                //
+                // }
+                // else {
+                    return this.entries.sort((a, b) => {
+                        let modifier = 1;
+                        if (this.currentSortDir === 'desc') modifier = -1;
+                        if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                        if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                        return 0;
+                    });
+                // }
+             }
         },
+
+        // beforeUpdate() {
+        //     console.log(`beforeUpdate At this point, Virtual DOM has not re-rendered or patched yet.`)
+        // },
+
+        updated() {
+            //console.log(`updated At this point, Virtual DOM has re-rendered and patched.`)
+            this.alternate('mainListTable');
+        },
+
         methods: {
+            sort(s) {
+                console.log("click");
+                //if s == current sort, reverse
+                if (s === this.currentSort) {
+                    this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+                }
+                this.currentSort = s;
+            },
+
             handler: function (event, id) {
                 // console.log("RIGHT BUTTON", event, event.target, id);
 
@@ -397,8 +478,7 @@
                 if (this.previousSelectedArticle !== this.selectedArticle) {
                     document.getElementById('context-menu').setAttribute('style', 'display');
                     this.$refs.ctxMenu.open(event);
-                }
-                else {
+                } else {
                     // console.log("CNTXT MENU", document.getElementById('context-menu'));
                     document.getElementById('context-menu').setAttribute('style', 'display:none');
                     //classList.add('hidden');
@@ -445,7 +525,7 @@
 
                             if (this.entries[i] !== null && typeof this.entries[i] !== 'undefined') {
                                 if (this.entries[i].rowColor !== null) {
-                                    // console.log("this.entries[i].rowColor", this.entries[i], this.entries[i].rowColor);
+                                    //console.log("this.entries[i].rowColor", this.entries[i], this.entries[i].rowColor);
                                     //let a = document.getElementsByClassName("redTable");
                                     //let a = document.getElementById('mainListTable');//.style;//.backgroundColor;
                                     // let element = document.getElementById('mainListTable');
@@ -457,7 +537,7 @@
                                     // let element = document.getElementById(id.toString());
                                     // let style = window.getComputedStyle(element);
                                     // let top = style.getPropertyValue('background-color');
-                                    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$css color null");
+                                    //console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$css color null");
                                     rows[i + 1].style.backgroundColor = (i % 2) ? "#EEEEEE" : '#D0E4F5';//'#888888';//+1 because of title
                                 }
                             }

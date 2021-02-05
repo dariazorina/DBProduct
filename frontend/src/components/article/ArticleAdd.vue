@@ -42,14 +42,14 @@
 
                 <form class="formCreation">
                     <div class="form-row align-items-center">
-                        <label>Тип материала</label>
+                        <label><b>Тип материала</b></label>
                         <div class="col-12" style="background-color: transparent">
                             <b-card style="background-color: transparent">
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
                                         <v-sheet
                                                 style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
-                                            <v-text-field label="search material type"
+                                            <v-text-field label="поиск типа материала"
                                                           v-model="searchMType"
                                                           filled>
                                             </v-text-field>
@@ -168,12 +168,11 @@
 
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 20px;">
                         <v-card-text>
+                            <label style="font-size: medium; font-weight: bold">Связанные лица</label>
                             <v-autocomplete
                                     id="author-autocomplete"
-                                    label="Связанные лица"
-
                                     :items="items"
                                     :loading="isLoading"
                                     :search-input.sync="authorSearch"
@@ -210,12 +209,11 @@
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
                     <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
                         <v-card-text>
+                            <label style="font-size: medium; font-weight: bold">Связанные страны/н.п./места</label>
                             <v-autocomplete
                                     id="location-autocomplete"
-                                    label="Связанные страны/н.п./места"
-
                                     :items="itemsLocation"
                                     :loading="isLoadingLocation"
                                     :search-input.sync="locationSearch"
@@ -251,12 +249,11 @@
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
                     <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
                         <v-card-text>
+                            <label style="font-size: medium; font-weight: bold">Связанные организации</label>
                             <v-autocomplete
                                     id="org-autocomplete"
-                                    label="Связанные организации"
-
                                     :items="itemsOrg"
                                     :loading="isLoadingOrg"
                                     :search-input.sync="orgSearch"
@@ -290,14 +287,14 @@
                 </form>
                 <form class="formCreation">
                     <div class="form-row align-items-md-start" style="background-color: transparent">
-                        <div class="col-4" style="background-color: transparent">
-                                <label style="background-color: transparent">Хештеги</label>
-                                <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
-                                           :read-only="uploadMode"
-                                           v-model="tags"></input-tag>
+                        <div class="col-5" style="background-color: transparent">
+                            <label style="background-color: transparent"><b>Хештеги</b></label>
+                            <input-tag id="add-hashtag1" :add-tag-on-keys="addTagOnKeys"
+                                       :read-only="uploadMode"
+                                       v-model="tags"></input-tag>
                         </div>
-                        <div class="col-8" style="background-color: transparent">
-                            <label>Форма добавления хештегов</label>
+                        <div class="col-7" style="background-color: transparent">
+                            <label><b>Форма добавления хештегов</b></label>
                             <b-card style="background-color: transparent">
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
@@ -337,44 +334,44 @@
                                         </v-container>
                                     </v-col>
 
-                                    <v-divider vertical
-                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
+                                    <!--                                    <v-divider vertical-->
+                                    <!--                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
 
-                                    <v-col
-                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+                                    <!--                                    <v-col-->
+                                    <!--                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
 
-                                        <v-container
-                                                id="scroll-target"
-                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"
-                                                class="overflow-y-auto">
+                                    <!--                                        <v-container-->
+                                    <!--                                                id="scroll-target"-->
+                                    <!--                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
+                                    <!--                                                class="overflow-y-auto">-->
 
-                                            <template v-if="!selectedHashtag.length">
-                                                No nodes selected.
-                                            </template>
+                                    <!--                                            <template v-if="!selectedHashtag.length">-->
+                                    <!--                                                No nodes selected.-->
+                                    <!--                                            </template>-->
 
-                                            <template v-else>
-                                                <div v-for="node in selectedHashtag">
-                                                    <v-btn text icon x-small
-                                                           @click="removeSelectedHashtag(node)">
-                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>
-                                                    </v-btn>
-                                                    {{ node }}
-                                                </div>
-                                                <div class="form-group row" style="padding-top: 30px">
-                                                    <button type="button"
-                                                            style="margin-right: 20px; margin-left: 15px"
-                                                            :disabled="uploadMode"
-                                                            @click="addHashtagToArticleList()"
-                                                            class="btn btn-success">Add
-                                                    </button>
-                                                    <button type="button" class="btn btn-info"
-                                                            :disabled="uploadMode"
-                                                            @click="clearAllSelectedTags()">Clear All
-                                                    </button>
-                                                </div>
-                                            </template>
-                                        </v-container>
-                                    </v-col>
+                                    <!--                                            <template v-else>-->
+                                    <!--                                                <div v-for="node in selectedHashtag">-->
+                                    <!--                                                    <v-btn text icon x-small-->
+                                    <!--                                                           @click="removeSelectedHashtag(node)">-->
+                                    <!--                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+                                    <!--                                                    </v-btn>-->
+                                    <!--                                                    {{ node }}-->
+                                    <!--                                                </div>-->
+                                    <!--                                                <div class="form-group row" style="padding-top: 30px">-->
+                                    <!--                                                    <button type="button"-->
+                                    <!--                                                            style="margin-right: 20px; margin-left: 15px"-->
+                                    <!--                                                            :disabled="uploadMode"-->
+                                    <!--                                                            @click="addHashtagToArticleList()"-->
+                                    <!--                                                            class="btn btn-success">Add-->
+                                    <!--                                                    </button>-->
+                                    <!--                                                    <button type="button" class="btn btn-info"-->
+                                    <!--                                                            :disabled="uploadMode"-->
+                                    <!--                                                            @click="clearAllSelectedTags()">Clear All-->
+                                    <!--                                                    </button>-->
+                                    <!--                                                </div>-->
+                                    <!--                                            </template>-->
+                                    <!--                                        </v-container>-->
+                                    <!--                                    </v-col>-->
                                 </v-row>
                             </b-card>
                         </div>
@@ -383,12 +380,11 @@
                 <form class="authorsFormCreation form-row col-12"
                       style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
                     <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
+                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
                         <v-card-text>
+                            <label style="font-size: medium; font-weight: bold">Связанные материалы</label>
                             <v-autocomplete
                                     id="material-autocomplete"
-                                    label="Связанные материалы"
-
                                     :items="itemsMaterial"
                                     :loading="isLoadingMaterial"
                                     :search-input.sync="materialSearch"
@@ -423,7 +419,7 @@
                 </form>
                 <form class="formCreation">
                     <div class="form-row align-items-center">
-                        <label for="add-descr">Описание</label>
+                        <label for="add-descr"><b>Описание</b></label>
                         <div class="col-12">
                             <ckeditor :editor="editor" id="add-descr" v-model="article.description"
                                       :config="editorConfig" :disabled="uploadMode"></ckeditor>
@@ -432,7 +428,7 @@
                     </div>
 
                     <div class="form-row align-items-center">
-                        <label for="add-text">Текст</label>
+                        <label for="add-text"><b>Текст</b></label>
                         <div class="col-12">
                             <ckeditor :editor="editor" id="add-text" v-model="article.text"
                                       :config="editorConfig"></ckeditor>
@@ -441,7 +437,7 @@
 
                     <div class="form-row align-items-center">
                         <!--                        <div class="form-group green-border-focus">-->
-                        <label for="add-misc">Комментарии</label>
+                        <label for="add-misc"><b>Комментарии</b></label>
                         <div class="col-12 green-border-focus">
 
                                     <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
@@ -449,12 +445,10 @@
                         </div>
                     </div>
 
-                    <div v-if="editMode" class="form-row align-items-center"
-                         style="background-color: transparent">
+                    <div v-if="editMode" class="form-row align-items-center" style="background-color: transparent">
                         <label class="col-1 col-form-label labelInCreation"
-                               style="vertical-align: center; background-color: transparent">Текущий
-                            статус</label>
-                        <div class="col-5" style="background-color: transparent">
+                               style="vertical-align: center; background-color: transparent">Текущий статус</label>
+                        <div class="col-3" style="background-color: transparent">
                             <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
                                            style="background-color: transparent;">
                                 <option v-for="status in statusOptions" v-bind:value="status.value">
@@ -463,6 +457,12 @@
                             </b-form-select>
                             <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
+                        <label class="col-2 col-form-label labelInCreation"
+                               style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
+                            цвет выделения</label>
+                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">
+                            <v-swatches v-model="article.rowColor" popover-x="left"></v-swatches>
+                        </div>
                     </div>
 
                     <div v-if="uploadMode||editMode">
@@ -470,7 +470,8 @@
                                          @getAttachment="getAttachment"
                                          @downloadAttachment="downloadAttachment"
                                          :userName="loggedName"
-                                         :already-uploaded-files="uploadedFiles"/>
+                                         :already-uploaded-files="uploadedFiles"
+                                         :is-details-mode="false"/>
                     </div>
                 </form>
                 <!--                </div>-->
@@ -478,9 +479,9 @@
                 <div v-if="editMode" class="form-group row align-items-center">
                     <div class="offset-sm-4 col-sm-3">
 
-                        <button type="button" @click="updateArticle" class="btn btn-primary">Update</button>
+                        <button type="button" @click="updateArticle" class="btn btn-primary">Обновить</button>
                         <a class="btn btn-default">
-                            <router-link to="/article">Cancel</router-link>
+                            <router-link to="/article">Отмена</router-link>
                         </a>
                     </div>
                 </div>
@@ -491,18 +492,18 @@
                          style="background-color: transparent">
                         <div class="form-group align-items-center col-sm-12" style="background-color: transparent">
                             <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue">
-                            <label for="checkbox">Check if you want to upload files after article creation</label>
+                            <label for="checkbox">Нажмите "галочку", если хотите добавить файлы</label>
                         </div>
 
                         <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
-                                class="btn btn-warning">In Progress
+                                class="btn btn-warning">В работе
                         </button>
                         <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
-                                class="btn btn-success">Done
+                                class="btn btn-success">Внесены
                         </button>
 
                         <button type="button" class="btn btn-info">
-                            <router-link to="/article" style="color: white">Cancel</router-link>
+                            <router-link to="/article" style="color: white">Отмена</router-link>
                         </button>
                     </div>
 
@@ -531,7 +532,7 @@
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
 
-    import FileAttachment from "./../FileAttachment";
+    import FileAttachment from "../components/FileAttachment";
     import moment from "moment";
     import InputTag from 'vue-input-tag';
     import router from "./../../router";
@@ -541,7 +542,7 @@
     import ConnectionComponent from "../components/connection/ConnectionComponent";
     import CreatedList from "../components/multiple-enter-list/CreatedList";
     import CKEditor from 'ckeditor4-vue';
-
+    import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     Vue.component('input-tag', InputTag);
 
     export default {
@@ -549,7 +550,8 @@
             CreatedList,
             ConnectionComponent,
             FileAttachment,
-            ckeditor: CKEditor.component
+            ckeditor: CKEditor.component,
+            VSwatches
         },
         name: 'article-add',
         vuetify: new Vuetify(),
@@ -603,7 +605,7 @@
 
             selectionType: 'independent',
 
-            selectedHashtag: [],
+            // selectedHashtag: [],
             selectedMType: {},
 
             hashtagFlatTree: [],
@@ -630,10 +632,10 @@
 
             status: ["statusProgress", "statusDone"],
             statusOptions: [
-                {text: 'In Progress', value: 0},
-                {text: 'Done', value: 1},
-                {text: 'Returned', value: 2},
-                {text: 'Completed', value: 3},
+                {text: 'В работе', value: 0},
+                {text: 'Внесены', value: 1},
+                {text: 'На доработке', value: 2},
+                {text: 'Отработаны', value: 3},
             ],
             editMode: false,
 
@@ -682,21 +684,21 @@
                 apiAttachment.previewAttachment('article', this.article.id, file.id);
             },
 
-            removeSelectedHashtag(hash) {
-                const index = this.selectedHashtag.indexOf(hash);
-                if (index > -1) {
-                    this.selectedHashtag.splice(index, 1);
-                }
-            },
+            // removeSelectedHashtag(hash) {
+            //     const index = this.selectedHashtag.indexOf(hash);
+            //     if (index > -1) {
+            //         this.selectedHashtag.splice(index, 1);
+            //     }
+            // },
 
             removeSelectedMType() {
                 this.selectedMType = '';
             },
 
             onHashtagSelect(item) {
-                const index = this.selectedHashtag.indexOf(item.name);
+                const index = this.tags.indexOf(item.name);
                 if (index === -1) {
-                    this.selectedHashtag.push(item.name);
+                    this.tags.push(item.name);
                 }
             },
 
@@ -728,26 +730,26 @@
                 return flatTree;
             },
 
-            clearAllSelectedTags() {
-                this.selectedHashtag = [];
-            },
+            // clearAllSelectedTags() {
+            //     this.selectedHashtag = [];
+            // },
 
             // addHashtagToArticleList(hashtag) {//from HashtagList
             //     this.tags = hashtag;
             // },
 
-            addHashtagToArticleList() {
-                let tagAlreadyAdded = 0;
-                this.selectedHashtag.forEach((item, i) => {
-                    this.tags.forEach((tag, j) => {
-                        if (tag === item)
-                            tagAlreadyAdded = 1;
-                    });
-                    if (tagAlreadyAdded == 0)
-                        this.tags.push(item);
-                });
-                this.selectedHashtag = [];
-            },
+            // addHashtagToArticleList() {
+            //     let tagAlreadyAdded = 0;
+            //     this.selectedHashtag.forEach((item, i) => {
+            //         this.tags.forEach((tag, j) => {
+            //             if (tag === item)
+            //                 tagAlreadyAdded = 1;
+            //         });
+            //         if (tagAlreadyAdded == 0)
+            //             this.tags.push(item);
+            //     });
+            //     this.selectedHashtag = [];
+            // },
 
             testFocus(obj) {
                 console.log("GET FOCUS");
