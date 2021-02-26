@@ -38,7 +38,7 @@
                         <div class="col-11" style="background-color: transparent; padding-bottom: 0; padding-top: 0;">
                             <label>1 уровень</label>
                             <b-form-select v-model="selected1LevelId" id="level1-selection">
-                                <option v-for="mt in levelMTypes" :value="mt.id" v-if="mt.parentId==0">
+                                <option v-for="mt in levelMTypes" :value="mt.id" v-if="mt.parentId===0">
                                     {{mt.content}}
                                 </option>
                             </b-form-select>
@@ -55,7 +55,7 @@
                             <label>2 уровень</label>
                             <b-form-select v-model="selected2LevelId" id="level2-selection">
                                 <option v-for="mt in levelMTypes" :value="mt.id"
-                                        v-if="mt.parentId==selected1LevelId">
+                                        v-if="mt.parentId===selected1LevelId">
                                     {{mt.content}}
                                 </option>
                             </b-form-select>
@@ -127,15 +127,15 @@
                     {{mt.miscellany}}
                 </td>
                 <td>
-                    <v-btn v-if="clicked.includes(mtype.id)" text icon x-small
-                           @click="deleteAddedMType(mtype.id)">
-                        <v-icon style="color: red">mdi-delete-forever</v-icon>
-                    </v-btn>
+<!--                    <v-btn v-if="clicked.includes(mt.id)" text icon x-small-->
+<!--                           @click="deleteAddedMType(mt.id)">-->
+<!--                        <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+<!--                    </v-btn>-->
 
-                    <v-btn text icon x-small @click="findEditedMType(mtype.id)">
+                    <v-btn text icon x-small @click="findEditedMType(mt.id)">
                         <v-icon style="color: green">mdi-pencil</v-icon>
                     </v-btn>
-                    <v-btn text icon x-small @click="deleteMType(mtype.id)">
+                    <v-btn text icon x-small @click="deleteMType(mt.id)">
                         <v-icon style="color: red">mdi-delete-forever</v-icon>
                     </v-btn>
                 </td>
@@ -209,22 +209,22 @@
                 // this.addedHashtagsId.push(id);
             },
 
-            deleteAddedMType(id) {
-                let clickedIndex = null;
-                let mtypesContentIndex = null;
-
-                this.clicked.forEach((el, index) => {
-                    if (el === id) clickedIndex = index;
-                });
-
-                this.addedMTypesContent.forEach((el, index) => {
-                    if (el === this.getMTypeContentById(id)) mtypesContentIndex = index;
-                });
-
-                this.clicked.splice(clickedIndex, 1);
-                this.addedMTypesContent.splice(mtypesContentIndex, 1);
-                // this.addedHashtagsId.splice(hashtagsIdIndex, 1);
-            },
+            // deleteAddedMType(id) {
+            //     let clickedIndex = null;
+            //     let mtypesContentIndex = null;
+            //
+            //     this.clicked.forEach((el, index) => {
+            //         if (el === id) clickedIndex = index;
+            //     });
+            //
+            //     this.addedMTypesContent.forEach((el, index) => {
+            //         if (el === this.getMTypeContentById(id)) mtypesContentIndex = index;
+            //     });
+            //
+            //     this.clicked.splice(clickedIndex, 1);
+            //     this.addedMTypesContent.splice(mtypesContentIndex, 1);
+            //     // this.addedHashtagsId.splice(hashtagsIdIndex, 1);
+            // },
 
             addChosenMType() { //add to Person
                 if (this.addedMTypesContent.length) {
@@ -391,6 +391,9 @@
                                 }
                             }
                         });
+                    }, error => {
+                        console.log(error);
+                        this.labelAddOrEditMType = "This type uses in materials, can't delete";
                     });
                 }
             },
@@ -448,7 +451,7 @@
             },
 
             isArrayValidAndNotEmpty(array) {
-                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                if (typeof array === 'undefined' || array === null || array.length === 0) {
                     return false;
                 }
                 return true;
@@ -512,7 +515,7 @@
             mtypeContentTitle() {
                 console.log(" mtypeContentTitle(){");
 
-                if (this.mtype.content.length == 0) {
+                if (this.mtype.content.length === 0) {
                     console.log(" mtype: function(){ NULL");
 
                     if (this.selected2LevelId == null) {
@@ -598,7 +601,7 @@
             searchKey: function () {
                 //If empty search to renew the table
                 console.log("WATCH");
-                if (this.searchKey == "") {
+                if (this.searchKey === "") {
                     this.search();
                 }
             },

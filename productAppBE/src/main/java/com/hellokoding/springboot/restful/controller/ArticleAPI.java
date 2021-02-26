@@ -44,16 +44,20 @@ public class ArticleAPI {
 
     //api/v1/article/search?title=title&hash=hash
     @GetMapping("/search")
-    public ResponseEntity<List<ArticleDto>> search(@RequestParam(name = "title", required = false) String title,
-                                                   @RequestParam(name = "hash", required = false) String hash,
-                                                   @RequestParam(name = "author", required = false) String author,
-                                                   @RequestParam(name = "language", required = false) String lang,
+    public ResponseEntity<List<ArticleDto>> search(@RequestParam(name = "title", required = false) List<String> title,
+                                                   @RequestParam(name = "hash", required = false) List<String> hash,
+                                                   @RequestParam(name = "author", required = false) List<String> author,
+                                                   @RequestParam(name = "org", required = false) List<String> org,
+                                                   @RequestParam(name = "location", required = false) List<String> location,
+                                                   @RequestParam(name = "language", required = false) List<String> lang,
                                                    @RequestParam(name = "description", required = false) String descr,
+                                                   @RequestParam(name = "text", required = false) String text,
+                                                   @RequestParam(name = "miscellany", required = false) List<String> misc,
                                                    @RequestParam(name = "status", required = false) List<Integer> status,
                                                    @RequestParam(name = "startDate", required = false) String startDate,
                                                    @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.search(title, hash, author, lang, descr, status, startDate, endDate);
+        List<ArticleDto> searchResult = articleService.search(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate);
         return ResponseEntity.ok(searchResult);
     }
 

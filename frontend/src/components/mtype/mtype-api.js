@@ -84,7 +84,7 @@ export default {
             })
     },
 
-    delete(id, fn) {
+    delete(id, fn, fnError) {
         AXIOS
             .delete('/mtype/' + id)
             .then(response => fn(response))
@@ -92,6 +92,9 @@ export default {
                 console.log(error);
                 if (error.response.status === 401) {
                     router.push('/login');
+                }
+                else {
+                    fnError(error.response.data);
                 }
             })
     },

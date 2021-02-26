@@ -37,14 +37,23 @@ public class MTypeServiceImpl implements MTypeService {
     }
 
     @Override
-    public MaterialType save(MaterialType stock) {
-
-        //todo is it ok?
-        MaterialType materialTypeByContent = mtypeRepository.getMaterialTypeByContent(stock.getContent()); //ищем хештег в БД
-        if (materialTypeByContent == null) {
+    public MaterialType save(MaterialType stock) { //enable to save equal values for different parents
+        boolean isMTDuplicate = false;
+        stock.setContent(stock.getContent().toLowerCase());
+        List<MaterialType> materialTypeByContentList = mtypeRepository.getMaterialTypeByContent(stock.getContent()); //ищем мт в БД
+        if (materialTypeByContentList == null) {
             return mtypeRepository.save(stock);
         } else {
-            return null;
+            for (MaterialType mt: materialTypeByContentList) {
+                if (mt.getParentId().equals(stock.getParentId())){
+                    isMTDuplicate = true;
+                    break;
+                }
+            }
+            if (isMTDuplicate) {
+                return null;
+            }
+            return mtypeRepository.save(stock);
         }
     }
 

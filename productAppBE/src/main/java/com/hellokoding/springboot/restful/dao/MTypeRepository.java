@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MTypeRepository extends JpaRepository<MaterialType, Integer> {
 
-    MaterialType getMaterialTypeByContent(String content);
+    List<MaterialType> getMaterialTypeByContent(String content);
     List<MaterialType> findByContentStartsWithIgnoreCaseOrderByContentDesc(String content);
     List<MaterialType> findByParentId(Integer id);
 }

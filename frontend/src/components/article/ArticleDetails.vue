@@ -11,6 +11,14 @@
         <div class="details">
 
             <div class="row">
+                <div class="col-sm-2">
+                    <div class="cellTitle"><span class="float-left">Тип материала</span></div>
+                </div>
+                <div class="col-sm-10"><span class="float-left"> <div v-if="article.mtype!=null">{{article.mtype.content}}</div> </span>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Links</span></div>
                 </div>
@@ -52,50 +60,28 @@
                 </div>
             </div>
 
+
             <div class="row">
                 <div class="col-sm-2">
+                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                        <span class="float-left">Заголовок</span></div>
+                </div>
+                <div class="col-sm-10">
+                    <span class="float-left"> <div>{{createComplexTitle()}}</div></span></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2"  style="background-color:lavender;">
                     <div class="cellTitle">
                         <span class="float-left">Авторы</span>
                     </div>
                 </div>
 
-                <div class="col-sm-10"><span class="float-left">
+                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left">
                      <div v-for="author in articlePersonEntities">
                             {{createComplexPersonById(author.id)}}
                     </div>
                 </span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2" style="background-color:lavender;">
-                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                        <span class="float-left">Заголовок</span></div>
-                </div>
-                <div class="col-sm-10" style="background-color:lavender;">
-                    <span class="float-left"> <div>{{createComplexTitle()}}</div></span></div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="cellTitle"><span class="float-left">Тип материала</span></div>
-                </div>
-                <div class="col-sm-10"><span class="float-left"> <div v-if="article.mtype!=null">{{article.mtype.content}}</div> </span>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-sm-2" style="background-color:lavender;">
-                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                        <span class="float-left">Организации</span></div>
-                </div>
-                <div class="col-sm-10" style="background-color:lavender;">
-                                       <span class="float-left">
-                                           <div v-for="org in articleOrgEntities">
-                                                {{createComplexOrgById(org.id)}}
-                                           </div>
-                                       </span>
                 </div>
             </div>
 
@@ -111,12 +97,17 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-sm-2" style="background-color:lavender;">
-                    <div class="cellTitle"><span class="float-left">Описание</span></div>
+                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                        <span class="float-left">Организации</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.description}}</span>
+                <div class="col-sm-10" style="background-color:lavender;">
+                                       <span class="float-left">
+                                           <div v-for="org in articleOrgEntities">
+                                                {{createComplexOrgById(org.id)}}
+                                           </div>
+                                       </span>
                 </div>
             </div>
 
@@ -149,18 +140,45 @@
                 </div>
             </div>
 
-            <div class="row" v-if="article.miscellany!=null">
+            <div class="row">
                 <div class="col-sm-2">
-                    <div class="cellTitle"><span class="float-left">Комментарии</span></div>
+                    <div class="cellTitle"><span class="float-left">Описание</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left"> {{article.miscellany}}</span>
+                <div class="col-sm-10"><span class="float-left"> {{article.description}}</span>
                 </div>
             </div>
 
-            <file-attachment @getAttachment="getAttachment"
-                             :userName="loggedName"
-                             :already-uploaded-files="uploadedFiles"
-                             :is-details-mode="true"/>
+
+            <div class="row">
+                <div class="col-sm-2" style="background-color:lavender;">
+                    <div class="cellTitle"><span class="float-left">Текст</span></div>
+                </div>
+                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.createComplexTitle}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="cellTitle"><span class="float-left">Статус</span></div>
+                </div>
+                <div class="col-sm-10"><span class="float-left"> {{getStatusName()}}</span>
+                </div>
+            </div>
+
+            <div class="row" v-if="article.miscellany!=null">
+                <div class="col-sm-2"  style="background-color:lavender;">
+                    <div class="cellTitle"><span class="float-left">Комментарии</span></div>
+                </div>
+                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left"> {{article.miscellany}}</span>
+                </div>
+            </div>
+
+            <div v-if="uploadedFiles.length > 0">
+                <file-attachment @getAttachment="getAttachment"
+                                 :userName="loggedName"
+                                 :already-uploaded-files="uploadedFiles"
+                                 :is-details-mode="true"/>
+            </div>
         </div>
 
         <div class="offset-sm-1 col-sm-3">
@@ -221,9 +239,20 @@
                 uploadedFiles: [],
                 loggedInFlag: false,  //todo to remove
                 loggedName: null,    //should be file's author, not logged user
+
+                statusOptions: [
+                    {text: 'В работе', value: 0},
+                    {text: 'Внесены', value: 1},
+                    {text: 'На доработке', value: 2},
+                    {text: 'Отработаны', value: 3},
+                ],
             }
         },
         methods: {
+            getStatusName() {
+                let status = this.statusOptions.find(x => x.value === this.article.status);
+                return status.text;
+            },
 
             getLoggedIn() {
                 this.loggedInFlag = this.$store.getters.isLoggedIn;

@@ -1,5 +1,5 @@
 <template>
-    <div style="padding-left: -50px; background-color: transparent">
+    <div style="background-color: transparent; margin-left: 20px; text-align: left">
         <li>
             {{ item.content }}
             <!--            <button class="btn btn-link" style="background-color: #EAF2F5" @click="$emit('remove', item.id)">-->

@@ -39,7 +39,7 @@ public class HashTagServiceImpl implements HashTagService {
     @Override
     public HashTag save(HashTag stock) {
 
-        //todo is it ok?
+        stock.setContent(stock.getContent().toLowerCase());
         HashTag hashTagByContent = hashTagRepository.getHashTagByContent(stock.getContent()); //ищем хештег в БД
         if (hashTagByContent == null) {
             return hashTagRepository.save(stock);

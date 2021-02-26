@@ -382,7 +382,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
 
-    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch){
+    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch) {
 
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
@@ -419,86 +419,171 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
-    public List<ArticleDto> search(String title, String hash, String author, String language, String description, List<Integer> status, String startDate, String endDate) throws ParseException {
+    //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
+    public List<ArticleDto> search(List<String> title, List<String> hash, List<String> author, List<String> org,
+                                   List<String> location, List<String> language, String description, String text, List<String> misc,
+                                   List<Integer> status, String startDate, String endDate) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date frmtStartDate = format.parse(startDate);
         Date frmtEndDate = format.parse(endDate);
 
-        List<Article> searchList = new ArrayList<>();
+//        List<Article> searchList = new ArrayList<>();
+        Set<Article> searchList = new HashSet<Article>();
+
         List<ArticleDto> dtoSearchList = new ArrayList<>();
 
-        if (status != null && status.size() > 0) {
+        if (status != null && status.size() > 0 && (title != null || hash != null || author != null || language != null || misc != null || org != null || location != null)) {
             if (title != null && !title.isEmpty()) {
 
+                int i;
+                List<String> titleList = new ArrayList<>();
+                for (String t : title) {
+                    titleList.add("%" + t + "%");
+                }
                 if (status.get(0) == -1) {
-                    searchList = articleRepository.findByTitleAndDate("%" + title + "%", frmtStartDate, frmtEndDate);
+                    for (i = 0; i < titleList.size(); i++)
+                        searchList.addAll(articleRepository.findByTitleAndDate(titleList.get(i), frmtStartDate, frmtEndDate));
 
                 } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByTitleAndStatus("%" + title + "%", status);
+                    for (i = 0; i < titleList.size(); i++)
+                        searchList.addAll(articleRepository.findByTitleAndStatus(titleList.get(i), status));
 
                 } else {
-                    searchList = articleRepository.findByTitleAndStatusAndDate("%" + title + "%", status, frmtStartDate, frmtEndDate);
+                    for (i = 0; i < titleList.size(); i++)
+                        searchList.addAll(articleRepository.findByTitleAndStatusAndDate(titleList.get(i), status, frmtStartDate, frmtEndDate));
                 }
-
-
-            } else if (hash != null && !hash.isEmpty()) {
-
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByHashAndDate(hash + "%", frmtStartDate, frmtEndDate);
-
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByHashAndStatus(hash + "%", status);
-
-                } else {
-                    searchList = articleRepository.findByHashAndStatusAndDate(hash + "%", status, frmtStartDate, frmtEndDate);
-                }
-
-
-            } else if (author != null && !author.isEmpty()) {
-
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByAuthorAndDate(author + "%", frmtStartDate, frmtEndDate);
-
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByAuthorAndStatus(author + "%", status);
-
-                } else {
-                    searchList = articleRepository.findByAuthorAndStatusAndDate(author + "%", status, frmtStartDate, frmtEndDate);
-                }
-
-            } else if (language != null && !language.isEmpty()) {
-
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByLangAndDate(language + "%", frmtStartDate, frmtEndDate);
-
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByLangAndStatus(language + "%", status);
-
-                } else {
-                    searchList = articleRepository.findByLangAndStatusAndDate(language + "%", status, frmtStartDate, frmtEndDate);
-                }
-
-            } else if (description != null && !description.isEmpty()) {
-
-                if (status.get(0) == -1) {
-                    searchList = articleRepository.findByDescriptionAndDate("%" + description + "%", frmtStartDate, frmtEndDate);
-
-                } else if (status.get(0) == 3) {
-                    searchList = articleRepository.findByDescriptionAndStatus("%" + description + "%", status);
-
-                } else {
-                    searchList = articleRepository.findByDescriptionAndStatusAndDate("%" + description + "%", status, frmtStartDate, frmtEndDate);
-                }
-
-            } else if (status.get(0) == -1) {
-                searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
-            } else if (status.get(0) == 3) {
-                searchList = articleRepository.findAllByStatus(status);
-            } else {
-                searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
             }
+            if (hash != null && !hash.isEmpty()) {
+                int i;
+                List<String> hashList = new ArrayList<>();
+                for (String h : hash) {
+                    hashList.add(h + "%");
+                }
+
+                if (status.get(0) == -1) {
+                    for (i = 0; i < hashList.size(); i++)
+                        searchList.addAll(articleRepository.findByHashAndDate(hashList.get(i), frmtStartDate, frmtEndDate));
+                } else if (status.get(0) == 3) {
+                    for (i = 0; i < hashList.size(); i++)
+                        searchList.addAll(articleRepository.findByHashAndStatus(hashList.get(i), status));
+
+                } else {
+                    for (i = 0; i < hashList.size(); i++)
+                        searchList.addAll(articleRepository.findByHashAndStatusAndDate(hashList.get(i), status, frmtStartDate, frmtEndDate));
+                }
+            }
+            if (author != null && !author.isEmpty()) {
+                int i;
+                List<String> authorList = new ArrayList<>();
+                for (String a : author) {
+                    authorList.add(a + "%");
+                }
+
+                if (status.get(0) == -1) {
+                    for (i = 0; i < authorList.size(); i++)
+                        searchList.addAll(articleRepository.findByAuthorAndDate(authorList.get(i), frmtStartDate, frmtEndDate));
+
+                } else if (status.get(0) == 3) {
+                    for (i = 0; i < authorList.size(); i++)
+                        searchList.addAll(articleRepository.findByAuthorAndStatus(authorList.get(i), status));
+
+                } else {
+                    for (i = 0; i < authorList.size(); i++)
+                        searchList.addAll(articleRepository.findByAuthorAndStatusAndDate(authorList.get(i), status, frmtStartDate, frmtEndDate));
+                }
+            }
+
+            if (org != null && !org.isEmpty()) {
+                int i;
+                List<String> orgList = new ArrayList<>();
+                for (String o : org) {
+                    orgList.add(o + "%");
+                }
+
+                if (status.get(0) == -1) {
+                    for (i = 0; i < orgList.size(); i++)
+                        searchList.addAll(articleRepository.findByOrgAndDate(orgList.get(i), frmtStartDate, frmtEndDate));
+
+                } else if (status.get(0) == 3) {
+                    for (i = 0; i < orgList.size(); i++)
+                        searchList.addAll(articleRepository.findByOrgAndStatus(orgList.get(i), status));
+
+                } else {
+                    for (i = 0; i < orgList.size(); i++)
+                        searchList.addAll(articleRepository.findByOrgAndStatusAndDate(orgList.get(i), status, frmtStartDate, frmtEndDate));
+                }
+            }
+
+            if (location != null && !location.isEmpty()) {
+                int i;
+                List<String> locationList = new ArrayList<>();
+                for (String l : location) {
+                    locationList.add(l + "%");
+                }
+
+                if (status.get(0) == -1) {
+                    for (i = 0; i < locationList.size(); i++)
+                        searchList.addAll(articleRepository.findByLocationAndDate(locationList.get(i), frmtStartDate, frmtEndDate));
+
+                } else if (status.get(0) == 3) {
+                    for (i = 0; i < locationList.size(); i++)
+                        searchList.addAll(articleRepository.findByLocationAndStatus(locationList.get(i), status));
+
+                } else {
+                    for (i = 0; i < locationList.size(); i++)
+                        searchList.addAll(articleRepository.findByLocationAndStatusAndDate(locationList.get(i), status, frmtStartDate, frmtEndDate));
+                }
+            }
+
+            if (language != null && !language.isEmpty()) {
+                int i;
+                List<String> langList = new ArrayList<>();
+                for (String l : language) {
+                    langList.add(l + "%");
+                }
+                if (status.get(0) == -1) {
+                    for (i = 0; i < langList.size(); i++)
+                        searchList.addAll(articleRepository.findByLangAndDate(langList.get(i), frmtStartDate, frmtEndDate));
+
+                } else if (status.get(0) == 3) {
+                    for (i = 0; i < langList.size(); i++)
+                        searchList.addAll(articleRepository.findByLangAndStatus(langList.get(i), status));
+
+                } else {
+                    for (i = 0; i < langList.size(); i++)
+                        searchList.addAll(articleRepository.findByLangAndStatusAndDate(langList.get(i), status, frmtStartDate, frmtEndDate));
+                }
+            }
+            if (misc != null && !misc.isEmpty()) {
+
+                int i;
+                List<String> miscList = new ArrayList<>();
+                for (String m : misc) {
+                    miscList.add("%" + m + "%");
+
+                    if (status.get(0) == -1) {
+                        for (i = 0; i < miscList.size(); i++)
+                            searchList.addAll(articleRepository.findByMiscellanyAndDate(miscList.get(i), frmtStartDate, frmtEndDate));
+
+                    } else if (status.get(0) == 3) {
+                        for (i = 0; i < miscList.size(); i++)
+                            searchList.addAll(articleRepository.findByMiscellanyAndStatus(miscList.get(i), status));
+
+                    } else {
+                        for (i = 0; i < miscList.size(); i++)
+                            searchList.addAll(articleRepository.findByMiscellanyAndStatusAndDate(miscList.get(i), status, frmtStartDate, frmtEndDate));
+                    }
+                }
+            }
+        } else if (status.get(0) == -1) {
+            searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
+        } else if (status.get(0) == 3) {
+            searchList = articleRepository.findAllByStatus(status);
+        } else {
+            searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
         }
+
 
         ArticleDto dtoArticle;
         for (Article article : searchList) {

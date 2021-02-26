@@ -126,6 +126,7 @@
                                 <!--                                          v-model="links"/>-->
 
                                 <CreatedList :items="links"
+                                             :isWithIdContentAdded="true"
                                              @update-item="updateLink"/>
 
                             </div>
@@ -149,6 +150,14 @@
                 <form class="formCreation">
                     <div class="form-row">
                         <div class="col-md-6">
+                            <label for="add-title-rus"> <b>Заголовок на русском*</b></label>
+                            <input class="form-control" id="add-title-rus"
+                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   :disabled="uploadMode"
+                                   v-model="article.titleRus"/>
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="add-title"><b>Заголовок в оригинале</b></label>
                             <input class="form-control" id="add-title"
                                    placeholder="Должно быть заполнено одно из полей заголовка"
@@ -156,14 +165,8 @@
                                    v-model="article.title"/>
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="add-title-rus"> <b>Заголовок на русском</b></label>
-                            <input class="form-control" id="add-title-rus"
-                                   placeholder="Должно быть заполнено одно из полей заголовка"
-                                   :disabled="uploadMode"
-                                   v-model="article.titleRus"/>
-                        </div>
                     </div>
+
                 </form>
 
                 <form class="authorsFormCreation form-row col-12"
@@ -902,12 +905,12 @@
                         this.addStatus('date-input', (!(this.validDate(this.article.date))));
                         if (this.hasError) {
                         } else {
-                            this.addStatus('add-title', (!(this.article.title || this.article.titleRus)));
-                            if (this.hasError) {
-                                this.addStatus('add-title-rus', true);
-                            } else {
-                                this.addStatus('add-title-rus', false);
-                            }
+                            this.addStatus('add-title-rus', (!(this.article.titleRus)));
+                            // if (this.hasError) {
+                            //     this.addStatus('add-title-rus', true);
+                            // } else {
+                            //     this.addStatus('add-title-rus', false);
+                            // }
                         }
                     }
                 }

@@ -93,7 +93,7 @@
 
 
         <!--        ////////////////////////////////////////search//////////////////////////////////-->
-        <div class="row">
+        <div class="row" style="background-color: transparent">
             <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
             <div class="col-sm-auto">
                 <b-form-select v-model="selected" id="search-selection">
@@ -101,15 +101,20 @@
                 </b-form-select>
             </div>
 
-            <div class="col-sm-2">
+            <div class="col-sm-2" style="background-color: transparent">
                 <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
                        id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
                 <span class="close" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">&times;</span>
                 <!--                todo-->
             </div>
 
-            <div style="padding-top: 11px">
-                <button type="button" @click="search" class="btn btn-primary">Search</button>
+            <div style="margin-top: 0px; background-color: transparent" align="left" class="form-group row col-sm-3">
+                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"
+                        type="button" @click="search" class="btn btn-primary" disabled>Поиск
+                </button>
+                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"
+                        type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                </button>
             </div>
 
             <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////-->
@@ -145,22 +150,39 @@
 
         <!--/////////////////////////////////////  T  A  B  L  E  //////////////////////////////////////////////////////////-->
         <!--        <div style="height:50%; background-color: #b5d592">-->
-        <table class="redTable" :key="authorComponentKey" id="mainListTable">
+        <!--        <table class="redTable" :key="authorComponentKey" id="mainListTable">-->
+        <table class="redTable" id="mainListTable">
             <thead>
             <tr>
+                <!--                <th class='tdTitle headerLink' @contextmenu.prevent="'modalStatus'" style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>-->
                 <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
                 <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
                     Дата
                 </th>
-                <th class='tdTitle'>Язык</th>
-                <th class='tdTitle'>Хештеги</th>
-                <th class='tdTitle'>Автор</th>
-                <th class='tdTitle headerLink' @click="sort('title')">Заголовок</th>
-                <th class='tdTitle' style="width:25%">Описание</th>
-                <th class='tdTitle' style="width:15%; color:lightgray">Комментарии</th>
-                <th class="tdTitle" style="width:4%">Действия</th>
-                <th class="tdTitle" style="width:4%">Смена статуса</th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(0)">Язык</th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(1)">Хештеги</th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(2)">Лица</th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(3)">Организации</th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(4)">Локации</th>
+                <th @contextmenu.prevent="searchByField(5)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='headerLink col-sm-10'
+                             style="text-align: center; background-color: transparent; padding-left: 55px;">
+                            Заголовок
+                        </div>
+                        <div class='col-sm-2' style="padding-right: 15px; background-color: transparent">
+                            <v-btn text icon x-small @click="resetFilter(5)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(6)"
+                    style="width:15%; color:lightgray">Комментарии
+                </th>
                 <th class="tdTitle" style="width:4%">Добавить материал..</th>
+                <th class="tdTitle" style="width:4%">Действия</th>
+                <!--                <th class="tdTitle" style="width:4%">Смена статуса</th>-->
                 <!--                    <th class="tdTitle" style="width:4%">Цвет</th>-->
             </tr>
             </thead>
@@ -172,7 +194,8 @@
                 :id="article.id"
                 :class="{'active': ((article.id === selectedArticle)&&(previousSelectedArticle!==selectedArticle))}">
 
-                <td :key="article.status">
+                <!--                <td :key="article.status">-->
+                <td>
                     <div v-if="article.status==0">
                         <v-icon style="color: orange">mdi-pencil-plus</v-icon>
                     </div>
@@ -202,31 +225,44 @@
                 </td>
                 <td>
                     <div v-for="author in article.personList">
-                        <div v-if="article.personList.length>0">
-                            {{createComplexCellValueById(author.itemId)}}
+                        <div v-if="article.personList.length > 0">
+                            {{getPersonCellById(author.itemId)}}
+                            <!--                            {{ createComplexCellValueById(author.itemId)}}-->
                         </div>
                     </div>
                 </td>
                 <td>
-                    <div>
-                        <!--                    <div style="white-space:pre-line">-->
+                    <div v-for="org in article.orgList">
+                        <div v-if="article.orgList.length > 0">
+                            {{getOrgCellById(org.itemId)}}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div v-for="location in article.locationList">
+                        <div v-if="article.locationList.length > 0">
+                            {{getLocationCellById(location.itemId)}}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div>                        <!--                    <div style="white-space:pre-line">-->
                         <a>
                             <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{createComplexCellValue(article.titleRus, article.title)}}
+                                {{ article.titleRus}}
                             </router-link>
                         </a>
                     </div>
                 </td>
                 <td style="height: 50px">
                     <div style="height:60px; overflow:hidden">
-                        {{article.description }}
-                    </div>
-                </td> <!--todo dots? if cut-->
-
-                <td style="height: 50px">
-                    <div style="height:60px; overflow:hidden">
                         {{article.miscellany }}
                     </div>
+                </td>
+                <td>
+                    <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
+                        <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
+                    </v-btn>
                 </td>
                 <td>
                     <v-btn text icon x-small>
@@ -246,20 +282,17 @@
                         </a>
                     </v-btn>
                 </td>
-                <td>
-                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">
-                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
-                    </v-btn>
 
-                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">
-                        <v-icon style="color: green">mdi-check</v-icon>
-                    </v-btn>
-                </td>
-                <td>
-                    <v-btn text icon x-small v-b-modal="'modal-scoped'" @click="setCurrentAricle(article.id)">
-                        <v-icon style="color: orange">mdi-account-multiple-plus</v-icon>
-                    </v-btn>
-                </td>
+                <!--                <td>-->
+                <!--                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">-->
+                <!--                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>-->
+                <!--                    </v-btn>-->
+
+                <!--                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">-->
+                <!--                        <v-icon style="color: green">mdi-check</v-icon>-->
+                <!--                    </v-btn>-->
+                <!--                </td>-->
+
                 <!--                    <td>-->
                 <!--                        <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">-->
                 <!--                            красный-->
@@ -301,6 +334,8 @@
         <context-menu id="context-menu" ref="ctxMenu">
             <li class="ctx-item" v-b-modal="'modal-color'">выделить...</li>
             <li class="ctx-item" @click="cancelRowSelection">отменить выделение</li>
+            <li class="ctx-item" @click="changeStatusReturned">изменить "На доработке"</li>
+            <li class="ctx-item" @click="changeStatusDone">изменить "Отработаны"</li>
         </context-menu>
 
         <b-modal id="modal-color" :hide-footer=true :hide-header=true>
@@ -309,6 +344,44 @@
                 <div align="center">
                     <v-swatches v-model="color" inline></v-swatches>
                     <!--                    <v-swatches v-model="color" inline :swatches="swatches"></v-swatches>-->
+                </div>
+            </template>
+        </b-modal>
+
+        <!--        <b-modal ref="modalStatus" :hide-footer=true :hide-header=true>-->
+        <!--            <template>-->
+        <!--                <b><p class="myHeader">Сменить статус текущей записи</p><br></b>-->
+
+        <!--                <div align="center" style="background-color: transparent">-->
+        <!--                    <v-btn text icon x-large @click="updateArticleStatus(article.id, 2)">-->
+        <!--                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>-->
+        <!--                    </v-btn>-->
+
+        <!--                    <v-btn text icon x-large @click="updateArticleStatus(article.id, 3)">-->
+        <!--                        <v-icon style="color: green">mdi-check</v-icon>-->
+        <!--                    </v-btn>-->
+        <!--                </div>-->
+        <!--            </template>-->
+        <!--        </b-modal>-->
+
+        <b-modal ref="modalSearch" :hide-footer=true :hide-header=true>
+            <template>
+                <b><p class="myHeader">Фильтр по полю '{{currentFilterField.text}}'</p><br></b>
+                <div align="center">
+                    <!--                    <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"-->
+                    <!--                           id="search-element1" style="padding-right: 20px" v-on:keyup.enter="search" requred/>-->
+
+
+                    <CreatedList :items="currentFilterItems"
+                                 @update-item="updateItem"/>
+
+
+                    <div v-if="currentFilterItems.length > 0">
+                        <b-button size="sm" variant="success"
+                                  @click="startModalSearch()">
+                            Применить
+                        </b-button>
+                    </div>
                 </div>
             </template>
         </b-modal>
@@ -345,6 +418,8 @@
     import Vue from 'vue';
     import api from "./article-api";
     import apiPerson from "./../person/person-api";
+    import apiCountry from "./../country/country-api";
+    import apiOrg from "./../org/org-api";
 
     import moment from "moment";
     import router from "./../../router";
@@ -355,23 +430,31 @@
 
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'
+    import CreatedList from "../components/multiple-enter-list/CreatedList";
 
     export default {
         name: 'article',
         components: {
             contextMenu,
             VSwatches,
+            CreatedList,
         },
         vuetify: new Vuetify(),
         data() {
             return {
                 color: '#1CA085',
                 articles: [],
-                article: {status: 0, personList: [], hashtagList: []},
+                article: {status: 0, personList: [], locationList: [], orgList: [], hashtagList: []},
                 authors: [],
                 articlePersonIds: [], //before request
                 articlePersonEntities: [], //after request
-                authorComponentKey: 0,
+                articleLocationIds: [], //before request
+                articleLocationEntities: [], //after request
+                articleOrgIds: [], //before request
+                articleOrgEntities: [], //after request
+
+
+                authorComponentKey: 0,  //todo delete?
 
                 response: [],
                 errors: [],
@@ -382,8 +465,8 @@
                 loggedInFlag: false,
                 loggedName: null,
 
-                selected: "заголовок",
-                searchItems: ["хештег", "заголовок", "автор", "язык", "описание"],
+                selected: "текст",
+                searchItems: ["текст", "описание"],
                 searchKey: '',
 
                 statusCheckBox: [],
@@ -408,7 +491,35 @@
                 previousSelectedArticle: null,
 
                 currentSort: 'date',
-                currentSortDir: 'asc'
+                currentSortDir: 'asc',
+
+                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
+                    {key: 3, value: []}, {key: 4, value: []}, {key: 5, value: []}, {key: 6, value: []}],
+
+                filterTableFields: [
+                    {key: 0, text: 'Язык'},
+                    {key: 1, text: 'Хештеги'},
+                    {key: 2, text: 'Лица'},
+                    {key: 3, text: 'Организации'},
+                    {key: 4, text: 'Локации'},
+                    {key: 5, text: 'Заголовок'},
+                    {key: 6, text: 'Комментарий'},
+                ],
+
+                // todo - maybe remove key? it dublicates index
+                filterTableFieldsForRequest: [
+                    {key: 0, text: 'language'},
+                    {key: 1, text: 'hash'},
+                    {key: 2, text: 'author'},
+                    {key: 3, text: 'org'},
+                    {key: 4, text: 'location'},
+                    {key: 5, text: 'title'},
+                    {key: 6, text: 'miscellany'},
+                ],
+
+                currentFilterField: '',
+                currentFilterItems: [],
+                links: [],
 
                 // swatches: [
                 //     '#FF0000', '#AA0000', '#550000',
@@ -434,22 +545,22 @@
 
             sortedArticles() {
                 console.log("sorted articles");
-                this.authorComponentKey++; //for zebra after sorting
+                // this.authorComponentKey++; //for zebra after sorting
 
                 // if (this.currentSort === 'author'){  //
                 //     return this.entries;
                 //
                 // }
                 // else {
-                    return this.entries.sort((a, b) => {
-                        let modifier = 1;
-                        if (this.currentSortDir === 'desc') modifier = -1;
-                        if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-                        if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-                        return 0;
-                    });
+                return this.entries.sort((a, b) => {
+                    let modifier = 1;
+                    if (this.currentSortDir === 'desc') modifier = -1;
+                    if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                    if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                    return 0;
+                });
                 // }
-             }
+            }
         },
 
         // beforeUpdate() {
@@ -462,6 +573,71 @@
         },
 
         methods: {
+            // changeStatus() {
+            //     this.$refs.modalStatus.show();
+            // },
+
+            resetFilter(filter) {
+                this.filterItems[filter].value.splice(0);
+                this.filterAll();
+            },
+
+            resetAllFilters() {
+                for (let i = 0; i < this.filterItems.length; i++) {
+                    this.filterItems[i].value.splice(0);
+                }
+                this.currentFilterItems = [];
+                api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
+                    this.entries = r.data;
+                });
+            },
+
+            updateItem(item) {  // (2) calls when search item adds to search list
+                console.log("ADDED LINK", item, this.currentFilterItems);
+                this.currentFilterItems.push(item);  //push item(item: {id, content}
+            },
+
+            startModalSearch() {  // (3) search starts
+                let array = [];
+                for (let i = 0; i < this.currentFilterItems.length; i++) {
+                    array.push(this.currentFilterItems[i].content);
+                }
+                let item = {
+                    "key": this.currentFilterField.key,
+                    "value": array,
+                };
+                this.filterItems[this.currentFilterField.key] = item;
+                this.currentFilterItems.splice(0);
+                console.log(">>>>>>>>>>>>>>>search by modal filterItems currentSI", this.filterItems, this.currentFilterItems);
+
+                this.filterAll();  //filter(title)
+                this.$refs.modalSearch.hide();
+            },
+
+            searchByField(field) {  // (1) it calls when user chooses item in context menu
+                let i = 0, item;
+
+                // console.log("search by field this.filterItems", field, this.filterItems);
+                this.currentFilterField = this.filterTableFields.find(x => x.key === field);
+                let res = this.filterItems.find(x => x.key === field).value;
+                this.currentFilterItems = [];
+                if (res.length > 0) {
+                    // console.log("1010101010010010101", res);
+
+                    let arrayValue = [];
+                    for (; i < res.length; i++) {
+                        item = {
+                            "id": i,
+                            "content": res[i],
+                        };
+                        arrayValue.push(item);
+                    }
+                    this.currentFilterItems = arrayValue;
+                }
+                console.log("search by field this.currentSearchField, this.filterItems, this.currentSearchItems", this.currentFilterField, this.filterItems, this.currentFilterItems);
+                this.$refs.modalSearch.show();
+            },
+
             sort(s) {
                 console.log("click");
                 //if s == current sort, reverse
@@ -492,6 +668,16 @@
             cancelRowSelection() {
                 let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
                 this.setColor(currentArticle, null);
+            },
+
+            changeStatusReturned() {
+                let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
+                this.updateArticleStatus(currentArticle.id, 2);
+            },
+
+            changeStatusDone() {
+                let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
+                this.updateArticleStatus(currentArticle.id, 3);
             },
 
             selectRow(articleId) {
@@ -581,55 +767,94 @@
                 // this.$router.push({path: '/add/$id/$connectionType'});
             },
 
-            createComplexCellValueById(id) {
+            // createComplexCellValueById(id) {
+            //     let result = '';
+            //     let currentPerson = this.articlePersonEntities.find(x => x.id === id);
+            //     let valueOrig = '', valueRus = '';
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
+            //         // if (this.isArrayValidAndNotEmpty(currentPerson.surname)) { //mandatory field in Person
+            //         valueOrig = currentPerson.surname;
+            //         // }
+            //
+            //         if (this.isArrayValidAndNotEmpty(currentPerson.surname)) {
+            //             valueRus = currentPerson.surnameRus;
+            //         }
+            //
+            //         // if (this.isArrayValidAndNotEmpty(currentPerson.name)) { //mandatory field in Person
+            //         valueOrig += " " + currentPerson.name;
+            //         // }
+            //
+            //         if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
+            //             valueRus += " " + currentPerson.nameRus;
+            //         }
+            //
+            //         if (this.isArrayValidAndNotEmpty(valueRus)) {
+            //             result = valueRus;
+            //             if (this.isArrayValidAndNotEmpty(valueOrig)) {
+            //                 if (valueRus.localeCompare(valueOrig) !== 0)
+            //                     result += " / " + valueOrig;
+            //             }
+            //         } else if (this.isArrayValidAndNotEmpty(valueOrig))
+            //             result += valueOrig;
+            //         return result;
+            //     }
+            // },
+
+            getPersonCellById(id) {
                 let result = '';
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-                let valueOrig = '', valueRus = '';
 
                 if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
-                    // if (this.isArrayValidAndNotEmpty(currentPerson.surname)) { //mandatory field in Person
-                    valueOrig = currentPerson.surname;
-                    // }
-
-                    if (this.isArrayValidAndNotEmpty(currentPerson.surname)) {
-                        valueRus = currentPerson.surnameRus;
-                    }
-
-                    // if (this.isArrayValidAndNotEmpty(currentPerson.name)) { //mandatory field in Person
-                    valueOrig += " " + currentPerson.name;
-                    // }
+                    result = currentPerson.surnameRus;
 
                     if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
-                        valueRus += " " + currentPerson.nameRus;
+                        result += " " + currentPerson.nameRus;
                     }
-
-                    if (this.isArrayValidAndNotEmpty(valueRus)) {
-                        result = valueRus;
-                        if (this.isArrayValidAndNotEmpty(valueOrig)) {
-                            if (valueRus.localeCompare(valueOrig) !== 0)
-                                result += " / " + valueOrig;
-                        }
-                    } else if (this.isArrayValidAndNotEmpty(valueOrig))
-                        result += valueOrig;
                     return result;
                 }
             },
 
-            createComplexCellValue(valueRus, valueOrig) {
+            getLocationCellById(id) {
                 let result = '';
-                // console.log("RUS - ", valueRus, "ORIG - ", valueOrig);
+                let currentLocation = this.articleLocationEntities.find(x => x.id === id);
 
-                if (this.isArrayValidAndNotEmpty(valueRus)) {
-                    result = valueRus;
-                    if (this.isArrayValidAndNotEmpty(valueOrig))
-                        result += " / " + valueOrig;
-                } else if (this.isArrayValidAndNotEmpty(valueOrig))
-                    result += valueOrig;
-                return result;
+                if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentLocation.country;
+
+                    if (this.isArrayValidAndNotEmpty(currentLocation.region)) {
+                        result += " / " + currentLocation.region;
+                    }
+                    if (this.isArrayValidAndNotEmpty(currentLocation.city)) {
+                        result += " / " + currentLocation.city;
+                    }
+                    return result;
+                }
             },
 
-            updateArticleStatus(id, status) {
+            getOrgCellById(id) {
+                let result = '';
+                let currentOrg = this.articleOrgEntities.find(x => x.id === id);
 
+                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentOrg.nameRus;
+                    return result;
+                }
+            },
+
+            // createComplexCellValue(valueRus, valueOrig) {
+            //     let result = '';
+            //
+            //     if (this.isArrayValidAndNotEmpty(valueRus)) {
+            //         result = valueRus;
+            //         if (this.isArrayValidAndNotEmpty(valueOrig))
+            //             result += " / " + valueOrig;
+            //     } else if (this.isArrayValidAndNotEmpty(valueOrig))
+            //         result += valueOrig;
+            //     return result;
+            // },
+
+            updateArticleStatus(id, status) {
                 api.findById(id, r => {
                     this.article = r.data;
 
@@ -642,10 +867,9 @@
                         // this.filteredArticles();
                         // document.location.reload(true);
 
-                        this.search();
+                        //this.search();
+                        this.filterAll();
                     });
-
-
                     // this.article.date = this.formatDate(this.article.date);
 
                     // this.tags = this.article.hashtagList;
@@ -657,8 +881,6 @@
                     //     this.links.push(this.article.linkList[i].content);
                     // }
                 });
-
-
             },
 
             refreshPeriod() {
@@ -682,12 +904,12 @@
                     Vue.prototype.startDate = this.startDate;
                     Vue.prototype.endDate = this.endDate;
 
-                    this.search();
+                    //this.search();
+                    this.filterAll();
 
                     // api.searchPeriod(this.startDate, this.endDate, r => {
                     //     this.entries = r.data;
                     // });
-
                 }
             },
 
@@ -729,7 +951,53 @@
 
                 result += this.statusCheckBox[i];
 
-                console.log(result);
+                console.log("complexStatusCreation", result);
+                return result;
+            },
+
+            arrayToParamsConversion(field) {
+                let result = '';
+                let connectionItem = '&' + field + '=';
+                let i = 0;
+
+                //encodeURIComponent  -- to avoid error with '&' in parameters (ex. P&P - cannot find)
+                //This function encodes special characters. In addition, it encodes the following characters: , / ? : @ & = + $ #
+
+                for (; i < this.filterItems[this.currentFilterField.key].value.length - 1; i++) {
+                    result += encodeURIComponent(this.filterItems[this.currentFilterField.key].value[i]) + connectionItem;
+                }
+
+                // console.log("iiii=", i, this.filterItems[this.currentFilterField.key].value.length);
+                result += encodeURIComponent(this.filterItems[this.currentFilterField.key].value[i]);
+
+                // console.log("complexTitleCreation filterItems[this.currentFilterField.key].value res", this.filterItems[this.currentFilterField.key].value, result);
+                return result;
+            },
+
+            filterAllBodyCreation() {
+                let result = '';
+                // let connectionItem = '&' + field + '=';
+
+                let i = 0, j = 0;
+
+                //encodeURIComponent  -- to avoid error with '&' in parameters (ex. P&P - cannot find)
+                //This function encodes special characters. In addition, it encodes the following characters: , / ? : @ & = + $ #
+
+                //console.log("rrrrrrrrrrrrrrres before for", this.filterItems);
+                for (; j < this.filterItems.length; j++) {
+                    //console.log("rrrrrrrrrrrrrrres In for", this.filterItems[j].value.length, this.filterTableFieldsForRequest[j].text);
+                    for (i = 0; i < this.filterItems[j].value.length; i++) {
+                        // if (result.length === 0){
+
+                        result += this.filterTableFieldsForRequest[j].text + '=' + encodeURIComponent(this.filterItems[j].value[i]) + '&';
+                        //console.log("rrrrrrrrrrrrrrres IN I", i, result);
+                        // } else {
+                        //         result += encodeURIComponent(this.filterItems[j].value[i]) + connectionItem;
+                        //     }
+                    }
+
+                }
+                //console.log("rrrrrrrrrrrrrrres", result);
                 return result;
             },
 
@@ -745,7 +1013,6 @@
             // },
 
             isArrayValidAndNotEmpty(array) {
-
                 if (typeof array === 'undefined' || array === null || array.length == 0) {
                     return false;
                 }
@@ -754,10 +1021,6 @@
 
             search() {
                 // console.log("SEARCH", this.searchKey);
-
-                // let emptyArray = [];
-                // let nonExistantArray = undefined;
-
 
                 if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
                     // this.entries = this.articles;
@@ -773,65 +1036,72 @@
                                 this.entries = r.data;
                             });
                         }
-
                     } else {        //s+
-                        if (this.selected === "хештег") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//ch+
-                                api.searchHash(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                api.searchHash(this.searchKey, -1, this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            }
+                        if (this.selected === "текст") {
+                            //this.filter('text');
 
-                        } else if (this.selected === "автор") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {  //ch+
-                                api.searchAuthor(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                api.searchAuthor(this.searchKey, -1, this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            }
-
-                        } else if (this.selected === "язык") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {    //ch+
-                                api.searchLanguage(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                api.searchLanguage(this.searchKey, -1, this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            }
+                            // if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//ch+
+                            //     api.filter('text', this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                            //         this.entries = r.data;
+                            //     });
+                            // } else {
+                            //     api.filter('text', this.searchKey, -1, this.startDate, this.endDate, r => {
+                            //         this.entries = r.data;
+                            //     });
+                            // }
 
                         } else if (this.selected === "описание") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {   //ch+
-                                api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            }
+                            // this.filter('description');
 
-                        } else if (this.selected === "заголовок") {
-                            if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                api.searchTitle(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            } else {
-                                console.log("NIT");
-                                api.searchTitle(this.searchKey, -1, this.startDate, this.endDate, r => {
-                                    this.entries = r.data;
-                                });
-                            }
+                            // if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {   //ch+
+                            //     api.filter('description', this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                            //         this.entries = r.data;
+                            //     });
+                            // } else {
+                            //     api.filter('description', this.searchKey, -1, this.startDate, this.endDate, r => {
+                            //         this.entries = r.data;
+                            //     });
+                            // }
                         }
+                        // else if (this.selected === "заголовок") {
+                        //     if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+                        //         api.searchTitle(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                        //             this.entries = r.data;
+                        //         });
+                        //     } else {
+                        //         console.log("NIT");
+                        //         api.searchTitle(this.searchKey, -1, this.startDate, this.endDate, r => {
+                        //             this.entries = r.data;
+                        //         });
+                        //      }
+                        // }
                     }
+                }
+            },
+
+            filter(field) {
+                console.log("-------filter by field--------", field);
+                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+                    api.filter(field, this.arrayToParamsConversion(field), this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                        this.entries = r.data;
+                    });
+                } else {
+                    api.filter(field, this.arrayToParamsConversion(field), -1, this.startDate, this.endDate, r => {
+                        this.entries = r.data;
+                    });
+                }
+            },
+
+            filterAll() {
+                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+                    api.filterAll(this.filterAllBodyCreation(), this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                        this.entries = r.data;
+                    });
+                } else {
+                    api.filterAll(this.filterAllBodyCreation(), -1, this.startDate, this.endDate, r => {
+                        this.entries = r.data;
+                        console.log("filter all =============", this.entries);
+                    });
                 }
             },
         },
@@ -854,8 +1124,22 @@
                     for (let j = 0; j < this.entries[i].personList.length; j++) {
                         this.articlePersonIds.push(this.entries[i].personList[j].itemId);
                     }
+                    for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                        this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
+                    }
+                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                        this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                    }
                 }
-                console.log(this.articlePersonIds);
+                console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
+
+                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
+                    this.articleOrgEntities = response.data;
+                });
+
+                apiCountry.getLocationsByIds(this.articleLocationIds, response => {
+                    this.articleLocationEntities = response.data;
+                });
 
                 apiPerson.getPersonsByIds(this.articlePersonIds, response => {
                     this.articlePersonEntities = response.data;
@@ -873,7 +1157,7 @@
 
             searchKey: function () {
                 //If empty search to renew the table
-                console.log("WATCH");
+                console.log("WATCH searchKey");
                 if (this.searchKey === "") {
                     // if (this.statusCheckBox.length > 0) {
                     this.search();
@@ -927,7 +1211,8 @@
                     }
                 }
 
-                this.search();
+                // this.search();
+                this.filterAll();
             },
 
             selected: function () {
