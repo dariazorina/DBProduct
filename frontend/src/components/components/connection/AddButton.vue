@@ -1,3 +1,4 @@
+<!--todo to delete-- unused>
 <template>
     <div v-if="isEditMode"
          style="padding-left: 0px; padding-right: 0px; margin-right: 20px; background-color: transparent">

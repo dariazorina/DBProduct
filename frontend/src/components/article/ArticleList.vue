@@ -159,18 +159,88 @@
                 <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
                     Дата
                 </th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(0)">Язык</th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(1)">Хештеги</th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(2)">Лица</th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(3)">Организации</th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(4)">Локации</th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(0)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Язык
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="languageFilterId">
+                            <v-btn text icon x-small @click="resetFilter(0)">
+                                <!--                            <v-btn text icon x-small @click="resetFilter(5)" id="titleFilterId" hidden>-->
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+
+                <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Хештеги
+                        </div>
+                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="hashFilterId">
+                            <v-btn text icon x-small @click="resetFilter(1)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Лица
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="authorFilterId">
+                            <v-btn text icon x-small @click="resetFilter(2)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Организации
+                        </div>
+                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="orgFilterId">
+                            <v-btn text icon x-small @click="resetFilter(3)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(4)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Локации
+                        </div>
+                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="locationFilterId">
+                            <v-btn text icon x-small @click="resetFilter(4)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
                 <th @contextmenu.prevent="searchByField(5)">
                     <div class="row" style="background-color: transparent">
-                        <div class='headerLink col-sm-10'
-                             style="text-align: center; background-color: transparent; padding-left: 55px;">
+                        <div class='col-sm-2' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent">
                             Заголовок
                         </div>
-                        <div class='col-sm-2' style="padding-right: 15px; background-color: transparent">
+                        <div class='col-sm-2'
+                             style="background-color: transparent; visibility: hidden; padding-left: 0" id="titleFilterId">
                             <v-btn text icon x-small @click="resetFilter(5)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
@@ -178,7 +248,17 @@
                     </div>
                 </th>
                 <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(6)"
-                    style="width:15%; color:lightgray">Комментарии
+                    style="width:15%; color:lightgray"><div class="row" style="background-color: transparent">
+                    <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                    <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                        Комментарии
+                    </div>
+                    <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="miscellanyFilterId">
+                        <v-btn text icon x-small @click="resetFilter(6)">
+                            <v-icon style="color: white">mdi-close-circle</v-icon>
+                        </v-btn>
+                    </div>
+                </div>
                 </th>
                 <th class="tdTitle" style="width:4%">Добавить материал..</th>
                 <th class="tdTitle" style="width:4%">Действия</th>
@@ -573,18 +653,27 @@
         },
 
         methods: {
+            filterClearButtonActivity(hide, filterClearButtonId) {
+                if (hide)
+                    document.getElementById(filterClearButtonId).style.visibility = "hidden";
+                else
+                    document.getElementById(filterClearButtonId).style.visibility = "visible";
+            },
+
             // changeStatus() {
             //     this.$refs.modalStatus.show();
             // },
 
             resetFilter(filter) {
                 this.filterItems[filter].value.splice(0);
+                this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[filter].text + 'FilterId');
                 this.filterAll();
             },
 
             resetAllFilters() {
                 for (let i = 0; i < this.filterItems.length; i++) {
                     this.filterItems[i].value.splice(0);
+                    this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[i].text + 'FilterId');
                 }
                 this.currentFilterItems = [];
                 api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
@@ -595,6 +684,10 @@
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
                 this.currentFilterItems.push(item);  //push item(item: {id, content}
+
+                let key = this.filterTableFields.find(x => x === this.currentFilterField).key;
+                this.filterClearButtonActivity(false, this.filterTableFieldsForRequest[key].text + 'FilterId');
+                // console.log("----------ADDED LINK", key, this.filterTableFieldsForRequest[key].text + 'FilterId');
             },
 
             startModalSearch() {  // (3) search starts

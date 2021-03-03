@@ -48,7 +48,7 @@
                                 <v-row style="background-color: transparent; margin-top: -10px; margin-bottom: -10px;">
                                     <v-col style="background-color: transparent; margin-top: -10px; margin-left: -5px; margin-bottom: -10px">
                                         <v-sheet
-                                                style="padding-left: 0px; padding-top: 0px; padding-right: 18px; background-color: transparent">
+                                                style="padding-left: 0; padding-top: 0; padding-right: 18px; background-color: transparent">
                                             <v-text-field label="поиск типа материала"
                                                           v-model="searchMType"
                                                           filled>
@@ -57,7 +57,7 @@
 
                                         <v-container
                                                 id="scroll-target"
-                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0px; padding-left: 0;"
+                                                style="max-height: 300px; background-color: transparent; margin-top: -10px; margin-left: -15px; padding-top: 0; padding-left: 0;"
                                                 class="overflow-y-auto"
                                         >
 
@@ -169,123 +169,132 @@
 
                 </form>
 
-                <form class="authorsFormCreation form-row col-12"
-                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 20px;">
-                        <v-card-text>
-                            <label style="font-size: medium; font-weight: bold">Связанные лица</label>
-                            <v-autocomplete
-                                    id="author-autocomplete"
-                                    :items="items"
-                                    :loading="isLoading"
-                                    :search-input.sync="authorSearch"
-                                    color="green"
-                                    hide-no-data
-                                    hide-selected
+                <form class="authorsFormCreation"
+                      style="background-color: transparent; padding: 25px 0 5px">
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold; background-color: transparent">Связанные
+                                    лица</label>
+                                <v-autocomplete
+                                        style="background-color: transparent"
+                                        id="author-autocomplete"
+                                        :items="items"
+                                        :loading="isLoading"
+                                        :search-input.sync="authorSearch"
+                                        color="green"
+                                        hide-no-data
+                                        hide-selected
 
-                                    v-model="selected"
+                                        v-model="selected"
 
-                                    @change="addAuthor(selected)"
-                                    @focus="testFocus(selected)"
-                                    item-text="surname"
-                                    item-value="id"
-                                    placeholder="Начните печатать, чтобы найти автора"
-                                    prepend-icon="mdi-database-search"
-                                    return-object
-                                    :disabled="uploadMode"
-                            ></v-autocomplete>
-                        </v-card-text>
-                    </div>
+                                        @change="addAuthor(selected)"
+                                        @focus="testFocus(selected)"
+                                        item-text="surname"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти автора"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
 
-                    <div v-if="personConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0; margin: 0px">
-                        <ConnectionComponent :itemsList="personConnectionList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"
-                                             @update-item="updateItem"/>
-                    </div>
-                </form>
-
-
-                <form class="authorsFormCreation form-row col-12"
-                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
-                        <v-card-text>
-                            <label style="font-size: medium; font-weight: bold">Связанные страны/н.п./места</label>
-                            <v-autocomplete
-                                    id="location-autocomplete"
-                                    :items="itemsLocation"
-                                    :loading="isLoadingLocation"
-                                    :search-input.sync="locationSearch"
-                                    color="orange"
-                                    hide-no-data
-                                    hide-selected
-
-                                    v-model="selectedLocation"
-
-                                    @change="addLocation(selectedLocation)"
-                                    @focus="testFocus(selectedLocation)"
-                                    item-text="country"
-                                    item-value="id"
-                                    placeholder="Начните печатать, чтобы найти локацию"
-                                    prepend-icon="mdi-database-search"
-                                    return-object
-                                    :disabled="uploadMode"
-                            ></v-autocomplete>
-                        </v-card-text>
-                    </div>
-
-                    <div v-if="locationConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="locationConnectionList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"
-                                             @update-item="updateItem"/>
+                        <div v-if="personConnectionList.length>0" class="col-9"
+                             style="background-color: transparent; padding:0; margin: 0">
+                            <ConnectionComponent :itemsList="personConnectionList"
+                                                 :isLinkMode="false"
+                                                 :isSelectionMode="false"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0" class="col-12"
+                                                 @update-item="updateItem"/>
+                        </div>
                     </div>
                 </form>
 
-                <form class="authorsFormCreation form-row col-12"
-                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
-                        <v-card-text>
-                            <label style="font-size: medium; font-weight: bold">Связанные организации</label>
-                            <v-autocomplete
-                                    id="org-autocomplete"
-                                    :items="itemsOrg"
-                                    :loading="isLoadingOrg"
-                                    :search-input.sync="orgSearch"
-                                    color="blue"
-                                    hide-no-data
-                                    hide-selected
 
-                                    v-model="selectedOrg"
+                <form class="authorsFormCreation"
+                      style="background-color: transparent; padding: 25px 0 5px">
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold">Связанные страны/н.п./места</label>
+                                <v-autocomplete
+                                        id="location-autocomplete"
+                                        :items="itemsLocation"
+                                        :loading="isLoadingLocation"
+                                        :search-input.sync="locationSearch"
+                                        color="orange"
+                                        hide-no-data
+                                        hide-selected
 
-                                    @change="addOrg(selectedOrg)"
-                                    @focus="testFocus(selectedOrg)"
-                                    item-text="org"
-                                    item-value="id"
-                                    placeholder="Начните печатать, чтобы найти организацию"
-                                    prepend-icon="mdi-database-search"
-                                    return-object
-                                    :disabled="uploadMode"
-                            ></v-autocomplete>
-                        </v-card-text>
+                                        v-model="selectedLocation"
+
+                                        @change="addLocation(selectedLocation)"
+                                        @focus="testFocus(selectedLocation)"
+                                        item-text="country"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти локацию"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
+
+                        <div v-if="locationConnectionList.length>0" class="col-9"
+                             style="background-color: transparent; padding:0">
+                            <ConnectionComponent :itemsList="locationConnectionList"
+                                                 :isLinkMode="false"
+                                                 :isSelectionMode="false"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0" class="col-12"
+                                                 @update-item="updateItem"/>
+                        </div>
                     </div>
+                </form>
 
-                    <div v-if="orgConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="orgConnectionList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"
-                                             @update-item="updateItem"/>
+                <form class="authorsFormCreation"
+                      style="background-color: transparent; padding: 25px 0 5px">
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold">Связанные организации</label>
+                                <v-autocomplete
+                                        id="org-autocomplete"
+                                        :items="itemsOrg"
+                                        :loading="isLoadingOrg"
+                                        :search-input.sync="orgSearch"
+                                        color="blue"
+                                        hide-no-data
+                                        hide-selected
+
+                                        v-model="selectedOrg"
+
+                                        @change="addOrg(selectedOrg)"
+                                        @focus="testFocus(selectedOrg)"
+                                        item-text="org"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти организацию"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
+
+                        <div v-if="orgConnectionList.length>0" class="col-9"
+                             style="background-color: transparent; padding:0">
+                            <ConnectionComponent :itemsList="orgConnectionList"
+                                                 :isLinkMode="false"
+                                                 :isSelectionMode="false"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0" class="col-12"
+                                                 @update-item="updateItem"/>
+                        </div>
                     </div>
                 </form>
                 <form class="formCreation">
@@ -380,44 +389,46 @@
                         </div>
                     </div>
                 </form>
-                <form class="authorsFormCreation form-row col-12"
-                      style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-                    <div class="col-3"
-                         style="background-color: transparent; padding-right: 0px; padding-left: 20px; padding-top: 0px">
-                        <v-card-text>
-                            <label style="font-size: medium; font-weight: bold">Связанные материалы</label>
-                            <v-autocomplete
-                                    id="material-autocomplete"
-                                    :items="itemsMaterial"
-                                    :loading="isLoadingMaterial"
-                                    :search-input.sync="materialSearch"
-                                    color="purple"
-                                    hide-no-data
-                                    hide-selected
+                <form class="authorsFormCreation"
+                      style="background-color: transparent; padding: 25px 0 5px">
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold">Связанные материалы</label>
+                                <v-autocomplete
+                                        id="material-autocomplete"
+                                        :items="itemsMaterial"
+                                        :loading="isLoadingMaterial"
+                                        :search-input.sync="materialSearch"
+                                        color="purple"
+                                        hide-no-data
+                                        hide-selected
 
-                                    v-model="selectedMaterial"
+                                        v-model="selectedMaterial"
 
-                                    @change="addMaterial(selectedMaterial)"
-                                    @focus="testFocus(selectedMaterial)"
-                                    item-text="material"
-                                    item-value="id"
-                                    placeholder="Начните печатать, чтобы материал"
-                                    prepend-icon="mdi-database-search"
-                                    return-object
-                                    :disabled="uploadMode"
-                            ></v-autocomplete>
-                        </v-card-text>
-                    </div>
+                                        @change="addMaterial(selectedMaterial)"
+                                        @focus="testFocus(selectedMaterial)"
+                                        item-text="material"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы материал"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
 
-                    <div v-if="materialConnectionList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="materialConnectionList"
-                                             :isLinkMode="true"
-                                             :isSelectionMode="true"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"
-                                             @update-item="updateItem"
-                                             @update-selection="updateSelection"/>
+                        <div v-if="materialConnectionList.length>0" class="col-9"
+                             style="background-color: transparent; padding:0">
+                            <ConnectionComponent :itemsList="materialConnectionList"
+                                                 :isLinkMode="true"
+                                                 :isSelectionMode="true"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0" class="col-12"
+                                                 @update-item="updateItem"
+                                                 @update-selection="updateSelection"/>
+                        </div>
                     </div>
                 </form>
                 <form class="formCreation">
@@ -444,7 +455,7 @@
                         <div class="col-12 green-border-focus">
 
                                     <textarea class="form-control" id="add-misc" rows="5" v-model="article.miscellany"
-                                              background-color="palegreen" :disabled="uploadMode"/>
+                                              :disabled="uploadMode"/>
                         </div>
                     </div>
 
@@ -482,7 +493,7 @@
                 <div v-if="editMode" class="form-group row align-items-center">
                     <div class="offset-sm-4 col-sm-3">
 
-                        <button type="button" @click="updateArticle" class="btn btn-primary">Обновить</button>
+                        <button type="button" @click="preliminaryDataCheck" class="btn btn-primary">Обновить</button>
                         <a class="btn btn-default">
                             <router-link to="/article">Отмена</router-link>
                         </a>
@@ -498,10 +509,10 @@
                             <label for="checkbox">Нажмите "галочку", если хотите добавить файлы</label>
                         </div>
 
-                        <button type="button" style="margin-right: 20px" @click="createArticle(status[0])"
+                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[0])"
                                 class="btn btn-warning">В работе
                         </button>
-                        <button type="button" style="margin-right: 20px" @click="createArticle(status[1])"
+                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[1])"
                                 class="btn btn-success">Внесены
                         </button>
 
@@ -975,6 +986,51 @@
                 }
                 // textarea.value = newLines.join("\r\n");
                 return newLines;
+            },
+
+            checkConnection(list) {
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].connection.length <= 0) {
+                        // console.log("AXTUNG");
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            preliminaryDataCheck(currentStatus) {
+                let y = false, t = false, g = false, o = false;
+
+                if (this.isObjectValidAndNotEmpty(this.personConnectionList)) {
+                    y = this.checkConnection(this.personConnectionList)
+                }
+                if (!y) {
+                    if (this.isObjectValidAndNotEmpty(this.locationConnectionList)) {
+                        t = this.checkConnection(this.locationConnectionList);
+                    }
+                    if (!t) {
+                        if (this.isObjectValidAndNotEmpty(this.orgConnectionList)) {
+                            g = this.checkConnection(this.orgConnectionList);
+                        }
+                        if (!g) {
+                            if (this.isObjectValidAndNotEmpty(this.materialConnectionList)) {
+                                o = this.checkConnection(this.materialConnectionList);
+                            }
+                        }
+                    }
+                }
+
+                if (y || t || g || o) {
+                    alert("Укажите связь для сущностей, которые вы добавили");
+                    // console.log("ALERT");
+                } else {
+                    // alert("else");
+                    if (this.editMode) {
+                        this.updateArticle();
+                    } else {
+                        this.createArticle(currentStatus);
+                    }
+                }
             },
 
             createArticle(currentStatus) {

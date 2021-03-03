@@ -3,11 +3,10 @@
 
         <div class="form-row">
             <div class="col-11" style="background-color: transparent;
-                                               margin-right: 0px; margin-bottom: 0px;
-                                               padding-right: 0px; padding-left:0px;
-                                               padding-top: 0px; padding-bottom: 10px">
+                                               margin-right: 0; margin-bottom: 0;
+                                               padding: 0 0 10px">
                 <div v-if="isLinkMode"
-                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0px; background-color: transparent">
+                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0; background-color: transparent">
                     <a>
                         <router-link :to="{name: 'article-details', params: {article_id: item.id}}" target="_blank">
                             {{item.name}}
@@ -15,15 +14,14 @@
                     </a>
                 </div>
                 <div v-else
-                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0px; background-color: transparent">
+                     style="padding-left: 20px; padding-top: 10px; margin-bottom: 0; background-color: transparent">
                     {{item.name}}
                 </div>
             </div>
 
             <div class="col-1" style="background-color: transparent;
-                                               margin-right: 0px; margin-bottom: 0px;
-                                               padding-right: 0px; padding-left:0px;
-                                               padding-top: 0px; padding-bottom: 0px">
+                                               margin-right: 0; margin-bottom: 0;
+                                               padding: 0px;">
             <span class="close" style="background-color: transparent; padding-right: 10px"
                   @click="$emit('remove', item.id)">&times;</span>
 
@@ -33,8 +31,7 @@
         <div class="form-row col-12" style="background-color: transparent; padding:0px">
             <div v-if="isSelectionMode" class="form-row col-6"
                  style="background-color: transparent;
-                 margin-right: 0px; padding-right: 0px;
-                 padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+                 margin-right: 0; padding: 0 0 0 20px;">
 
                 <ConnectionTypeSelection :allTypes="allTypes"
                                          v-model="item.connection"
@@ -42,16 +39,17 @@
                                          @update-selectedConnection="updateConnection"/>
             </div>
             <div v-else class="form-row col-6" style="background-color: transparent;
-                                               margin-right: 0px; margin-bottom: 0px;
-                                               padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+                                               margin-right: 0; margin-bottom: 0;
+                                               padding: 0 0 0 20px;">
 
                 <InputConnectionText v-model="item.connection"
                                      :existedConnection="item.connection"
                                      @has-clicked="hasClickedChanged(item)"/>
+<!--                todo to delete hasClicked-->
             </div>
 
             <div class="form-row col-6"
-                 style="background-color: transparent; padding-right: 0px; padding-left:20px; padding-top: 0px; padding-bottom: 0px">
+                 style="background-color: transparent; padding: 0 0 0 20px;">
                 <InputCommentText v-model="item.comment" :existedComment="item.comment"/>
             </div>
         </div>
@@ -75,6 +73,7 @@
                 type: Array,
                 required: true
             },
+//todo to delete hasCl
             hasClicked: {
                 type: Boolean,
                 required: true

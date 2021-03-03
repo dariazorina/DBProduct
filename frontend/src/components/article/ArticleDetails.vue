@@ -144,7 +144,7 @@
                 <div class="col-sm-2">
                     <div class="cellTitle"><span class="float-left">Описание</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left"> {{article.description}}</span>
+                <div class="col-sm-10"><span v-html="article.description"></span>
                 </div>
             </div>
 
@@ -153,7 +153,7 @@
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Текст</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.createComplexTitle}}</span>
+                <div class="col-sm-10" style="background-color:lavender;"><span v-html="article.text"></span>
                 </div>
             </div>
 
@@ -282,10 +282,7 @@
 
             isObjectValidAndNotEmpty(obj) {
                 // console.log("VALID", obj);
-                if (typeof obj === 'undefined' || obj === null || obj.length === 0) {
-                    return false;
-                }
-                return true;
+                return !(typeof obj === 'undefined' || obj === null || obj.length === 0);
             },
 
             createComplexPersonById(id) {
