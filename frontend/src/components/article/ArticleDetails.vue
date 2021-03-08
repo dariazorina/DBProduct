@@ -12,10 +12,11 @@
 
             <div class="row">
                 <div class="col-sm-2">
-                    <div class="cellTitle"><span class="float-left">Тип материала</span></div>
+                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                        <span class="float-left">Заголовок</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left"> <div v-if="article.mtype!=null">{{article.mtype.content}}</div> </span>
-                </div>
+                <div class="col-sm-10">
+                    <span class="float-left"> <div><b>{{createComplexTitle()}}</b></div></span></div>
             </div>
 
             <div class="row">
@@ -44,31 +45,32 @@
 
             <div class="row">
                 <div class="col-sm-2">
-                    <div class="cellTitle"><span class="float-left">Язык</span></div>
+                    <div class="cellTitle"><span class="float-left">Тип материала</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left"> {{article.language.name}} </span>
+                <div class="col-sm-10"><span class="float-left"> <div v-if="article.mtype!=null">{{article.mtype.content}}</div> </span>
                 </div>
             </div>
 
-
             <div class="row">
-                <div class="col-sm-2" style="background-color:lavender;">
-                    <div class="cellTitle"><span class="float-left">Дата</span></div>
+                <div class="col-sm-2"  style="background-color:lavender;">
+                    <div class="cellTitle"><span class="float-left">Язык</span></div>
                 </div>
-                <div class="col-sm-10" style="background-color:lavender;">
-                    <span class="float-left"> {{ article.date }}</span>
+                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left"> {{article.language.name}} </span>
                 </div>
             </div>
 
 
             <div class="row">
                 <div class="col-sm-2">
-                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                        <span class="float-left">Заголовок</span></div>
+                    <div class="cellTitle"><span class="float-left">Дата</span></div>
                 </div>
                 <div class="col-sm-10">
-                    <span class="float-left"> <div>{{createComplexTitle()}}</div></span></div>
+                    <span class="float-left"> {{ article.date }}</span>
+                </div>
             </div>
+
+
+
 
             <div class="row">
                 <div class="col-sm-2"  style="background-color:lavender;">

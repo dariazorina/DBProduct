@@ -27,19 +27,19 @@
             </div>
         </div>
 
-        <form class="formCreation">
+        <form class="authorsFormCreation">
             <div class="row" style="background-color: transparent">
                 <div class="col-md-9">
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-surname"><b>Фамилия*</b></label>
-                            <input class="form-control" id="add-surname" v-model="person.surname"/>
+                            <label for="add-surname-rus">Фамилия на русском*</label>
+                            <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-surname-rus">Фамилия на русском</label>
-                            <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
+                            <label for="add-surname">Фамилия</label>
+                            <input class="form-control" id="add-surname" v-model="person.surname"/>
                         </div>
 
                         <div class="col-md-4">
@@ -50,13 +50,13 @@
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-name"><b>Имя*</b></label>
-                            <input class="form-control" id="add-name" v-model="person.name"/>
+                            <label for="add-name-rus">Имя на русском*</label>
+                            <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-name-rus">Имя на русском</label>
-                            <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
+                            <label for="add-name">Имя</label>
+                            <input class="form-control" id="add-name" v-model="person.name"/>
                         </div>
 
                         <div class="col-md-4">
@@ -118,78 +118,82 @@
                 </div>
             </div>
         </form>
-        <form class="authorsFormCreation form-row col-12"
-              style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-            <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
-                <v-card-text>
-                    <v-autocomplete
-                            id="location-autocomplete"
-                            label="Местонахождение"
+        <form class="authorsFormCreation"
+              style="background-color: transparent; padding: 25px 0 5px">
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные страны/н.п./места</label>
+                        <v-autocomplete
+                                id="location-autocomplete"
+                                :items="locationItems"
+                                :loading="isLoadingLocation"
+                                :search-input.sync="locationSearch"
+                                color="orange"
+                                hide-no-data
+                                hide-selected
 
-                            :items="locationItems"
-                            :loading="isLoadingLocation"
-                            :search-input.sync="locationSearch"
-                            color="orange"
-                            hide-no-data
-                            hide-selected
+                                v-model="selectedLocation"
 
-                            v-model="selectedLocation"
+                                @change="addLocation(selectedLocation)"
+                                item-text="country"
+                                item-value="id"
+                                placeholder="Начните печатать, чтобы найти локацию"
+                                prepend-icon="mdi-database-search"
+                                return-object
+                        ></v-autocomplete>
+                    </v-card-text>
+                </div>
 
-                            @change="addLocation(selectedLocation)"
-                            item-text="country"
-                            item-value="id"
-                            placeholder="Начните печатать, чтобы найти локацию"
-                            prepend-icon="mdi-database-search"
-                            return-object
-                    ></v-autocomplete>
-                </v-card-text>
-            </div>
-
-            <div v-if="locationList.length>0" class="col-9"
-                 style="background-color: transparent; padding:0">
-                <ConnectionComponent :itemsList="locationList"
-                                     :isLinkMode="false"
-                                     :isSelectionMode="false"
-                                     :allTypes="connectionTypes"
-                                     style="background-color: transparent; padding:0px" class="col-12"/>
+                <div v-if="locationList.length>0" class="col-9"
+                     style="background-color: transparent; padding:0">
+                    <ConnectionComponent :itemsList="locationList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
+                </div>
             </div>
         </form>
 
-        <form class="authorsFormCreation form-row col-12"
-              style="background-color: transparent; padding-right: 0px; padding-left: 0px; padding-top: 20px; padding-bottom: 20px">
-            <div class="col-3" style="background-color: transparent; padding-right: 0px; padding-left: 0px; ">
-                <v-card-text>
-                    <v-autocomplete
-                            id="author-autocomplete"
-                            label="Организации"
+        <form class="authorsFormCreation"
+              style="background-color: transparent; padding: 25px 0 5px">
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные организации</label>
+                        <v-autocomplete
+                                id="author-autocomplete"
+                                :items="orgItems"
+                                :loading="isLoadingOrg"
+                                :search-input.sync="orgSearch"
+                                color="green"
+                                hide-no-data
+                                hide-selected
 
-                            :items="orgItems"
-                            :loading="isLoadingOrg"
-                            :search-input.sync="orgSearch"
-                            color="green"
-                            hide-no-data
-                            hide-selected
+                                v-model="selectedOrg"
 
-                            v-model="selectedOrg"
+                                @change="addOrg(selectedOrg)"
+                                item-text="name"
+                                item-value="id"
+                                placeholder="Начните печатать, чтобы найти организацию"
+                                prepend-icon="mdi-database-search"
+                                return-object
+                        ></v-autocomplete>
+                    </v-card-text>
+                </div>
 
-                            @change="addOrg(selectedOrg)"
-                            item-text="name"
-                            item-value="id"
-                            placeholder="Начните печатать, чтобы найти организацию"
-                            prepend-icon="mdi-database-search"
-                            return-object
-                    ></v-autocomplete>
-                </v-card-text>
-            </div>
-
-            <div v-if="occupationList.length>0" class="col-9"
-                 style="background-color: transparent; padding:0; margin: 0px">
-                <ConnectionComponent :itemsList="occupationList"
-                                     :isLinkMode="false"
-                                     :isSelectionMode="false"
-                                     :allTypes="connectionTypes"
-                                     style="background-color: transparent; padding:0px" class="col-12"
-                                     @update-item="updateOccupation"/>
+                <div v-if="occupationList.length>0" class="col-9"
+                     style="background-color: transparent; padding:0; margin: 0px">
+                    <ConnectionComponent :itemsList="occupationList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"
+                                         @update-item="updateOccupation"/>
+                </div>
             </div>
         </form>
 
@@ -208,6 +212,7 @@
             <div class="form-row">
                 <div class="col-md-6">
 
+                    <label><b>Описание</b></label>
                     <!--                    <label for="add-description">Описание</label>-->
                     <!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
 
@@ -223,7 +228,7 @@
                     <!--                        <hashtag-list :commonProp="test" @addHashtagToList="addHashtagToList($event)"/>-->
                     <!--                    </b-card>-->
 
-                    <label>Форма добавления хештегов</label>
+                    <label><b>Форма добавления хештегов</b></label>
                     <div class="col-12" style="background-color: transparent; margin-left: -15px">
                         <b-card style="background-color: transparent; width: 88%">
                             <!--                            todo? 88%-->
@@ -263,43 +268,43 @@
                                     </v-container>
                                 </v-col>
 
-                                <v-divider vertical
-                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>
-                                <v-col
-                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">
+<!--                                <v-divider vertical-->
+<!--                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
+<!--                                <v-col-->
+<!--                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
 
-                                    <v-container
-                                            id="scroll-target"
-                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"
-                                            class="overflow-y-auto">
+<!--                                    <v-container-->
+<!--                                            id="scroll-target"-->
+<!--                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
+<!--                                            class="overflow-y-auto">-->
 
-                                        <template v-if="!selectedHashtag.length">
-                                            No nodes selected.
-                                        </template>
+<!--                                        <template v-if="!selectedHashtag.length">-->
+<!--                                            No nodes selected.-->
+<!--                                        </template>-->
 
-                                        <template v-else>
-                                            <div v-for="node in selectedHashtag">
-                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">
-                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>
-                                                </v-btn>
-                                                {{ node }}
-                                            </div>
+<!--                                        <template v-else>-->
+<!--                                            <div v-for="node in selectedHashtag">-->
+<!--                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">-->
+<!--                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+<!--                                                </v-btn>-->
+<!--                                                {{ node }}-->
+<!--                                            </div>-->
 
-                                            <div class="form-group row" style="padding-top: 30px">
+<!--                                            <div class="form-group row" style="padding-top: 30px">-->
 
-                                                <button type="button"
-                                                        style="margin-right: 20px; margin-left: 15px"
-                                                        @click="addHashtagToArticleList()"
-                                                        class="btn btn-success">Add
-                                                </button>
+<!--                                                <button type="button"-->
+<!--                                                        style="margin-right: 20px; margin-left: 15px"-->
+<!--                                                        @click="addHashtagToArticleList()"-->
+<!--                                                        class="btn btn-success">Add-->
+<!--                                                </button>-->
 
-                                                <button type="button" class="btn btn-info"
-                                                        @click="clearAllSelectedTags()">Clear All
-                                                </button>
-                                            </div>
-                                        </template>
-                                    </v-container>
-                                </v-col>
+<!--                                                <button type="button" class="btn btn-info"-->
+<!--                                                        @click="clearAllSelectedTags()">Clear All-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                        </template>-->
+<!--                                    </v-container>-->
+<!--                                </v-col>-->
                             </v-row>
 
                         </b-card>
@@ -307,6 +312,8 @@
                 </div>
             </div>
 
+        </form>
+        <form class="authorsFormCreation">
             <div class="form-row">
                 <div class="col-md-6">
                     <label for="add-link">Хештеги</label>
@@ -519,7 +526,7 @@
                 reader.readAsDataURL(image);
                 reader.onload = e => {
                     this.previewImage = e.target.result;
-                   // console.log(this.previewImage);
+                    // console.log(this.previewImage);
                 };
             },
 
@@ -580,7 +587,7 @@
             },
 
             addOrg(obj) {
-                 console.log("GET CHANGED ORG", obj);
+                console.log("GET CHANGED ORG", obj);
                 let i = 0;
                 for (i = 0; i < this.occupationList.length; i++) { //to exclude double values
                     if (this.occupationList[i].id === obj.id) {
@@ -620,7 +627,7 @@
             },
 
             finalConnectionListCreation(list, finalList) {
-                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
+                console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
                 for (let i = 0; i < list.length; i++) {
                     let a = {
                         "itemId": list[i].id,
@@ -633,17 +640,17 @@
                 }
             },
 
-            removeSelectedHashtag(hash) {
-                const index = this.selectedHashtag.indexOf(hash);
-                if (index > -1) {
-                    this.selectedHashtag.splice(index, 1);
-                }
-            },
+            // removeSelectedHashtag(hash) {
+            //     const index = this.selectedHashtag.indexOf(hash);
+            //     if (index > -1) {
+            //         this.selectedHashtag.splice(index, 1);
+            //     }
+            // },
 
             onHashtagSelect(item) {
-                const index = this.selectedHashtag.indexOf(item.name);
+                const index = this.tags.indexOf(item.name);
                 if (index === -1) {
-                    this.selectedHashtag.push(item.name);
+                    this.tags.push(item.name);
                 }
             },
 
@@ -678,22 +685,22 @@
                 return flatTree;
             },
 
-            clearAllSelectedTags() {
-                this.selectedHashtag = [];
-            },
-
-            addHashtagToArticleList() {
-                let tagAlreadyAdded = 0;
-                this.selectedHashtag.forEach((item, i) => {
-                    this.tags.forEach((tag, j) => {
-                        if (tag === item)
-                            tagAlreadyAdded = 1;
-                    });
-                    if (tagAlreadyAdded === 0)
-                        this.tags.push(item);
-                });
-                this.selectedHashtag = [];
-            },
+            // clearAllSelectedTags() {
+            //     this.selectedHashtag = [];
+            // },
+            //
+            // addHashtagToArticleList() {
+            //     let tagAlreadyAdded = 0;
+            //     this.selectedHashtag.forEach((item, i) => {
+            //         this.tags.forEach((tag, j) => {
+            //             if (tag === item)
+            //                 tagAlreadyAdded = 1;
+            //         });
+            //         if (tagAlreadyAdded === 0)
+            //             this.tags.push(item);
+            //     });
+            //     this.selectedHashtag = [];
+            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -945,8 +952,8 @@
             locationItems() {
                 if (this.locationEntries) {      ///todo analyze why undefined (after selection in the search list)
                     return this.locationEntries.map(entry => {
-                       // const org = entry.name;
-                       //  return Object.assign({}, entry, {org})
+                        // const org = entry.name;
+                        //  return Object.assign({}, entry, {org})
                         return Object.assign({}, entry)
                     })
                 }

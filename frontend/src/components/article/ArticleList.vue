@@ -1,6 +1,6 @@
 <template id="article">
     <div>
-        <link href="../dbnm.css" rel="stylesheet"/>
+<!--        <link href="../dbnm.css" rel="stylesheet"/>-->
         <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px; background-color: transparent">
             <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
@@ -470,7 +470,7 @@
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
 <style lang="scss">
-    @import '../dbnm.css';
+    /*@import '../dbnm.css';*/
 </style>
 <style>
     .odd {
@@ -532,7 +532,6 @@
                 articleLocationEntities: [], //after request
                 articleOrgIds: [], //before request
                 articleOrgEntities: [], //after request
-
 
                 authorComponentKey: 0,  //todo delete?
 
@@ -1270,12 +1269,12 @@
                 if (this.statusCheckBox[this.statusCheckBox.length - 1] === 3) {
                     console.log("this.statusCheckBox!!! == 3");
 
-                    document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
-                    document.getElementById("enddate-input").style.backgroundColor = "lightgrey";
-
-                    document.getElementById("startdate-input").disabled = true;
-                    document.getElementById("enddate-input").disabled = true;
-                    document.getElementById("refreshButton").disabled = true;
+                    // document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
+                    // document.getElementById("enddate-input").style.backgroundColor = "lightgrey";
+                    //
+                    // document.getElementById("startdate-input").disabled = true;
+                    // document.getElementById("enddate-input").disabled = true;
+                    // document.getElementById("refreshButton").disabled = true;
 
                     for (let i = 0; i < this.statusCheckBox.length; i++) {
                         if (this.statusCheckBox[i] !== 3) {
@@ -1287,12 +1286,12 @@
 
                     console.log("AFTER", this.statusCheckBox);
                 } else {
-                    document.getElementById("startdate-input").style.backgroundColor = "white";
-                    document.getElementById("enddate-input").style.backgroundColor = "white";
-
-                    document.getElementById("startdate-input").disabled = false;
-                    document.getElementById("enddate-input").disabled = false;
-                    document.getElementById("refreshButton").disabled = false;
+                    // document.getElementById("startdate-input").style.backgroundColor = "white";
+                    // document.getElementById("enddate-input").style.backgroundColor = "white";
+                    //
+                    // document.getElementById("startdate-input").disabled = false;
+                    // document.getElementById("enddate-input").disabled = false;
+                    // document.getElementById("refreshButton").disabled = false;
 
                     for (let i = 0; i < this.statusCheckBox.length; i++) {
                         if (this.statusCheckBox[i] === 3) {

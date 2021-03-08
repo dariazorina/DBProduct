@@ -578,8 +578,8 @@ public class ArticleServiceImpl implements ArticleService {
             }
         } else if (status.get(0) == -1) {
             searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
-        } else if (status.get(0) == 3) {
-            searchList = articleRepository.findAllByStatus(status);
+//        } else if (status.get(0) == 3) {  //remove special status for 'done' (now search for period as for other one)
+//            searchList = articleRepository.findAllByStatus(status);
         } else {
             searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
         }

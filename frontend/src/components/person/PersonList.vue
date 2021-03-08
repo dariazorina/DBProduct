@@ -113,6 +113,8 @@
 <script>
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
+    import apiCountry from "./../country/country-api";
+
     import OccupationList from "../components/person-occupation/OccupationList";
 
     export default {
@@ -124,6 +126,14 @@
             return {
                 persons: [],
                 allOrgs: [],
+
+                // persons: [status: 0, locationList: [], orgList: [], hashtagList: []],
+                articlePersonIds: [], //before request
+                articlePersonEntities: [], //after request
+                articleLocationIds: [], //before request
+                articleLocationEntities: [], //after request
+                articleOrgIds: [], //before request
+                articleOrgEntities: [], //after request
 
                 searchKey: '',
                 response: [],
@@ -177,6 +187,25 @@
             api.getAllPersons(response => {
                 this.persons = response.data;
                 // console.log(response.data)
+
+                for (let i = 0; i < this.entries.length; i++) {
+                    for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                        this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
+                    }
+                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                        this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                    }
+                }
+
+                console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
+
+                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
+                    this.articleOrgEntities = response.data;
+                });
+
+                apiCountry.getLocationsByIds(this.articleLocationIds, response => {
+                    this.articleLocationEntities = response.data;
+                });
             });
 
             apiOrg.getAllOrgs(response => {
