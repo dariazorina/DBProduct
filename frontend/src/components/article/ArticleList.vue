@@ -14,47 +14,18 @@
 
 
             <!--            ////////////////////////////////date period/////////////////////////////////////-->
-
-            <!--            <div class="col-4"-->
-            <!--                 style="margin-left:auto; background-color: yellow">-->
-
-
-            <!--                <div class="align-items-lg-baseline"-->
-            <!--                     style="margin-top: -20px;  margin-bottom: -5px; background-color: #b5d592">-->
-
-            <!--&lt;!&ndash;                    <label for="startdate-input" class="col-form-label">Начало</label>&ndash;&gt;-->
-
-            <!--                    <div class="col-4"-->
-            <!--                         style="margin-bottom: -15px; background-color: khaki">-->
-            <!--                        <input class="form-control" id="startdate-input" type="date" v-model="startDate"-->
-            <!--                               style="background-color: lightcyan"/>-->
-            <!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-
-            <!--                    &lt;!&ndash;                                        <v-btn text icon x-small style="margin-bottom: 10px; margin-right: 0px" @click="momentFormat()">&ndash;&gt;-->
-            <!--                    &lt;!&ndash;                                            <v-icon style="color: green">mdi-pencil</v-icon>&ndash;&gt;-->
-            <!--                    &lt;!&ndash;                                        </v-btn>&ndash;&gt;-->
-            <!--&lt;!&ndash;                </div>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;                <div class="row align-items-lg-baseline" style="background-color: #ba68c8">&ndash;&gt;-->
-            <!--&lt;!&ndash;                    <label for="enddate-input" class="col-form-label">Конец</label>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;                    <div class="col-7" style="margin-left: 10px; margin-bottom: -15px; background-color: #4183c4">&ndash;&gt;-->
-            <!--                        <input class="form-control" type="date" id="enddate-input" v-model="endDate"/>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-
             <div class="form-group row col-9"
-                 style="margin: auto; background-color: transparent; padding-right: 0px; padding: 0;">
+                 style="margin: 0; background-color: transparent; padding-right: 0px; padding: 0;">
 
-                <div class="col-5"
-                     style="margin-top: 0px; background-color: transparent; padding-top: 0px; padding-bottom:0px; padding-left: 280px">
+                <div class="col-8"
+                     style="margin-top: 0px; background-color: transparent; padding:0">
                     <a class="btn btn-default">
                         <router-link :to="{name: 'article-add'}">Add article</router-link>
                     </a>
                     <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
                 </div>
 
-                <div class="form-group row col-3" style="margin-left: 32%; padding:0; background-color: transparent">
+                <div class="form-group row col-4" style="margin: 0; margin-left: 0; padding:0; background-color: transparent">
 
                     <div class="col-5"
                          style="background-color: transparent; padding-left: 2px; padding-right: 2px; margin-left: 0px; padding-bottom: 0px; padding-top: 0px">
@@ -67,53 +38,37 @@
                         <input class="form-control" type="date" id="enddate-input" v-model="endDate"
                                style="padding-left: 5px; padding-right: 2px; "/>
                     </div>
-                    <!--            </div>-->
-
-                    <!--            <div>-->
-                    <!--                    <a class="btn btn-default" onclick="refreshPeriod">-->
-                    <div class="col-2"
+                      <div class="col-2"
                          style="background-color: transparent; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; margin-left: 0px">
                         <button id="refreshButton" type="button" class="btn" @click="refreshPeriod">
-                            <!--                    Refresh period-->
-                            <!--                    </a>-->
-                            <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
+                             <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
                         </button>
                     </div>
 
                 </div>
             </div>
         </div>
-
-
-        <!--        <div class="logoutNameAndButton">welcome, {{loggedName}}!-->
-        <!--            <b-btn v-if="loggedInFlag" size="sm" variant="outline-secondary" v-b-modal.modal1>Logout</b-btn>-->
-        <!--            &lt;!&ndash; Modal Component &ndash;&gt;-->
-        <!--            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>-->
-        <!--        </div>-->
-
-
         <!--        ////////////////////////////////////////search//////////////////////////////////-->
-        <div class="row" style="background-color: transparent">
-            <label class="col-sm-2 col-form-label" style="line-height: 45px;">Выберете поле для поиска:</label>
-            <div class="col-sm-auto">
+        <div class="row" style="background-color: transparent; padding: 0px;  margin:0;  ">
+            <label class="col-sm-2 col-form-label" align="right" style="line-height: 45px; padding-right: 0;background-color: transparent">Выберете поле для поиска:</label>
+            <div class="col-sm-auto" style="padding-right: 0;background-color: transparent">
                 <b-form-select v-model="selected" id="search-selection">
                     <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
                 </b-form-select>
             </div>
 
-            <div class="col-sm-2" style="background-color: transparent">
+            <div class="col-sm-2" style="padding-right: 0;background-color: transparent">
                 <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
                        id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
                 <span class="close" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">&times;</span>
                 <!--                todo-->
             </div>
 
-            <div style="margin-top: 0px; background-color: transparent" align="left" class="form-group row col-sm-3">
-                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"
-                        type="button" @click="search" class="btn btn-primary" disabled>Поиск
+            <div class="form-group row col-sm-3"  align="left" style="margin: 0; padding: 10px 15px; background-color: transparent">
+<!--                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"-->
+                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary" disabled>Поиск
                 </button>
-                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"
-                        type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
                 </button>
             </div>
 
@@ -121,8 +76,9 @@
 
             <div class="form-group row col-2"
                  style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
-                <div class="col-6">
-                    <b-form-group label="" style="text-align: left; margin-left: -15px; background-color: transparent">
+<!--                <div class="col-3" style="padding: 0; margin: 0; background-color: #ba68c8  "></div>-->
+                <div class="col-5" style="padding: 0px;  margin:0;">
+                        <b-form-group label="" style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options1"
                                 v-model="statusCheckBox"
@@ -133,8 +89,8 @@
                         </b-form-checkbox>
                     </b-form-group>
                 </div>
-                <div class="col-6">
-                    <b-form-group label="" style="text-align: left; margin-left: -15px; background-color: transparent">
+                <div class="col-7" style="padding: 0px;  margin:0;">
+                    <b-form-group label="" style="text-align: left;  padding: 0px;  margin:0;  background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options2"
                                 v-model="statusCheckBox"
