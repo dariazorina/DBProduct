@@ -268,43 +268,43 @@
                                     </v-container>
                                 </v-col>
 
-<!--                                <v-divider vertical-->
-<!--                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
-<!--                                <v-col-->
-<!--                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
+                                <!--                                <v-divider vertical-->
+                                <!--                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
+                                <!--                                <v-col-->
+                                <!--                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
 
-<!--                                    <v-container-->
-<!--                                            id="scroll-target"-->
-<!--                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
-<!--                                            class="overflow-y-auto">-->
+                                <!--                                    <v-container-->
+                                <!--                                            id="scroll-target"-->
+                                <!--                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
+                                <!--                                            class="overflow-y-auto">-->
 
-<!--                                        <template v-if="!selectedHashtag.length">-->
-<!--                                            No nodes selected.-->
-<!--                                        </template>-->
+                                <!--                                        <template v-if="!selectedHashtag.length">-->
+                                <!--                                            No nodes selected.-->
+                                <!--                                        </template>-->
 
-<!--                                        <template v-else>-->
-<!--                                            <div v-for="node in selectedHashtag">-->
-<!--                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">-->
-<!--                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-<!--                                                </v-btn>-->
-<!--                                                {{ node }}-->
-<!--                                            </div>-->
+                                <!--                                        <template v-else>-->
+                                <!--                                            <div v-for="node in selectedHashtag">-->
+                                <!--                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">-->
+                                <!--                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>-->
+                                <!--                                                </v-btn>-->
+                                <!--                                                {{ node }}-->
+                                <!--                                            </div>-->
 
-<!--                                            <div class="form-group row" style="padding-top: 30px">-->
+                                <!--                                            <div class="form-group row" style="padding-top: 30px">-->
 
-<!--                                                <button type="button"-->
-<!--                                                        style="margin-right: 20px; margin-left: 15px"-->
-<!--                                                        @click="addHashtagToArticleList()"-->
-<!--                                                        class="btn btn-success">Add-->
-<!--                                                </button>-->
+                                <!--                                                <button type="button"-->
+                                <!--                                                        style="margin-right: 20px; margin-left: 15px"-->
+                                <!--                                                        @click="addHashtagToArticleList()"-->
+                                <!--                                                        class="btn btn-success">Add-->
+                                <!--                                                </button>-->
 
-<!--                                                <button type="button" class="btn btn-info"-->
-<!--                                                        @click="clearAllSelectedTags()">Clear All-->
-<!--                                                </button>-->
-<!--                                            </div>-->
-<!--                                        </template>-->
-<!--                                    </v-container>-->
-<!--                                </v-col>-->
+                                <!--                                                <button type="button" class="btn btn-info"-->
+                                <!--                                                        @click="clearAllSelectedTags()">Clear All-->
+                                <!--                                                </button>-->
+                                <!--                                            </div>-->
+                                <!--                                        </template>-->
+                                <!--                                    </v-container>-->
+                                <!--                                </v-col>-->
                             </v-row>
 
                         </b-card>
@@ -350,7 +350,7 @@
             <div v-if="editMode" class="form-group row align-items-center align-items-center">
                 <div class="offset-sm-4 col-sm-3">
 
-                    <button type="button" @click="createPerson" class="btn btn-primary">Update</button>
+                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Update</button>
                     <a class="btn btn-default">
                         <router-link to="/article">Cancel</router-link>
                     </a>
@@ -359,7 +359,7 @@
             <div v-else class="form-group row">
                 <div class="col-sm-4">
 
-                    <button type="button" @click="createPerson" class="btn btn-primary">Save</button>
+                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Save</button>
                     <a class="btn btn-default">
                         <router-link to="/person">Cancel</router-link>
                     </a>
@@ -715,10 +715,10 @@
             },
 
             formValidate() {
-                this.addStatus('add-surname', (!this.person.surname));
+                this.addStatus('add-surname-rus', (!this.person.surnameRus));
                 if (this.hasError) {
                 } else {
-                    this.addStatus('add-name', (!this.person.name));
+                    this.addStatus('add-name-rus', (!this.person.nameRus));
                     // if (this.hasError) {
                     // } else {
                     //     this.addStatus('country-selection', (!this.selectedC));
@@ -730,7 +730,47 @@
                 return !this.hasError;
             },
 
-            createPerson() {
+            isObjectValidAndNotEmpty(obj) {
+                return !(typeof obj === 'undefined' || obj === null);
+            },
+
+            checkConnection(list) {
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].connection.length <= 0) {
+                        console.log("AXTUNG");
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            preliminaryDataCheck(currentStatus) {
+                let t = false, g = false;
+
+
+                if (this.isObjectValidAndNotEmpty(this.locationList)) {
+                    t = this.checkConnection(this.locationList);
+                }
+                if (!t) {
+                    if (this.isObjectValidAndNotEmpty(this.occupationList)) {
+                        g = this.checkConnection(this.occupationList);
+                    }
+                }
+
+                if (t || g ) {
+                    alert("Укажите связь для сущностей, которые вы добавили");
+                    // console.log("ALERT");
+                } else {
+                    // alert("else");
+                    // if (this.editMode) {
+                    //     this.updateArticle();
+                    // } else {
+                        this.createPerson(currentStatus);
+                    // }
+                }
+            },
+
+            createPerson(status) {
                 // this.person.movement = {
                 //     "id": this.selectedM
                 // }; todo

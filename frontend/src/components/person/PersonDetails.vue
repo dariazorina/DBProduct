@@ -364,13 +364,10 @@
             },
 
             showSurname() {
-                let surname; // = this.person.surname; //surname - obligatory field
+                let surname = this.person.surnameRus; //surnameRus - obligatory field
 
                 if (this.person.surname)
-                    surname = this.person.surname;
-
-                if (this.person.surnameRus)
-                    surname = surname + " / " + this.person.surnameRus;
+                    surname = surname + " / " + this.person.surname;
 
                 if (this.person.surnameEng)
                     surname = surname + " / " + this.person.surnameEng;
@@ -379,13 +376,10 @@
             },
 
             showName() {
-                let name;
+                let name = this.person.nameRus;
 
                 if (this.person.name)
-                    name = this.person.name;
-
-                if (this.person.nameRus)
-                    name = name + " / " + this.person.nameRus;
+                    name = name + " / " + this.person.name;
 
                 if (this.person.nameEng)
                     name = name + " / " + this.person.nameEng;

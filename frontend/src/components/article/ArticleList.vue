@@ -1179,7 +1179,7 @@
                         this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
                     }
                 }
-                console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
+                //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
 
                 apiOrg.getOrgsByIds(this.articleOrgIds, response => {
                     this.articleOrgEntities = response.data;

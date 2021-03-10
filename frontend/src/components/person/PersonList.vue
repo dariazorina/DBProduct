@@ -18,76 +18,49 @@
             <!--        <table class="table">-->
             <thead>
             <tr>
-                <th class='tdAlignLeft'>Id</th>
-                <th class='tdAlignLeft'>Фамилия</th>
-                <th class='tdAlignLeft'>Имя</th>
-                <th class='tdAlignLeft'>Фамилия на русском</th>
-                <th class='tdAlignLeft'>Имя на русском</th>
-                <!--                <th class='tdAlignLeft'>Patronymic</th>-->
-                <!--                <th class='tdAlignLeft'>Surname</th>-->
-                <!--                <th class='tdAlignLeft'>Name</th>-->
-                <!--                <th class='tdAlignLeft'>Movement</th>-->
+<!--                <th class='tdAlignLeft'>Статус</th>-->
+                <th class='tdAlignLeft'>Фамилия, Имя </th>
                 <th class='tdAlignLeft'>Год рождения</th>
                 <th class='tdAlignLeft'>Год смерти</th>
-                <th class='tdAlignLeft'>Страна</th>
-                <th class='tdAlignLeft'>Город</th>
+                <th class='tdAlignLeft'>Локация</th>
                 <th class='tdAlignLeft'>Должность</th>
                 <th class='tdAlignLeft'>Организация</th>
                 <th class='tdAlignLeft'>Хештеги</th>
-                <!--                <th class='tdAlignLeft' style="width:35%">Description</th>-->
-
                 <th style="width:10%" class="col-sm-2"></th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="person in filteredPersons">
-                <td>{{person.id }}</td>
+<!--                <td>{{ person. }}</td>-->
                 <td><a>
-                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">{{ person.surname }}
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">{{ person.surnameRus}} {{ person.nameRus }} <div v-if="person.patronymic != null">
+                        {{ person.patronymic}}
+                    </div>
                     </router-link>
                 </a></td>
-
-                <td class='tdAlignLeft'>{{person.name}}</td>
-                <td class='tdAlignLeft'>{{person.surnameRus }}</td>
-                <td class='tdAlignLeft'>{{person.nameRus}}</td>
                 <td class='tdAlignLeft'>{{person.birthYear}}</td>
                 <td class='tdAlignLeft'>{{person.deathYear}}</td>
-                <td class='tdAlignLeft'>{{showCountry(person.country)}}</td>
-                <!--                <td class='tdAlignLeft'>{{person.surnameEng }}</td>-->
-                <!--                <td class='tdAlignLeft'>{{person.nameEng }}</td>-->
-                <!--                <td class='tdAlignLeft'>{{person.movement.name}}</td>-->
-                <!--                <td class='tdAlignLeft'>{{person.country.name}}</td>-->
-                <td class='tdAlignLeft'>{{person.settlement }}</td>
+                <td class='tdAlignLeft'>
+                    <div v-for="location in person.locationList">
+                        <div v-if="person.locationList.length > 0">
+                            {{getLocationCellById(location.itemId)}}
+                        </div>
+                    </div>
+                </td>
                 <td class='tdAlignLeft'>
                     <div v-for="occ in person.testList">{{occ.position}}</div>
                 </td>
 
                 <td class='tdAlignLeft'>
                     <div v-for="occ in person.testList">{{getOrgNameById(occ.orgId)}}</div>
-<!--                    <div v-for="org in person.orgList">{{org.name}}</div>-->
+                    <!--                    <div v-for="org in person.orgList">{{org.name}}</div>-->
                 </td>
                 <td class='tdAlignLeft'>
                     <div v-for="ph in person.hashtagList">
                         {{ph}}
                     </div>
                 </td>
-
-                <!--                <td class='tdAlignLeft'>{{person.description }}</td>-->
-
-                <!--                <td>-->
-                <!--                    <a>-->
-                <!--                        <router-link :to="{name: 'article', params: {article_id: article.id}}">{{ article.title }}-->
-                <!--                        </router-link>-->
-                <!--                    </a>-->
-                <!--                </td>-->
-
-
                 <td>
-<!--                    <a class="btn btn-warning btn-sm mr-2">-->
-<!--                        <router-link :to="{name: 'person-add', params: {person_id: person.id}}">Edit</router-link>-->
-<!--                    </a>-->
-
-
                     <v-btn text icon x-small>
                         <a>
                             <router-link :to="{name: 'person-add', params: {person_id: person.id}}">
@@ -95,7 +68,6 @@
                             </router-link>
                         </a>
                     </v-btn>
-
                     <!--                    <a class="btn btn-danger btn-sm">-->
                     <!--                        <router-link :to="{name: 'person-delete', params: {person_id: person.id}}">Delete</router-link>-->
                     <!--                    </a>-->
@@ -127,13 +99,11 @@
                 persons: [],
                 allOrgs: [],
 
-                // persons: [status: 0, locationList: [], orgList: [], hashtagList: []],
-                articlePersonIds: [], //before request
-                articlePersonEntities: [], //after request
-                articleLocationIds: [], //before request
-                articleLocationEntities: [], //after request
-                articleOrgIds: [], //before request
-                articleOrgEntities: [], //after request
+                person: {status: 0, locationList: [], testList: [], hashtagList: []},
+                personLocationIds: [], //before request
+                personLocationEntities: [], //after request
+                personOrgIds: [], //before request
+                personOrgEntities: [], //after request
 
                 searchKey: '',
                 response: [],
@@ -166,13 +136,48 @@
                 })
             },
 
-            getOrgNameById(orgId){
-                for (let i = 0; i < this.allOrgs.length; i++) {
-                    if (this.allOrgs[i].id === orgId){
-                        return this.allOrgs[i].name;
-                    }
+            getOrgNameById(id) {
+                let result = '';
+                let currentOrg = this.personOrgEntities.find(x => x.id === id);
+
+                // console.log("ORG", currentOrg);
+                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentOrg.nameRus;
+                    return result;
                 }
             },
+
+            getLocationCellById(id) {
+                let result = '';
+                let currentLocation = this.personLocationEntities.find(x => x.id === id);
+
+                if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentLocation.country;
+
+                    if (this.isArrayValidAndNotEmpty(currentLocation.region)) {
+                        result += " / " + currentLocation.region;
+                    }
+                    if (this.isArrayValidAndNotEmpty(currentLocation.city)) {
+                        result += " / " + currentLocation.city;
+                    }
+                    return result;
+                }
+            },
+
+            isArrayValidAndNotEmpty(array) {
+                if (typeof array === 'undefined' || array === null || array.length == 0) {
+                    return false;
+                }
+                return true;
+            },
+
+            // getOrgNameById(orgId){
+            //     for (let i = 0; i < this.allOrgs.length; i++) {
+            //         if (this.allOrgs[i].id === orgId){
+            //             return this.allOrgs[i].name;
+            //         }
+            //     }
+            // },
 
             showCountry(country) {
                 if (country) {
@@ -186,32 +191,36 @@
         mounted() {
             api.getAllPersons(response => {
                 this.persons = response.data;
-                // console.log(response.data)
+                // console.log("PERSONS", response.data)
 
-                for (let i = 0; i < this.entries.length; i++) {
-                    for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                        this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
+                for (let i = 0; i < this.persons.length; i++) {
+                    for (let j = 0; j < this.persons[i].testList.length; j++) {
+                        this.personOrgIds.push(this.persons[i].testList[j].orgId);
                     }
-                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                        this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                    for (let j = 0; j < this.persons[i].locationList.length; j++) {
+                        this.personLocationIds.push(this.persons[i].locationList[j].itemId);
                     }
                 }
 
-                console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
+                // console.log("IDS", this.personOrgIds, this.personLocationIds);
 
-                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
-                    this.articleOrgEntities = response.data;
+                apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                    this.personOrgEntities = response.data;
+                    // console.log("IDS--------------", this.personOrgIds);
                 });
 
-                apiCountry.getLocationsByIds(this.articleLocationIds, response => {
-                    this.articleLocationEntities = response.data;
+                apiCountry.getLocationsByIds(this.personLocationIds, response => {
+                    this.personLocationEntities = response.data;
+                    // console.log("IDS-----****---------", this.personLocationEntities);
                 });
+
+
             });
 
-            apiOrg.getAllOrgs(response => {
-                this.allOrgs = response.data;
-                // console.log(" O R G A ", response.data)
-            });
+            // apiOrg.getAllOrgs(response => {
+            //     this.allOrgs = response.data;
+            //     // console.log(" O R G A ", response.data)
+            // });
         }
     }
 </script>
