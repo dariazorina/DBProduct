@@ -152,7 +152,7 @@
                         <div class="col-md-6">
                             <label for="add-title-rus"> <b>Заголовок на русском*</b></label>
                             <input class="form-control" id="add-title-rus"
-                                   placeholder="Должно быть заполнено одно из полей заголовка"
+                                   placeholder="Поле должно быть заполнено"
                                    :disabled="uploadMode"
                                    v-model="article.titleRus"/>
                         </div>
@@ -160,7 +160,6 @@
                         <div class="col-md-6">
                             <label for="add-title"><b>Заголовок в оригинале</b></label>
                             <input class="form-control" id="add-title"
-                                   placeholder="Должно быть заполнено одно из полей заголовка"
                                    :disabled="uploadMode"
                                    v-model="article.title"/>
                         </div>
@@ -434,9 +433,9 @@
                 <form class="formCreation">
                     <div class="form-row align-items-center">
                         <label for="add-descr"><b>Описание</b></label>
-                        <div class="col-12">
+                        <div class="col-12" :disabled="uploadMode">
                             <ckeditor :editor="editor" id="add-descr" v-model="article.description"
-                                      :config="editorConfig" :disabled="uploadMode"></ckeditor>
+                                      :config="editorConfig" ></ckeditor>
 
                         </div>
                     </div>

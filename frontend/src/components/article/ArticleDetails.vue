@@ -1,6 +1,7 @@
 <template id="article-details">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
+        <iframe id="iframeToDownload" style="display:none;"></iframe>
 
         <div class="form-group row">
             <div class="col-2 col-form-label">
@@ -177,6 +178,7 @@
 
             <div v-if="uploadedFiles.length > 0">
                 <file-attachment @getAttachment="getAttachment"
+                                 @downloadAttachment="downloadAttachment"
                                  :userName="loggedName"
                                  :already-uploaded-files="uploadedFiles"
                                  :is-details-mode="true"/>
@@ -251,6 +253,10 @@
             }
         },
         methods: {
+            downloadAttachment(file) {
+                document.getElementById('iframeToDownload').src = '/api/v1/article/downloadAttachment?entityId=' + this.article.id + '&id=' + file.id;
+            },
+
             getStatusName() {
                 let status = this.statusOptions.find(x => x.value === this.article.status);
                 return status.text;

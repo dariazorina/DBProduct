@@ -1,6 +1,7 @@
 <template id="person-add">
     <v-app id="inspire">
         <div>
+            <iframe id="iframeToDownload" style="display:none;"></iframe>
             <div class="form-group row">
                 <!--                <div class="col-2 col-form-label">-->
                 <!--                    <p class="pageCreateTitle">Add New Person</p>-->
@@ -34,7 +35,8 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <label for="add-surname-rus">Фамилия на русском*</label>
-                            <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"/>
+                            <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"
+                                   placeholder="Поле должно быть заполнено"/>
                         </div>
 
                         <div class="col-md-4">
@@ -51,7 +53,8 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <label for="add-name-rus">Имя на русском*</label>
-                            <input class="form-control" id="add-name-rus" v-model="person.nameRus"/>
+                            <input class="form-control" id="add-name-rus" v-model="person.nameRus"
+                                   placeholder="Поле должно быть заполнено"/>
                         </div>
 
                         <div class="col-md-4">
@@ -347,24 +350,76 @@
                 </div>
             </div>
 
-            <div v-if="editMode" class="form-group row align-items-center align-items-center">
+            <div v-if="uploadMode||editMode" style="background-color: transparent">
+                <file-attachment @attachFiles="createAttachment"
+                                 @getAttachment="getAttachment"
+                                 @downloadAttachment="downloadAttachment"
+                                 :userName="loggedName"
+                                 :already-uploaded-files="uploadedFiles"
+                                 :is-details-mode="false"/>
+            </div>
+            <div v-if="editMode" class="form-group row align-items-center">
                 <div class="offset-sm-4 col-sm-3">
 
-                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Update</button>
+                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Обновить</button>
                     <a class="btn btn-default">
-                        <router-link to="/article">Cancel</router-link>
+                        <router-link to="/article">Отмена</router-link>
                     </a>
                 </div>
             </div>
-            <div v-else class="form-group row">
-                <div class="col-sm-4">
+            <div v-else class="form-group row"
+                 style="background-color: transparent; margin: 0; padding: 0; padding-top: 15px">
+                <div v-if="!uploadMode" class="form-group align-items-center col-sm-12"
+                     style="background-color: transparent; padding: 0;">
+                    <div class="form-group align-items-center col-sm-12"
+                         style="background-color: transparent; margin: 0; padding:0; padding-bottom: 15px;">
+                        <input type="checkbox" id="checkbox" v-model="uploadFilesCheckBoxValue" class="yyy">
+                        <label for="checkbox" style="background-color: transparent">Нажмите "галочку", если хотите
+                            добавить файлы </label>
+                    </div>
 
-                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Save</button>
-                    <a class="btn btn-default">
-                        <router-link to="/person">Cancel</router-link>
-                    </a>
+                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[0])"
+                            class="btn btn-warning">В работе
+                    </button>
+                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[1])"
+                            class="btn btn-success">Внесены
+                    </button>
+
+                    <button type="button" class="btn btn-info">
+                        <router-link to="/article" style="color: white">Отмена</router-link>
+                    </button>
+                </div>
+
+                <div v-else class="offset-sm-4 col-sm-3">
+                    <button type="button" style="margin-right: 20px" @click="uploadFiles"
+                            class="btn btn-info">Upload Files
+                    </button>
+                    <button type="button" class="btn btn-info">
+                        <router-link to="/article" style="color: white">Cancel</router-link>
+
+                    </button>
                 </div>
             </div>
+
+
+            <!--            <div v-if="editMode" class="form-group row align-items-center align-items-center">-->
+            <!--                <div class="offset-sm-4 col-sm-3">-->
+
+            <!--                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Update</button>-->
+            <!--                    <a class="btn btn-default">-->
+            <!--                        <router-link to="/article">Cancel</router-link>-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div v-else class="form-group row">-->
+            <!--                <div class="col-sm-4">-->
+
+            <!--                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Save</button>-->
+            <!--                    <a class="btn btn-default">-->
+            <!--                        <router-link to="/person">Cancel</router-link>-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </form>
     </v-app>
 </template>
@@ -385,12 +440,15 @@
 
     import CKEditor from 'ckeditor4-vue';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
+    import FileAttachment from "../components/FileAttachment";
+    import apiAttachment from "./../attachment-api";
 
     export default {
         components: {
             OccupationList,
             ConnectionComponent,
             ckeditor: CKEditor.component, // to use the component locally
+            FileAttachment,
         },
         name: 'person-add',
         vuetify: new Vuetify(),
@@ -465,6 +523,13 @@
             person: {hashtagList: [], linkList: [], testList: [], locationList: []},
             years: [],
             editMode: false,
+            uploadMode: false,
+            uploadFilesCheckBoxValue: false,
+            status: ["statusProgress", "statusDone"],
+            loggedInFlag: false,
+            loggedName: '',
+            uploadedFiles: [],
+            attachedFiles: [],
 
             editor: CKEditor, // to use the component locally
             editorConfig: {
@@ -473,6 +538,37 @@
         }),
 
         methods: {
+            uploadFiles() {             //on button press
+                for (let i = 0; i < this.attachedFiles.length; i++) {
+                    apiAttachment.uploadFile('person', this.person.id, this.attachedFiles[i], r => {
+                    });
+                    // this.submitFile(this.attachedFiles[i]);
+                    //todo progress bar?
+                }
+                router.push('/person');
+            },
+
+            createAttachment(files) {     //emit from FilesAttachment Component 'attachFiles'
+                console.log("files from COMPONENT", files);
+                this.attachedFiles = [];
+                for (let i = 0; i < files.length; i++) {
+                    this.attachedFiles.push(files[i]);
+                }
+            },
+
+            downloadAttachment(file) {
+                document.getElementById('iframeToDownload').src = '/api/v1/person/downloadAttachment?entityId=' + this.person.id + '&id=' + file.id;
+            },
+
+            getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
+                apiAttachment.previewAttachment('person', this.person.id, file.id);
+            },
+
+
+            getLoggedIn() {
+                this.loggedInFlag = this.$store.getters.isLoggedIn;
+                this.loggedName = this.$store.getters.getUserName;
+            },
 
             setHeight(event) {
                 let image = event.target;
@@ -757,7 +853,7 @@
                     }
                 }
 
-                if (t || g ) {
+                if (t || g) {
                     alert("Укажите связь для сущностей, которые вы добавили");
                     // console.log("ALERT");
                 } else {
@@ -765,7 +861,7 @@
                     // if (this.editMode) {
                     //     this.updateArticle();
                     // } else {
-                        this.createPerson(currentStatus);
+                    this.createPerson(currentStatus);
                     // }
                 }
             },
@@ -827,6 +923,11 @@
                     if (this.formValidate()) {
                         api.update(this.person.id, this.person, r => {
                             console.log(r);
+                            for (let i = 0; i < this.attachedFiles.length; i++) {
+                                apiAttachment.uploadFile('person', this.person.id, this.attachedFiles[i], r => {
+                                });
+                                //todo progress bar?
+                            }
                             router.push('/person');
                         });
                     }
@@ -835,7 +936,15 @@
                     if (this.formValidate()) {
                         api.create(this.person, r => {
                             console.log(r);
-                            router.push('/person');
+                            if (!this.uploadFilesCheckBoxValue) {
+                                router.push('/person');
+                            } else {
+                                this.uploadMode = true;
+                                this.uploadFilesCheckBoxValue = false;
+                                let ID = r.data.id;
+                                this.person.id = ID;
+                                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here, PERSON ID", r.data, ID);
+                            }
                         });
                     }
                 }
@@ -880,9 +989,12 @@
             },
         },
         mounted() {
+            this.getLoggedIn();
+
             if (this.$route.params.person_id != null) {
                 console.log("EDIT MODE");
                 this.editMode = true;
+                this.uploadFilesCheckBoxValue = true;
             }
 
             this.initYears();
@@ -931,6 +1043,11 @@
                     //     }
                     // });
 
+                    apiAttachment.getAttachments('person', this.person.id, r => {
+                        for (let i = 0; i < r.data.length; i++) {
+                            this.uploadedFiles.push(r.data[i]);
+                        }
+                    });
 
                     apiCountry.getLocationsByIds(this.personLocationIds, response => {  ///returns List<Location>
                         this.personLocationEntities = response.data;   //returns List<Org>

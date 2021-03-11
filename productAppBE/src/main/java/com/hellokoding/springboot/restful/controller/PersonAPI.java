@@ -2,16 +2,25 @@ package com.hellokoding.springboot.restful.controller;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hellokoding.springboot.restful.model.Person;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.service.PersonService;
+import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
+import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
+import com.hellokoding.springboot.restful.service.dto.EntityType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonAPI {
     private final PersonService personService;
+    private final AttachmentService attachmentService;
 
     @GetMapping("/search")
     public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q) {
@@ -73,6 +83,117 @@ public class PersonAPI {
         personService.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping("/attachment/{id}")
+    public ResponseEntity<Integer> handleFileUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
+        Integer attachmentId = attachmentService.createAttachment(EntityType.PERSON, id, Instant.now(), "admin", file.getOriginalFilename(), file.getBytes());
+//        if (attachmentId == 0) return ResponseEntity.ok(attachmentId); //todo?
+        return ResponseEntity.ok(attachmentId);
+    }
+
+    @GetMapping("/attachments/{id}")
+    public ResponseEntity<List<AttachmentDTO>> getAttachments(@PathVariable Integer id) {
+        List<AttachmentDTO> all = attachmentService.getAttachments(EntityType.PERSON, id);
+        return ResponseEntity.ok(all);
+    }
+
+    public Optional<String> getExtensionByStringHandling(String filename) {
+        return Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+    }
+
+    @GetMapping("/attachment")
+    public ResponseEntity<InputStreamResource> getAttachment(@RequestParam(name = "entityId", required = true) Integer entityId, @RequestParam(name = "id", required = true) Integer id) {
+
+        HttpHeaders headers = new HttpHeaders();
+        ByteArrayInputStream bis = null;
+        AttachmentDTO attachmentDTO = attachmentService.getAttachment(EntityType.PERSON, entityId, id);
+        MediaType type = MediaType.APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
+        Optional<String> extension;
+
+        try{
+//            File uFile = null;
+//            uFile = maintainFileService.getDocument(123456L);
+            bis = new ByteArrayInputStream(attachmentDTO.getContent());
+            String FN =  attachmentDTO.getName().replaceAll(",", ".");
+            extension = getExtensionByStringHandling(FN);
+
+            String headerView = "inline; filename=" + FN;
+            headers.add("Content-Disposition", headerView);
+
+            if (extension.isPresent()) {
+                switch (extension.get().toLowerCase()) {
+                    case "pdf": {
+                        type = MediaType.APPLICATION_PDF;
+                        break;
+                    }
+                    case "png": {
+                        type = MediaType.IMAGE_PNG;
+                        break;
+                    }
+                    case "jpg":
+                    case "jpeg": {
+                        type = MediaType.IMAGE_JPEG;
+                        break;
+                    }
+                    case "gif": {
+                        type = MediaType.IMAGE_GIF;
+                        break;
+                    }
+                    case "txt": {
+                        type = MediaType.TEXT_PLAIN;
+                        break;
+                    }
+
+                    case "fb2":
+                    case "htm":
+                    case "html":{
+                        type = MediaType.TEXT_HTML;
+                        break;
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            System.out.printf("Exception", e);
+        }
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(type)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/downloadAttachment")
+    public ResponseEntity<InputStreamResource> downloadAttachment(@RequestParam(name = "entityId", required = true) Integer entityId, @RequestParam(name = "id", required = true) Integer id) {
+
+        HttpHeaders headers = new HttpHeaders();
+        ByteArrayInputStream bis = null;
+        AttachmentDTO attachmentDTO = attachmentService.getAttachment(EntityType.PERSON, entityId, id);
+//        MediaType type = MediaType.APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
+
+        try{
+            bis = new ByteArrayInputStream(attachmentDTO.getContent());
+            String FN =  attachmentDTO.getName().replaceAll(",", ".");
+
+            String headerView = "attachment; filename=" + FN;
+            headers.add("Content-Disposition", headerView);
+//            headers.add("Content-Description", "File Transfer");
+        }
+        catch(Exception e){
+            System.out.printf("Exception", e);
+        }
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(bis));
+    }
+
+
 
     //////////////////////utils/////////////////////////////////////////
 /*    @GetMapping("/fillPersonTableFromArticle")

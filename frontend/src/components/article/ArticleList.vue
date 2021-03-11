@@ -77,8 +77,8 @@
             <div class="form-group row col-2"
                  style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
 <!--                <div class="col-3" style="padding: 0; margin: 0; background-color: #ba68c8  "></div>-->
-                <div class="col-5" style="padding: 0px;  margin:0;">
-                        <b-form-group label="" style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
+                <div class="col-5" style="padding: 0;  margin:0; margin-left:auto; background-color: transparent">
+                        <b-form-group label="" style="text-align: left; padding: 0;  margin:0; background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options1"
                                 v-model="statusCheckBox"
@@ -89,8 +89,8 @@
                         </b-form-checkbox>
                     </b-form-group>
                 </div>
-                <div class="col-7" style="padding: 0px;  margin:0;">
-                    <b-form-group label="" style="text-align: left;  padding: 0px;  margin:0;  background-color: transparent">
+                <div class="col-6" style="padding: 0;  margin:0; margin-left:auto; background-color: transparent">
+                    <b-form-group label="" style="text-align: left;  padding: 0;  margin:0;  background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options2"
                                 v-model="statusCheckBox"

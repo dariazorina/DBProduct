@@ -1,6 +1,7 @@
 <template id="person-details">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
+        <iframe id="iframeToDownload" style="display:none;"></iframe>
 
         <div class="form-group row">
             <div class="col-2 col-form-label">
@@ -144,7 +145,8 @@
                             <span class="float-left">
                                 <div class="linkButton" v-for="link in person.linkList">
                                     <span class="float-left">
-                                        <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">{{link.content}}</button>
+                                        <button class="btn btn-link" style="font-size: small"
+                                                @click="goURL(link.content)">{{link.content}}</button>
                                     </span>
                                 </div>
                             </span>
@@ -278,14 +280,23 @@
                         </div>
 
                         <div class="col-sm-10 back1">
-                    <span class="float-left">
-                        <div class="linkButton" v-for="link in person.linkList">
                             <span class="float-left">
-                                <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">{{link.content}}</button>
-                            </span>
+                                <div class="linkButton" v-for="link in person.linkList">
+                                    <span class="float-left">
+                                        <button class="btn btn-link" style="font-size: small"
+                                                @click="goURL(link.content)">{{link.content}}</button>
+                                     </span>
+                                 </div>
+                             </span>
                         </div>
-                    </span>
-                        </div>
+                    </div>
+
+                    <div v-if="uploadedFiles.length > 0">
+                        <file-attachment @getAttachment="getAttachment"
+                                         @downloadAttachment="downloadAttachment"
+                                         :userName="loggedName"
+                                         :already-uploaded-files="uploadedFiles"
+                                         :is-details-mode="true"/>
                     </div>
 
                 </div>
@@ -317,10 +328,16 @@
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
     import apiLocation from "./../country/country-api";
+    import apiAttachment from "./../attachment-api";
+    import FileAttachment from "../components/FileAttachment";
+
     import "vue-scroll-table";
 
     export default {
         name: 'person-details',
+        components: {
+            FileAttachment,
+        },
         data() {
             return {
                 persons: [],
@@ -329,23 +346,95 @@
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
 
+                personOrgIds: [], //before request
+                personOrgEntities: [], //after request
+
+                uploadedFiles: [],
+                loggedInFlag: false,  //todo to remove
+                loggedName: null,    //should be file's author, not logged user
+
                 searchKey: '',
                 response: [],
                 errors: [],
                 showResponse: false,
+
+                statusOptions: [
+                    {text: 'В работе', value: 0},
+                    {text: 'Внесены', value: 1},
+                    {text: 'На доработке', value: 2},
+                    {text: 'Отработаны', value: 3},
+                ],
             }
         },
 
         methods: {
-            getOrgNameById(orgId) {
-                if (this.allOrgs !== null) {
-                    for (let i = 0; i < this.allOrgs.length; i++) {
-                        if (this.allOrgs[i].id === orgId) {
-                            return this.allOrgs[i].name;
-                        }
-                    }
+            downloadAttachment(file) {
+                document.getElementById('iframeToDownload').src = '/api/v1/person/downloadAttachment?entityId=' + this.person.id + '&id=' + file.id;
+            },
+
+            getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
+                console.log("get attachm");
+                apiAttachment.previewAttachment('person', this.person.id, file.id);
+            },
+
+            getStatusName() {
+                let status = this.statusOptions.find(x => x.value === this.person.status);
+                return status.text;
+            },
+
+            getLoggedIn() {
+                this.loggedInFlag = this.$store.getters.isLoggedIn;
+                this.loggedName = this.$store.getters.getUserName;
+            },
+
+            // getOrgNameById(orgId) {
+            //     if (this.allOrgs !== null) {
+            //         for (let i = 0; i < this.allOrgs.length; i++) {
+            //             if (this.allOrgs[i].id === orgId) {
+            //                 return this.allOrgs[i].name;
+            //             }
+            //         }
+            //     }
+            // },
+
+            getOrgNameById(id) {
+                let result = '';
+                let currentOrg = this.personOrgEntities.find(x => x.id === id);
+
+                // console.log("ORG", currentOrg);
+                if (this.isObjectValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentOrg.nameRus;
+                    return result;
                 }
             },
+
+            // createComplexOrgById(id) {
+            //     let currentOrg = this.articleOrgEntities.find(x => x.id === id);
+            //     let connection = this.article.orgList.find(x => x.itemId === id);
+            //     let result;
+            //
+            //     if (this.isObjectValidAndNotEmpty(currentOrg.name)) {
+            //         result = currentOrg.name + "/ " + currentOrg.nameRus;
+            //     } else {
+            //         result = currentOrg.nameRus;
+            //     }
+            //
+            //     if (this.isObjectValidAndNotEmpty(currentOrg.abbr)) {
+            //         result += "/ " + currentOrg.abbr;
+            //     }
+            //
+            //     if (this.isObjectValidAndNotEmpty(currentOrg.abbrRus)) {
+            //         result += "/ " + currentOrg.abbrRus;
+            //     }
+            //
+            //     if (this.isObjectValidAndNotEmpty(connection.connection))
+            //         result += "/ " + connection.connection;
+            //
+            //     if (this.isObjectValidAndNotEmpty(connection.comment))
+            //         result += "/ " + connection.comment;
+            //
+            //     return result;
+            // },
 
             showOrgAndPosition(occ) {
                 if (occ.comment !== null) {
@@ -387,12 +476,12 @@
                 return name;
             },
 
-            showCountry(country) {
-                if (country) {
-                    return country.name;
-                }
-                return "";
-            },
+            // showCountry(country) {
+            //     if (country) {
+            //         return country.name;
+            //     }
+            //     return "";
+            // },
 
             createComplexLocationById(id) {
                 let currentLocation = this.personLocationEntities.find(x => x.id === id);
@@ -441,27 +530,38 @@
             },
         },
         mounted() {
+            this.getLoggedIn();
+
             api.findById(this.$route.params.person_id, r => {
+                this.person = r.data;
                 console.log(r.data);
 
-                apiOrg.getAllOrgs(response => {  //todo - get only actual orgs
-                    this.person = r.data;
-                    this.allOrgs = response.data;
-                    // console.log(" O R G A ", response.data)
+                for (let j = 0; j < this.person.locationList.length; j++) {
+                    this.personLocationIds.push(this.person.locationList[j].itemId);
+                    //console.log("+", j);
+                }
+                //console.log("PRSN locations", this.personLocationIds);
 
-                    for (let j = 0; j < this.person.locationList.length; j++) {
-                        this.personLocationIds.push(this.person.locationList[j].itemId);
-                        console.log("+", j);
-                    }
-                    console.log("mountedmountedmountedmountedmounted locations", this.personLocationIds);
-
-                    apiLocation.getLocationsByIds(this.personLocationIds, response => {
-                        this.personLocationEntities = response.data;
-                        console.log("getLocationsByIds getLocationsByIds getLocationsByIds", this.personLocationEntities);
-                    });
+                apiLocation.getLocationsByIds(this.personLocationIds, response => {
+                    this.personLocationEntities = response.data;
+                    //console.log("getLocationsByIds getLocationsByIds getLocationsByIds", this.personLocationEntities);
                 });
 
+                for (let j = 0; j < this.person.testList.length; j++) {
+                    this.personOrgIds.push(this.person.testList[j].orgId);
+                    //console.log("+", j);
+                }
 
+                apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                    this.personOrgEntities = response.data;
+                    //console.log("apiOrga", this.personOrgEntities);
+                });
+
+                apiAttachment.getAttachments('person', this.person.id, r => {
+                    for (let i = 0; i < r.data.length; i++) {
+                        this.uploadedFiles.push(r.data[i]);
+                    }
+                });
             });
         },
     }
