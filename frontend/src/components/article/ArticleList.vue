@@ -1,6 +1,6 @@
 <template id="article">
     <div>
-<!--        <link href="../dbnm.css" rel="stylesheet"/>-->
+        <!--        <link href="../dbnm.css" rel="stylesheet"/>-->
         <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px; background-color: transparent">
             <div class="col-3 col-form-label">
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
@@ -38,10 +38,10 @@
                         <input class="form-control" type="date" id="enddate-input" v-model="endDate"
                                style="padding-left: 5px; padding-right: 2px; "/>
                     </div>
-                      <div class="col-2"
+                    <div class="col-2"
                          style="background-color: transparent; padding-left: 0px; padding-bottom: 0px; padding-top: 0px; margin-left: 0px">
                         <button id="refreshButton" type="button" class="btn" @click="refreshPeriod">
-                             <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
+                            <v-icon style="color: #0074D9">mdi-database-refresh</v-icon>
                         </button>
                     </div>
 
@@ -50,7 +50,9 @@
         </div>
         <!--        ////////////////////////////////////////search//////////////////////////////////-->
         <div class="row" style="background-color: transparent; padding: 0px;  margin:0;  ">
-            <label class="col-sm-2 col-form-label" align="right" style="line-height: 45px; padding-right: 0;background-color: transparent">Выберете поле для поиска:</label>
+            <label class="col-sm-2 col-form-label" align="right"
+                   style="line-height: 45px; padding-right: 0;background-color: transparent">Выберете поле для
+                поиска:</label>
             <div class="col-sm-auto" style="padding-right: 0;background-color: transparent">
                 <b-form-select v-model="selected" id="search-selection">
                     <option v-for="item in searchItems" v-bind:value="item">{{item}}</option>
@@ -58,15 +60,39 @@
             </div>
 
             <div class="col-sm-2" style="padding-right: 0;background-color: transparent">
-                <input :placeholder="placeholderCreation()" v-model="searchKey" class="form-control"
-                       id="search-element" style="padding-right: 20px" v-on:keyup.enter="search" requred/>
-                <span class="close" @click="deleteSearch()" style="margin-top: -31px; margin-right: 5px">&times;</span>
-                <!--                todo-->
+                <div v-if="searchKey.length === 0">
+                    <input :placeholder="placeholderCreation()"
+                           v-model="searchKey"
+                           class="form-control"
+                           style="padding-right: 20px"
+                           requred/>
+
+                    <span class="close" @click="deleteSearch()"
+                          style="margin-top: -31px; margin-right: 5px">&times;</span>
+                    <!--                todo-->
+                </div>
+                <div v-else><input :placeholder="placeholderCreation()"
+                                   v-model="searchKey"
+                                   class="form-control"
+                                   style="padding-right: 20px"
+                                   v-on:keyup.enter="search"
+                                   requred/>
+                    <span class="close" @click="deleteSearch()"
+                          style="margin-top: -31px; margin-right: 5px">&times;</span></div>
             </div>
 
-            <div class="form-group row col-sm-3"  align="left" style="margin: 0; padding: 10px 15px; background-color: transparent">
-<!--                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"-->
-                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary" disabled>Поиск
+            <div v-if="searchKey.length === 0" class="form-group row col-sm-3" align="left"
+                 style="margin: 0; padding: 10px 15px; background-color: transparent">
+                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary" disabled>
+                    Поиск
+                </button>
+                <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                </button>
+            </div>
+            <div v-else class="form-group row col-sm-3" align="left"
+                 style="margin: 0; padding: 10px 15px; background-color: transparent">
+                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary">
+                    Поиск
                 </button>
                 <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
                 </button>
@@ -76,9 +102,8 @@
 
             <div class="form-group row col-2"
                  style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
-<!--                <div class="col-3" style="padding: 0; margin: 0; background-color: #ba68c8  "></div>-->
                 <div class="col-5" style="padding: 0px;  margin:0;">
-                        <b-form-group label="" style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
+                    <b-form-group label="" style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options1"
                                 v-model="statusCheckBox"
@@ -136,10 +161,13 @@
                 <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
                             Хештеги
                         </div>
-                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="hashFilterId">
+                        <div class='col-sm-2'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="hashFilterId">
                             <v-btn text icon x-small @click="resetFilter(1)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
@@ -165,10 +193,13 @@
                 <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
                             Организации
                         </div>
-                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="orgFilterId">
+                        <div class='col-sm-2'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="orgFilterId">
                             <v-btn text icon x-small @click="resetFilter(3)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
@@ -178,10 +209,13 @@
                 <th class='tdTitle' @contextmenu.prevent="searchByField(4)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                        <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
                             Локации
                         </div>
-                        <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="locationFilterId">
+                        <div class='col-sm-2'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="locationFilterId">
                             <v-btn text icon x-small @click="resetFilter(4)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
@@ -196,25 +230,30 @@
                             Заголовок
                         </div>
                         <div class='col-sm-2'
-                             style="background-color: transparent; visibility: hidden; padding-left: 0" id="titleFilterId">
+                             style="background-color: transparent; visibility: hidden; padding-left: 0"
+                             id="titleFilterId">
                             <v-btn text icon x-small @click="resetFilter(5)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
                     </div>
                 </th>
-                <th class='tdTitle headerLink' @contextmenu.prevent="searchByField(6)"
-                    style="width:15%; color:lightgray"><div class="row" style="background-color: transparent">
-                    <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                    <div class='headerLink col-sm-8' style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
-                        Комментарии
+                <th @contextmenu.prevent="searchByField(6)"
+                    style="width:15%; color:lightgray">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Комментарии
+                        </div>
+                        <div class='col-sm-2'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="miscellanyFilterId">
+                            <v-btn text icon x-small @click="resetFilter(6)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
-                    <div class='col-sm-2' style="padding-left: 0px; background-color: transparent; visibility: hidden" id="miscellanyFilterId">
-                        <v-btn text icon x-small @click="resetFilter(6)">
-                            <v-icon style="color: white">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </div>
-                </div>
                 </th>
                 <th class="tdTitle" style="width:4%">Добавить материал..</th>
                 <th class="tdTitle" style="width:4%">Действия</th>
@@ -419,6 +458,10 @@
                         </b-button>
                     </div>
                 </div>
+
+                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по текущему полю будет отрабатывать
+                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не задействованы).
+                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i> введенное значение фильтра для текущего поля.</div>
             </template>
         </b-modal>
     </div>
@@ -529,7 +572,8 @@
                 currentSortDir: 'asc',
 
                 filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
-                    {key: 3, value: []}, {key: 4, value: []}, {key: 5, value: []}, {key: 6, value: []}],
+                    {key: 3, value: []}, {key: 4, value: []}, {key: 5, value: []}, {key: 6, value: []},
+                    {key: 7, value: []}, {key: 8, value: []}],
 
                 filterTableFields: [
                     {key: 0, text: 'Язык'},
@@ -550,26 +594,13 @@
                     {key: 4, text: 'location'},
                     {key: 5, text: 'title'},
                     {key: 6, text: 'miscellany'},
+                    {key: 7, text: 'description'},
+                    {key: 8, text: 'text'},
                 ],
 
                 currentFilterField: '',
                 currentFilterItems: [],
                 links: [],
-
-                // swatches: [
-                //     '#FF0000', '#AA0000', '#550000',
-                //     '#FFFF00', '#AAAA00', '#555500',
-                //     '#00FF00', '#00AA00', '#005500',
-                //     '#00FFFF', '#00AAAA', '#005555',
-                //     '#0000FF', '#0000AA', '#000055'
-                // ],
-                //
-                // colors: [
-                //     '#D90D0D',
-                //     '#FBFF1F',
-                //     '#01A722',
-                //     '#01D3EF'
-                // ],
             }
         },
         computed: {
@@ -609,10 +640,12 @@
 
         methods: {
             filterClearButtonActivity(hide, filterClearButtonId) {
-                if (hide)
-                    document.getElementById(filterClearButtonId).style.visibility = "hidden";
-                else
-                    document.getElementById(filterClearButtonId).style.visibility = "visible";
+                if (this.isArrayValidAndNotEmpty(document.getElementById(filterClearButtonId))) {
+                    if (hide)
+                        document.getElementById(filterClearButtonId).style.visibility = "hidden";
+                    else
+                        document.getElementById(filterClearButtonId).style.visibility = "visible";
+                }
             },
 
             // changeStatus() {
@@ -622,10 +655,12 @@
             resetFilter(filter) {
                 this.filterItems[filter].value.splice(0);
                 this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[filter].text + 'FilterId');
-                this.filterAll();
+                this.deleteSearch();
+                this.filterAll(false);
             },
 
             resetAllFilters() {
+                this.deleteSearch();
                 for (let i = 0; i < this.filterItems.length; i++) {
                     this.filterItems[i].value.splice(0);
                     this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[i].text + 'FilterId');
@@ -658,7 +693,8 @@
                 this.currentFilterItems.splice(0);
                 console.log(">>>>>>>>>>>>>>>search by modal filterItems currentSI", this.filterItems, this.currentFilterItems);
 
-                this.filterAll();  //filter(title)
+                this.deleteSearch();
+                this.filterAll(false);  //filter(title)
                 this.$refs.modalSearch.hide();
             },
 
@@ -916,7 +952,8 @@
                         // document.location.reload(true);
 
                         //this.search();
-                        this.filterAll();
+                        this.deleteSearch();
+                        this.filterAll(false);
                     });
                     // this.article.date = this.formatDate(this.article.date);
 
@@ -953,7 +990,8 @@
                     Vue.prototype.endDate = this.endDate;
 
                     //this.search();
-                    this.filterAll();
+                    this.deleteSearch();
+                    this.filterAll(false);
 
                     // api.searchPeriod(this.startDate, this.endDate, r => {
                     //     this.entries = r.data;
@@ -1022,36 +1060,49 @@
                 return result;
             },
 
-            filterAllBodyCreation() {
+            filterAllBodyCreation(singleFilter) {
                 let result = '';
                 // let connectionItem = '&' + field + '=';
-
                 let i = 0, j = 0;
 
                 //encodeURIComponent  -- to avoid error with '&' in parameters (ex. P&P - cannot find)
                 //This function encodes special characters. In addition, it encodes the following characters: , / ? : @ & = + $ #
 
-                //console.log("rrrrrrrrrrrrrrres before for", this.filterItems);
-                for (; j < this.filterItems.length; j++) {
-                    //console.log("rrrrrrrrrrrrrrres In for", this.filterItems[j].value.length, this.filterTableFieldsForRequest[j].text);
-                    for (i = 0; i < this.filterItems[j].value.length; i++) {
-                        // if (result.length === 0){
-
-                        result += this.filterTableFieldsForRequest[j].text + '=' + encodeURIComponent(this.filterItems[j].value[i]) + '&';
-                        //console.log("rrrrrrrrrrrrrrres IN I", i, result);
-                        // } else {
-                        //         result += encodeURIComponent(this.filterItems[j].value[i]) + connectionItem;
-                        //     }
+                if (singleFilter) {
+                    for (; j < this.filterItems.length; j++) {
+                        for (i = 0; i < this.filterItems[j].value.length; i++) {
+                            result += this.filterTableFieldsForRequest[j].text + '=' + encodeURIComponent(this.filterItems[j].value[i]) + '&';
+                        }
                     }
-
+                } else {
+                    //console.log("rrrrrrrrrrrrrrres before for", this.filterItems);
+                    for (; j < this.filterItems.length; j++) {
+                        //console.log("rrrrrrrrrrrrrrres In for", this.filterItems[j].value.length, this.filterTableFieldsForRequest[j].text);
+                        if (this.filterItems[j].value.length > 0) {
+                            result += this.filterTableFieldsForRequest[j].text + '=' + encodeURIComponent(this.filterItems[j].value[0]) + '&';
+                            // console.log("rrrrrrrrrrrrrrres IN I", i, result);
+                        }
+                    }
                 }
-                //console.log("rrrrrrrrrrrrrrres", result);
+
+                console.log("rrrrrrrrrrrrrrres", result);
                 return result;
             },
 
             deleteSearch() {
                 this.searchKey = "";
                 // this.entries = this.articles;
+                let array = [];
+
+                let item = {
+                    "key": "",
+                    "value": array,
+                };
+
+                this.filterItems[7] = item;
+                this.filterItems[8] = item;
+
+//                this.filterAll(false); //calls in watcher for searchKey
             },
 
             // dateFormat(value, row, index) {  //todo
@@ -1069,16 +1120,19 @@
 
             search() {
                 // console.log("SEARCH", this.searchKey);
+                let isFilterActive = false;
+                for (let i = 0; i < this.filterItems.length; i++) {
+                    if (this.filterItems[i].value.length > 0) {
+                        isFilterActive = true;
+                    }
+                }
 
-                if (this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
-                    // this.entries = this.articles;
-
+                if (!isFilterActive && this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
                     api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
                         this.entries = r.data;
                     });
-
                 } else {
-                    if (this.searchKey === "") {    //s-
+                    if (!isFilterActive && this.searchKey === "") {    //s-
                         if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) { //ch+
                             api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, r => {
                                 this.entries = r.data;
@@ -1086,30 +1140,75 @@
                         }
                     } else {        //s+
                         if (this.selected === "текст") {
-                            //this.filter('text');
 
-                            // if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//ch+
-                            //     api.filter('text', this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                            //         this.entries = r.data;
-                            //     });
-                            // } else {
-                            //     api.filter('text', this.searchKey, -1, this.startDate, this.endDate, r => {
-                            //         this.entries = r.data;
-                            //     });
-                            // }
+                            console.log("filters in search", this.filterItems);
+
+                            let array = [];
+                            let item = {
+                                "key": "text",
+                                "value": array,
+                            };
+                            this.filterItems[7] = item;  // in the case of selected changed
+
+                            if (isFilterActive) {
+                                let array = [];
+                                array.push(this.searchKey);
+
+                                let item = {
+                                    "key": "text",
+                                    "value": array,
+                                };
+                                this.filterItems[8] = item;
+                                this.filterAll(true); //mix search+filter
+
+                            } else {  //just search
+                                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+                                    api.searchText(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                                        this.entries = r.data;
+                                    });
+                                } else {
+                                    // console.log("TEXT SEARCH");
+                                    api.searchText(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                        this.entries = r.data;
+                                        console.log("filter all ===++=====", this.filterItems, this.entries);
+                                    });
+                                }
+                            }
 
                         } else if (this.selected === "описание") {
-                            // this.filter('description');
+                            console.log("filters in search desc", this.filterItems);
 
-                            // if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {   //ch+
-                            //     api.filter('description', this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                            //         this.entries = r.data;
-                            //     });
-                            // } else {
-                            //     api.filter('description', this.searchKey, -1, this.startDate, this.endDate, r => {
-                            //         this.entries = r.data;
-                            //     });
-                            // }
+                            let array = [];
+                            let item = {
+                                "key": "text",
+                                "value": array,
+                            };
+                            this.filterItems[8] = item;  // in the case of selected changed
+
+                            if (isFilterActive) {
+                                let array = [];
+                                array.push(this.searchKey);
+
+                                let item = {
+                                    "key": "description",
+                                    "value": array,
+                                };
+                                this.filterItems[7] = item;
+                                this.filterAll(true); //mix search+filter
+
+                            } else {  //just search
+                                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+                                    api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                                        this.entries = r.data;
+                                    });
+                                } else {
+                                    // console.log("TEXT SEARCH");
+                                    api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                        this.entries = r.data;
+                                        console.log("filter all ===++=====", this.filterItems, this.entries);
+                                    });
+                                }
+                            }
                         }
                         // else if (this.selected === "заголовок") {
                         //     if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
@@ -1127,28 +1226,28 @@
                 }
             },
 
-            filter(field) {
-                console.log("-------filter by field--------", field);
-                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                    api.filter(field, this.arrayToParamsConversion(field), this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                        this.entries = r.data;
-                    });
-                } else {
-                    api.filter(field, this.arrayToParamsConversion(field), -1, this.startDate, this.endDate, r => {
-                        this.entries = r.data;
-                    });
-                }
-            },
+            filterAll(isSearch) {
+                let singleFilter = 0;
 
-            filterAll() {
+                if (isSearch) {
+                    singleFilter++;
+                } else {
+                    for (let j = 0; j < this.filterItems.length; j++) {
+                        if (this.filterItems[j].value.length > 0) {
+                            singleFilter++;
+                        }
+                    }
+                }
+                console.log("FFFFFFFFFFFFFFlag", singleFilter);
+
                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                    api.filterAll(this.filterAllBodyCreation(), this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate, r => {
                         this.entries = r.data;
                     });
                 } else {
-                    api.filterAll(this.filterAllBodyCreation(), -1, this.startDate, this.endDate, r => {
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate, r => {
                         this.entries = r.data;
-                        console.log("filter all =============", this.entries);
+                        console.log("filter all =============", this.filterItems, this.entries);
                     });
                 }
             },
@@ -1207,14 +1306,21 @@
                 //If empty search to renew the table
                 console.log("WATCH searchKey");
                 if (this.searchKey === "") {
-                    // if (this.statusCheckBox.length > 0) {
-                    this.search();
-                    // } else {
-                    //this.entries = this.articles;
-                    // api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
-                    //     this.entries = r.data;
-                    // });
-                    // }
+
+                    this.deleteSearch();
+                    let filterCounter = 0;
+                    for (let j = 0; j < this.filterItems.length; j++) {
+                        if (this.filterItems[j].value.length > 0) {
+                            filterCounter++;
+                        }
+                    }
+                    if (filterCounter > 0) {
+                        console.log("watch search filter");
+                        this.filterAll(false);
+                    } else {
+                        this.search();
+                        console.log("watch search SEARCH");
+                    }
                 }
             },
 
@@ -1259,8 +1365,11 @@
                     }
                 }
 
-                // this.search();
-                this.filterAll();
+                if (this.searchKey === "") {
+                    this.filterAll(false);
+                } else {
+                    this.search();
+                }
             },
 
             selected: function () {

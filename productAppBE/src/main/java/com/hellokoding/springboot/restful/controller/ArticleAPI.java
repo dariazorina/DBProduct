@@ -43,8 +43,8 @@ public class ArticleAPI {
     private final ConnectionTypeService ctypeService;
 
     //api/v1/article/search?title=title&hash=hash
-    @GetMapping("/search")
-    public ResponseEntity<List<ArticleDto>> search(@RequestParam(name = "title", required = false) List<String> title,
+    @GetMapping("/filter")
+    public ResponseEntity<List<ArticleDto>> filter(@RequestParam(name = "title", required = false) List<String> title,
                                                    @RequestParam(name = "hash", required = false) List<String> hash,
                                                    @RequestParam(name = "author", required = false) List<String> author,
                                                    @RequestParam(name = "org", required = false) List<String> org,
@@ -57,7 +57,18 @@ public class ArticleAPI {
                                                    @RequestParam(name = "startDate", required = false) String startDate,
                                                    @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.search(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate);
+        List<ArticleDto> searchResult = articleService.filter(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate);
+        return ResponseEntity.ok(searchResult);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ArticleDto>> search(@RequestParam(name = "description", required = false) String descr,
+                                                   @RequestParam(name = "text", required = false) String text,
+                                                   @RequestParam(name = "status", required = false) List<Integer> status,
+                                                   @RequestParam(name = "startDate", required = false) String startDate,
+                                                   @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
+
+        List<ArticleDto> searchResult = articleService.search(descr, text, status, startDate, endDate);
         return ResponseEntity.ok(searchResult);
     }
 
