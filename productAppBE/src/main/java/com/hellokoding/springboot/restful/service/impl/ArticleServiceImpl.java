@@ -419,13 +419,25 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
-    public List<ArticleDto> search(String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
+    public List<ArticleDto> search(String description, String text, List<Integer> status, String startDate, String endDate) {
 
         List<ArticleDto> dtoSearchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date frmtStartDate = format.parse(startDate);
-        Date frmtEndDate = format.parse(endDate);
+
+        Date frmtStartDate = null;
+        try {
+            frmtStartDate = format.parse(startDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date frmtEndDate = null;
+        try {
+            frmtEndDate = format.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if (description != null) {
             if (status.get(0) == -1) {
@@ -433,9 +445,7 @@ public class ArticleServiceImpl implements ArticleService {
             } else {
                 searchList = articleRepository.findByDescriptionAndStatusAndDate("%" + description + "%", status, frmtStartDate, frmtEndDate);
             }
-        }
-
-        else if (text != null) {
+        } else if (text != null) {
             if (status.get(0) == -1) {
                 searchList = articleRepository.findByTextAndDate("%" + text + "%", frmtStartDate, frmtEndDate);
             } else {
@@ -453,16 +463,19 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
 
-
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
     public List<ArticleDto> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
                                    List<String> location, List<String> language, String description, String text, List<String> misc,
                                    List<Integer> status, String startDate, String endDate){
 
         boolean isSingleFilter = false;
-        int length = 0;
-        int length1 = 0;
-        int currentSize = 0;
+        int hashCurrentSize = 0;
+        int orgCurrentSize = 0;
+        int locationCurrentSize = 0;
+        int authorCurrentSize = 0;
+        int titleCurrentSize = 0;
+        int languageCurrentSize = 0;
+        int miscCurrentSize = 0;
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date frmtStartDate = null;
@@ -477,7 +490,6 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 //        List<Article> searchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();
         List<ArticleDto> dtoSearchList = new ArrayList<>();
@@ -490,79 +502,132 @@ public class ArticleServiceImpl implements ArticleService {
         List<String> langList = new ArrayList<>();
         List<String> miscList = new ArrayList<>();
 
-
         if (status != null && status.size() > 0 && (title != null || hash != null || author != null || language != null || misc != null || org != null || location != null)) {
 
-
-            if (text != null || description != null){
+            if (text != null || description != null) {
                 isSingleFilter = false;
-            }
-            else{
-                if (title != null && !title.isEmpty()) {
-                    currentSize = title.size();
-
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+            } else {
+                if (title != null) {
+                    titleCurrentSize = title.size();
                 }
-
                 if (hash != null) {
-                    currentSize = hash.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+                    hashCurrentSize = hash.size();
                 }
                 if (author != null) {
-                    currentSize = author.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+                    authorCurrentSize = author.size();
                 }
                 if (misc != null) {
-                    currentSize = misc.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+                    miscCurrentSize = misc.size();
                 }
                 if (location != null) {
-                    currentSize = location.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+                    locationCurrentSize = location.size();
                 }
-
                 if (language != null) {
-                    currentSize = language.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
+                    languageCurrentSize = language.size();
                 }
                 if (org != null) {
-                    currentSize = org.size();
-                    if (currentSize == 1) {
-                        length1++;
-                    } else if (currentSize > 1) {
-                        isSingleFilter = true;
-                    }
-                }
-                if (length1 == 1) {
-                    isSingleFilter = true;
+                    orgCurrentSize = org.size();
                 }
             }
 
-            if (title != null && !title.isEmpty()) {
+            if (hashCurrentSize >= 1) {
+                isSingleFilter = true;
+
+                if (authorCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (titleCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (orgCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (locationCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (miscCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (languageCurrentSize >= 1) {
+                    isSingleFilter = false;
+                }
+            } else {
+                if (authorCurrentSize >= 1) {
+                    isSingleFilter = true;
+
+                    if (orgCurrentSize >= 1) {
+                        isSingleFilter = false;
+
+                    } else if (miscCurrentSize >= 1) {
+                        isSingleFilter = false;
+
+                    } else if (languageCurrentSize >= 1) {
+                        isSingleFilter = false;
+
+                    } else if (titleCurrentSize >= 1) {
+                        isSingleFilter = false;
+
+                    } else if (locationCurrentSize >= 1) {
+                        isSingleFilter = false;
+                    }
+                } else {
+                    if (titleCurrentSize >= 1) {
+                        isSingleFilter = true;
+
+                        if (orgCurrentSize >= 1) {
+                            isSingleFilter = false;
+
+                        } else if (locationCurrentSize >= 1) {
+                            isSingleFilter = false;
+
+                        } else if (miscCurrentSize >= 1) {
+                            isSingleFilter = false;
+
+                        } else if (languageCurrentSize >= 1) {
+                            isSingleFilter = false;
+                        }
+                    } else {
+                        if (orgCurrentSize >= 1) {
+                            isSingleFilter = true;
+
+                            if (locationCurrentSize >= 1) {
+                                isSingleFilter = false;
+
+                            } else if (miscCurrentSize >= 1) {
+                                isSingleFilter = false;
+
+                            } else if (languageCurrentSize >= 1) {
+                                isSingleFilter = false;
+                            }
+                        } else {
+                            if (locationCurrentSize >= 1) {
+                                isSingleFilter = true;
+
+                                if (miscCurrentSize >= 1) {
+                                    isSingleFilter = false;
+
+                                } else if (languageCurrentSize >= 1) {
+                                    isSingleFilter = false;
+                                }
+                            } else {
+                                if (languageCurrentSize >= 1) {
+                                    isSingleFilter = true;
+
+                                    if (miscCurrentSize >= 1) {
+                                        isSingleFilter = false;
+                                    }
+                                } else {
+                                    if (miscCurrentSize >= 1) {
+                                        isSingleFilter = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (title != null && !title.isEmpty()) { //todo isEmpty - is it neccesary?
                 int i;
                 for (String t : title) {
                     titleList.add("%" + t + "%");
@@ -593,9 +658,6 @@ public class ArticleServiceImpl implements ArticleService {
                     if (status.get(0) == -1) {
                         for (i = 0; i < hashList.size(); i++)
                             searchList.addAll(articleRepository.findByHashAndDate(hashList.get(i), frmtStartDate, frmtEndDate));
-//                    } else if (status.get(0) == 3) {
-//                        for (i = 0; i < hashList.size(); i++)
-//                            searchList.addAll(articleRepository.findByHashAndStatus(hashList.get(i), status));
 
                     } else {
                         for (i = 0; i < hashList.size(); i++)
@@ -615,21 +677,16 @@ public class ArticleServiceImpl implements ArticleService {
                         for (i = 0; i < authorList.size(); i++)
                             searchList.addAll(articleRepository.findByAuthorAndDate(authorList.get(i), frmtStartDate, frmtEndDate));
 
-//                    } else if (status.get(0) == 3) {
-//                        for (i = 0; i < authorList.size(); i++)
-//                            searchList.addAll(articleRepository.findByAuthorAndStatus(authorList.get(i), status));
-
                     } else {
                         for (i = 0; i < authorList.size(); i++)
                             searchList.addAll(articleRepository.findByAuthorAndStatusAndDate(authorList.get(i), status, frmtStartDate, frmtEndDate));
                     }
                 }
             }
-
             if (org != null && !org.isEmpty()) {
                 int i;
                 for (String o : org) {
-                    orgList.add(o + "%");
+                    orgList.add("%" + o + "%");
                 }
 
                 if (isSingleFilter) {
@@ -637,17 +694,12 @@ public class ArticleServiceImpl implements ArticleService {
                         for (i = 0; i < orgList.size(); i++)
                             searchList.addAll(articleRepository.findByOrgAndDate(orgList.get(i), frmtStartDate, frmtEndDate));
 
-//                    } else if (status.get(0) == 3) {
-//                        for (i = 0; i < orgList.size(); i++)
-//                            searchList.addAll(articleRepository.findByOrgAndStatus(orgList.get(i), status));
-
                     } else {
                         for (i = 0; i < orgList.size(); i++)
                             searchList.addAll(articleRepository.findByOrgAndStatusAndDate(orgList.get(i), status, frmtStartDate, frmtEndDate));
                     }
                 }
             }
-
             if (location != null && !location.isEmpty()) {
                 int i;
                 for (String l : location) {
@@ -659,17 +711,12 @@ public class ArticleServiceImpl implements ArticleService {
                         for (i = 0; i < locationList.size(); i++)
                             searchList.addAll(articleRepository.findByLocationAndDate(locationList.get(i), frmtStartDate, frmtEndDate));
 
-//                    } else if (status.get(0) == 3) {
-//                        for (i = 0; i < locationList.size(); i++)
-//                            searchList.addAll(articleRepository.findByLocationAndStatus(locationList.get(i), status));
-
                     } else {
                         for (i = 0; i < locationList.size(); i++)
                             searchList.addAll(articleRepository.findByLocationAndStatusAndDate(locationList.get(i), status, frmtStartDate, frmtEndDate));
                     }
                 }
             }
-
             if (language != null && !language.isEmpty()) {
                 int i;
                 for (String l : language) {
@@ -680,10 +727,6 @@ public class ArticleServiceImpl implements ArticleService {
                     if (status.get(0) == -1) {
                         for (i = 0; i < langList.size(); i++)
                             searchList.addAll(articleRepository.findByLangAndDate(langList.get(i), frmtStartDate, frmtEndDate));
-
-//                    } else if (status.get(0) == 3) {
-//                        for (i = 0; i < langList.size(); i++)
-//                            searchList.addAll(articleRepository.findByLangAndStatus(langList.get(i), status));
 
                     } else {
                         for (i = 0; i < langList.size(); i++)
@@ -713,9 +756,11 @@ public class ArticleServiceImpl implements ArticleService {
                     }
                 }
             }
-
             if (text != null) {
                 text = "%" + text + "%";
+            }
+            if (description != null) {
+                description = "%" + description + "%";
             }
 
             if (!isSingleFilter) {
@@ -744,8 +789,7 @@ public class ArticleServiceImpl implements ArticleService {
                         status, frmtStartDate, frmtEndDate);
             }
 
-        }
-        else {
+        } else {
             if (status.get(0) == -1) {
                 searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
 //        } else if (status.get(0) == 3) {  //remove special status for 'done' (now search for period as for other one)

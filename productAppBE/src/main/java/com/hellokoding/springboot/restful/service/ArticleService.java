@@ -11,6 +11,7 @@ public interface ArticleService {
     List<ArticleDto> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
                             List<String> location, List<String> lang, String descr, String text, List<String> misc,
                             List<Integer> status, String startDate, String endDate);
+    List<ArticleDto> search(String descr, String text, List<Integer> status, String startDate, String endDate);
     List<IdContentDto> searchMaterial(String q);
     List<IdContentDto> searchMaterialById(Integer id);
     List<ArticleDto> findAll();

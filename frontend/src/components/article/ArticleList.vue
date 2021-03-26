@@ -83,10 +83,10 @@
 
             <div v-if="searchKey.length === 0" class="form-group row col-sm-3" align="left"
                  style="margin: 0; padding: 10px 15px; background-color: transparent">
-                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary" disabled>
+                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary">
                     Поиск
                 </button>
-                <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров
                 </button>
             </div>
             <div v-else class="form-group row col-sm-3" align="left"
@@ -94,7 +94,7 @@
                 <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary">
                     Поиск
                 </button>
-                <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров
                 </button>
             </div>
 

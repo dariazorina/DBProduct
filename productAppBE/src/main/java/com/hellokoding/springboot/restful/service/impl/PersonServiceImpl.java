@@ -105,7 +105,6 @@ public class PersonServiceImpl implements PersonService {
         Set<Person> searchList = new HashSet<>();
 
         boolean isSingleFilter = false;
-        int length1 = 0;
         int hashCurrentSize = 0;
         int orgCurrentSize = 0;
         int locationCurrentSize = 0;
