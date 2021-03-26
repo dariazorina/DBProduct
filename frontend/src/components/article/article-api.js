@@ -169,19 +169,19 @@ export default {
         })
     },
 
-    filter(searchItem, searchKey, status, start, end, fn) {
-        AXIOS.get(`article/search?` + searchItem + `=` + searchKey + `status=` + status + `&startDate=` + start + `&endDate=` + end)
-            .then(response => fn(response))
-            .catch(error => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    router.push('/login');
-                }
-            });
-    },
+    // filter(searchItem, searchKey, status, start, end, fn) {
+    //     AXIOS.get(`article/search?` + searchItem + `=` + searchKey + `status=` + status + `&startDate=` + start + `&endDate=` + end)
+    //         .then(response => fn(response))
+    //         .catch(error => {
+    //             console.log(error);
+    //             if (error.response.status === 401) {
+    //                 router.push('/login');
+    //             }
+    //         });
+    // },
 
     filterAll(body, status, start, end, fn) {
-        AXIOS.get(`article/search?` + body + `status=` + status + `&startDate=` + start + `&endDate=` + end)
+        AXIOS.get(`article/filter?` + body + `status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
@@ -224,19 +224,30 @@ export default {
     //         });
     // },
     //
-    // searchDescription(searchKey, status, start, end, fn) {
-    //     AXIOS.get(`article/search?description=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
-    //         .then(response => fn(response))
-    //         .catch(error => {
-    //             console.log(error);
-    //             if (error.response.status === 401) {
-    //                 router.push('/login');
-    //             }
-    //         });
-    // },
+    searchText(searchKey, status, start, end, fn) {
+        AXIOS.get(`article/search?text=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+    searchDescription(searchKey, status, start, end, fn) {
+        AXIOS.get(`article/search?description=` + encodeURIComponent(searchKey) + `&status=` + status + `&startDate=` + start + `&endDate=` + end)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
 
     searchPeriodAndStatus(status, start, end, fn) {
-        AXIOS.get(`article/search?status=` + status + `&startDate=` + start + `&endDate=` + end)
+        AXIOS.get(`article/filter?status=` + status + `&startDate=` + start + `&endDate=` + end)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
