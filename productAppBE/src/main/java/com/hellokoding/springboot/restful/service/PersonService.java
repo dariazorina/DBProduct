@@ -13,6 +13,7 @@ public interface PersonService {
     Optional<NewPersonDto> findById(Integer id);
     List<NewPersonDto> findByIds(List<Integer> idList);
     void deleteById(Integer id);
-    List<PersonDto> search(String q);
+    List<PersonDto> searchBySurname(String q);
+    List<NewPersonDto> search(List<String> hash, List<String> author, List<String> org, List<String> location);
     Person save(NewPersonDto stock);
 }

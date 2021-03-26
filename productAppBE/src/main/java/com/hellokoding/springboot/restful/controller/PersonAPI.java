@@ -33,10 +33,21 @@ public class PersonAPI {
     private final PersonService personService;
     private final AttachmentService attachmentService;
 
-    @GetMapping("/search")
+    @GetMapping("/searchBySurname")
     public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q) {
-        List<PersonDto> search = personService.search(q);
+        List<PersonDto> search = personService.searchBySurname(q);   //used for ex in material creation
         return ResponseEntity.ok(search);
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<NewPersonDto>> search(@RequestParam(name = "hash", required = false) List<String> hash,
+                                                   @RequestParam(name = "surname", required = false) List<String> surname,
+                                                   @RequestParam(name = "org", required = false) List<String> org,
+                                                   @RequestParam(name = "location", required = false) List<String> location) {
+
+        List<NewPersonDto> searchResult = personService.search(hash, surname, org, location);
+        return ResponseEntity.ok(searchResult);
     }
 
     @GetMapping

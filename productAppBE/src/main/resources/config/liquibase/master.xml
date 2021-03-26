@@ -70,6 +70,9 @@
     <include file="config/liquibase/changelog/00000000000071_drop_art_material_type.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000073_insert_value_connection_type_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000075_add_color_field_article.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000077_add_connect_person_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000079_add_color_field_person.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000081_add_status_field_person.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>

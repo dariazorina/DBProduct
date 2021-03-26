@@ -194,8 +194,50 @@
                                          :isLinkMode="false"
                                          :isSelectionMode="false"
                                          :allTypes="connectionTypes"
-                                         style="background-color: transparent; padding:0px" class="col-12"
-                                         @update-item="updateOccupation"/>
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
+                </div>
+            </div>
+        </form>
+
+
+        <form class="authorsFormCreation"
+              style="background-color: transparent; padding: 25px 0 5px">
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные персоны</label>
+                        <v-autocomplete
+                                style="background-color: transparent"
+                                id="author-autocomplete"
+                                :items="itemsPerson"
+                                :loading="isLoadingPerson"
+                                :search-input.sync="personSearch"
+                                color="pink"
+                                hide-no-data
+                                hide-selected
+
+                                v-model="selectedPerson"
+
+                                @change="addPerson(selectedPerson)"
+                                item-text="surname"
+                                item-value="id"
+                                placeholder="Начните печатать, чтобы найти автора"
+                                prepend-icon="mdi-database-search"
+                                return-object
+                                :disabled="uploadMode"
+                        ></v-autocomplete>
+
+                    </v-card-text>
+                </div>
+
+                <div v-if="personList.length>0" class="col-9"
+                     style="background-color: transparent; padding:0; margin: 0px">
+                    <ConnectionComponent :itemsList="personList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
                 </div>
             </div>
         </form>
@@ -350,6 +392,26 @@
                 </div>
             </div>
 
+            <div v-if="editMode" class="form-row align-items-center" style="background-color: transparent">
+                <label class="col-1 col-form-label labelInCreation"
+                       style="vertical-align: center; background-color: transparent">Текущий статус</label>
+                <div class="col-3" style="background-color: transparent">
+                    <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
+                                   style="background-color: transparent;">
+                        <option v-for="status in statusOptions" v-bind:value="status.value">
+                            {{status.text}}
+                        </option>
+                    </b-form-select>
+                    <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
+                </div>
+                <label class="col-2 col-form-label labelInCreation"
+                       style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
+                    цвет выделения</label>
+                <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">
+                    <v-swatches v-model="person.rowColor" popover-x="left"></v-swatches>
+                </div>
+            </div>
+
             <div v-if="uploadMode||editMode" style="background-color: transparent">
                 <file-attachment @attachFiles="createAttachment"
                                  @getAttachment="getAttachment"
@@ -442,6 +504,7 @@
     import ConnectionComponent from "../components/connection/ConnectionComponent";
     import FileAttachment from "../components/FileAttachment";
     import apiAttachment from "./../attachment-api";
+    import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
 
     export default {
         components: {
@@ -449,6 +512,7 @@
             ConnectionComponent,
             ckeditor: CKEditor.component, // to use the component locally
             FileAttachment,
+            VSwatches
         },
         name: 'person-add',
         vuetify: new Vuetify(),
@@ -461,6 +525,7 @@
 
             isLoadingLocation: false,
             isLoadingOrg: false,
+            isLoadingPerson: false,
 
             model: null,
             search: null,
@@ -473,8 +538,10 @@
             hashtagFlatTree: [],
 
             selected: '',
+            selectedS: null,
             selectedLocation: [],
             selectedOrg: [],
+            selectedPerson: [],
             selectedM: null,
             // selectedCountry: null,
             selectedBYear: null,
@@ -494,6 +561,7 @@
 
             locationEntries: [],
             orgEntries: [],
+            personEntries: [],
             connectionTypes: [],
 
             previewImage: null,
@@ -514,18 +582,29 @@
             orgSearch: null,
             occupationList: [],
 
+            personSearch: null,
+            personList: [],
+
             personLocationIds: [], //before request
             personLocationEntities: [], //after request
             personOrgIds: [], //before request
             personOrgEntities: [], //after request
+            personPersonIds: [], //before request
+            personPersonEntities: [], //after request
 
             testList: [],
-            person: {hashtagList: [], linkList: [], testList: [], locationList: []},
+            person: {hashtagList: [], linkList: [], testList: [], locationList: [], personList:[]},
             years: [],
             editMode: false,
             uploadMode: false,
             uploadFilesCheckBoxValue: false,
             status: ["statusProgress", "statusDone"],
+            statusOptions: [
+                {text: 'В работе', value: 0},
+                {text: 'Внесены', value: 1},
+                {text: 'На доработке', value: 2},
+                {text: 'Отработаны', value: 3},
+            ],
             loggedInFlag: false,
             loggedName: '',
             uploadedFiles: [],
@@ -655,10 +734,10 @@
                 }
             },
 
-            updateOccupation(occupation) {   //occupation was sent by Property //todo to delete
-                //this.occupationList.push(occupation);
-                console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
-            },
+            // updateOccupation(occupation) {   //occupation was sent by Property //todo to delete
+            //     //this.occupationList.push(occupation);
+            //     console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
+            // },
 
             addLocation(obj) {
                 console.log("GET CHANGED LOCATION", obj);
@@ -703,6 +782,29 @@
                     console.log("ADDED");
                 }
             },
+
+            addPerson(obj) {
+                console.log("GET CHANGED PERSON", obj);
+                let i = 0;
+                for (i = 0; i < this.personList.length; i++) { //to exclude double values
+                    if (this.personList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.personList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.surname,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.personList.push(connection);
+                    console.log("ADDED PERSON");
+                }
+            },
+
 
             finalPositionListCreation(list, finalList) {
                 // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
@@ -841,7 +943,7 @@
             },
 
             preliminaryDataCheck(currentStatus) {
-                let t = false, g = false;
+                let t = false, g = false, s = false;
 
 
                 if (this.isObjectValidAndNotEmpty(this.locationList)) {
@@ -850,10 +952,16 @@
                 if (!t) {
                     if (this.isObjectValidAndNotEmpty(this.occupationList)) {
                         g = this.checkConnection(this.occupationList);
+
+                        if (!g){
+                            if (this.isObjectValidAndNotEmpty(this.personList)) {
+                                s = this.checkConnection(this.personList);
+                            }
+                        }
                     }
                 }
 
-                if (t || g) {
+                if (t || g || s) {
                     alert("Укажите связь для сущностей, которые вы добавили");
                     // console.log("ALERT");
                 } else {
@@ -866,7 +974,7 @@
                 }
             },
 
-            createPerson(status) {
+            createPerson(currentStatus) {
                 // this.person.movement = {
                 //     "id": this.selectedM
                 // }; todo
@@ -881,6 +989,12 @@
 
                 if (this.selectedDYear) {
                     this.person.deathYear = this.selectedDYear;
+                }
+
+                if (currentStatus === this.status[0]) {
+                    this.person.status = 0;
+                } else {
+                    this.person.status = 1;
                 }
 
                 // if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
@@ -912,13 +1026,16 @@
                 // }
 
                 this.person.locationList.splice(0);
+                this.person.personList.splice(0);
                 this.person.testList.splice(0);
                 this.finalConnectionListCreation(this.locationList, this.person.locationList);
                 this.finalPositionListCreation(this.occupationList, this.person.testList);
+                this.finalConnectionListCreation(this.personList, this.person.personList);
 
                 this.person.photo = this.avatar.imageBase64;
 
                 if (this.editMode) {
+                    this.person.status = this.selectedS;
                     console.log("PERSON BEFORE UPDATING", this.person);
                     if (this.formValidate()) {
                         api.update(this.person.id, this.person, r => {
@@ -981,6 +1098,18 @@
                 return returnedTitle;
             },
 
+            personNameCreation(person) {
+                let personTitle = person.surnameRus;
+
+                if (this.isArrayValidAndNotEmpty(person.nameRus)) {
+                    personTitle += " " + person.nameRus;
+                }
+                if (this.isArrayValidAndNotEmpty(person.birthYear)) {
+                    personTitle += ", " + person.birthYear;
+                }
+                return personTitle;
+            },
+
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length === 0) {
                     return false;
@@ -1002,13 +1131,10 @@
             if (this.editMode) {////////////////////////////////EDIT MODE//////////////////////////////////////
                 api.findById(this.$route.params.person_id, r => {
                     this.person = r.data;
-                    // console.log("person EDIT!", this.person);
 
-                    // if (this.person.location != null) {
-                    //     this.selectedCountry = this.person.location.id;
-                    // }
                     this.selectedBYear = this.person.birthYear;
                     this.selectedDYear = this.person.deathYear;
+                    this.selectedS = this.person.status;
 
                     for (let i = 0; i < this.person.hashtagList.length; i++) {
                         this.tags.push(this.person.hashtagList[i]);
@@ -1016,11 +1142,14 @@
 
                     for (let i = 0; i < this.person.linkList.length; i++) {
                         this.links.push(this.person.linkList[i].content);
-                        // console.log("links!", this.person.linkList[i].content);
                     }
 
                     for (let j = 0; j < this.person.locationList.length; j++) {
                         this.personLocationIds.push(this.person.locationList[j].itemId);
+                    }
+
+                    for (let j = 0; j < this.person.personList.length; j++) {
+                        this.personPersonIds.push(this.person.personList[j].itemId);
                     }
 
                     for (let j = 0; j < this.person.testList.length; j++) {
@@ -1069,6 +1198,24 @@
                         }
                     });
 
+                    api.getPersonsByIds(this.personPersonIds, response => {  ///returns List<Location>
+                        this.personPersonEntities = response.data;   //returns List<Org>
+
+                        for (let i = 0; i < this.person.personList.length; i++) {
+                            let element = this.person.personList[i];
+                            let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": this.personNameCreation(currentPersonEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                                "hasClicked": true
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.personList.push(connection);
+                        }
+                    });
+
                     apiOrg.getOrgsByIds(this.personOrgIds, response => {  ///returns List<Location>
                         this.personOrgEntities = response.data;   //returns List<Org>
                         console.log("apiOrg", this.personOrgEntities);
@@ -1106,6 +1253,14 @@
             });
         },
         computed: {
+            itemsPerson() {
+                return this.personEntries.map(entry => {
+                    const surname = entry.surname;
+                    return Object.assign({}, entry, {surname})
+                })
+            },
+
+
             locationItems() {
                 if (this.locationEntries) {      ///todo analyze why undefined (after selection in the search list)
                     return this.locationEntries.map(entry => {
@@ -1128,16 +1283,6 @@
                     // })
                 }
                 // return this.orgEntries;
-            },
-            items() {
-                return this.entries.map(entry => {
-                    // const Description = entry.Description.length > this.descriptionLimit
-                    //     ? entry.Description.slice(0, this.descriptionLimit) + '...'
-                    //     : entry.Description;
-
-                    const surname = entry.surname;
-                    return Object.assign({}, entry, {surname})
-                })
             },
 
             searchLength() {
@@ -1331,6 +1476,25 @@
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             // console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
+                        });
+                    }
+            },
+
+            personSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedPerson !== 'undefined') {
+                            if (this.person.personList.length > 1)
+                                this.selectedPerson = "";
+                        }
+                        // Items have already been requested
+                        if (this.isLoadingPerson) return;
+                        this.isLoadingPerson = true;
+
+                        api.searchPerson(val, r => {
+                            this.personEntries = r;
+                            // console.log("***ПОИСК ******", this.personEntries);
+                            this.isLoadingPerson = false;
                         });
                     }
             },

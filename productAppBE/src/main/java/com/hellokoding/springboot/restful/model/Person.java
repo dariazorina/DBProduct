@@ -21,6 +21,7 @@ public class Person {
 //    @JoinColumn(name = "movement_id", nullable = false)
 //    private Movement movement;
 
+    private Integer status;
     private String surname;
     private String name;
     private String patronymic;
@@ -68,6 +69,11 @@ public class Person {
     @ToString.Exclude
     private List<PersonLocationConnection> locationConnections;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<PersonPersonConnection> personConnections;
+
 
     @ManyToMany
     @JoinTable(
@@ -79,6 +85,9 @@ public class Person {
 
     private String description;
     private String miscellany;
+
+    @Column(name = "rgb_selection")
+    private String rgbSelection;
 
     //    columnDefinition="BLOB"
 //    @Lob  //was an error bytea - bigint

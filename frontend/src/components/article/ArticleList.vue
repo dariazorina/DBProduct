@@ -66,9 +66,9 @@
 
             <div class="form-group row col-sm-3"  align="left" style="margin: 0; padding: 10px 15px; background-color: transparent">
 <!--                <button style="margin-left: 5px; margin-right: 5px; margin-top: 0px; margin-bottom: 10px; padding-top: 0px; padding-bottom: 0px"-->
-                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-primary" disabled>Поиск
+                <button type="button" style="margin-right: 10px" @click="search" class="btn btn-outline-primary" disabled>Поиск
                 </button>
-                <button type="button" @click="resetAllFilters" class="btn btn-info">Сброс фильтров
+                <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров
                 </button>
             </div>
 
@@ -318,31 +318,6 @@
                         </a>
                     </v-btn>
                 </td>
-
-                <!--                <td>-->
-                <!--                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 2)">-->
-                <!--                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>-->
-                <!--                    </v-btn>-->
-
-                <!--                    <v-btn text icon x-small @click="updateArticleStatus(article.id, 3)">-->
-                <!--                        <v-icon style="color: green">mdi-check</v-icon>-->
-                <!--                    </v-btn>-->
-                <!--                </td>-->
-
-                <!--                    <td>-->
-                <!--                        <b-button size="sm" variant="danger" @click="setColor(article, colors[0])" style="padding: 0">-->
-                <!--                            красный-->
-                <!--                        </b-button>-->
-                <!--                        <b-button size="sm" variant="warning" @click="setColor(article, colors[1])" style="padding: 0">-->
-                <!--                            желтый-->
-                <!--                        </b-button>-->
-                <!--                        <b-button size="sm" variant="success" @click="setColor(article, colors[2])" style="padding: 0">-->
-                <!--                            зеленый-->
-                <!--                        </b-button>-->
-                <!--                        <b-button size="sm" variant="info" @click="setColor(article, colors[3])" style="padding: 0">-->
-                <!--                            голубой-->
-                <!--                        </b-button>-->
-                <!--                    </td>-->
             </tr>
             </tbody>
         </table>
@@ -463,7 +438,6 @@
     import Vuetify from 'vuetify';
     import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
     import contextMenu from 'vue-context-menu'
-
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'
     import CreatedList from "../components/multiple-enter-list/CreatedList";
@@ -555,21 +529,6 @@
                 currentFilterField: '',
                 currentFilterItems: [],
                 links: [],
-
-                // swatches: [
-                //     '#FF0000', '#AA0000', '#550000',
-                //     '#FFFF00', '#AAAA00', '#555500',
-                //     '#00FF00', '#00AA00', '#005500',
-                //     '#00FFFF', '#00AAAA', '#005555',
-                //     '#0000FF', '#0000AA', '#000055'
-                // ],
-                //
-                // colors: [
-                //     '#D90D0D',
-                //     '#FBFF1F',
-                //     '#01A722',
-                //     '#01D3EF'
-                // ],
             }
         },
         computed: {
@@ -1127,18 +1086,18 @@
                 }
             },
 
-            filter(field) {
-                console.log("-------filter by field--------", field);
-                if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                    api.filter(field, this.arrayToParamsConversion(field), this.complexStatusCreation(), this.startDate, this.endDate, r => {
-                        this.entries = r.data;
-                    });
-                } else {
-                    api.filter(field, this.arrayToParamsConversion(field), -1, this.startDate, this.endDate, r => {
-                        this.entries = r.data;
-                    });
-                }
-            },
+            // filter(field) {
+            //     console.log("-------filter by field--------", field);
+            //     if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
+            //         api.filter(field, this.arrayToParamsConversion(field), this.complexStatusCreation(), this.startDate, this.endDate, r => {
+            //             this.entries = r.data;
+            //         });
+            //     } else {
+            //         api.filter(field, this.arrayToParamsConversion(field), -1, this.startDate, this.endDate, r => {
+            //             this.entries = r.data;
+            //         });
+            //     }
+            // },
 
             filterAll() {
                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {

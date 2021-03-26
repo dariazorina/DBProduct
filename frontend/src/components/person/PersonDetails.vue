@@ -10,6 +10,7 @@
         </div>
 
         <div class="row">
+            <!--            ////////////////photo exists!/////////////////////////-->
             <div v-if="person.photo" class="col-sm-2" style="background-color: transparent">
 
                 <div id="preview" style="background-color: transparent">
@@ -81,7 +82,7 @@
                         <!--                        </div>-->
                         <div class="col-sm-10 back1">
                             <div v-for="location in personLocationEntities">
-                                {{createComplexLocationById(location.id)}}
+                                {{createComplexLocationById(location.id)}}<br>
                             </div>
                         </div>
                     </div>
@@ -100,27 +101,37 @@
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
                             <div>
-                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}</a>
+                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}<br></a>
                             </div>
                         </div>
                     </div>
 
-
                     <div class="row">
                         <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Описание</span></div>
+                            <div class="cellTitle"><span class="float-left">Связанные персоны</span></div>
                         </div>
-
-                        <div class="col-sm-10 back1" style="text-align: left">
-                            <span v-html="person.description"></span>
+                        <div class="col-sm-10 back1" style="text-align: left;">
+                            <div>
+                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-2">
+                            <div class="cellTitle"><span class="float-left">Описание</span></div>
+                        </div>
+
+                        <div class="col-sm-10" style="text-align: left; background-color: transparent; padding-bottom: 0">
+                            <span v-html="person.description"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                         </div>
-                        <div class="col-sm-10"><span class="float-left">
+                        <div class="col-sm-10 back1"><span class="float-left">
                             <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}
                             </div></span>
                         </div>
@@ -137,11 +148,11 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2 back1">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10 back1">
+                        <div class="col-sm-10">
                             <span class="float-left">
                                 <div class="linkButton" v-for="link in person.linkList">
                                     <span class="float-left">
@@ -152,9 +163,28 @@
                             </span>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 back1">
+                            <div class="cellTitle"><span class="float-left">Статус</span></div>
+                        </div>
+                        <div class="col-sm-10 back1"><span class="float-left"> {{getStatusName()}}</span>
+                        </div>
+                    </div>
+
+                    <div v-if="uploadedFiles.length > 0"
+                         style="background-color: transparent; margin: 10px 10px 10px 0px ">
+                        <file-attachment @getAttachment="getAttachment"
+                                         @downloadAttachment="downloadAttachment"
+                                         :userName="loggedName"
+                                         :already-uploaded-files="uploadedFiles"
+                                         :is-details-mode="true"/>
+                    </div>
+
                 </div>
             </div>
 
+            <!--            /////////////////photo is absent////////////////-->
             <div v-else class="col-sm-12">
                 <div class="details" style="background-color: transparent">
                     <!--        ///////////////////////////////////////////////////////////-->
@@ -220,18 +250,10 @@
 
                         <div class="col-sm-10 back1">
                             <div v-for="location in personLocationEntities">
-                                {{createComplexLocationById(location.id)}}
+                                {{createComplexLocationById(location.id)}}<br>
                             </div>
                         </div>
                     </div>
-
-                    <!--                    <div class="row">-->
-                    <!--                        <div class="col-sm-2">-->
-                    <!--                            <div class="cellTitle"><span class="float-left">Город</span></div>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="col-sm-10"><span class="float-left"> {{person.settlement}} </span>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
 
                     <div class="row">
                         <div class="col-sm-2">
@@ -239,27 +261,38 @@
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
                             <div>
-                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}</a>
+                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}<br></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 back1">
+                            <div class="cellTitle"><span class="float-left">Связанные персоны</span></div>
+                        </div>
+                        <div class="col-sm-10 back1" style="text-align: left;">
+                            <div>
+                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>
                             </div>
                         </div>
                     </div>
 
 
                     <div class="row">
-                        <div class="col-sm-2 back1">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Описание</span></div>
                         </div>
 
-                        <div class="col-sm-10 back1" style="text-align: left">
+                        <div class="col-sm-10" style="text-align: left; padding-bottom: 0">
                             <span v-html="person.description"></span>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 back1">
                             <div class="cellTitle"><span class="float-left">Хештеги</span></div>
                         </div>
-                        <div class="col-sm-10"><span class="float-left">
+                        <div class="col-sm-10 back1"><span class="float-left">
                 <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}</div></span>
                         </div>
                     </div>
@@ -275,11 +308,11 @@
 
 
                     <div class="row">
-                        <div class="col-sm-2 back1">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10 back1">
+                        <div class="col-sm-10">
                             <span class="float-left">
                                 <div class="linkButton" v-for="link in person.linkList">
                                     <span class="float-left">
@@ -291,7 +324,15 @@
                         </div>
                     </div>
 
-                    <div v-if="uploadedFiles.length > 0">
+                    <div class="row">
+                        <div class="col-sm-2 back1">
+                            <div class="cellTitle"><span class="float-left">Статус</span></div>
+                        </div>
+                            <div class="col-sm-10 back1"><span class="float-left"> {{getStatusName()}}</span>
+                        </div>
+                    </div>
+
+                    <div v-if="uploadedFiles.length > 0" style="background-color: transparent">
                         <file-attachment @getAttachment="getAttachment"
                                          @downloadAttachment="downloadAttachment"
                                          :userName="loggedName"
@@ -345,6 +386,9 @@
 
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
+
+                personPersonIds: [], //before request
+                personPersonEntities: [], //after request
 
                 personOrgIds: [], //before request
                 personOrgEntities: [], //after request
@@ -521,6 +565,35 @@
                 return result;
             },
 
+            createComplexPersonById(id) {
+                let currentPerson = this.personPersonEntities.find(x => x.id === id);
+                let result = currentPerson.surnameRus;
+                let connection = this.person.personList.find(x => x.itemId === id);
+
+                if (this.isObjectValidAndNotEmpty(currentPerson.nameRus)) {
+                    result += " " + currentPerson.nameRus;
+                }
+                if (this.isObjectValidAndNotEmpty(currentPerson.patronymic)) {
+                    result += " " + currentPerson.patronymic;
+                }
+
+                if (this.isObjectValidAndNotEmpty(currentPerson.birthYear)) {
+                    result += ", " + currentPerson.birthYear;
+                }
+
+                if (this.isObjectValidAndNotEmpty(connection.connection)){
+                    result += "/ " + connection.connection;}
+
+                if (this.isObjectValidAndNotEmpty(connection.comment)){
+                    result += "/ " + connection.comment;}
+
+                result += "\n";
+
+                console.log("res", result);
+
+                return result;
+            },
+
             isObjectValidAndNotEmpty(obj) {
                 // console.log("VALID", obj);
                 if (typeof obj === 'undefined' || obj === null || obj.length === 0) {
@@ -547,6 +620,14 @@
                     //console.log("getLocationsByIds getLocationsByIds getLocationsByIds", this.personLocationEntities);
                 });
 
+                for (let j = 0; j < this.person.personList.length; j++) {
+                    this.personPersonIds.push(this.person.personList[j].itemId);
+                }
+
+                api.getPersonsByIds(this.personPersonIds, response => {
+                    this.personPersonEntities = response.data;
+                });
+
                 for (let j = 0; j < this.person.testList.length; j++) {
                     this.personOrgIds.push(this.person.testList[j].orgId);
                     //console.log("+", j);
@@ -558,6 +639,7 @@
                 });
 
                 apiAttachment.getAttachments('person', this.person.id, r => {
+                    // console.log("person attachments", r.data);
                     for (let i = 0; i < r.data.length; i++) {
                         this.uploadedFiles.push(r.data[i]);
                     }

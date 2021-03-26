@@ -422,11 +422,21 @@ public class ArticleServiceImpl implements ArticleService {
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
     public List<ArticleDto> search(List<String> title, List<String> hash, List<String> author, List<String> org,
                                    List<String> location, List<String> language, String description, String text, List<String> misc,
-                                   List<Integer> status, String startDate, String endDate) throws ParseException {
+                                   List<Integer> status, String startDate, String endDate){
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date frmtStartDate = format.parse(startDate);
-        Date frmtEndDate = format.parse(endDate);
+        Date frmtStartDate = null;
+        try {
+            frmtStartDate = format.parse(startDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date frmtEndDate = null;
+        try {
+            frmtEndDate = format.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 //        List<Article> searchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();

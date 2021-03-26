@@ -10,6 +10,7 @@ import java.util.List;
 public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private Integer id;
+    private Integer status;
     private String surname;
     private String name;
     private String patronymic;
@@ -22,6 +23,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private Location location;
     private String description;
     private String miscellany;
+    private String rowColor;
 
     private Integer birthYear;
     private Integer deathYear;
@@ -30,6 +32,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private List<String> hashtagList;
     private List<PositionDto> testList; //todo rename
     private List<ItemConnectionDto> locationList;
+    private List<ItemConnectionDto> personList;
     private String photo;
 //    private byte[] photo;
 
@@ -38,8 +41,8 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus,
                         String nameRus, String surnameEng, String nameEng, String description,
-                        String miscellany, List<UrlLink> linkList, List<String> hashtagList,
-                        List<PositionDto> testList, List<ItemConnectionDto> locationList, Integer bYear, Integer dYear, String photo) {
+                        String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
+                        List<PositionDto> testList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList, Integer bYear, Integer dYear, String photo, Integer status) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -48,12 +51,15 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.nameRus = nameRus;
         this.surnameEng = surnameEng;
         this.nameEng = nameEng;
+        this.status = status;
         this.description = description;
         this.miscellany = miscellany;
+        this.rowColor = rowColor;
         this.linkList = linkList;
         this.hashtagList = hashtagList;
         this.testList = testList;
         this.locationList = locationList;
+        this.personList = personList;
         this.birthYear = bYear;
         this.deathYear = dYear;
         this.photo = photo;
@@ -64,12 +70,14 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.surname = p.getSurname();
         this.name = p.getName();
         this.patronymic = p.getPatronymic();
+        this.status = p.getStatus();
         this.surnameRus = p.getSurnameRus();
         this.nameRus = p.getNameRus();
         this.surnameEng = p.getSurnameEng();
         this.nameEng = p.getNameEng();
         this.description = p.getDescription();
         this.miscellany = p.getMiscellany();
+        this.rowColor = p.getRgbSelection();
         this.linkList = p.getLinkList();
         this.birthYear = p.getBirthYear();
         this.deathYear = p.getDeathYear();
@@ -82,6 +90,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
         this.testList = new ArrayList<>();
         this.locationList = new ArrayList<>();
+        this.personList = new ArrayList<>();
 
         PositionDto posDto;
         for (Position pos : p.getOccupation()) {
@@ -101,6 +110,16 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             locationConnectionDto.setComment(connection.getComment());
 
             this.locationList.add(locationConnectionDto);
+        }
+
+        ItemConnectionDto personConnectionDto;
+        for (PersonPersonConnection connection : p.getPersonConnections()) {
+            personConnectionDto = new ItemConnectionDto();
+            personConnectionDto.setItemId(connection.getConnectedPerson().getId());
+            personConnectionDto.setConnection(connection.getConnection());
+            personConnectionDto.setComment(connection.getComment());
+
+            this.personList.add(personConnectionDto);
         }
 
         if (p.getPhoto() != null) {
@@ -235,6 +254,22 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.miscellany = miscellany;
     }
 
+    public String getRowColor() {
+        return rowColor;
+    }
+
+    public void setRowColor(String rowColor) {
+        this.rowColor = rowColor;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getBirthYear() {
         return birthYear;
     }
@@ -251,6 +286,13 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.deathYear = deathYear;
     }
 
+    public List<ItemConnectionDto> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<ItemConnectionDto> personList) {
+        this.personList = personList;
+    }
 //    public byte[] getPhoto() {
 //        return photo;
 //    }

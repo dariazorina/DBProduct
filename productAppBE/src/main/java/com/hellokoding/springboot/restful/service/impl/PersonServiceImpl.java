@@ -86,7 +86,7 @@ public class PersonServiceImpl implements PersonService {
             Optional<Person> p = personRepository.findById(id);
             NewPersonDto newPersonDto;
 
-            if (p!=null) {
+            if (p != null) {
                 newPersonDto = new NewPersonDto(p.get());
                 searchRes.add(newPersonDto);
             }
@@ -100,7 +100,124 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<PersonDto> search(String q) {
+    public List<NewPersonDto> search(List<String> hash, List<String> surname, List<String> org, List<String> location) {
+        List<NewPersonDto> dtoSearchList = new ArrayList<>();
+        Set<Person> searchList = new HashSet<>();
+
+        boolean isSingleFilter = false;
+        int length1 = 0;
+        int hashCurrentSize = 0;
+        int orgCurrentSize = 0;
+        int locationCurrentSize = 0;
+        int surnameCurrentSize = 0;
+
+
+        List<String> hashList = new ArrayList<>();
+        List<String> authorList = new ArrayList<>();
+        List<String> orgList = new ArrayList<>();
+        List<String> locationList = new ArrayList<>();
+
+
+        if (hash != null) {
+            hashCurrentSize = hash.size();
+        }
+        if (surname != null) {
+            surnameCurrentSize = surname.size();
+        }
+        if (location != null) {
+            locationCurrentSize = location.size();
+        }
+        if (org != null) {
+            orgCurrentSize = org.size();
+        }
+
+        if (hashCurrentSize >= 1) {
+            isSingleFilter = true;
+
+            if (surnameCurrentSize >= 1) {
+                isSingleFilter = false;
+
+            } else if (orgCurrentSize >= 1) {
+                isSingleFilter = false;
+
+            } else if (locationCurrentSize >= 1) {
+                isSingleFilter = false;
+            }
+        } else {
+            if (surnameCurrentSize >= 1) {
+                isSingleFilter = true;
+
+                if (orgCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (locationCurrentSize >= 1) {
+                    isSingleFilter = false;
+                }
+            } else {
+                if (orgCurrentSize >= 1) {
+                    isSingleFilter = true;
+
+                    if (locationCurrentSize >= 1) {
+                        isSingleFilter = false;
+                    }
+                } else {
+                    if (locationCurrentSize >= 1) {
+                        isSingleFilter = true;
+                    }
+                }
+            }
+        }
+
+        if (hash != null && !hash.isEmpty()) {
+            for (String h : hash) hashList.add(h + "%");
+
+            if (isSingleFilter) {
+                for (String s : hashList) searchList.addAll(personRepository.findByHash(s));
+            }
+        }
+
+        if (surname != null && !surname.isEmpty()) {
+            for (String a : surname) authorList.add(a + "%");
+
+            if (isSingleFilter) {
+                for (String s : authorList) searchList.addAll(personRepository.findBySurname(s));
+            }
+        }
+
+        if (org != null && !org.isEmpty()) {
+            for (String o : org) orgList.add("%" + o + "%");
+
+            if (isSingleFilter) {
+                for (String s : orgList) searchList.addAll(personRepository.findByOrg(s));
+            }
+        }
+
+        if (location != null && !location.isEmpty()) {
+            for (String l : location) locationList.add(l + "%");
+
+            if (isSingleFilter) {
+                for (String s : locationList) searchList.addAll(personRepository.findByLocation(s));
+            }
+        }
+
+        if (!isSingleFilter) {
+            searchList = personRepository.findByFilters(
+                    hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
+                    authorList.size() == 0 ? null : authorList.get(0).toLowerCase(),
+                    orgList.size() == 0 ? null : orgList.get(0).toLowerCase(),
+                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase());
+        }
+
+        NewPersonDto dtoPerson;
+        for (Person p : searchList) {
+            dtoPerson = new NewPersonDto(p);
+            dtoSearchList.add(dtoPerson);
+        }
+        return dtoSearchList;
+    }
+
+    @Override
+    public List<PersonDto> searchBySurname(String q) {
 
         List<Person> surnameSearchList = personRepository.findBySurnameStartsWithIgnoreCase(q);
         List<Person> surnameRusSearchList = personRepository.findBySurnameRusStartsWithIgnoreCase(q);
@@ -256,6 +373,8 @@ public class PersonServiceImpl implements PersonService {
         person.setNameRus(personDto.getNameRus());
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
+        person.setRgbSelection(personDto.getRowColor());
+        person.setStatus(personDto.getStatus());
 
 
         if (person.getOccupation() != null) {
@@ -314,6 +433,36 @@ public class PersonServiceImpl implements PersonService {
         } else {
             person.getLocationConnections().addAll(locationConnectionList);
         }
+
+        ///persons
+        if (person.getPersonConnections() != null) {
+            person.getPersonConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer personId;
+        PersonPersonConnection personConnection;
+        List<PersonPersonConnection> personConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : personDto.getPersonList()) {
+
+            personId = connectionDto.getItemId();
+            if (personRepository.findById(personId).isPresent()) {
+                personConnection = new PersonPersonConnection();
+                personConnection.setConnectedPerson(personRepository.findById(personId).get());
+                personConnection.setPerson(person);
+                personConnection.setConnection(connectionDto.getConnection());
+                personConnection.setComment(connectionDto.getComment());
+
+                personConnectionList.add(personConnection);
+            }
+        }
+
+        if (person.getPersonConnections() == null) {
+            person.setPersonConnections(personConnectionList);
+        } else {
+            person.getPersonConnections().addAll(personConnectionList);
+        }
+
 
         /////////////////////person-hashtag////////////////////////
         PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;
