@@ -41,7 +41,7 @@ import store from './store'
 Vue.use(Router);
 
 const router = new Router({
-    // mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
+     mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
     routes: [
         // { path: '/', component: Hello },
         // { path: '/callservice', component: Service },
@@ -58,7 +58,7 @@ const router = new Router({
 
         {path: '/login', component: Login, meta: {isLoginPage: true}},
 
-        {path: '/', component: Hello},
+        {path: '/', component: ArticleList}, //Hello
 
         {path: '/person', component: PersonList},
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
@@ -111,14 +111,23 @@ router.beforeEach((to, from, next) => {
     // }
 
 
-    if (!to.matched.some(record => record.meta.isLoginPage)) { 
+    if (!to.matched.some(record => record.meta.isLoginPage)) {
 
 
         // this route requires auth, check if logged in
         // if not, redirect to login page.
         //console.log("check auth " + store.getters.isLoggedIn);
 
-        if (!store.getters.isLoggedIn) {
+
+        // console.log("COOKIES =)", window.$cookies.keys());
+        // console.log("COOKIES =))", window.$cookies.get('XSRF-TOKEN'));
+        // // console.log("COOKIES", localStorage.getItem('userToken'));
+        //
+        // console.log("ISLOGGEDIN", store.getters.isLoggedIn);
+        //
+        //
+        // if (!store.getters.isLoggedIn) {
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
             next({
                 path: '/login'
             })

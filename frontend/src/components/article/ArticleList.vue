@@ -25,11 +25,13 @@
                     <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
                 </div>
 
-                <div class="form-group row col-4" style="margin: 0; margin-left: 0; padding:0; background-color: transparent">
+                <div class="form-group row col-4"
+                     style="margin: 0; margin-left: 0; padding:0; background-color: transparent">
 
                     <div class="col-5"
                          style="background-color: transparent; padding-left: 2px; padding-right: 2px; margin-left: 0px; padding-bottom: 0px; padding-top: 0px">
                         <input class="form-control" id="startdate-input" type="date" v-model="startDate"
+                               :key="keyToRenew"
                                style="background-color: transparent;padding-left: 5px; padding-right: 2px;"/>
                     </div>
 
@@ -103,7 +105,8 @@
             <div class="form-group row col-2"
                  style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
                 <div class="col-5" style="padding: 0px;  margin:0;">
-                    <b-form-group label="" style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
+                    <b-form-group label=""
+                                  style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options1"
                                 v-model="statusCheckBox"
@@ -115,7 +118,8 @@
                     </b-form-group>
                 </div>
                 <div class="col-6" style="padding: 0;  margin:0; margin-left:auto; background-color: transparent">
-                    <b-form-group label="" style="text-align: left;  padding: 0;  margin:0;  background-color: transparent">
+                    <b-form-group label=""
+                                  style="text-align: left;  padding: 0;  margin:0;  background-color: transparent">
                         <b-form-checkbox
                                 v-for="option in options2"
                                 v-model="statusCheckBox"
@@ -434,9 +438,13 @@
                     </div>
                 </div>
 
-                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по текущему полю будет отрабатывать
-                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не задействованы).
-                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i> введенное значение фильтра для текущего поля.</div>
+                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по
+                    текущему полю будет отрабатывать
+                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не
+                    задействованы).
+                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i>
+                    введенное значение фильтра для текущего поля.
+                </div>
             </template>
         </b-modal>
     </div>
@@ -575,9 +583,33 @@
                 currentFilterField: '',
                 currentFilterItems: [],
                 links: [],
+
+                startDate: '',
+                endDate: '',
+                localStorFlag: false,
+                storeItemSubscribers: {},
+                keyToRenew: 0
             }
         },
         computed: {
+
+            // keyToRenew() {
+            //     console.log("***********keyToRenew************START DATE COMPUTED");
+            //     return localStorage.getItem('startDate');
+            // },
+
+            // startDate: {
+            //     get() {
+            //         console.log("*********GET**************START DATE COMPUTED");
+            //         return this.startDate; //localStorage.getItem('startDate');
+            //     },
+            //
+            //     set(newName) {
+            //         console.log("+++++++++++++SET**************START DATE COMPUTED", newName);
+            //         return newName;
+            //     }
+            // },
+
             filteredArticles() {
                 // console.log("*************************************FILTERED ARTICLES", this.entries);
                 return this.entries;
@@ -613,6 +645,20 @@
         },
 
         methods: {
+
+            pp() {
+                let getItem = localStorage.getItem;
+                localStorage.getItem = (key, target) => {
+                    console.info("Getting", key);
+                    // Создаем зависимый экземпляр Vue
+                    if (!storeItemSubscribers[key]) storeItemSubscribers[key] = [];
+                    if (target) storeItemSubscribers[key].push(target);
+                    // Вызываем оригинальную функцию
+                    return getItem.call(localStorage, key);
+                }
+            },
+
+
             filterClearButtonActivity(hide, filterClearButtonId) {
                 if (this.isArrayValidAndNotEmpty(document.getElementById(filterClearButtonId))) {
                     if (hide)
@@ -960,8 +1006,11 @@
                 if (days < 0) {
                     alert("You select incorrect period of time. Nothing will be done");
                 } else {
-                    Vue.prototype.startDate = this.startDate;
-                    Vue.prototype.endDate = this.endDate;
+                    // Vue.prototype.startDate = this.startDate;
+                    // Vue.prototype.endDate = this.endDate;
+
+                    localStorage.setItem('startDate', this.startDate);
+                    localStorage.setItem('endDate', this.endDate);
 
                     //this.search();
                     this.deleteSearch();
@@ -984,8 +1033,8 @@
             },
 
             getLoggedIn() {
-                this.loggedInFlag = this.$store.getters.isLoggedIn;
-                this.loggedName = this.$store.getters.getUserName;
+                this.loggedInFlag = localStorage.getItem('isLoggedIn');//this.$store.getters.isLoggedIn;
+                this.loggedName = localStorage.getItem('userName');
             },
 
             placeholderCreation() {
@@ -1221,13 +1270,57 @@
                     api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate, r => {
                         this.entries = r.data;
                         console.log("filter all =============", this.filterItems, this.entries);
+                        //console.log("COOOOKIES", this.entries.token);
                     });
                 }
             },
         },
 
+        //todo doesn't call mounted() on second tab - to test and improve
+        //https://stackoverflow.com/questions/57699473/vuejs-hook-mounted-is-not-called-when-page-is-re-open-by-vue-router
+
         mounted() {
             this.getLoggedIn();
+
+            console.log("ENTER MOUNTED");
+
+            window.addEventListener('storage', (event) => {
+                console.log("event", event);
+
+                if(event.key === 'startDate') {
+                    console.log("CATCH STARTDATE");
+                    this.startDate = localStorage.getItem('startDate');
+
+                    this.refreshPeriod();
+                }
+            });
+
+        // let input = document.getElementById("add-level");
+        // if (input)
+        // // input.addEventListener("keyup", function (event) {
+        //     input.addEventListener("keyup", (event) => {
+        //         if (event.key === "Enter") {
+        //             console.log("CATCH ENTER");
+        //             event.preventDefault();
+        //             this.addOrUpdateHashtag();
+        //         }
+        //
+        //         if (event.key === "Backspace") {
+        //             event.preventDefault();
+        //             this.hashtagContentTitle();
+        //         }
+        //
+        //         if (event.key === "Delete") {
+        //             event.preventDefault();
+        //             this.hashtagContentTitle();
+        //         }
+        //     });
+
+            this.startDate = localStorage.getItem('startDate');
+            this.endDate = localStorage.getItem('endDate');
+
+            // console.log("startDate", this.startDate);
+
             // api.getAll().then(response => {
             //     this.articles = response.data;
             //     this.entries = this.articles;
@@ -1273,6 +1366,14 @@
         watch: {
             // currentArticle: function () {
             //     console.log("CURRENT ARTICLE WATCH", this.currentArticle);
+            // },
+
+            startDate: function (newDate, oldDate) {
+                console.log(`We have ${newDate} fruits now, yay! ${oldDate}`)
+            },
+
+            // localStorage: function(newV){
+            //     console.log("~~~~~~~~~~~ localSt", newV);
             // },
 
             searchKey: function () {
@@ -1357,6 +1458,11 @@
                 this.setColor(currentArticle, this.color);
                 this.$root.$emit('bv::hide::modal', 'modal-color');
             },
+
+            localStorFlag: function () {
+
+
+            }
         },
     }
 </script>

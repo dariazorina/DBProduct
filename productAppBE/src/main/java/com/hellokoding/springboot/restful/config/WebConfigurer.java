@@ -1,9 +1,9 @@
 package com.hellokoding.springboot.restful.config;
 
-import io.github.jhipster.config.JHipsterConstants;
-import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.config.h2.H2ConfigurationHelper;
-import io.github.jhipster.web.filter.CachingHttpHeadersFilter;
+//import io.github.jhipster.config.JHipsterConstants;
+//import io.github.jhipster.config.JHipsterProperties;
+//import io.github.jhipster.config.h2.H2ConfigurationHelper;
+//import io.github.jhipster.web.filter.CachingHttpHeadersFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.MimeMappings;
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 import static java.net.URLDecoder.decode;
@@ -42,11 +44,11 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
     private final Environment env;
 
-    private final JHipsterProperties jHipsterProperties;
+//    private final JHipsterProperties jHipsterProperties;
 
-    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
+    public WebConfigurer(Environment env) {//, JHipsterProperties jHipsterProperties) {
         this.env = env;
-        this.jHipsterProperties = jHipsterProperties;
+//        this.jHipsterProperties = jHipsterProperties;
     }
 
     @Override
@@ -144,18 +146,42 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 //        cachingHttpHeadersFilter.setAsyncSupported(true);
 //    }
 
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = jHipsterProperties.getCors();
+//        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+//            log.debug("Registering CORS filter");
+//            source.registerCorsConfiguration("/api/**", config);
+//            source.registerCorsConfiguration("/management/**", config);
+//            source.registerCorsConfiguration("/v2/api-docs", config);
+//        }
+//        return new CorsFilter(source);
+//    }
+
+
+
+
     @Bean
-    public CorsFilter corsFilter() {
+    CorsFilter CorsFilter() { //todo
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = jHipsterProperties.getCors();
-        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
-            log.debug("Registering CORS filter");
-            source.registerCorsConfiguration("/api/**", config);
-            source.registerCorsConfiguration("/management/**", config);
-            source.registerCorsConfiguration("/v2/api-docs", config);
-        }
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedHeader("*");
+//        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedOrigin("http://localhost:8080");
+        corsConfiguration.setAllowedMethods(Arrays.asList(
+                HttpMethod.GET.name(),
+                HttpMethod.HEAD.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.DELETE.name()));
+        corsConfiguration.setMaxAge(1800L);
+        source.registerCorsConfiguration("/**", corsConfiguration); // you restrict your path here
         return new CorsFilter(source);
     }
+
+
+
 
 //    /**
 //     * Initializes H2 console.

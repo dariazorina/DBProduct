@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import api from './components/login-api'
+import isLoggedInPlugin from './isloggedinplugin'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+    plugins: [isLoggedInPlugin],
     state: {
         loginSuccess: false,
         loginError: false,
@@ -34,7 +36,7 @@ export default new Vuex.Store({
     actions: {
         login({commit}, {user, password}) {
             return new Promise((resolve, reject) => {
-                console.log("Accessing backend with user: '" + user);
+                console.log("Accessing backend with user: '" + user + " " + commit);
 
                 const params = new URLSearchParams();
                 params.append('username', user);
@@ -90,13 +92,14 @@ export default new Vuex.Store({
                         console.log("Logout success");
                         commit('logout_success', {});
 
-                        api.getAccount().then(
-                            response => {
-                                console.log("Account retrieved :" + response.status);
-                            }).catch(
-                            error => {
-                                console.log("Error: " + error);
-                            });
+
+                        // api.getAccount().then(
+                        //     response => {
+                        //         console.log("Account retrieved :" + response.status);
+                        //     }).catch(
+                        //     error => {
+                        //         console.log("Error: " + error);
+                        //     });
                         resolve(response);
                     }
                 ).catch(

@@ -69,11 +69,11 @@ public class PersistentTokenRememberMeServices extends    AbstractRememberMeServ
 
     private final UserRepository userRepository;
 
-    public PersistentTokenRememberMeServices(JHipsterProperties jHipsterProperties,
+    public PersistentTokenRememberMeServices(//JHipsterProperties jHipsterProperties,
             org.springframework.security.core.userdetails.UserDetailsService userDetailsService,
             PersistentTokenRepository persistentTokenRepository, UserRepository userRepository) {
 
-        super(jHipsterProperties.getSecurity().getRememberMe().getKey(), userDetailsService);
+        super("67cc9eda5071660462ea5397a972db51b2bdaf592eb0c7c3c59304f1a3f6ee955fd7ac59cef9597e75b5ca9f6b2ba1946787", userDetailsService); //todo
         this.persistentTokenRepository = persistentTokenRepository;
         this.userRepository = userRepository;
         upgradedTokenCache = new PersistentTokenCache<>(UPGRADED_TOKEN_VALIDITY_MILLIS);

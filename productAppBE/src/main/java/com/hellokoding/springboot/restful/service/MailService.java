@@ -1,6 +1,5 @@
 package com.hellokoding.springboot.restful.service;
 
-
 import com.hellokoding.springboot.restful.model.security.User;
 import io.github.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
@@ -41,9 +40,8 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
-//    public MailService(JHipsterProperties jHipsterProperties, JavaMailSender javaMailSender,                   MessageSource messageSource, SpringTemplateEngine templateEngine) {
-    public MailService(JHipsterProperties jHipsterProperties,                   MessageSource messageSource, SpringTemplateEngine templateEngine) {
-
+//    public MailService(JHipsterProperties jHipsterProperties, JavaMailSender javaMailSender, MessageSource messageSource, SpringTemplateEngine templateEngine) {
+    public MailService(JHipsterProperties jHipsterProperties, MessageSource messageSource, SpringTemplateEngine templateEngine) {
         this.jHipsterProperties = jHipsterProperties;
 //        this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
@@ -60,7 +58,7 @@ public class MailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());
             message.setTo(to);
-            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setFrom(jHipsterProperties.getMail().getFrom());  //todo
             message.setSubject(subject);
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
@@ -79,7 +77,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl()); //todo
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);

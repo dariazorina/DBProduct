@@ -32,6 +32,13 @@
                     </div>
                 </div>
 
+
+<!--                <div class="form-group row align-items-center">-->
+<!--                    <label for="add-pass" class="col-1 col-form-label labelInCreation">Remember Me:</label>-->
+<!--                    <div class="col-3"><input type="checkbox" name="remember-me" /></div>-->
+<!--                </div>-->
+
+
                 <div class="form-group row">
                     <div class="offset-sm-1 col-sm-3">
                         <b-btn size="sm" variant="btn btn-outline-info" type="submit">Login</b-btn>
@@ -81,18 +88,13 @@
             }
         },
         mounted() {
-            const moment = require('moment');
-            let now = moment();
-         //   console.log(`Now: ${now.format('ll')}`);
-            Vue.prototype.endDate = now.format('YYYY-MM-DD');
-
-            now.subtract('1', 'months');
+            //const moment = require('moment');
+            //let now = moment();
+            //Vue.prototype.endDate = now.format('YYYY-MM-DD');
+            //now.subtract('1', 'months');
         //    console.log(`Subtracting 1 m: ${now.format('ll')}`);
-            Vue.prototype.startDate = now.format('YYYY-MM-DD');
-            // Vue.prototype.startDate = now.format("DD/MM/YYYY");
-            //  Vue.prototype.startDate = now.format('MM/DD/YYYY');
-
-            // console.log(Vue.prototype.startDate);
+            //Vue.prototype.startDate = now.format('YYYY-MM-DD');
+           // console.log("VUE PROTOTYPE", Vue.prototype, this.$store);
         }
     }
 </script>

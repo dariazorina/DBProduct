@@ -2,6 +2,9 @@ package com.hellokoding.springboot.restful.controller.errors;
 
 import java.net.URI;
 
+//https://www.jhipster.tech/security/
+//todo remove jhipster
+
 public final class ErrorConstants {
 
     public static final String ERR_CONCURRENCY_FAILURE = "error.concurrencyFailure";

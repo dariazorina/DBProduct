@@ -45,10 +45,57 @@ public class DomainUserDetailsService implements UserDetailsService {
 
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
         return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
-            .map(user -> createSpringSecurityUser(lowercaseLogin, user))
-            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
-
+                .map(user -> createSpringSecurityUser(lowercaseLogin, user))
+                .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
     }
+
+        /*
+                String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+        Optional<User> a = userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin);
+        Optional <UserDetails> b = Optional.ofNullable(a.map(user -> createSpringSecurityUser(lowercaseLogin, user))
+                .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database")));
+
+
+        return new UserDetails() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return null;
+            }
+
+            @Override
+            public String getPassword() {
+                return null;
+            }
+
+            @Override
+            public String getUsername() {
+                return null;
+            }
+
+            @Override
+            public boolean isAccountNonExpired() {
+                return false;
+            }
+
+            @Override
+            public boolean isAccountNonLocked() {
+                return false;
+            }
+
+            @Override
+            public boolean isCredentialsNonExpired() {
+                return false;
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+        };
+
+
+         */
+
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.getActivated()) {

@@ -19,7 +19,6 @@ Vue.use(Vuetify);
 // Bootstrap
 Vue.use(BootstrapVue);
 
-
 new Vue({
     router,
 //    vuetify,

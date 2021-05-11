@@ -14,6 +14,7 @@ export default {
         },*/
 
     getSecured(credentials) {
+       // console.log("LOGIN API AUTH", credentials);
         return AXIOS.post(`authentication`, credentials);
     },
 
