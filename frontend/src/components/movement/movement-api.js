@@ -8,7 +8,7 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAll(fn) {
+    getAllMovements(fn) {
         return AXIOS
             .get(`/movement`)
             .then(response => fn(response))

@@ -41,6 +41,29 @@
             <div class="col-lg-12" style="background-color: transparent; padding-top: 0">
 
                 <form class="formCreation">
+                    <div class="form-row align-items-center" style="background-color: transparent">
+                        <div v-if="role==='ROLE_ADMIN'||addAdditionalMovementFlag">
+                            <div class="col-12" style="background-color: transparent">
+                                <label>Текущее движение: {{currentUserMovement.name}} </label><br>
+                            </div>
+                            <label><b>Добавить дополнительное движение:</b></label>
+                            <div class="col-12" style="background-color: transparent">
+                                <div v-for="(movement, index) in allMovements">
+                                    <input v-bind:value="movement.id" name="movement.name" type="checkbox"
+                                           v-model="checkedMovements"/>
+                                    <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
+                                    <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else class="col-12">
+                            <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
+                                    class="btn btn-info">Добавить дополнительное движение
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="form-row align-items-center">
                         <label><b>Тип материала</b></label>
                         <div class="col-12" style="background-color: transparent">
@@ -344,45 +367,6 @@
                                             </v-treeview>
                                         </v-container>
                                     </v-col>
-
-                                    <!--                                    <v-divider vertical-->
-                                    <!--                                               style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
-
-                                    <!--                                    <v-col-->
-                                    <!--                                            style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
-
-                                    <!--                                        <v-container-->
-                                    <!--                                                id="scroll-target"-->
-                                    <!--                                                style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
-                                    <!--                                                class="overflow-y-auto">-->
-
-                                    <!--                                            <template v-if="!selectedHashtag.length">-->
-                                    <!--                                                No nodes selected.-->
-                                    <!--                                            </template>-->
-
-                                    <!--                                            <template v-else>-->
-                                    <!--                                                <div v-for="node in selectedHashtag">-->
-                                    <!--                                                    <v-btn text icon x-small-->
-                                    <!--                                                           @click="removeSelectedHashtag(node)">-->
-                                    <!--                                                        <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-                                    <!--                                                    </v-btn>-->
-                                    <!--                                                    {{ node }}-->
-                                    <!--                                                </div>-->
-                                    <!--                                                <div class="form-group row" style="padding-top: 30px">-->
-                                    <!--                                                    <button type="button"-->
-                                    <!--                                                            style="margin-right: 20px; margin-left: 15px"-->
-                                    <!--                                                            :disabled="uploadMode"-->
-                                    <!--                                                            @click="addHashtagToArticleList()"-->
-                                    <!--                                                            class="btn btn-success">Add-->
-                                    <!--                                                    </button>-->
-                                    <!--                                                    <button type="button" class="btn btn-info"-->
-                                    <!--                                                            :disabled="uploadMode"-->
-                                    <!--                                                            @click="clearAllSelectedTags()">Clear All-->
-                                    <!--                                                    </button>-->
-                                    <!--                                                </div>-->
-                                    <!--                                            </template>-->
-                                    <!--                                        </v-container>-->
-                                    <!--                                    </v-col>-->
                                 </v-row>
                             </b-card>
                         </div>
@@ -435,7 +419,7 @@
                         <label for="add-descr"><b>Описание</b></label>
                         <div class="col-12" :disabled="uploadMode">
                             <ckeditor :editor="editor" id="add-descr" v-model="article.description"
-                                      :config="editorConfig" ></ckeditor>
+                                      :config="editorConfig"></ckeditor>
 
                         </div>
                     </div>
@@ -541,6 +525,7 @@
     import apiCountry from "./../country/country-api";
     import apiOrg from "./../org/org-api";
     import apiLanguage from "./../language/language-api";
+    import apiMovement from "./../movement/movement-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
@@ -626,8 +611,19 @@
 
             allLanguages: [],
             allMovements: [],
+            checkedMovements: [],
+            currentUserMovement: '',
+            // toKey: '',
+            addAdditionalMovementFlag: false,
 
-            article: {personList: [], locationList: [], hashtagList: [], orgList: [], materialList: []},
+            article: {
+                personList: [],
+                locationList: [],
+                hashtagList: [],
+                orgList: [],
+                materialList: [],
+                movementList: []
+            },
 
             selected: [],
             selectedLocation: [],
@@ -661,6 +657,7 @@
             attachedFiles: [],
             loggedInFlag: false,
             loggedName: null,
+            role: null,
             uploadFilesCheckBoxValue: false,
             uploadMode: false,
             uploadedFiles: [],
@@ -671,6 +668,10 @@
         }),
 
         methods: {
+            addAdditionalMovement() {
+                this.addAdditionalMovementFlag = true;
+            },
+
             uploadFiles() {             //on button press
                 for (let i = 0; i < this.attachedFiles.length; i++) {
                     apiAttachment.uploadFile('article', this.article.id, this.attachedFiles[i], r => {
@@ -943,8 +944,8 @@
 
             updateLink(link) {
                 //   this.links.push(link.content);
-                this.links.push(link);
-                //console.log("ADDED LINK", link, this.links);
+                // this.links.push(link);
+                console.log("ADDED LINK", link, this.links);
             },
 
             // actOnEachLine(textarea, func) {
@@ -1033,13 +1034,6 @@
             },
 
             createArticle(currentStatus) {
-                // this.article.movement = {
-                //     "id": this.selectedM
-                // };todo
-
-                this.article.movement = {
-                    "id": 1
-                };
 
                 this.article.language = {
                     "id": this.selectedL
@@ -1064,6 +1058,18 @@
                         "content": this.links[i].content
                     };
                 }
+
+                let i = 0;
+                for (; i < this.checkedMovements.length; i++) {
+                    this.article.movementList[i] = {
+                        "id": this.checkedMovements[i]
+                    };
+                }
+
+                this.article.movementList[i] = {
+                    "id": this.currentUserMovement.id
+                };
+
 
                 // let textarea = document.getElementById("add-linkS");
                 // let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
@@ -1126,12 +1132,10 @@
                         }
                     });
                 }
+               // console.log("BEFORE SAVING", this.article);
             },
 
             updateArticle() {
-                // this.article.movement = {
-                //     "id": this.selectedM
-                // }; todo
 
                 //todo!!! если id языков в таблице будут не подряд и не с 1 - будет ошибка
                 this.article.language = {
@@ -1142,10 +1146,20 @@
                 this.hasError = false;
 
                 this.article.linkList = [];
+                this.article.hashtagList = [];
+                this.article.movementList = [];
+
                 //console.log("#*#*#*#*#*#*#*#*#*#*#*#*#    LINKS", this.links, this.links.length);
                 for (let i = 0; i < this.links.length; i++) {
                     this.article.linkList[i] = {
                         "content": this.links[i].content
+                    };
+                }
+
+                let i = 0;
+                for (; i < this.checkedMovements.length; i++) {
+                    this.article.movementList[i] = {
+                        "id": this.checkedMovements[i]
                     };
                 }
 
@@ -1189,8 +1203,18 @@
             },
 
             getLoggedIn() {
-                this.loggedInFlag = this.$store.getters.isLoggedIn;
-                this.loggedName = this.$store.getters.getUserName;
+                //this.checkedMovements.push(localStorage.getItem('movement'));  //need if we want to show current movement in checkbox list
+                //console.log("PUSHED CHECKED MOV");
+
+                //this.toKey++;
+
+                this.loggedInFlag = localStorage.getItem('isLoggedIn');
+                this.loggedName = localStorage.getItem('userName');
+                this.role = 'ROLE_USER';
+
+                // this.role = 'ROLE_ADMIN';
+                //to get user's role todo
+                //read stackoverflow or get user id from user_cred and get user role by id from user_auth
             },
 
             finalConnectionListCreation(list, finalList) {
@@ -1220,9 +1244,7 @@
             },
 
             isObjectValidAndNotEmpty(obj) {
-
                 return !(typeof obj === 'undefined' || obj === null);
-
             },
 
             locationEditConnectionTitleCreation(location) {
@@ -1400,6 +1422,18 @@
             //     console.log(response.data);
             // });
 
+            apiMovement.getAllMovements(response => {
+                // this.getLoggedIn();
+                this.allMovements = response.data;
+                console.log("MOVEMENTS", response.data);
+                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+
+                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+                let ddd = this.allMovements.indexOf(currentIndex);
+                this.allMovements.splice(ddd, 1);
+                //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            });
+
             api.getConnectionTypes(response => {
                 this.connectionTypes = response.data;
                 console.log("connectionTypes---------------", response.data)
@@ -1413,20 +1447,17 @@
             apiHashtag.getAllHashtags(response => {
                 // this.allTags = response.data;
                 this.hashtagFlatTree = this.createFlatTree(response.data);
-
-            })
-                .catch(error => {
-                    this.errors.push(error)
-                });
+            }).catch(error => {
+                this.errors.push(error)
+            });
 
             apiMType.getAll(response => {
                 // this.allMTypes = response.data;
                 this.mtypeFlatTree = this.createFlatTree(response.data);
 
-            })
-                .catch(error => {
-                    this.errors.push(error)
-                });
+            }).catch(error => {
+                this.errors.push(error)
+            });
 
             //console.log("==================PARAMS", this.$route.params);
 
@@ -1488,6 +1519,10 @@
 
                     for (let i = 0; i < this.article.linkList.length; i++) {
                         this.links.push(this.article.linkList[i]);
+                    }
+
+                    for (let i = 0; i < this.article.movementList.length; i++) {
+                        this.checkedMovements.push(this.article.movementList[i].id);
                     }
 
 //                    console.log("::::::::::::::::LINK LIST", this.article.linkList);
@@ -1830,6 +1865,10 @@
 
         ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
+            // checkedMovements() {
+            //     console.log("CHECKED", this.checkedMovements);
+            // },
+
             searchHashtag() {
                 this.$nextTick(() => {
                     if (this.searchHashtagLength === 0) {

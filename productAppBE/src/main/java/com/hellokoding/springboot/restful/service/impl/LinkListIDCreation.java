@@ -18,7 +18,7 @@ public class LinkListIDCreation {
         UrlLink linkWithID;
 
         for (UrlLink link : linkList) {
-            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
+            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем в БД
             if (linkByContent == null) {
                 linkRepository.save(link);
 

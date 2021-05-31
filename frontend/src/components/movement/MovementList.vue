@@ -88,7 +88,7 @@
 
         methods: {},
         mounted() {
-            api.getAll(response => {
+            api.getAllMovements(response => {
                 this.movements = response.data;
                 console.log(response.data)
             })

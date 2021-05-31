@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <div id="nav" style="margin-top: -30px">
+        <div id="nav" style="margin-top: -30px; background-color: transparent">
 
             <!-----------------------------            the header------------------------------------------->
-            <router-link to="/person">Person</router-link>
+            <router-link to="/person">P1e2r3s4o5n6</router-link>
             |
             <router-link to="/article">Article</router-link>
             |
@@ -19,6 +19,10 @@
             <router-link to="/hashtag">Hashtag</router-link>
             |
             <router-link to="/mtype">Material Type</router-link>
+
+            <template v-if="role==='ROLE_ADMIN'">                |
+                <router-link to="/uadmin">User Administration</router-link>
+            </template>
 
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
@@ -37,7 +41,8 @@
         data() {
             return {
                 // loggedInFlag: false,
-                msg: 'Welcome to your Vue.js powered Spring Boot App'
+                msg: 'Welcome to your Vue.js powered Spring Boot App',
+                role: 'ROLE_ADMIN'
             }
         },
         methods: {

@@ -3,7 +3,7 @@
 <!--        <label>Комментарий</label>-->
         <div class="form-row" style="background-color: transparent">
             <div class="col-md-12" style="background-color: transparent; margin-top: -4px">
-                <input class="form-control" id="add-linkS" type="text" :value="value" v-on="listeners" placeholder="Для сохранения введенных данных нажмите 'Enter'"/>
+                <input class="form-control" id="add-linkS" type="text" :value="value" v-on="listeners" placeholder="Для сохранения введенных данных нажмите 'Tab'"/>
             </div>
         </div>
     </div>

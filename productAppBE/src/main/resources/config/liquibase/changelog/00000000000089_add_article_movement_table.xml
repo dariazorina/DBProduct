@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="12052021-7">
+        <createTable remarks="Таблица связка" tableName="article_movement">
+            <column name="movement_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="movement_id, article_id" tableName="article_movement"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="12052021-8">
+        <addForeignKeyConstraint baseColumnNames="movement_id"
+                                 baseTableName="article_movement"
+                                 constraintName="t_movement_article_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="movement_id"
+                                 referencedTableName="t_movement"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="12052021-9">
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="article_movement"
+                                 constraintName="t_article_movement_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="article_id"
+                                 referencedTableName="t_article"/>
+    </changeSet>
+</databaseChangeLog>

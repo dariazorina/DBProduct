@@ -8,6 +8,15 @@ export default store => {
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userName', mutation.payload.userName);
 
+            if (typeof mutation.payload.account.movementList !== 'undefined' && mutation.payload.account.movementList !== null) {
+                if (mutation.payload.account.movementList.length < 2) {
+                    localStorage.setItem('movement', mutation.payload.account.movementList[0].id);
+                    localStorage.setItem('movementSingle', 'true');
+                } else {
+                    localStorage.setItem('movementSingle', 'false');
+                }
+            }
+
             const moment = require('moment');
             let now = moment();
 
@@ -18,12 +27,23 @@ export default store => {
         }
 
         if (mutation.type === "logout_success") {
-          //  alert("Logout succs!");
+            // alert("Logout succs!");
             console.log(store, mutation, state);
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userName');
             localStorage.removeItem('startDate');
             localStorage.removeItem('endDate');
+            localStorage.removeItem('movementSingle');
+            localStorage.removeItem('movement');
         }
+
+        if (mutation.type === "movement_selection") {
+            // console.log("PLUGIN MOVEMENT", state, mutation.payload);
+            localStorage.setItem('movement', mutation.payload.movement);
+        }
+
+        // if (mutation.type === "clear_storage") {  //todo check is it in use?
+        //     localStorage.clear();
+        // }
     });
 };

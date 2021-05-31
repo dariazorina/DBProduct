@@ -1,7 +1,6 @@
 package com.hellokoding.springboot.restful.controller;
 
 
-
 import com.hellokoding.springboot.restful.controller.errors.EmailNotFoundException;
 import com.hellokoding.springboot.restful.controller.vm.KeyAndPasswordVM;
 import com.hellokoding.springboot.restful.controller.vm.ManagedUserVM;
@@ -20,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ import java.util.Optional;
  * REST controller for managing the current user's account.
  */
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api")
 public class AccountAPI {
 
     private static class AccountResourceException extends RuntimeException {
@@ -60,11 +60,24 @@ public class AccountAPI {
         this.persistentTokenRepository = persistentTokenRepository;
     }
 
+
+    @GetMapping("/users")   //for administration
+    public ResponseEntity<List<UserDTO>> findAll() {
+        List<UserDTO> all = userService.findAll();
+        return ResponseEntity.ok(all);
+    }
+
+    @PutMapping("/user/{id}") //for temp administration
+    public ResponseEntity<User> updateMovement(@PathVariable Long id, @Valid @RequestBody List<Integer> movements) {
+
+        User u = userService.updMovement(id, movements);
+        return ResponseEntity.ok(u);
+    }
     /**
      * {@code POST  /register} : register the user.
      *
      * @param managedUserVM the managed user View Model.
-     * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
+     * @throws InvalidPasswordException  {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
@@ -112,9 +125,11 @@ public class AccountAPI {
      */
     @GetMapping("/account")
     public UserDTO getAccount() {
-        return userService.getUserWithAuthorities()
-            .map(UserDTO::new)
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        UserDTO ty = userService.getUserWithAuthorities()
+                .map(UserDTO::new)
+                .orElseThrow(() -> new AccountResourceException("User could not be found"));
+
+        return ty;
     }
 
     /**
@@ -122,7 +137,7 @@ public class AccountAPI {
      *
      * @param userDTO the current user information.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
-     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
+     * @throws RuntimeException          {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @PostMapping("/account")
     public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
@@ -171,16 +186,16 @@ public class AccountAPI {
 
     /**
      * {@code DELETE  /account/sessions?series={series}} : invalidate an existing session.
-     *
+     * <p>
      * - You can only delete your own sessions, not any other user's session
      * - If you delete one of your existing sessions, and that you are currently logged in on that session, you will
-     *   still be able to use that session, until you quit your browser: it does not work in real time (there is
-     *   no API for that), it only removes the "remember me" cookie
+     * still be able to use that session, until you quit your browser: it does not work in real time (there is
+     * no API for that), it only removes the "remember me" cookie
      * - This is also true if you invalidate your current session: you will still be able to use it until you close
-     *   your browser or that the session times out. But automatic login (the "remember me" cookie) will not work
-     *   anymore.
-     *   There is an API to invalidate the current session, but there is no API to check which session uses which
-     *   cookie.
+     * your browser or that the session times out. But automatic login (the "remember me" cookie) will not work
+     * anymore.
+     * There is an API to invalidate the current session, but there is no API to check which session uses which
+     * cookie.
      *
      * @param series the series of an existing session.
      * @throws UnsupportedEncodingException if the series couldn't be URL decoded.
@@ -189,11 +204,11 @@ public class AccountAPI {
     public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
         String decodedSeries = URLDecoder.decode(series, "UTF-8");
         SecurityUtils.getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(u ->
-                persistentTokenRepository.findByUser(u).stream()
-                    .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
-                    .findAny().ifPresent(t -> persistentTokenRepository.deleteById(decodedSeries)));
+                .flatMap(userRepository::findOneByLogin)
+                .ifPresent(u ->
+                        persistentTokenRepository.findByUser(u).stream()
+                                .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
+                                .findAny().ifPresent(t -> persistentTokenRepository.deleteById(decodedSeries)));
     }
 
     /**
@@ -204,10 +219,10 @@ public class AccountAPI {
      */
     @PostMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestBody String mail) {
-       mailService.sendPasswordResetMail(
-           userService.requestPasswordReset(mail)
-               .orElseThrow(EmailNotFoundException::new)
-       );
+        mailService.sendPasswordResetMail(
+                userService.requestPasswordReset(mail)
+                        .orElseThrow(EmailNotFoundException::new)
+        );
     }
 
     /**
@@ -215,7 +230,7 @@ public class AccountAPI {
      *
      * @param keyAndPassword the generated key and the new password.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
-     * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
+     * @throws RuntimeException         {@code 500 (Internal Server Error)} if the password could not be reset.
      */
     @PostMapping(path = "/account/reset-password/finish")
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
@@ -223,7 +238,7 @@ public class AccountAPI {
             throw new InvalidPasswordException();
         }
         Optional<User> user =
-            userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
+                userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this reset key");
@@ -232,7 +247,7 @@ public class AccountAPI {
 
     private static boolean checkPasswordLength(String password) {
         return !StringUtils.isEmpty(password) &&
-            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
-            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
+                password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
+                password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     }
 }

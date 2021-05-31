@@ -8,7 +8,7 @@
             <InputTextField
                     style="background-color: transparent"
                     v-model="newInputText"
-                    @keydown.enter="addItem"/>
+                    @keydown.tab="addItem"/>
 
             <ul v-if="items.length">
                 <CreatedListItem
@@ -61,6 +61,7 @@
                     this.$emit("update-item", currentItem);
                     this.newInputText = '';
                     this.componentKey += 1;  //to rerender org selection element
+                    this.items.push(currentItem);
                 }
             },
 

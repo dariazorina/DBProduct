@@ -21,6 +21,13 @@ public class Person {
 //    @JoinColumn(name = "movement_id", nullable = false)
 //    private Movement movement;
 
+    @ManyToMany
+    @JoinTable(
+            name = "person_movement",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
+    private List<Movement> movementList;
+
     private Integer status;
     private String surname;
     private String name;

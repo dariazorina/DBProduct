@@ -22,6 +22,14 @@ public class MovementServiceImpl implements MovementService {
     private final MovementRepository movementRepository;
 
 
+
+//    public String getMovementById(Integer id) {
+//        Movement m = movementRepository.getMovementById(id);
+//        String mName = m.getName();
+//        return mName;
+//    }
+
+
     public List<Movement> findAll() {
         List<Movement> all = movementRepository.findAll();
         return all;

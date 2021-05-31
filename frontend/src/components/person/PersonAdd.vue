@@ -29,6 +29,29 @@
         </div>
 
         <form class="authorsFormCreation">
+            <div class="form-row align-items-center" style="background-color: transparent">
+                <div v-if="role==='ROLE_ADMIN'||addAdditionalMovementFlag">
+                    <div class="col-12" style="background-color: transparent">
+                        <label>Текущее движение: {{currentUserMovement.name}} </label><br>
+                    </div>
+                    <label>Добавить дополнительное движение:</label>
+                    <div class="col-12" style="background-color: transparent">
+                        <div v-for="(movement, index) in allMovements">
+                            <input v-bind:value="movement.id" name="movement.name" type="checkbox"
+                                   v-model="checkedMovements"/>
+                            <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
+                            <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else class="col-12">
+                    <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
+                            class="btn btn-info">Добавить дополнительное движение
+                    </button>
+                </div>
+            </div>
+
             <div class="row" style="background-color: transparent">
                 <div class="col-md-9">
 
@@ -499,6 +522,7 @@
     import Vuetify from 'vuetify';
     import OccupationList from "../components/person-occupation/OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
+    import apiMovement from "./../movement/movement-api";
 
     import CKEditor from 'ckeditor4-vue';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
@@ -554,10 +578,7 @@
             errors: [],
             validationErrors: {},
             hasError: false,
-
             // allCountries: [],
-            // allOrgs: [],
-            // allMovements: [],
 
             locationEntries: [],
             orgEntries: [],
@@ -593,7 +614,7 @@
             personPersonEntities: [], //after request
 
             testList: [],
-            person: {hashtagList: [], linkList: [], testList: [], locationList: [], personList:[]},
+            person: {hashtagList: [], linkList: [], testList: [], locationList: [], personList:[], movementList: []},
             years: [],
             editMode: false,
             uploadMode: false,
@@ -609,6 +630,11 @@
             loggedName: '',
             uploadedFiles: [],
             attachedFiles: [],
+            role: '',
+            addAdditionalMovementFlag: false,
+            allMovements: [],
+            currentUserMovement: '',
+            checkedMovements: [],
 
             editor: CKEditor, // to use the component locally
             editorConfig: {
@@ -617,6 +643,10 @@
         }),
 
         methods: {
+            addAdditionalMovement() {
+                this.addAdditionalMovementFlag = true;
+            },
+
             uploadFiles() {             //on button press
                 for (let i = 0; i < this.attachedFiles.length; i++) {
                     apiAttachment.uploadFile('person', this.person.id, this.attachedFiles[i], r => {
@@ -647,6 +677,7 @@
             getLoggedIn() {
                 this.loggedInFlag = this.$store.getters.isLoggedIn;
                 this.loggedName = this.$store.getters.getUserName;
+                this.role = 'ROLE_USER';
             },
 
             setHeight(event) {
@@ -1000,6 +1031,9 @@
                 // if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
                 //     this.person.location_id = this.selectedCountry;
                 // }
+                this.person.linkList = [];
+                this.person.hashtagList = [];
+                this.person.movementList = [];
 
                 for (let i = 0; i < this.links.length; i++) {
                     this.person.linkList[i] = {
@@ -1010,6 +1044,19 @@
 
                 for (let i = 0; i < this.tags.length; i++) {
                     this.person.hashtagList[i] = this.tags[i];
+                }
+
+                let i = 0;
+                for (; i < this.checkedMovements.length; i++) {
+                    this.person.movementList[i] = {
+                        "id": this.checkedMovements[i]
+                    };
+                }
+
+                if (!this.editMode) {
+                    this.person.movementList[i] = {
+                        "id": this.currentUserMovement.id
+                    };
                 }
 
                 this.hasError = false;
@@ -1120,6 +1167,18 @@
         mounted() {
             this.getLoggedIn();
 
+            apiMovement.getAllMovements(response => {
+                // this.getLoggedIn();
+                this.allMovements = response.data;
+               // console.log("MOVEMENTS", response.data);
+                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
+
+                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
+                let ddd = this.allMovements.indexOf(currentIndex);
+                this.allMovements.splice(ddd, 1);
+               // console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            });
+
             if (this.$route.params.person_id != null) {
                 console.log("EDIT MODE");
                 this.editMode = true;
@@ -1142,6 +1201,10 @@
 
                     for (let i = 0; i < this.person.linkList.length; i++) {
                         this.links.push(this.person.linkList[i].content);
+                    }
+
+                    for (let i = 0; i < this.person.movementList.length; i++) {
+                            this.checkedMovements.push(this.person.movementList[i].id);
                     }
 
                     for (let j = 0; j < this.person.locationList.length; j++) {

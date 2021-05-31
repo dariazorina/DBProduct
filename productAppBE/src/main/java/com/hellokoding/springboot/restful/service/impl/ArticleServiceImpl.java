@@ -124,17 +124,26 @@ public class ArticleServiceImpl implements ArticleService {
 
         article.setTitle(articleDto.getTitle());
         article.setTitleRus(articleDto.getTitleRus());
-        article.setMovement(articleDto.getMovement());
         article.setLanguage(articleDto.getLanguage());
+
+
+        if (article.getMovementList() != null) {
+            article.getMovementList().clear();
+            articleRepository.flush();
+        } else {
+            article.setMovementList(new ArrayList<>());
+        }
+        if (article.getMovementList() == null) {
+            article.setMovementList(articleDto.getMovementList());
+        } else
+            article.getMovementList().addAll(articleDto.getMovementList());
 
 
         MaterialType mT = articleDto.getMtype();
         if (mT != null) {
             if (mT.getId() != null) {
                 Optional<MaterialType> byId = materialTypeRepository.findById(mT.getId());
-                if (byId != null) {
-                    article.setMtype(byId.get());
-                }
+                byId.ifPresent(article::setMtype);
             }
         }
 
@@ -357,9 +366,11 @@ public class ArticleServiceImpl implements ArticleService {
         for (Integer id : idList) {
             Optional<Article> l = articleRepository.findById(id);
 
-            if (l != null) {
-                searchRes.add(l.get());
-            }
+            l.ifPresent(searchRes::add);
+
+//            if (l != null) {  //first variant
+//                searchRes.add(l.get());
+//            }
         }
         return searchRes;
     }

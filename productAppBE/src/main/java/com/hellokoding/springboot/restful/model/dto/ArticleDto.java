@@ -11,7 +11,7 @@ import java.util.List;
 public class ArticleDto implements Comparable<ArticleDto> {
 
     private Integer id;
-    private Movement movement;
+    private List<Movement> movementList;
     private Language language;
 
     private Date date;
@@ -33,13 +33,13 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     private MaterialType mtype;
 
-    public ArticleDto(Integer id, Movement movement, Language language, Date date, String title, Integer status,
+    public ArticleDto(Integer id, List<Movement> movementList, Language language, Date date, String title, Integer status,
                       String titleRus, String description, String text, String rowColor,
                       String url, List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
                       List<ItemConnectionDto> orgList, List<ItemConnectionDto> materialList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
-        this.movement = movement;
+        this.movementList = movementList;
         this.language = language;
         this.mtype = mtype;
         this.date = date;
@@ -61,7 +61,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public ArticleDto(Article article) {
         this.id = article.getId();
-        this.movement = article.getMovement();
+        this.movementList = article.getMovementList();
         this.language = article.getLanguage();
         this.mtype = article.getMtype();
         this.date = article.getDate();
@@ -136,12 +136,12 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.id = id;
     }
 
-    public Movement getMovement() {
-        return movement;
+    public List<Movement> getMovementList() {
+        return movementList;
     }
 
-    public void setMovement(Movement movement) {
-        this.movement = movement;
+    public void setMovementList(List<Movement> movementList) {
+        this.movementList = movementList;
     }
 
     public Language getLanguage() {

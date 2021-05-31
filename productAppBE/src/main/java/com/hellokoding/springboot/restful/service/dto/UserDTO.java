@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.service.dto;
 
 
 import com.hellokoding.springboot.restful.config.Constants;
+import com.hellokoding.springboot.restful.model.Movement;
 import com.hellokoding.springboot.restful.model.security.Authority;
 import com.hellokoding.springboot.restful.model.security.User;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,8 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private List<Movement> movementList;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -74,6 +78,7 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
+        this.movementList = user.getMovementList();
     }
 
     public Long getId() {
@@ -180,6 +185,14 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
+    public List<Movement> getMovementList() {
+        return movementList;
+    }
+
+    public void setMovementList(List<Movement> movementList) {
+        this.movementList = movementList;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -195,6 +208,7 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
+            ", movement=" + movementList + //?
             "}";
     }
 }

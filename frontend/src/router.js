@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Hello from '@/components/Hello'
+import UserAdmin from '@/components/UserAdmin'
 
 import PersonList from '@/components/person/PersonList'
 import PersonAdd from '@/components/person/PersonAdd'
@@ -41,7 +42,8 @@ import store from './store'
 Vue.use(Router);
 
 const router = new Router({
-     mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
+    //
+    mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
     routes: [
         // { path: '/', component: Hello },
         // { path: '/callservice', component: Service },
@@ -58,7 +60,7 @@ const router = new Router({
 
         {path: '/login', component: Login, meta: {isLoginPage: true}},
 
-        {path: '/', component: ArticleList}, //Hello
+        {path: '/', component: Hello},//ArticleList}, //Hello
 
         {path: '/person', component: PersonList},
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
@@ -96,6 +98,8 @@ const router = new Router({
 
         {path: '/org', component: OrgList},
         {path: '/org/add', component: OrgAdd, name: 'org-add'},
+
+        {path: '/uadmin', component: UserAdmin, name: 'user-admin'},
 
         // otherwise redirect to home
         {path: '*', redirect: '/'}

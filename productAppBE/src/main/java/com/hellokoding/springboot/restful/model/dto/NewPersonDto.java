@@ -33,17 +33,19 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private List<PositionDto> testList; //todo rename
     private List<ItemConnectionDto> locationList;
     private List<ItemConnectionDto> personList;
+    private List<Movement> movementList;
     private String photo;
 //    private byte[] photo;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, String surname, String name, String patronymic, String surnameRus,
+    public NewPersonDto(Integer id, List<Movement> movementList, String surname, String name, String patronymic, String surnameRus,
                         String nameRus, String surnameEng, String nameEng, String description,
                         String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
                         List<PositionDto> testList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList, Integer bYear, Integer dYear, String photo, Integer status) {
         this.id = id;
+        this.movementList = movementList;
         this.surname = surname;
         this.name = name;
         this.patronymic = patronymic;
@@ -67,6 +69,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public NewPersonDto(Person p) {
         this.id = p.getId();
+        this.movementList = p.getMovementList();
         this.surname = p.getSurname();
         this.name = p.getName();
         this.patronymic = p.getPatronymic();
@@ -301,6 +304,14 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 //        this.photo = photo;
 //    }
 
+
+    public List<Movement> getMovementList() {
+        return movementList;
+    }
+
+    public void setMovementList(List<Movement> movementList) {
+        this.movementList = movementList;
+    }
 
     public String getPhoto() {
         return photo;

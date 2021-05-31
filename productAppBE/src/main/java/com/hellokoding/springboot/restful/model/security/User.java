@@ -2,6 +2,7 @@ package com.hellokoding.springboot.restful.model.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hellokoding.springboot.restful.config.Constants;
+import com.hellokoding.springboot.restful.model.Movement;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -92,6 +94,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<PersistentToken> persistentTokens = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_movement",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
+    private List<Movement> movementList;
 
     public Long getId() {
         return id;
@@ -204,6 +213,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
+    }
+
+    public List<Movement> getMovementList() {
+        return movementList;
+    }
+
+    public void setMovementList(List<Movement> movementList) {
+        this.movementList = movementList;
     }
 
     @Override

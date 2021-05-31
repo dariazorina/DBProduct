@@ -1282,8 +1282,7 @@
         mounted() {
             this.getLoggedIn();
 
-            console.log("ENTER MOUNTED");
-
+           // console.log("ENTER MOUNTED");
             window.addEventListener('storage', (event) => {
                 console.log("event", event);
 

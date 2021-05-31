@@ -15,9 +15,18 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movement_id", nullable = false)
-    private Movement movement;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "movement_id", nullable = false)
+//    private Movement movement;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_movement",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
+    private List<Movement> movementList;
+
 
     private Date date;
 

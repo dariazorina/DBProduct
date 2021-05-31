@@ -12,7 +12,8 @@ export default new Vuex.Store({
         loginError: false,
         userName: null,
         userPass: null,
-        account: null
+        account: null,
+        movement: null
     },
 
     mutations: {
@@ -20,7 +21,7 @@ export default new Vuex.Store({
             state.loginSuccess = true;
             state.userName = payload.userName;
             state.userPass = payload.userPass;
-            state.account  = payload.account;
+            state.account = payload.account;
         },
         login_error(state, payload) {
             state.loginError = true;
@@ -32,11 +33,15 @@ export default new Vuex.Store({
             state.userPass = null;
             state.account = {};
         },
+
+        movement_selection(state, payload) {
+            state.movement = payload.movement;
+        }
     },
     actions: {
         login({commit}, {user, password}) {
             return new Promise((resolve, reject) => {
-                console.log("Accessing backend with user: '" + user + " " + commit);
+                console.log("Accessing backend with user: " + user + " " + commit);
 
                 const params = new URLSearchParams();
                 params.append('username', user);
@@ -44,26 +49,29 @@ export default new Vuex.Store({
 
                 api.getSecured(params)
                     .then(response => {
-                        console.log("Status code " + response.status);
-                        /*                        if (response.status == 200) {
-                                                    console.log("Login successful");
-                                                    // place the loginSuccess state into our vuex store
+                        //console.log("Status code " + response.data);
+                        if (response.status == 200) {
+                            console.log("Login successful");
+                            // place the loginSuccess state into our vuex store
 
-                                                    api.getAccount().then(
-                                                        response => {
-                                                            console.log("Account retrieved :" + response.data);
-                                                            commit('login_success', {
-                                                                userName: user,
-                                                                userPass: password,
-                                                                account: response.data
-                                                            });
-                                                        }
-                                                    ).catch(
-                                                        error => {
-                                                            console.log("Error: " + error);
-                                                        }
-                                                    );
-                                                }*/
+                            api.getAccount().then(
+                                response => {
+                                    console.log("Account retrieved :" + response.data.login + response.data.createdBy);
+                                    commit('login_success', {
+                                        userName: user,
+                                        userPass: password,
+                                        account: response.data
+                                    });
+
+                                    // if (response.data.movementList.length > 1)
+                                    //     alert("бздынь!");
+                                }
+                            ).catch(
+                                error => {
+                                    console.log("Error: " + error);
+                                }
+                            );
+                        }
 
                         commit('login_success', {
                             userName: user,
@@ -109,7 +117,16 @@ export default new Vuex.Store({
                     }
                 );
             })
-        }
+        },
+
+        movement_selection({commit}, {movement}) {
+           // console.log("IN ACTION movement", movement);
+            commit('movement_selection', {movement});
+        },
+
+        // clear_storage({commit}, {}) {
+        //     commit('clear_storage', {});
+        // }
     },
     getters: {
         isLoggedIn: state => state.loginSuccess,

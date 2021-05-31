@@ -19,9 +19,18 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movement_id", nullable = false)
-    private Movement movement;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "movement_id", nullable = false)
+//    private Movement movement;
+
+    @ManyToMany
+    @JoinTable(
+            name = "article_movement",
+            joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
+    private List<Movement> movementList;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id", nullable = false)

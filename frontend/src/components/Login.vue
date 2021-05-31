@@ -78,7 +78,9 @@
                 this.errors = [];
                 this.$store.dispatch("login", {user: this.user, password: this.password})
                     .then(() => {
-                        this.$router.push('/article')
+                        console.log("--login page--");
+                        this.$router.push('/')
+                        // this.$router.push('/article')
                     })
                     .catch(error => {
                         this.loginError = true;

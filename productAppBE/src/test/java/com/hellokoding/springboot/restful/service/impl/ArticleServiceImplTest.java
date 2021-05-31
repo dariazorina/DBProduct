@@ -106,7 +106,7 @@ public class ArticleServiceImplTest {
         dtoBuilder.hashtagList(hashtagStringList); //(new ArrayList<>());
         dtoBuilder.title(title);
         dtoBuilder.titleRus(titleRus);
-        dtoBuilder.movement(movement);
+       // dtoBuilder.movement(movement);
         dtoBuilder.language(language);
         dtoBuilder.date(date);
         dtoBuilder.status(status);
@@ -118,7 +118,7 @@ public class ArticleServiceImplTest {
         article.setHashtagList(hashtagList);
         article.setTitle(title);
         article.setTitleRus(titleRus);
-        article.setMovement(movement);
+       // article.setMovement(movement);
         article.setLanguage(language);
         article.setDate(date);
         article.setStatus(status);

@@ -252,7 +252,19 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
+
+                    //todo: to test
+                    localStorage.clear();
                     router.push('/login');
+
+                    //todo: to choose suitable variant (above or this)
+                    //can't logout when 401 occurs?
+                    // this.$store.dispatch("logout", {}).then(result => {
+                    //     // this.$store.dispatch("clear_storage");
+                    //     console.log("--logout-@-@-@-@- 401");
+                    //     router.push('/login');
+                    // });
+
                 }
             })
     },

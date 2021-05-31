@@ -361,6 +361,19 @@ public class PersonServiceImpl implements PersonService {
         }
         //person.setLinkList(linkListWithID);
 
+        if (person.getMovementList() != null) {
+            person.getMovementList().clear();
+            personRepository.flush();
+        } else {
+            person.setMovementList(new ArrayList<>());
+        }
+        if (person.getMovementList() == null) {
+            person.setMovementList(personDto.getMovementList());
+        } else {
+            person.getMovementList().addAll(personDto.getMovementList());
+            //personRepository.flush();
+        }
+
         person.setSurname(personDto.getSurname());
         person.setName(personDto.getName());
         person.setPatronymic(personDto.getPatronymic());

@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="12052021-10">
+        <createTable remarks="Таблица связка" tableName="event_movement">
+            <column name="movement_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="movement_id, event_id" tableName="event_movement"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="12052021-11">
+        <addForeignKeyConstraint baseColumnNames="movement_id"
+                                 baseTableName="event_movement"
+                                 constraintName="t_movement_event_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="movement_id"
+                                 referencedTableName="t_movement"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="12052021-12">
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="event_movement"
+                                 constraintName="t_event_movement_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="event_id"
+                                 referencedTableName="t_event"/>
+    </changeSet>
+</databaseChangeLog>

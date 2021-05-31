@@ -3,8 +3,10 @@ package com.hellokoding.springboot.restful.service;
 
 import com.hellokoding.springboot.restful.config.Constants;
 import com.hellokoding.springboot.restful.dao.AuthorityRepository;
+import com.hellokoding.springboot.restful.dao.MovementRepository;
 import com.hellokoding.springboot.restful.dao.PersistentTokenRepository;
 import com.hellokoding.springboot.restful.dao.UserRepository;
+import com.hellokoding.springboot.restful.model.Movement;
 import com.hellokoding.springboot.restful.model.security.Authority;
 import com.hellokoding.springboot.restful.model.security.User;
 import com.hellokoding.springboot.restful.security.AuthoritiesConstants;
@@ -23,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,45 +45,61 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository) {
+    private final MovementRepository movementRepository;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, MovementRepository movRepo) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.persistentTokenRepository = persistentTokenRepository;
         this.authorityRepository = authorityRepository;
+        this.movementRepository = movRepo;
+    }
+
+
+    public List<UserDTO> findAll() {
+        List<UserDTO> dtoAllUserList = new ArrayList<>();
+        List<User> allUsers = userRepository.findAll();
+
+        UserDTO currentNewDtoUser;
+        for (User p : allUsers) {
+            currentNewDtoUser = new UserDTO(p);
+            dtoAllUserList.add(currentNewDtoUser);
+        }
+        return dtoAllUserList;
     }
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
+                .map(user -> {
+                    // activate given user for the registration key.
+                    user.setActivated(true);
+                    user.setActivationKey(null);
+                    log.debug("Activated user: {}", user);
+                    return user;
+                });
     }
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
         log.debug("Reset user password for reset key {}", key);
         return userRepository.findOneByResetKey(key)
-            .filter(user -> user.getResetDate().isAfter(Instant.now().minusSeconds(86400)))
-            .map(user -> {
-                user.setPassword(passwordEncoder.encode(newPassword));
-                user.setResetKey(null);
-                user.setResetDate(null);
-                return user;
-            });
+                .filter(user -> user.getResetDate().isAfter(Instant.now().minusSeconds(86400)))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    user.setResetKey(null);
+                    user.setResetDate(null);
+                    return user;
+                });
     }
 
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmailIgnoreCase(mail)
-            .filter(User::getActivated)
-            .map(user -> {
-                user.setResetKey(RandomUtil.generateResetKey());
-                user.setResetDate(Instant.now());
-                return user;
-            });
+                .filter(User::getActivated)
+                .map(user -> {
+                    user.setResetKey(RandomUtil.generateResetKey());
+                    user.setResetDate(Instant.now());
+                    return user;
+                });
     }
 
     public User registerUser(UserDTO userDTO, String password) {
@@ -124,9 +139,9 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser){
+    private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
-             return false;
+            return false;
         }
         userRepository.delete(existingUser);
         userRepository.flush();
@@ -154,10 +169,10 @@ public class UserService {
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO.getAuthorities().stream()
-                .map(authorityRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
+                    .map(authorityRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
         userRepository.save(user);
@@ -176,17 +191,17 @@ public class UserService {
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(user -> {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                if (email != null) {
-	                user.setEmail(email.toLowerCase());
-                }
-                user.setLangKey(langKey);
-                user.setImageUrl(imageUrl);
-                log.debug("Changed Information for User: {}", user);
-            });
+                .flatMap(userRepository::findOneByLogin)
+                .ifPresent(user -> {
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    if (email != null) {
+                        user.setEmail(email.toLowerCase());
+                    }
+                    user.setLangKey(langKey);
+                    user.setImageUrl(imageUrl);
+                    log.debug("Changed Information for User: {}", user);
+                });
     }
 
     /**
@@ -197,30 +212,38 @@ public class UserService {
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
-            .findById(userDTO.getId()))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(user -> {
-                user.setLogin(userDTO.getLogin().toLowerCase());
-                user.setFirstName(userDTO.getFirstName());
-                user.setLastName(userDTO.getLastName());
-                if (userDTO.getEmail() != null) {
-                    user.setEmail(userDTO.getEmail().toLowerCase());
-                }
-                user.setImageUrl(userDTO.getImageUrl());
-                user.setActivated(userDTO.isActivated());
-                user.setLangKey(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
-                managedAuthorities.clear();
-                userDTO.getAuthorities().stream()
-                    .map(authorityRepository::findById)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(managedAuthorities::add);
-                log.debug("Changed Information for User: {}", user);
-                return user;
-            })
-            .map(UserDTO::new);
+                .findById(userDTO.getId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(user -> {
+                    user.setLogin(userDTO.getLogin().toLowerCase());
+                    user.setFirstName(userDTO.getFirstName());
+                    user.setLastName(userDTO.getLastName());
+                    if (userDTO.getEmail() != null) {
+                        user.setEmail(userDTO.getEmail().toLowerCase());
+                    }
+                    user.setImageUrl(userDTO.getImageUrl());
+                    user.setActivated(userDTO.isActivated());
+                    user.setLangKey(userDTO.getLangKey());
+                    Set<Authority> managedAuthorities = user.getAuthorities();
+                    managedAuthorities.clear();
+                    userDTO.getAuthorities().stream()
+                            .map(authorityRepository::findById)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .forEach(managedAuthorities::add);
+
+//                List<Movement> managedMovs = user.getMovementList();
+//                managedMovs.clear();
+//                userDTO.getMovementList().stream()
+//                        .map(movementRepository::getMovementById)
+//                        .filter(Optional::isPresent)
+//                        .map(Optional::get)
+//                        .forEach(managedMovs::add);
+                    log.debug("Changed Information for User: {}", user);
+                    return user;
+                })
+                .map(UserDTO::new);
     }
 
     public void deleteUser(String login) {
@@ -230,18 +253,75 @@ public class UserService {
         });
     }
 
+    //    @Override
+    @Transactional
+    public User updMovement(Long userId, List<Integer> movementList) {
+
+        User user;
+        List<Movement> mList = new ArrayList<>();
+
+        if (userRepository.findById(userId).isPresent()) {
+            user = userRepository.findById(userId).get();
+        } else
+            return null;
+
+
+        if (user.getMovementList() != null) {
+            user.getMovementList().clear();
+            userRepository.flush();
+        } else {
+            user.setMovementList(new ArrayList<>());
+        }
+       // if (user.getMovementList() == null) {
+            for (Integer m : movementList) {
+                Movement mov = movementRepository.findById(m).get();
+                if (mov != null) {
+                    mList.add(mov);
+                }
+            }
+            user.setMovementList(mList);
+        //}
+
+//        if (user.getAuthorities() != null) {
+//            user.getAuthorities().clear();
+//            userRepository.flush();
+//        } else {
+//            user.setAuthorities(new HashSet<>());
+//        }
+//        if (user.getAuthorities() == null) {
+//
+//            Set<String> authStr = userDTO.getAuthorities();
+//            Set<Authority> authSet = new HashSet<>();
+//
+//            for (String a : authStr) {
+//                Authority auth = authorityRepository.findByName(a);
+//                if (auth != null) {
+//                    authSet.add(auth);
+//                }
+//            }
+//            user.setAuthorities(authSet);
+//
+//            user.setLogin(userDTO.getLogin());
+//            user.setPassword(userDTO.getPassword());
+//            user.setCreatedDate(userDTO.getCreatedDate());
+//        }
+
+        return userRepository.save(user);
+//        return user;
+    }
+
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils.getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(user -> {
-                String currentEncryptedPassword = user.getPassword();
-                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                    throw new InvalidPasswordException();
-                }
-                String encryptedPassword = passwordEncoder.encode(newPassword);
-                user.setPassword(encryptedPassword);
-                log.debug("Changed password for User: {}", user);
-            });
+                .flatMap(userRepository::findOneByLogin)
+                .ifPresent(user -> {
+                    String currentEncryptedPassword = user.getPassword();
+                    if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
+                        throw new InvalidPasswordException();
+                    }
+                    String encryptedPassword = passwordEncoder.encode(newPassword);
+                    user.setPassword(encryptedPassword);
+                    log.debug("Changed password for User: {}", user);
+                });
     }
 
     @Transactional(readOnly = true)
@@ -289,15 +369,16 @@ public class UserService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
-            .forEach(user -> {
-                log.debug("Deleting not activated user {}", user.getLogin());
-                userRepository.delete(user);
-            });
+                .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+                .forEach(user -> {
+                    log.debug("Deleting not activated user {}", user.getLogin());
+                    userRepository.delete(user);
+                });
     }
 
     /**
      * Gets a list of all the authorities.
+     *
      * @return a list of all the authorities.
      */
     public List<String> getAuthorities() {
