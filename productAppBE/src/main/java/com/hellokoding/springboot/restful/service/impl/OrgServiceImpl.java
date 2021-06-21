@@ -25,13 +25,13 @@ public class OrgServiceImpl implements OrgService {
     }
 
     @Override
-    public List<OrgDto> search(String q) {
+    public List<OrgDto> search(String q, Integer mov) {
 
         Set<OrgDto> fooSet = new TreeSet<>();
         String dtoName;
         List<Org> orgSearchList = new ArrayList<>();
 
-        orgSearchList = orgRepository.findByOrgName("%" + q + "%"); //findByNameRusStartsWithIgnoreCase(q);
+        orgSearchList = orgRepository.findByOrgName("%" + q + "%", mov); //findByNameRusStartsWithIgnoreCase(q);
 
         System.out.println("=====================================");
         System.out.println(orgSearchList);

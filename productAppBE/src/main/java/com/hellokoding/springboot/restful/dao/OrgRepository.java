@@ -15,11 +15,13 @@ public interface OrgRepository extends JpaRepository <Org, Integer> {
 //    List<Org> findByOrgName(String name);
 
     @Query("from Org as org " +
+            "join org.movementList oML " +
             "where (lower(org.name) like lower(:name) " +
             "or lower(org.nameRus) like lower(:name) " +
             "or lower(org.nameEng) like lower(:name) " +
             "or lower(org.abbr) like lower(:name) " +
             "or lower(org.abbrRus) like lower(:name) " +
-            "or lower(org.abbrEng) like lower(:name))")
-    List<Org> findByOrgName(String name);
+            "or lower(org.abbrEng) like lower(:name))" +
+            "and oML.id = :movement")
+    List<Org> findByOrgName(String name, Integer movement);
 }

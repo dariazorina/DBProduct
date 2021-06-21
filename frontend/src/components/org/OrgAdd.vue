@@ -22,12 +22,11 @@
 
             </div>
 
-            <form>
-
-
+            <form class="formCreation">
                 <div class="form-group row align-items-center">
                     <div class="col-12" style="background-color: gainsboro">
-                        <label class="col-12 col-form-label labelInCreation">Временная страничка упрощенного добавления организации. Для
+                        <label class="col-12 col-form-label labelInCreation">Временная страничка упрощенного добавления
+                            организации. Для
                             тестирования позиций в разделе "Персона"</label>
                     </div>
                 </div>
@@ -38,6 +37,30 @@
                     <label for="add-name" class="col-1 col-form-label labelInCreation">Название</label>
                     <div class="col-4">
                         <input type="text" class="form-control" id="add-name" v-model="org.name"/>
+                    </div>
+                </div>
+
+
+                <div class="form-row align-items-center" style="background-color: transparent">
+                    <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
+                        <div class="col-12" style="background-color: transparent">
+                            <label>Текущее движение: {{currentUserMovement.name}} </label><br>
+                        </div>
+                        <label><b>Добавить дополнительное движение:</b></label>
+                        <div class="col-12" style="background-color: transparent">
+                            <div v-for="(movement, index) in allMovements">
+                                <input v-bind:value="movement.id" name="movement.name" type="checkbox"
+                                       v-model="checkedMovements"/>
+                                <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
+                                <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else class="col-12">
+                        <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
+                                class="btn btn-info">Добавить дополнительное движение
+                        </button>
                     </div>
                 </div>
 
@@ -60,6 +83,7 @@
 <script>
 
     import apiOrg from "./org-api";
+    import apiMovement from "./../movement/movement-api";
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
@@ -76,11 +100,34 @@
             validationErrors: {},
             hasError: false,
 
-            org: {},
-            movements: [],
+            org: {movementList: []},
+            allMovements: [],
+            isAdmin: null,
+            addAdditionalMovementFlag: false,
+            currentUserMovement: '',
+            checkedMovements: []
         }),
 
+        mounted() {
+            this.isAdmin = localStorage.getItem('isAdmin');
+
+            apiMovement.getAllMovements(response => {
+                // this.getLoggedIn();
+                this.allMovements = response.data;
+                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+
+                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+                let ddd = this.allMovements.indexOf(currentIndex);
+                this.allMovements.splice(ddd, 1);
+                //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            });
+
+        },
+
         methods: {
+            addAdditionalMovement() {
+                this.addAdditionalMovementFlag = true;
+            },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -96,7 +143,7 @@
 
             formValidate() {
                 if (this.org.name != null) {
-                    if (this.org.name.length != 0) {
+                    if (this.org.name.length !== 0) {
                         this.addStatus('add-name', (!this.org.name));
                     } else this.hasError = true;
                 } else this.hasError = true;
@@ -110,13 +157,26 @@
                 this.hasError = false;
 
                 if (this.formValidate()) {
+
+                    let i = 0;
+                    for (; i < this.checkedMovements.length; i++) {
+                        this.org.movementList[i] = {
+                            "id": this.checkedMovements[i]
+                        };
+                    }
+
+                    this.org.movementList[i] = {
+                        "id": this.currentUserMovement.id
+                    };
+
                     apiOrg.create(this.org, r => {
-                        router.push('/article')
-                    }, r => {
-                        this.errorFlag = true;
-                        this.errors.push(r);
-                        console.log(r);
-                    });
+                            router.push('/article')
+                        },
+                        r => {
+                            this.errorFlag = true;
+                            this.errors.push(r);
+                            console.log(r);
+                        });
                 }
             },
         },

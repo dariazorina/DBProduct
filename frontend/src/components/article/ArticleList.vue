@@ -686,14 +686,14 @@
                     this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[i].text + 'FilterId');
                 }
                 this.currentFilterItems = [];
-                api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
+                api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                     this.entries = r.data;
                 });
             },
 
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
-                this.currentFilterItems.push(item);  //push item(item: {id, content}
+               /////// this.currentFilterItems.push(item);  //push item(item: {id, content}
 
                 let key = this.filterTableFields.find(x => x === this.currentFilterField).key;
                 this.filterClearButtonActivity(false, this.filterTableFieldsForRequest[key].text + 'FilterId');
@@ -1151,13 +1151,13 @@
                 }
 
                 if (!isFilterActive && this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
-                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
+                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                         this.entries = r.data;
                     });
                 } else {
                     if (!isFilterActive && this.searchKey === "") {    //s-
                         if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) { //ch+
-                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                                 this.entries = r.data;
                             });
                         }
@@ -1186,12 +1186,12 @@
 
                             } else {  //just search
                                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                    api.searchText(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                                    api.searchText(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                                         this.entries = r.data;
                                     });
                                 } else {
                                     // console.log("TEXT SEARCH");
-                                    api.searchText(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                    api.searchText(this.searchKey, -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                                         this.entries = r.data;
                                         console.log("filter all ===++=====", this.filterItems, this.entries);
                                     });
@@ -1221,12 +1221,12 @@
 
                             } else {  //just search
                                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                    api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                                    api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                                         this.entries = r.data;
                                     });
                                 } else {
                                     // console.log("TEXT SEARCH");
-                                    api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, r => {
+                                    api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                                         this.entries = r.data;
                                         console.log("filter all ===++=====", this.filterItems, this.entries);
                                     });
@@ -1263,11 +1263,11 @@
                 }
                 console.log("FFFFFFFFFFFFFFlag", singleFilter);
                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate, r => {
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                         this.entries = r.data;
                     });
                 } else {
-                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate, r => {
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                         this.entries = r.data;
                         console.log("filter all =============", this.filterItems, this.entries);
                         //console.log("COOOOKIES", this.entries.token);
@@ -1329,7 +1329,7 @@
             //         this.errors.push(error)
             //     })
 
-            api.searchPeriodAndStatus(-1, this.startDate, this.endDate, r => {
+            api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                 this.entries = r.data;
                 console.log(this.entries);
                 for (let i = 0; i < this.entries.length; i++) {

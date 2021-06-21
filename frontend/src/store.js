@@ -76,7 +76,9 @@ export default new Vuex.Store({
                         commit('login_success', {
                             userName: user,
                             userPass: password,
-                            account: {}
+                            account: {
+                                authorities: [],
+                            }
                         });
 
                         resolve(response);

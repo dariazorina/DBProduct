@@ -11,6 +11,6 @@ public interface OrgService {
     Optional<Org> findById(Integer id);
     Org save(Org stock);
     void deleteById(Integer id);
-    List<OrgDto> search(String q);
+    List<OrgDto> search(String q, Integer mov);
     List<Org> findByIds(List<Integer> idList);
 }

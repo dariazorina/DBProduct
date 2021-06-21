@@ -3,7 +3,13 @@
 <!--        <label>Комментарий</label>-->
         <div class="form-row" style="background-color: transparent">
             <div class="col-md-12" style="background-color: transparent; margin-top: -4px">
-                <input class="form-control" id="add-linkS" type="text" :value="value" v-on="listeners" placeholder="Для сохранения введенных данных нажмите 'Tab'"/>
+
+                <input class="form-control"
+                       id="add-linkS"
+                       type="text"
+                       :value="value"
+                       v-on="listeners"
+                       placeholder="Для сохранения введенных данных нажмите 'Tab'"/>
             </div>
         </div>
     </div>
@@ -30,10 +36,11 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .input {
-        width: 100%;
-        padding: 8px 10px;
-        border: 1px solid #32485F;
-    }
-</style>
+<!--<style lang="scss" scoped>-->
+<!--    .input {-->
+<!--        width: 100%;-->
+<!--        padding: 8px 10px;-->
+<!--        border: 1px solid #32485F;-->
+<!--    }
+</style>-->
+

@@ -3,10 +3,21 @@
 export default store => {
     store.subscribe((mutation, state) => {
         if (mutation.type === "login_success") {
-           // alert("Login succs!");
+            // alert("Login succs!");
+            //console.log("^^^^^^^^^^^^^^^^^^^^^^^^^", mutation.payload.account.authorities.length);
             console.log(store, mutation, state);
+
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userName', mutation.payload.userName);
+
+            localStorage.setItem('isAdmin', 'false');
+
+            mutation.payload.account.authorities.forEach(function (item, i) {
+                console.log(i + ": " + item);
+                if (mutation.payload.account.authorities[i] === 'ROLE_ADMIN') {
+                    localStorage.setItem('isAdmin', 'true');
+                }
+            });
 
             if (typeof mutation.payload.account.movementList !== 'undefined' && mutation.payload.account.movementList !== null) {
                 if (mutation.payload.account.movementList.length < 2) {
@@ -21,9 +32,9 @@ export default store => {
             let now = moment();
 
             //   console.log(`Now: ${now.format('ll')}`);
-           localStorage.setItem('endDate', now.format('YYYY-MM-DD'));
-           now.subtract('1', 'months');
-           localStorage.setItem('startDate', now.format('YYYY-MM-DD'));
+            localStorage.setItem('endDate', now.format('YYYY-MM-DD'));
+            now.subtract('1', 'months');
+            localStorage.setItem('startDate', now.format('YYYY-MM-DD'));
         }
 
         if (mutation.type === "logout_success") {
@@ -35,6 +46,7 @@ export default store => {
             localStorage.removeItem('endDate');
             localStorage.removeItem('movementSingle');
             localStorage.removeItem('movement');
+            localStorage.removeItem('isAdmin');
         }
 
         if (mutation.type === "movement_selection") {

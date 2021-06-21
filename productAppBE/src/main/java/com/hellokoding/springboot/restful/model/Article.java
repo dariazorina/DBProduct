@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +20,12 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "movement_id", nullable = false)
-//    private Movement movement;
-
     @ManyToMany
     @JoinTable(
             name = "article_movement",
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
-    private List<Movement> movementList;
+    private List<Movement> movementList = new ArrayList<Movement>();
 
 
 

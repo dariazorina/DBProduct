@@ -41,7 +41,7 @@
         data() {
             return {
                 componentKey: 0,
-                renderComponent: true,
+               // renderComponent: true,
                 newInputText: '',
             }
         },
@@ -74,11 +74,11 @@
                 }
             }
         },
-        computed: {
-            inputItems() {
-                console.log("computed inputItems", this.items);
-                return this.items;
-            }
-        },
+        // computed: {
+        //     inputItems() {
+        //         console.log("computed inputItems", this.items);
+        //         return this.items;
+        //     }
+        // },
     }
 </script>

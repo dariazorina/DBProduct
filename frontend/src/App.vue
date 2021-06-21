@@ -20,13 +20,12 @@
             |
             <router-link to="/mtype">Material Type</router-link>
 
-            <template v-if="role==='ROLE_ADMIN'">                |
+            <template v-if="isAdmin==='true'"> |
                 <router-link to="/uadmin">User Administration</router-link>
             </template>
 
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
-        <!--        <button v-if="loggedInFlag" v-on:click="logout">LOGOUT</button>-->
         <router-view/>
         <!--        <router-view :hellomsg="msg"></router-view>-->
     </div>
@@ -40,9 +39,8 @@
         name: 'app',
         data() {
             return {
-                // loggedInFlag: false,
                 msg: 'Welcome to your Vue.js powered Spring Boot App',
-                role: 'ROLE_ADMIN'
+                isAdmin: ''
             }
         },
         methods: {
@@ -52,20 +50,11 @@
             //     });
             //     console.log("LOGOUT");
             // },
-
-            // getLoggedIn() {
-            //     this.loggedInFlag = this.$store.getters.isLoggedIn;
-            // }
         },
-        // mounted() {
-        //     this.loggedInFlag = this.$store.getters.isLoggedIn;
-        //     console.log("MOUNTED " + this.loggedInFlag);
-        // },
-        // computed(){
-        //     this.loggedInFlag = this.$store.getters.isLoggedIn;
-        //     console.log("COMPUTED " + this.loggedInFlag);
-        // }
 
+        mounted() {
+            this.isAdmin = localStorage.getItem('isAdmin');
+        },
     }
 </script>
 

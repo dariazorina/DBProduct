@@ -513,7 +513,7 @@
             },
         },
         mounted() {
-            api.getAllPersons(response => {
+            api.getAllPersons(localStorage.getItem('movement'), response => {
                 // this.persons = response.data;
                 this.entries = response.data;
                 // console.log("PERSONS", response.data)

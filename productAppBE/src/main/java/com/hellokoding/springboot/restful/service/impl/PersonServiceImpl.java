@@ -36,10 +36,10 @@ public class PersonServiceImpl implements PersonService {
 //        return personRepository.findAll();
 //    }
 
-    public List<NewPersonDto> findAll() {
+    public List<NewPersonDto> findAll(Integer mov) {
 
         List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
-        List<Person> allPerson = personRepository.findAll();
+        List<Person> allPerson = personRepository.findAllWithMovement(mov);
 
         // hack for org creation, for relase
 //        Random objGenerator = new Random();
@@ -216,11 +216,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<PersonDto> searchBySurname(String q) {
+    public List<PersonDto> searchBySurname(String q, Integer mov) {
 
-        List<Person> surnameSearchList = personRepository.findBySurnameStartsWithIgnoreCase(q);
-        List<Person> surnameRusSearchList = personRepository.findBySurnameRusStartsWithIgnoreCase(q);
-        List<Person> surnameEngSearchList = personRepository.findBySurnameEngStartsWithIgnoreCase(q);
+        List<Person> surnameSearchList = personRepository.findBySurnameAndMovement(q.toLowerCase() + "%", mov);//findBySurnameStartsWithIgnoreCase(q);
+        List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
+        List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
+
 
         Set<PersonDto> fooSet = new TreeSet<>();
         String dtoName;

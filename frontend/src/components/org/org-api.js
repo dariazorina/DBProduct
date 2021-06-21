@@ -55,8 +55,8 @@ export default {
             });
     },
 
-    searchOrg(searchKey, fn) {
-        AXIOS.get(`/org/search?q=` + encodeURIComponent(searchKey))
+    searchOrg(searchKey, mov, fn) {
+        AXIOS.get(`/org/search?q=` + encodeURIComponent(searchKey)  + `&mov=` + mov)
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response;

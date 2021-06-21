@@ -73,6 +73,12 @@ public class AccountAPI {
         User u = userService.updMovement(id, movements);
         return ResponseEntity.ok(u);
     }
+
+    @GetMapping("/role")  //not in use right now
+    public User getUserByLogin(@RequestParam(value = "login") String login){
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+        return user.orElse(null);
+    }
     /**
      * {@code POST  /register} : register the user.
      *

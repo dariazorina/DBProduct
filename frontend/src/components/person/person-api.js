@@ -7,15 +7,15 @@ const AXIOS = axios.create({
 });
 
 export default {
-    getAllPersons(fn) {
+    getAllPersons(mov, fn) {
         return AXIOS
-            .get(`/person`)
+            .get(`/person?mov=` + mov)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
                 // if (error.response !== undefined)
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
@@ -27,7 +27,7 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             });
     },
@@ -39,7 +39,7 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
@@ -51,7 +51,7 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
@@ -63,7 +63,7 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
@@ -75,40 +75,39 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
 
 
-    searchPerson(searchKey, fn) {
-        AXIOS.get(
-            `/person/searchBySurname?q=` + encodeURIComponent(searchKey)
-        ).then((response) => {
-            if (response.status >= 200 && response.status < 300) {
-                return response;
+    searchPerson(searchKey, mov, fn) {
+        AXIOS.get(`/person/searchBySurname?q=` + encodeURIComponent(searchKey) + `&mov=` + mov)
+            .then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response;
 
-            } else {
-                let error = new Error(response.statusText);
-                error.response = response;
-                throw error
-            }
+                } else {
+                    let error = new Error(response.statusText);
+                    error.response = response;
+                    throw error
+                }
+            })
+            .then((response) => {
+                // if (response.headers['content-type'] !== 'application/json') {
+                //     let error = new Error('Некорректный ответ от сервера');
+                //     error.response = response;
+                //     throw error
+                // }
+                return response.data;
 
-        }).then((response) => {
-            // if (response.headers['content-type'] !== 'application/json') {
-            //     let error = new Error('Некорректный ответ от сервера');
-            //     error.response = response;
-            //     throw error
-            // }
-            return response.data;
-
-        }).then((json) => {
+            }).then((json) => {
             fn(json);
 
         }).catch((error) => {
             console.log(error);
             if (error.response.status === 401) {
-                router.push('/login');
+                this.error401Handling();
             }
         })
     },
@@ -119,8 +118,13 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             });
+    },
+
+    error401Handling() {
+        localStorage.clear();
+        router.push('/login');
     },
 }

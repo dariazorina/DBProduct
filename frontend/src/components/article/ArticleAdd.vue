@@ -42,7 +42,7 @@
 
                 <form class="formCreation">
                     <div class="form-row align-items-center" style="background-color: transparent">
-                        <div v-if="role==='ROLE_ADMIN'||addAdditionalMovementFlag">
+                        <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
                             <div class="col-12" style="background-color: transparent">
                                 <label>Текущее движение: {{currentUserMovement.name}} </label><br>
                             </div>
@@ -150,6 +150,12 @@
 
                                 <CreatedList :items="links"
                                              :isWithIdContentAdded="true"
+                                             @update-item="updateLink"/>
+
+<!--                                костылище редкой величины-->
+                                <CreatedList :items="links"
+                                             :isWithIdContentAdded="true"
+                                             hidden="true"
                                              @update-item="updateLink"/>
 
                             </div>
@@ -556,8 +562,8 @@
 
         data: () => ({
             test: "articleProp",
-            addTagOnKeys: [13, 9],
-            // addTagOnKeys: [],  //to prevent enter in input-tag))
+            //addTagOnKeys: [13, 9], //enter and tab
+            addTagOnKeys: [],  //setting it empty is to prevent manual enter in input-tag))
             descriptionLimit: 60,
 
             personEntries: [],
@@ -655,9 +661,8 @@
             },
 
             attachedFiles: [],
-            loggedInFlag: false,
             loggedName: null,
-            role: null,
+            isAdmin: null,
             uploadFilesCheckBoxValue: false,
             uploadMode: false,
             uploadedFiles: [],
@@ -1136,8 +1141,6 @@
             },
 
             updateArticle() {
-
-                //todo!!! если id языков в таблице будут не подряд и не с 1 - будет ошибка
                 this.article.language = {
                     "id": this.selectedL
                 };
@@ -1205,16 +1208,10 @@
             getLoggedIn() {
                 //this.checkedMovements.push(localStorage.getItem('movement'));  //need if we want to show current movement in checkbox list
                 //console.log("PUSHED CHECKED MOV");
-
                 //this.toKey++;
 
-                this.loggedInFlag = localStorage.getItem('isLoggedIn');
                 this.loggedName = localStorage.getItem('userName');
-                this.role = 'ROLE_USER';
-
-                // this.role = 'ROLE_ADMIN';
-                //to get user's role todo
-                //read stackoverflow or get user id from user_cred and get user role by id from user_auth
+                this.isAdmin = localStorage.getItem('isAdmin');
             },
 
             finalConnectionListCreation(list, finalList) {
@@ -1493,7 +1490,6 @@
                     this.article = r.data;
                     console.log("article EDIT!", this.article);
 
-                    // this.selectedM = this.article.movement.id; //to select necessary value from article
                     this.selectedL = this.article.language.id;
                     this.selectedS = this.article.status;
                     // console.log("STATUS", this.article.status);
@@ -1909,7 +1905,7 @@
                         if (this.isLoading) return;
                         this.isLoading = true;
 
-                        apiPerson.searchPerson(val, r => {
+                        apiPerson.searchPerson(val, localStorage.getItem('movement'), r => {
                             this.personEntries = r;
                             //  console.log("****", this.entries);
                             this.isLoading = false;
@@ -1956,7 +1952,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, r => {
+                        apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             // console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -1979,7 +1975,7 @@
                         if (this.isLoadingMaterial) return;
                         this.isLoadingMaterial = true;
 
-                        api.searchMaterial(val, r => {
+                        api.searchMaterial(val, localStorage.getItem('movement'), r => {
                             this.materialEntries = r;
                             console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;

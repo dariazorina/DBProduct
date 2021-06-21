@@ -34,25 +34,26 @@ public class PersonAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping("/searchBySurname")
-    public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q) {
-        List<PersonDto> search = personService.searchBySurname(q);   //used for ex in material creation
+    public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q,
+                                                  @RequestParam(name = "mov", required = true) Integer mov) {
+        List<PersonDto> search = personService.searchBySurname(q, mov);   //used for ex in material creation
         return ResponseEntity.ok(search);
     }
 
 
     @GetMapping("/search")
     public ResponseEntity<List<NewPersonDto>> search(@RequestParam(name = "hash", required = false) List<String> hash,
-                                                   @RequestParam(name = "surname", required = false) List<String> surname,
-                                                   @RequestParam(name = "org", required = false) List<String> org,
-                                                   @RequestParam(name = "location", required = false) List<String> location) {
+                                                     @RequestParam(name = "surname", required = false) List<String> surname,
+                                                     @RequestParam(name = "org", required = false) List<String> org,
+                                                     @RequestParam(name = "location", required = false) List<String> location) {
 
         List<NewPersonDto> searchResult = personService.search(hash, surname, org, location);
         return ResponseEntity.ok(searchResult);
     }
 
     @GetMapping
-    public ResponseEntity<List<NewPersonDto>> findAll() {
-        return ResponseEntity.ok(personService.findAll());
+    public ResponseEntity<List<NewPersonDto>> findAll(@RequestParam(name = "mov", required = false) Integer mov) {
+        return ResponseEntity.ok(personService.findAll(mov));
     }
 
     @PostMapping
@@ -124,11 +125,11 @@ public class PersonAPI {
         MediaType type = MediaType.APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
         Optional<String> extension;
 
-        try{
+        try {
 //            File uFile = null;
 //            uFile = maintainFileService.getDocument(123456L);
             bis = new ByteArrayInputStream(attachmentDTO.getContent());
-            String FN =  attachmentDTO.getName().replaceAll(",", ".");
+            String FN = attachmentDTO.getName().replaceAll(",", ".");
             extension = getExtensionByStringHandling(FN);
 
             String headerView = "inline; filename=" + FN;
@@ -160,14 +161,13 @@ public class PersonAPI {
 
                     case "fb2":
                     case "htm":
-                    case "html":{
+                    case "html": {
                         type = MediaType.TEXT_HTML;
                         break;
                     }
                 }
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.printf("Exception", e);
         }
 
@@ -186,15 +186,14 @@ public class PersonAPI {
         AttachmentDTO attachmentDTO = attachmentService.getAttachment(EntityType.PERSON, entityId, id);
 //        MediaType type = MediaType.APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
 
-        try{
+        try {
             bis = new ByteArrayInputStream(attachmentDTO.getContent());
-            String FN =  attachmentDTO.getName().replaceAll(",", ".");
+            String FN = attachmentDTO.getName().replaceAll(",", ".");
 
             String headerView = "attachment; filename=" + FN;
             headers.add("Content-Disposition", headerView);
 //            headers.add("Content-Description", "File Transfer");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.printf("Exception", e);
         }
         return ResponseEntity
@@ -203,7 +202,6 @@ public class PersonAPI {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(new InputStreamResource(bis));
     }
-
 
 
     //////////////////////utils/////////////////////////////////////////

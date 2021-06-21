@@ -26,8 +26,9 @@ public class OrgAPI {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<OrgDto>> search(@RequestParam(name = "q", required = true) String q) {
-        List<OrgDto> search = orgService.search(q);
+    public ResponseEntity<List<OrgDto>> search(@RequestParam(name = "q", required = true) String q,
+                                               @RequestParam(name = "mov", required = true) Integer mov) {
+        List<OrgDto> search = orgService.search(q, mov);
         return ResponseEntity.ok(search);
     }
 

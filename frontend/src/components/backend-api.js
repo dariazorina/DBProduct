@@ -15,6 +15,10 @@ export default {
         return AXIOS.get(`/user/` + userId);
     },
 
+    getUserByLogin(login){  //not in use right now
+        return AXIOS.get(`/role/` + login);
+    },
+
     getAllUsers() {
         return AXIOS.get(`/users`);
     },

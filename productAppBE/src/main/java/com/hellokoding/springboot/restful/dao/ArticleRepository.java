@@ -94,6 +94,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "left join a.locationConnections aLo " +
             "left join aLo.location aLoc " +
             "join a.language l " +
+            "join a.movementList aML " +
             "where ((:org is null  or lower(aOrg.nameRus) like :org) " +
             "and (:location is null or lower(aLoc.country) like :location) " +
             "and (:author is null or lower(aP.surnameRus) like :author) " +
@@ -103,9 +104,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and (:description is null or lower(a.description) like :description) " +
             "and (:lang is null or lower(l.name) like :lang) " +
             "and (:title is null or lower(a.titleRus) like :title) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate))")
-    Set<Article> findByFiltersAndDate(String title, String hashTag, String author, String org, String location,
-                                      String lang, String comment, String text, String description, Date startDate, Date endDate);
+    Set<Article> findByFiltersAndDateAndMovement(String title, String hashTag, String author, String org, String location,
+                                      String lang, String comment, String text, String description, Date startDate, Date endDate, Integer movement);
 
     @Query("select distinct a " +
             "from Article as a " +
@@ -118,6 +120,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "left join a.locationConnections aLo " +
             "left join aLo.location aLoc " +
             "join a.language l " +
+            "join a.movementList aML " +
             "where ((:org is null  or lower(aOrg.nameRus) like :org) " +
             "and (:location is null or lower(aLoc.country) like :location) " +
             "and (:author is null or lower(aP.surnameRus) like :author) " +
@@ -127,77 +130,100 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and (:description is null or lower(a.description) like :description) " +
             "and (:lang is null or lower(l.name) like :lang) " +
             "and (:title is null or lower(a.titleRus) like :title) " +
+            "and (aML.id = :movement) " +
             "and a.status in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate))")
-    Set<Article> findByFiltersAndDateAndStatus(String title, String hashTag, String author, String org, String location,
-                                               String lang, String comment, String text, String description, List<Integer> status, Date startDate, Date endDate);
+    Set<Article> findByFiltersAndDateAndStatusAndMovement(String title, String hashTag, String author, String org, String location,
+                                               String lang, String comment, String text, String description, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     //////////////MATERIALS///////////
+//    @Query("from Article as a " +
+//            "where (lower(a.title) like lower(:title) " +
+//            "or lower(a.titleRus) like lower(:title))")
+//    List<Article> findMaterialByTitle(String title);
+
     @Query("from Article as a " +
+            "join a.movementList aML " +
             "where (lower(a.title) like lower(:title) " +
-            "or lower(a.titleRus) like lower(:title))")
-    List<Article> findMaterialByTitle(String title);
+            "or lower(a.titleRus) like lower(:title)) " +
+            "and (aML.id = :movement)")
+    List<Article> findMaterialByTitleAndMovement(String title, Integer movement);
 
 
     ////////////TITLE///////////////
     //search in title (title, titleRus simultaneously), "contains" +date
     @Query("from Article as a " +
+            "join a.movementList aML " +
             "where (lower(a.title) like lower(:title) " +
             "or lower(a.titleRus) like lower(:title)) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByTitleAndDate(String title, Date startDate, Date endDate);
+    List<Article> findByTitleAndDateAndMovement(String title, Date startDate, Date endDate, Integer movement);
 
     //    //search status+title+date
     @Query("from Article a " +
+            "join a.movementList aML " +
             "where (lower(a.title) like lower(:title) or lower(a.titleRus) like lower(:title)) " +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByTitleAndStatusAndDate(@Param("title") String title, @Param("status") List<Integer> status, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<Article> findByTitleAndStatusAndDateAndMovement(@Param("title") String title, @Param("status") List<Integer> status, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Integer movement);
 
 
     /////////////////////DESCR///////////////////////
     //search in description, "contains" +date
     @Query("from Article as a " +
+            "join a.movementList aML " +
             "where lower(a.text) like lower(:text) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    Set<Article> findByTextAndDate(String text, Date startDate, Date endDate);
+    Set<Article> findByTextAndDateAndMovement(String text, Date startDate, Date endDate, Integer movement);
 
     //search status+description+date
     @Query("from Article a " +
+            "join a.movementList aML " +
             "where lower(a.text) like lower(:text) " +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    Set<Article> findByTextAndStatusAndDate(String text, List<Integer> status, Date startDate, Date endDate);
+    Set<Article> findByTextAndStatusAndDateAndMovement(String text, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     /////////////////////DESCR///////////////////////
     //search in description, "contains" +date
     @Query("from Article as a " +
+            "join a.movementList aML " +
             "where lower(a.description) like lower(:description) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    Set<Article> findByDescriptionAndDate(String description, Date startDate, Date endDate);
+    Set<Article> findByDescriptionAndDateAndMovement(String description, Date startDate, Date endDate, Integer movement);
 
     //search status+description+date
     @Query("from Article a " +
+            "join a.movementList aML " +
             "where lower(a.description) like lower(:description) " +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    Set<Article> findByDescriptionAndStatusAndDate(String description, List<Integer> status, Date startDate, Date endDate);
+    Set<Article> findByDescriptionAndStatusAndDateAndMovement(String description, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     /////////////////////////LANG//////////////
 //    //search in language, "starts with"
-    @Query("select a from Article as a join a.language l where lower(l.name) like lower(:lang) " +
+    @Query("select a from Article as a join a.movementList aML join a.language l where lower(l.name) like lower(:lang) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByLangAndDate(String lang, Date startDate, Date endDate);
+    List<Article> findByLangAndDateAndMovement(String lang, Date startDate, Date endDate, Integer movement);
 
     //    //search in language+status, "starts with"
     @Query("from Article a " +
+            "join a.movementList aML " +
             "where lower(a.language.name) like lower(:lang) " +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByLangAndStatusAndDate(String lang, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByLangAndStatusAndDateAndMovement(String lang, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     ///////////HASH/////////////
@@ -206,21 +232,25 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.hashtagList h " +
             "join h.assigned_hashtag assh " +
+            "join a.movementList aML " +
             "where h.assigned_hashtag = assh.id " +
             "and lower(assh.content) like lower(:hashTag)" +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByHashAndDate(String hashTag, Date startDate, Date endDate);
+    List<Article> findByHashAndDateAndMovement(String hashTag, Date startDate, Date endDate, Integer movement);
 
     //    //search status+hash+date
     @Query("select distinct a " +   //to remove duplicate if item has several hashtags start with search word
             "from Article a " +
             "join a.hashtagList h " +
             "join h.assigned_hashtag assh " +
+            "join a.movementList aML " +
             "where h.assigned_hashtag = assh.id " +
             "and lower(assh.content) like lower(:hashTag)" +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByHashAndStatusAndDate(String hashTag, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByHashAndStatusAndDateAndMovement(String hashTag, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     ////////////AUTHOR//////////
@@ -229,35 +259,43 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.personConnections aL " +
             "join aL.person aP " +
+            "join a.movementList aML " +
             "where (lower(aP.surname) like lower(:author) " +
             "or lower(aP.surnameRus) like lower(:author) ) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByAuthorAndDate(String author, Date startDate, Date endDate);
+    List<Article> findByAuthorAndDateAndMovement(String author, Date startDate, Date endDate, Integer movement);
 
     //    //search status+author+date
     @Query("select distinct a " +
             "from Article a " +
             "join a.personConnections aL " +
             "join aL.person aP " +
+            "join a.movementList aML " +
             "where (lower(aP.surname) like lower(:author) " +
             "or lower(aP.surnameRus) like lower(:author)) " +
             "and a.status in :status " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByAuthorAndStatusAndDate(String author, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByAuthorAndStatusAndDateAndMovement(String author, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
     ////////////MISC////////////////
     //search status+misc+date
     @Query("from Article a " +
+            "join a.movementList aML " +
             "where lower(a.miscellany) like lower(:miscellany) " +
             "and a.status in (:status) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByMiscellanyAndStatusAndDate(String miscellany, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByMiscellanyAndStatusAndDateAndMovement(String miscellany, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
     //search in miscellany, "contains" +date
     @Query("from Article as a " +
+            "join a.movementList aML " +
             "where lower(a.miscellany) like lower(:miscellany) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByMiscellanyAndDate(String miscellany, Date startDate, Date endDate);
+    List<Article> findByMiscellanyAndDateAndMovement(String miscellany, Date startDate, Date endDate, Integer movement);
 
 
     /////////////ORG/////////////
@@ -266,21 +304,25 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.orgConnections aL " +
             "join aL.org aP " +
+            "join a.movementList aML " +
             "where (lower(aP.name) like lower(:org) " +
             "or lower(aP.nameRus) like lower(:org)) " +
             "and a.status in :status " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByOrgAndStatusAndDate(String org, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByOrgAndStatusAndDateAndMovement(String org, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
     //    //search in org, "contains" +date
     @Query("select distinct a " +
             "from Article a " +
             "join a.orgConnections aL " +
             "join aL.org aP " +
+            "join a.movementList aML " +
             "where (lower(aP.name) like lower(:org) " +
             "or lower(aP.nameRus) like lower(:org) ) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByOrgAndDate(String org, Date startDate, Date endDate);
+    List<Article> findByOrgAndDateAndMovement(String org, Date startDate, Date endDate, Integer movement);
 
     /////////////////LOCATION
     //    //search status+location+date
@@ -288,10 +330,12 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.locationConnections aL " +
             "join aL.location aP " +
+            "join a.movementList aML " +
             "where (lower(aP.country) like lower(:location)) " +
             "and a.status in :status " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByLocationAndStatusAndDate(String location, List<Integer> status, Date startDate, Date endDate);
+    List<Article> findByLocationAndStatusAndDateandMovement(String location, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     //    //search in org, "contains" +date
@@ -299,9 +343,11 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.locationConnections aL " +
             "join aL.location aP " +
+            "join a.movementList aML " +
             "where (lower(aP.country) like lower(:location)) " +
+            "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
-    List<Article> findByLocationAndDate(String location, Date startDate, Date endDate);
+    List<Article> findByLocationAndDateAndMovement(String location, Date startDate, Date endDate, Integer movement);
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -312,8 +358,25 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Set<Article> findByDateAndStatus(List<Integer> status, Date startDate, Date endDate);
 
 
-    //search date range
+    @Query("from Article a " +
+            "join a.movementList aML " +
+            "where a.status in :status " +
+            "and (aML.id = :movement) " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    Set<Article> findByDateAndStatusAndMovement(List<Integer> status, Date startDate, Date endDate, Integer movement);
+
+
+//    //search date range
     Set<Article> findAllByDateBetween(Date startDate, Date endDate);
+
+    @Query("select distinct a " +
+            "from Article a " +
+            "join a.movementList aMM " +
+//            "join fetch a.movementList aMM " +
+//            "left join fetch aMM.content b " +
+            "where (aMM.id = :movement) " +
+            "and (a.date >=:startDate and a.date <= :endDate)")
+    Set<Article> findAllByDateBetweenAndMovement(Date startDate, Date endDate, Integer movement);
 
     ///////////////////////////////////////////////////////////////////////
 

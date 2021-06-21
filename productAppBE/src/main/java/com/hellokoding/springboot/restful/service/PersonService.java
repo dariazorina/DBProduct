@@ -9,11 +9,15 @@ import java.util.Optional;
 
 public interface PersonService {
 
-    List<NewPersonDto> findAll();
+//    List<NewPersonDto> findAll();
+    List<NewPersonDto> findAll(Integer movement);
+
     Optional<NewPersonDto> findById(Integer id);
     List<NewPersonDto> findByIds(List<Integer> idList);
+
     void deleteById(Integer id);
-    List<PersonDto> searchBySurname(String q);
-    List<NewPersonDto> search(List<String> hash, List<String> author, List<String> org, List<String> location);
     Person save(NewPersonDto stock);
+
+    List<PersonDto> searchBySurname(String q, Integer mov);
+    List<NewPersonDto> search(List<String> hash, List<String> author, List<String> org, List<String> location);
 }

@@ -55,9 +55,10 @@ public class ArticleAPI {
                                                    @RequestParam(name = "miscellany", required = false) List<String> misc,
                                                    @RequestParam(name = "status", required = false) List<Integer> status,
                                                    @RequestParam(name = "startDate", required = false) String startDate,
-                                                   @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
+                                                   @RequestParam(name = "endDate", required = false) String endDate,
+                                                   @RequestParam(name = "mov", required = false) Integer movement) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.filter(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate);
+        List<ArticleDto> searchResult = articleService.filter(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate, movement);
         return ResponseEntity.ok(searchResult);
     }
 
@@ -66,9 +67,10 @@ public class ArticleAPI {
                                                    @RequestParam(name = "text", required = false) String text,
                                                    @RequestParam(name = "status", required = false) List<Integer> status,
                                                    @RequestParam(name = "startDate", required = false) String startDate,
-                                                   @RequestParam(name = "endDate", required = false) String endDate) throws ParseException {
+                                                   @RequestParam(name = "endDate", required = false) String endDate,
+                                                   @RequestParam(name = "mov", required = false) Integer movement) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.search(descr, text, status, startDate, endDate);
+        List<ArticleDto> searchResult = articleService.search(descr, text, status, startDate, endDate, movement);
         return ResponseEntity.ok(searchResult);
     }
 
@@ -79,8 +81,9 @@ public class ArticleAPI {
     }
 
     @GetMapping("/searchMaterial")
-    public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q) {
-        List<IdContentDto> search = articleService.searchMaterial(q);
+    public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q,
+                                                             @RequestParam(name = "mov", required = true) Integer mov) {
+        List<IdContentDto> search = articleService.searchMaterial(q, mov);
         return ResponseEntity.ok(search);
     }
 

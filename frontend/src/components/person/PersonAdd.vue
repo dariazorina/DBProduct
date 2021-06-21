@@ -30,7 +30,7 @@
 
         <form class="authorsFormCreation">
             <div class="form-row align-items-center" style="background-color: transparent">
-                <div v-if="role==='ROLE_ADMIN'||addAdditionalMovementFlag">
+                <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
                     <div class="col-12" style="background-color: transparent">
                         <label>Текущее движение: {{currentUserMovement.name}} </label><br>
                     </div>
@@ -543,7 +543,7 @@
 
         data: () => ({
             test: "personProp",
-            addTagOnKeys: [13, 9],
+            addTagOnKeys: [], ///[13, 9],
             descriptionLimit: 60,
             entries: [],
 
@@ -626,11 +626,10 @@
                 {text: 'На доработке', value: 2},
                 {text: 'Отработаны', value: 3},
             ],
-            loggedInFlag: false,
             loggedName: '',
             uploadedFiles: [],
             attachedFiles: [],
-            role: '',
+            isAdmin: 'false',
             addAdditionalMovementFlag: false,
             allMovements: [],
             currentUserMovement: '',
@@ -675,9 +674,8 @@
 
 
             getLoggedIn() {
-                this.loggedInFlag = this.$store.getters.isLoggedIn;
-                this.loggedName = this.$store.getters.getUserName;
-                this.role = 'ROLE_USER';
+                this.loggedName = this.$store.getters.getUserName;  //todo change to author, not current user
+                this.isAdmin = localStorage.getItem('isAdmin');
             },
 
             setHeight(event) {
@@ -1535,7 +1533,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, r => {
+                        apiOrg.searchOrg(val, localStorage.getItem('movement'),  r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             // console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -1554,7 +1552,7 @@
                         if (this.isLoadingPerson) return;
                         this.isLoadingPerson = true;
 
-                        api.searchPerson(val, r => {
+                        api.searchPerson(val, localStorage.getItem('movement'), r => {
                             this.personEntries = r;
                             // console.log("***ПОИСК ******", this.personEntries);
                             this.isLoadingPerson = false;

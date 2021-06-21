@@ -8,13 +8,41 @@ import java.util.List;
 import java.util.Set;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
+
+    @Query("select distinct p " +
+            "from Person p " +
+            "join p.movementList pML " +
+            "where (pML.id = :movement) ")
+    List<Person> findAllWithMovement(Integer movement);
+
     Person getPersonByName(String name);
 
-    List<Person> findBySurnameStartsWithIgnoreCase(String surname);
+    //List<Person> findBySurnameStartsWithIgnoreCase(String surname);
+    @Query("select distinct p " +
+            "from Person p " +
+            "join p.movementList pML " +
+            "where (pML.id = :movement) " +
+            "and lower(p.surname) like :surname")
+    List<Person> findBySurnameAndMovement(String surname, Integer movement);
 
-    List<Person> findBySurnameEngStartsWithIgnoreCase(String surname);
 
-    List<Person> findBySurnameRusStartsWithIgnoreCase(String surname);
+    //    List<Person> findBySurnameEngStartsWithIgnoreCase(String surname);
+    @Query("select distinct p " +
+            "from Person p " +
+            "join p.movementList pML " +
+            "where (pML.id = :movement) " +
+            "and lower(p.surnameEng) like :surname")
+    List<Person> findBySurnameEngAndMovement(String surname, Integer movement);
+
+
+    //    List<Person> findBySurnameRusStartsWithIgnoreCase(String surname);
+    @Query("select distinct p " +
+            "from Person p " +
+            "join p.movementList pML " +
+            "where (pML.id = :movement) " +
+            "and lower(p.surnameRus) like :surname")
+    List<Person> findBySurnameRusAndMovement(String surname, Integer movement);
+
 
     ///////////////FILTER/////////////////
     @Query("select distinct a " +
