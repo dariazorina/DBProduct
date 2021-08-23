@@ -59,35 +59,35 @@
                 </th>
                 <th class='tdAlignLeft'>Должность</th>
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
-                <div class="row" style="background-color: transparent">
-                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                    <div class='headerLink col-sm-6'
-                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                        Организация
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Организация
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="orgFilterId">
+                            <v-btn text icon x-small @click="resetFilter(1)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
-                    <div class='col-sm-3'
-                         style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                         id="orgFilterId">
-                        <v-btn text icon x-small @click="resetFilter(1)">
-                            <v-icon style="color: white">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </div>
-                </div>
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
-                <div class="row" style="background-color: transparent">
-                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                    <div class='headerLink col-sm-6'
-                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                        Хештеги
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Хештеги
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="hashFilterId">
+                            <v-btn text icon x-small @click="resetFilter(0)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
-                    <div class='col-sm-3'
-                         style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                         id="hashFilterId">
-                        <v-btn text icon x-small @click="resetFilter(0)">
-                            <v-icon style="color: white">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </div>
-                </div>
                 <th style="width:10%" class="col-sm-2">Действия</th>
             </tr>
             </thead>
@@ -98,29 +98,34 @@
 
 
                 <td>
-                    <div v-if="person.status==0">
-                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                    <div v-if="statusList.length > 0">
+                        <div v-if="statusList[0].name === person.status">
+                            <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="person.status==1">
-                        <v-icon style="color: orange">mdi-check</v-icon>
+                    <div v-if="statusList.length > 1">
+                        <div v-if="statusList[1].name === person.status">
+                            <v-icon style="color: orange">mdi-check</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="person.status==2">
-                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    <div v-if="statusList.length > 2">
+                        <div v-if="statusList[2].name === person.status">
+                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="person.status==3">
-                        <v-icon style="color: green">mdi-check</v-icon>
+                    <div v-if="statusList.length > 3">
+                        <div v-if="statusList[3].name === person.status">
+                            <v-icon style="color: green">mdi-check</v-icon>
+                        </div>
                     </div>
                 </td>
 
                 <td><a>
-                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">{{ person.surnameRus}}
-                        {{ person.nameRus }}
-                        <div v-if="person.patronymic != null">
-                            {{ person.patronymic}}
-                        </div>
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">
+                        {{ getPrioritySNP(person) }}
                     </router-link>
                 </a></td>
                 <td class='tdAlignLeft'>{{person.birthYear}}</td>
@@ -133,11 +138,11 @@
                     </div>
                 </td>
                 <td class='tdAlignLeft'>
-                    <div v-for="occ in person.testList">{{occ.position}}</div>
+                    <!--                    <div v-for="occ in person.testList">{{occ.position}}</div>-->
                 </td>
 
                 <td class='tdAlignLeft'>
-                    <div v-for="occ in person.testList">{{getOrgNameById(occ.orgId)}}</div>
+                    <!--                    <div v-for="occ in person.testList">{{getOrgNameById(occ.orgId)}}</div>-->
                     <!--                    <div v-for="org in person.orgList">{{org.name}}</div>-->
                 </td>
                 <td class='tdAlignLeft'>
@@ -214,6 +219,7 @@
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'
     import CreatedList from "../components/multiple-enter-list/CreatedList";
+    import apiStatus from "./../status-api";
 
 
     export default {
@@ -230,7 +236,7 @@
                 persons: [],
                 entries: [],
 
-                person: {status: 0, locationList: [], testList: [], hashtagList: []},
+                person: {status: 0, locationList: [], positionDtoList: [], hashtagList: [], snpList: []},
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
                 personOrgIds: [], //before request
@@ -264,6 +270,13 @@
                     {key: 1, text: 'org'},
                     {key: 2, text: 'location'},
                     {key: 3, text: 'surname'},
+                ],
+
+                statusList: [
+                    {id:1, name:''},  //to prevent access to undefined list
+                    {id:2, name:''},
+                    {id:3, name:''},
+                    {id:4, name:''}
                 ],
 
                 currentFilterField: '',
@@ -305,6 +318,29 @@
         },
 
         methods: {
+
+            getPrioritySNP(currentPerson) {
+
+                console.log("*************************", this.entries);
+                let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
+
+
+                    for (let i = 0; i < currentPerson.snpList.length; i++) {
+                        console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
+
+                        if (currentPerson.snpList[i].priority === 1) {
+                            sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
+
+                            if (currentPerson.snpList[i].patronymic != null)
+                                sss += currentPerson.snpList[i].patronymic;
+                            console.log("******^^^^^^^^^^^^^****", sss);
+                        }
+                    }
+
+                // console.log("*************************", sss);
+                return sss;
+            },
+
             filterClearButtonActivity(hide, filterClearButtonId) {
                 if (hide)
                     document.getElementById(filterClearButtonId).style.visibility = "hidden";
@@ -334,7 +370,7 @@
 
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
-                this.currentFilterItems.push(item);  //push item(item: {id, content}
+                //this.currentFilterItems.push(item);  //push item(item: {id, content}
 
                 let key = this.filterTableFields.find(x => x === this.currentFilterField).key;
                 this.filterClearButtonActivity(false, this.filterTableFieldsForRequest[key].text + 'FilterId');
@@ -513,22 +549,28 @@
             },
         },
         mounted() {
+
+            apiStatus.getAllStatuses(response => {
+                this.statusList = response.data;
+                console.log("STATUS LIST", this.statusList);
+            });
+
             api.getAllPersons(localStorage.getItem('movement'), response => {
                 // this.persons = response.data;
                 this.entries = response.data;
                 // console.log("PERSONS", response.data)
 
                 for (let i = 0; i < this.entries.length; i++) {
-                    for (let j = 0; j < this.entries[i].testList.length; j++) {
-                        this.personOrgIds.push(this.entries[i].testList[j].orgId);
+                    for (let j = 0; j < this.entries[i].positionDtoList.length; j++) {
+                        this.personOrgIds.push(this.entries[i].positionDtoList[j].orgId);
                     }
                     for (let j = 0; j < this.entries[i].locationList.length; j++) {
                         this.personLocationIds.push(this.entries[i].locationList[j].itemId);
                     }
                 }
-                apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                    this.personOrgEntities = response.data;
-                });
+                // apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                //     this.personOrgEntities = response.data;
+                // });
 
                 apiCountry.getLocationsByIds(this.personLocationIds, response => {
                     this.personLocationEntities = response.data;

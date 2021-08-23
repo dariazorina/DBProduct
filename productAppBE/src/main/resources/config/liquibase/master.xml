@@ -78,6 +78,32 @@
     <include file="config/liquibase/changelog/00000000000087_add_user_movement_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000089_add_article_movement_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000091_add_event_movement_table.xml" relativeToChangelogFile="false"/>
-
+    <include file="config/liquibase/changelog/00000000000092_add_activity_type_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000093_add_person_activity_type_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000095_add_person_snp_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000097_add_connect_person_event_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000099_add_connect_person_isource_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000101_remove_surname_name_text_fields_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000103_add_status_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000105_add_org_type_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000107_add_org_name_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000109_add_org_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000111_add_connect_org_isource_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000113_add_connect_org_org_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000115_add_connect_org_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000117_add_connect_org_location_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000119_remove_rename_add_name_abbr_text_fields_org_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000121_drop_constraint_t_snp_person.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000123_add_person_snp_connection_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000125_drop_person_id_field.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000127_article_status_field.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000129_load_status_values.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000131_rename_location1.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000133_load_russian_lang.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000135_person_status_field.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000137_remove_lang_fields_person_snp_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000139_remove_lang_fields_org_name_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000141_remove_org_field_org_name_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000143_add_org_name_connection_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

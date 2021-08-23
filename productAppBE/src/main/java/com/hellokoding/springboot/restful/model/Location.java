@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="t_location1")
+@Table(name="t_location")
 @Data
 
 public class Location {

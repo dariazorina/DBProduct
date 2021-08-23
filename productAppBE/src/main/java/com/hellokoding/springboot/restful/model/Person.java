@@ -17,10 +17,6 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "movement_id", nullable = false)
-//    private Movement movement;
-
     @ManyToMany
     @JoinTable(
             name = "person_movement",
@@ -28,22 +24,9 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
     private List<Movement> movementList;
 
-    private Integer status;
-    private String surname;
-    private String name;
-    private String patronymic;
-
-    @Column(name = "surname_rus")
-    private String surnameRus;
-
-    @Column(name = "name_rus")
-    private String nameRus;
-
-    @Column(name = "surname_eng")
-    private String surnameEng;
-
-    @Column(name = "name_eng")
-    private String nameEng;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", nullable = false)
+    private Status status;
 
     @Column(name = "birth_year")
     private Integer birthYear;
@@ -51,13 +34,27 @@ public class Person {
     @Column(name = "death_year")
     private Integer deathYear;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "location_id")//, insertable = false, updatable = false)
-////    @JoinColumn(name = "country_id", nullable = false)
-//    private Location location;
+//    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    @ToString.Exclude
+//    private List<SurnameNamePatr> snpList;
 
-   // private String settlement;
 
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "person_snp",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "snp_id", referencedColumnName = "snp_id"))
+    private List<SurnameNamePatr> snpList;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "person_activity_type",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_type_id", referencedColumnName = "activity_type_id"))
+    private List<ActivityType> activityTypeList;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude //    @JsonIgnore
@@ -81,6 +78,16 @@ public class Person {
     @JsonIgnore
     private List<PersonPersonConnection> personConnections;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<PersonIsourceConnection> isourceConnections;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<PersonEventConnection> eventConnections;
+
 
     @ManyToMany
     @JoinTable(
@@ -98,7 +105,9 @@ public class Person {
 
     //    columnDefinition="BLOB"
 //    @Lob  //was an error bytea - bigint
-    @Column(name = "photo")//, columnDefinition="mediumblob")
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] photo;
+
+//    working version, photo should be saved in FS now
+//    @Column(name = "photo")   //, columnDefinition="mediumblob")
+//    @Basic(fetch = FetchType.LAZY)
+//    private byte[] photo;
 }

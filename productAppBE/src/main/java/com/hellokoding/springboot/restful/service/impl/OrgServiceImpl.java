@@ -31,7 +31,7 @@ public class OrgServiceImpl implements OrgService {
         String dtoName;
         List<Org> orgSearchList = new ArrayList<>();
 
-        orgSearchList = orgRepository.findByOrgName("%" + q + "%", mov); //findByNameRusStartsWithIgnoreCase(q);
+        //orgSearchList = orgRepository.findByOrgName("%" + q + "%", mov); //findByNameRusStartsWithIgnoreCase(q);
 
         System.out.println("=====================================");
         System.out.println(orgSearchList);
@@ -39,26 +39,26 @@ public class OrgServiceImpl implements OrgService {
         if (orgSearchList.size() > 0) {
             for (Org org : orgSearchList) {
 
-                dtoName = org.getNameRus();  //nameRus - mandatory field
-
-                if (org.getAbbrRus() != null) {
-                    dtoName += ", " + org.getAbbrRus();
-                }
-                if (org.getName() != null) {
-                    dtoName += ", " + org.getName();
-                }
-                if (org.getAbbr() != null) {
-                    dtoName += ", " + org.getAbbr();
-                }
-                if (org.getNameEng() != null) {
-                    dtoName += ", " + org.getNameEng();
-                }
-                if (org.getAbbrEng() != null) {
-                    dtoName += ", " + org.getAbbrEng();
-                }
-                if (org.getFounded() != null) {
-                    dtoName += ", " + org.getFounded();
-                }
+                dtoName = "";//org.getNameRus();  //nameRus - mandatory field
+//
+//                if (org.getAbbrRus() != null) {
+//                    dtoName += ", " + org.getAbbrRus();
+//                }
+//                if (org.getName() != null) {
+//                    dtoName += ", " + org.getName();
+//                }
+//                if (org.getAbbr() != null) {
+//                    dtoName += ", " + org.getAbbr();
+//                }
+//                if (org.getNameEng() != null) {
+//                    dtoName += ", " + org.getNameEng();
+//                }
+//                if (org.getAbbrEng() != null) {
+//                    dtoName += ", " + org.getAbbrEng();
+//                }
+//                if (org.getFounded() != null) {
+//                    dtoName += ", " + org.getFounded();
+//                }
 
                 //todo add another fields
 

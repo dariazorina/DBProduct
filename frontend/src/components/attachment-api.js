@@ -40,6 +40,55 @@ export default {
             });
     },
 
+    uploadPhoto(entity, id, file, fn) {
+        let formData = new FormData();
+        formData.append('file', file);
+        AXIOS
+            .post('/' + entity + '/attachmentPhoto/' + id,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+
+    deletePhoto(entity, id, fn) {
+        AXIOS
+            .delete('/' + entity + '/attachmentPhoto/' + id)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
+    getAttachmentPhoto(entity, id, fn) {
+        AXIOS
+            .get('/' + entity + '/attachmentPhoto/' + id)
+            .then((response) => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+                if (error.response.status === 400) {
+                    console.log("No such file");
+                }
+            });
+    },
+
+
     getAttachments(entity, id, fn) {
         AXIOS
             .get('/' + entity + '/attachments/' + id)

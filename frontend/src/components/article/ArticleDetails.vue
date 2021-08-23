@@ -164,7 +164,7 @@
                 <div class="col-sm-2">
                     <div class="cellTitle"><span class="float-left">Статус</span></div>
                 </div>
-                <div class="col-sm-10"><span class="float-left"> {{getStatusName()}}</span>
+                <div class="col-sm-10"><span class="float-left"> {{this.article.status}}</span>
                 </div>
             </div>
 
@@ -205,6 +205,7 @@
     import apiOrg from "./../org/org-api";
     import apiAttachment from "./../attachment-api";
     import moment from "moment";
+    import apiStatus from "./../status-api";
 
     import "vue-scroll-table";
     import FileAttachment from "../components/FileAttachment";
@@ -244,22 +245,18 @@
                 loggedInFlag: false,  //todo to remove
                 loggedName: null,    //should be file's author, not logged user
 
-                statusOptions: [
-                    {text: 'В работе', value: 0},
-                    {text: 'Внесены', value: 1},
-                    {text: 'На доработке', value: 2},
-                    {text: 'Отработаны', value: 3},
-                ],
+                statusList: [],
+                // statusOptions: [
+                //     {text: 'В работе', value: 0},
+                //     {text: 'Внесены', value: 1},
+                //     {text: 'На доработке', value: 2},
+                //     {text: 'Отработаны', value: 3},
+                // ],
             }
         },
         methods: {
             downloadAttachment(file) {
                 document.getElementById('iframeToDownload').src = '/api/v1/article/downloadAttachment?entityId=' + this.article.id + '&id=' + file.id;
-            },
-
-            getStatusName() {
-                let status = this.statusOptions.find(x => x.value === this.article.status);
-                return status.text;
             },
 
             getLoggedIn() {
@@ -451,6 +448,12 @@
                 this.article = r.data;
                 console.log("-------------------", this.article);
                 this.article.date = this.formatDate(this.article.date);
+
+                apiStatus.getAllStatuses(response => {
+                    this.statusList = response.data;
+                    console.log("STATUS LIST", this.statusList);
+                });
+
 
                 for (let j = 0; j < this.article.personList.length; j++) {
                     this.articlePersonIds.push(this.article.personList[j].itemId);

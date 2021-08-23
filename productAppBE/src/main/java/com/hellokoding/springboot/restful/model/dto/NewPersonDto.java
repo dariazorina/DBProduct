@@ -3,21 +3,14 @@ package com.hellokoding.springboot.restful.model.dto;
 import com.hellokoding.springboot.restful.model.*;
 
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+    import java.util.List;
 
 //just Person Dto
 public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private Integer id;
-    private Integer status;
-    private String surname;
-    private String name;
-    private String patronymic;
-    private String surnameRus;
-    private String nameRus;
-    private String surnameEng;
-    private String nameEng;
+    private String status;
+    private List <SnpDto> snpList;
 
     private Integer location_id;
     private Location location;
@@ -30,54 +23,45 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private List<UrlLink> linkList;
     private List<String> hashtagList;
-    private List<PositionDto> testList; //todo rename
+    private List<PositionDto> positionDtoList;
     private List<ItemConnectionDto> locationList;
     private List<ItemConnectionDto> personList;
+    private List<ItemConnectionDto> isourceList;
+    private List<ItemConnectionDto> eventList;
     private List<Movement> movementList;
-    private String photo;
+//    private String photo;
 //    private byte[] photo;
 
     public NewPersonDto() {
     }
 
-    public NewPersonDto(Integer id, List<Movement> movementList, String surname, String name, String patronymic, String surnameRus,
-                        String nameRus, String surnameEng, String nameEng, String description,
+    public NewPersonDto(Integer id, List<Movement> movementList, List<SnpDto> snpList, String description,
                         String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                        List<PositionDto> testList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList, Integer bYear, Integer dYear, String photo, Integer status) {
+                        List<PositionDto> positionList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList,
+                        List<ItemConnectionDto> isourceList, List<ItemConnectionDto> eventList, Integer bYear, Integer dYear, String status) {
         this.id = id;
         this.movementList = movementList;
-        this.surname = surname;
-        this.name = name;
-        this.patronymic = patronymic;
-        this.surnameRus = surnameRus;
-        this.nameRus = nameRus;
-        this.surnameEng = surnameEng;
-        this.nameEng = nameEng;
+        this.snpList = snpList;
         this.status = status;
         this.description = description;
         this.miscellany = miscellany;
         this.rowColor = rowColor;
         this.linkList = linkList;
         this.hashtagList = hashtagList;
-        this.testList = testList;
+        this.positionDtoList = positionList;
         this.locationList = locationList;
+        this.isourceList = isourceList;
+        this.eventList = eventList;
         this.personList = personList;
         this.birthYear = bYear;
         this.deathYear = dYear;
-        this.photo = photo;
+//        this.photo = photo;
     }
 
     public NewPersonDto(Person p) {
         this.id = p.getId();
+        this.status = p.getStatus().getName();
         this.movementList = p.getMovementList();
-        this.surname = p.getSurname();
-        this.name = p.getName();
-        this.patronymic = p.getPatronymic();
-        this.status = p.getStatus();
-        this.surnameRus = p.getSurnameRus();
-        this.nameRus = p.getNameRus();
-        this.surnameEng = p.getSurnameEng();
-        this.nameEng = p.getNameEng();
         this.description = p.getDescription();
         this.miscellany = p.getMiscellany();
         this.rowColor = p.getRgbSelection();
@@ -91,9 +75,13 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
                 this.hashtagList.add(pers.getHashtag().getContent());
         }
 
-        this.testList = new ArrayList<>();
+        this.positionDtoList = new ArrayList<>();
         this.locationList = new ArrayList<>();
         this.personList = new ArrayList<>();
+        this.snpList = new ArrayList<>();
+        this.isourceList = new ArrayList<>();
+        this.eventList = new ArrayList<>();
+
 
         PositionDto posDto;
         for (Position pos : p.getOccupation()) {
@@ -102,7 +90,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             posDto.setPosition(pos.getPosition());
             posDto.setComment(pos.getComment());
 
-            this.testList.add(posDto);
+            this.positionDtoList.add(posDto);
         }
 
         ItemConnectionDto locationConnectionDto;
@@ -115,6 +103,26 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             this.locationList.add(locationConnectionDto);
         }
 
+        ItemConnectionDto isourceConnectionDto;
+        for (PersonIsourceConnection connection : p.getIsourceConnections()) {
+            isourceConnectionDto = new ItemConnectionDto();
+            isourceConnectionDto.setItemId(connection.getIsource().getId());
+            isourceConnectionDto.setConnection(connection.getConnection());
+            isourceConnectionDto.setComment(connection.getComment());
+
+            this.isourceList.add(isourceConnectionDto);
+        }
+
+        ItemConnectionDto eventConnectionDto;
+        for (PersonEventConnection connection : p.getEventConnections()) {
+            eventConnectionDto = new ItemConnectionDto();
+            eventConnectionDto.setItemId(connection.getEvent().getId());
+            eventConnectionDto.setConnection(connection.getConnection());
+            eventConnectionDto.setComment(connection.getComment());
+
+            this.eventList.add(eventConnectionDto);
+        }
+
         ItemConnectionDto personConnectionDto;
         for (PersonPersonConnection connection : p.getPersonConnections()) {
             personConnectionDto = new ItemConnectionDto();
@@ -125,10 +133,22 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             this.personList.add(personConnectionDto);
         }
 
-        if (p.getPhoto() != null) {
-            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
-            this.photo = encodedString;
+        SnpDto snpDto;
+        for (SurnameNamePatr snp : p.getSnpList()) {
+            snpDto = new SnpDto();
+            snpDto.setId(snp.getId());
+            snpDto.setSurname(snp.getSurname());
+            snpDto.setName(snp.getName());
+            snpDto.setPatronymic(snp.getPatronymic());
+            snpDto.setPriority(snp.getPriority());
+
+            this.snpList.add(snpDto);
         }
+
+//        if (p.getPhoto() != null) {
+//            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
+//            this.photo = encodedString;
+//        }
     }
 
     public Integer getId() {
@@ -139,60 +159,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.id = id;
     }
 
-    public String getSurname() {
-        return surname;
+    public List<SnpDto> getSnpList() {
+        return snpList;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getSurnameRus() {
-        return surnameRus;
-    }
-
-    public void setSurnameRus(String surnameRus) {
-        this.surnameRus = surnameRus;
-    }
-
-    public String getNameRus() {
-        return nameRus;
-    }
-
-    public void setNameRus(String nameRus) {
-        this.nameRus = nameRus;
-    }
-
-    public String getSurnameEng() {
-        return surnameEng;
-    }
-
-    public void setSurnameEng(String surnameEng) {
-        this.surnameEng = surnameEng;
-    }
-
-    public String getNameEng() {
-        return nameEng;
-    }
-
-    public void setNameEng(String nameEng) {
-        this.nameEng = nameEng;
+    public void setSnpList(List<SnpDto> snpList) {
+        this.snpList = snpList;
     }
 
     public Integer getLocation_id() {
@@ -235,10 +207,10 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.hashtagList = hashtagList;
     }
 
-    public List<PositionDto> getTestList() { return testList;  }
+    public List<PositionDto> getPositionDtoList() { return positionDtoList;  }
 
-    public void setTestList(List<PositionDto> testList) {
-        this.testList = testList;
+    public void setPositionDtoList(List<PositionDto> positionDtoList) {
+        this.positionDtoList = positionDtoList;
     }
 
     public List<ItemConnectionDto> getLocationList() {
@@ -265,11 +237,11 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.rowColor = rowColor;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -287,6 +259,23 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public void setDeathYear(Integer deathYear) {
         this.deathYear = deathYear;
+    }
+
+    public List<ItemConnectionDto> getIsourceList() {
+        return isourceList;
+    }
+
+    public void setIsourceList(List<ItemConnectionDto> isourceList) {
+        this.isourceList = isourceList;
+    }
+
+
+    public List<ItemConnectionDto> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<ItemConnectionDto> eventList) {
+        this.eventList = eventList;
     }
 
     public List<ItemConnectionDto> getPersonList() {
@@ -313,14 +302,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.movementList = movementList;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return ((NewPersonDto) obj).id.equals(id);
@@ -333,7 +314,20 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     @Override
     public int compareTo(NewPersonDto obj) {
-        return surname.compareToIgnoreCase(obj.getSurname());
+
+        String surname = "", surname1 = "";
+
+        for (int i=0 ; i<snpList.size(); i++)
+            if (snpList.get(i).getPriority() == 1){
+                surname = snpList.get(i).getSurname();
+            }
+
+        for (int i=0 ; i < obj.snpList.size(); i++)
+            if (obj.snpList.get(i).getPriority() == 1){
+                surname1 = obj.snpList.get(i).getSurname();
+            }
+
+        return surname.compareToIgnoreCase(surname1);
     }
 }
 

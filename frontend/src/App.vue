@@ -3,7 +3,7 @@
         <div id="nav" style="margin-top: -30px; background-color: transparent">
 
             <!-----------------------------            the header------------------------------------------->
-            <router-link to="/person">P1e2r3s4o5n6</router-link>
+            <router-link to="/person">Person</router-link>
             |
             <router-link to="/article">Article</router-link>
             |

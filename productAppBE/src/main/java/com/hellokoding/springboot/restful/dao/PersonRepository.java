@@ -15,34 +15,16 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "where (pML.id = :movement) ")
     List<Person> findAllWithMovement(Integer movement);
 
-    Person getPersonByName(String name);
+    //Person getPersonByName(String name);
 
     //List<Person> findBySurnameStartsWithIgnoreCase(String surname);
     @Query("select distinct p " +
             "from Person p " +
             "join p.movementList pML " +
+            "join p.snpList snpL " +
             "where (pML.id = :movement) " +
-            "and lower(p.surname) like :surname")
+            "and lower(snpL.surname) like :surname")
     List<Person> findBySurnameAndMovement(String surname, Integer movement);
-
-
-    //    List<Person> findBySurnameEngStartsWithIgnoreCase(String surname);
-    @Query("select distinct p " +
-            "from Person p " +
-            "join p.movementList pML " +
-            "where (pML.id = :movement) " +
-            "and lower(p.surnameEng) like :surname")
-    List<Person> findBySurnameEngAndMovement(String surname, Integer movement);
-
-
-    //    List<Person> findBySurnameRusStartsWithIgnoreCase(String surname);
-    @Query("select distinct p " +
-            "from Person p " +
-            "join p.movementList pML " +
-            "where (pML.id = :movement) " +
-            "and lower(p.surnameRus) like :surname")
-    List<Person> findBySurnameRusAndMovement(String surname, Integer movement);
-
 
     ///////////////FILTER/////////////////
     @Query("select distinct a " +
@@ -51,11 +33,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "left join h.assigned_hashtag assh " +
             "left join a.occupation aO " +
             "left join aO.org aOrg " +
+            "left join aOrg.nameList nmL " +
             "left join a.locationConnections aLo " +
             "left join aLo.location aLoc " +
-            "where ((:org is null  or lower(aOrg.nameRus) like :org) " +
+            "left join a.snpList snpL " +
+            "where ((:org is null  or lower(nmL.name) like :org) " +
             "and (:location is null or lower(aLoc.country) like :location) " +
-            "and (:surname is null or lower(a.surnameRus) like :surname) " +
+            "and (:surname is null or lower(snpL.surname) like :surname) " +
             "and (:hashTag is null or assh.content like :hashTag)) ")
     Set<Person> findByFilters(String hashTag, String surname, String org, String location);
 
@@ -78,16 +62,16 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select distinct p " +
             "from Person p " +
-            "where (lower(p.surname) like lower(:surname) " +
-            "or lower(p.surnameRus) like lower(:surname) ) ")
+            "join p.snpList snpL " +
+            "where (lower(snpL.surname) like lower(:surname)) ")
     List<Person> findBySurname(String surname);
 
     @Query("select distinct p " +
             "from Person p " +
             "join p.occupation aL " +
             "join aL.org aP " +
-            "where (lower(aP.name) like lower(:org) " +
-            "or lower(aP.nameRus) like lower(:org)) ")
+            "join aP.nameList nmL " +
+            "where (lower(nmL.name) like lower(:org)) ")
     List<Person> findByOrg(String org);
 
     @Query("select distinct p " +

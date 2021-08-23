@@ -2,10 +2,7 @@ package com.hellokoding.springboot.restful.service.impl;
 
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
-import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
-import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
-import com.hellokoding.springboot.restful.model.dto.PersonDto;
-import com.hellokoding.springboot.restful.model.dto.PositionDto;
+import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.PersonService;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.access.method.P;
@@ -30,6 +27,9 @@ public class PersonServiceImpl implements PersonService {
     //    private final PersonHashtagRepository personHashtagRepository;
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
+//    private final LanguageRepository languageRepository;
+    private final SnpRepository snpRepository;
+    private final StatusRepository statusRepository;
 
     @Override
 //    public List<Person> findAll() {
@@ -219,62 +219,26 @@ public class PersonServiceImpl implements PersonService {
     public List<PersonDto> searchBySurname(String q, Integer mov) {
 
         List<Person> surnameSearchList = personRepository.findBySurnameAndMovement(q.toLowerCase() + "%", mov);//findBySurnameStartsWithIgnoreCase(q);
-        List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
-        List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
-
+      //  List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
+      //  List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
 
         Set<PersonDto> fooSet = new TreeSet<>();
-        String dtoName;
+        List<SurnameNamePatr> snpList;
+        String dtoName = "";
 
         for (Person person : surnameSearchList) {
-            dtoName = person.getSurname();
-            if (person.getName() != null) {
-                dtoName += " " + person.getName();
+            snpList = person.getSnpList();
+            for (SurnameNamePatr snp : snpList) {
+                if (snp.getSurname() != null) {
+                    dtoName = snp.getSurname();
+                    if (snp.getName() != null) {
+                        dtoName += " " + snp.getName();
+                    }
+                }
+                PersonDto personDto = new PersonDto(person.getId(), dtoName);
+                fooSet.add(personDto);
             }
-            PersonDto personDto = new PersonDto(person.getId(), dtoName);
-            fooSet.add(personDto);
         }
-
-        for (Person person : surnameRusSearchList) {
-            dtoName = person.getSurnameRus();
-            if (person.getNameRus() != null) {
-                dtoName += " " + person.getNameRus();
-            }
-            PersonDto personDto = new PersonDto(person.getId(), dtoName);
-            fooSet.add(personDto);
-        }
-
-        for (Person person : surnameEngSearchList) {
-            dtoName = person.getSurnameEng();
-            if (person.getNameEng() != null) {
-                dtoName += " " + person.getNameEng();
-            }
-            PersonDto personDto = new PersonDto(person.getId(), dtoName);
-            fooSet.add(personDto);
-        }
-
-
-//        if (surnameSearchList.size() > 0) {
-//            fooSet =
-//
-//            if (surnameRusSearchList.size() > 0) {
-//                fooSet.addAll(surnameRusSearchList);
-//
-//                if (surnameEngSearchList.size() > 0){
-//                    fooSet.addAll(surnameEngSearchList);
-//                }
-//            }
-//        } else {
-//            if (surnameRusSearchList.size() > 0) {
-//                fooSet = new LinkedHashSet<>(surnameRusSearchList);
-//
-//                if (surnameEngSearchList.size() > 0) {
-//                    fooSet.addAll(surnameEngSearchList);
-//                }
-//            } else {
-//                fooSet = new LinkedHashSet<>(surnameEngSearchList);
-//            }
-//        }
 
         List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
         return finalList;
@@ -321,7 +285,7 @@ public class PersonServiceImpl implements PersonService {
 //        }
 
         LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
-        ll.getLinkListID(linkList, linkListWithID);
+        ll.getLinkListID(linkList, linkListWithID);  //todo - maybe.. to remove this class?
 
 
         Person person;// = new Person();
@@ -375,19 +339,47 @@ public class PersonServiceImpl implements PersonService {
             //personRepository.flush();
         }
 
-        person.setSurname(personDto.getSurname());
-        person.setName(personDto.getName());
-        person.setPatronymic(personDto.getPatronymic());
+
+        List<SurnameNamePatr> snpList = new ArrayList<>();
+        if (person.getSnpList() != null) {
+            person.getSnpList().clear();
+            personRepository.flush();
+        }
+//        else {
+//            person.setSnpList(snpList);
+//        }
+
+        List<SnpDto> snpDtoList = personDto.getSnpList();
+        SurnameNamePatr snp;
+        for (SnpDto snpDto: snpDtoList){
+            snp = new SurnameNamePatr();
+            snp.setSurname(snpDto.getSurname());
+            snp.setName(snpDto.getName());
+            snp.setPatronymic(snpDto.getPatronymic());
+            snp.setPriority(snpDto.getPriority());
+            snpList.add(snp);
+            snpRepository.save(snp);
+        }
+        snpRepository.flush();
+
+
+        if (person.getSnpList() == null) {
+            person.setSnpList(snpList);
+        } else {
+            person.getSnpList().addAll(snpList);
+            //personRepository.flush();
+        }
+
         person.setBirthYear(personDto.getBirthYear());
         person.setDeathYear(personDto.getDeathYear());
-        person.setSurnameEng(personDto.getSurnameEng());
-        person.setNameEng(personDto.getNameEng());
-        person.setSurnameRus(personDto.getSurnameRus());
-        person.setNameRus(personDto.getNameRus());
         person.setDescription(personDto.getDescription());
         person.setMiscellany(personDto.getMiscellany());
         person.setRgbSelection(personDto.getRowColor());
-        person.setStatus(personDto.getStatus());
+
+        Optional<Status> byName = statusRepository.getByName(personDto.getStatus());
+        if (byName.isPresent()) {
+            person.setStatus(byName.get());
+        }
 
 
         if (person.getOccupation() != null) {
@@ -398,7 +390,7 @@ public class PersonServiceImpl implements PersonService {
         Integer orgId;
         Position position;
         List<Position> occList = new ArrayList<>();
-        for (PositionDto posDto : personDto.getTestList()) {
+        for (PositionDto posDto : personDto.getPositionDtoList()) {
 
             orgId = posDto.getOrgId();
             if (orgRepository.findById(orgId).isPresent()) {
@@ -418,7 +410,7 @@ public class PersonServiceImpl implements PersonService {
             person.getOccupation().addAll(occList);
         }
 
-
+            ///location
         if (person.getLocationConnections() != null) {
             person.getLocationConnections().clear();
             personRepository.flush();
@@ -445,6 +437,65 @@ public class PersonServiceImpl implements PersonService {
             person.setLocationConnections(locationConnectionList);
         } else {
             person.getLocationConnections().addAll(locationConnectionList);
+        }
+
+
+        //isource
+        if (person.getIsourceConnections() != null) {
+            person.getIsourceConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer isourceId;
+        PersonIsourceConnection isourceConnection;
+        List<PersonIsourceConnection> isourceConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : personDto.getIsourceList()) {
+
+            isourceId = connectionDto.getItemId();
+            if (isourceRepository.findById(isourceId).isPresent()) {
+                isourceConnection = new PersonIsourceConnection();
+                isourceConnection.setIsource(isourceRepository.findById(isourceId).get());
+                isourceConnection.setPerson(person);
+                isourceConnection.setConnection(connectionDto.getConnection());
+                isourceConnection.setComment(connectionDto.getComment());
+
+                isourceConnectionList.add(isourceConnection);
+            }
+        }
+
+        if (person.getIsourceConnections() == null) {
+            person.setIsourceConnections(isourceConnectionList);
+        } else {
+            person.getIsourceConnections().addAll(isourceConnectionList);
+        }
+
+        //event
+        if (person.getEventConnections() != null) {
+            person.getEventConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer eventId;
+        PersonIsourceConnection eventConnection;
+        List<PersonIsourceConnection> eventConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : personDto.getEventList()) {
+
+            eventId = connectionDto.getItemId();
+            if (isourceRepository.findById(eventId).isPresent()) {
+                eventConnection = new PersonIsourceConnection();
+                eventConnection.setIsource(isourceRepository.findById(eventId).get());
+                eventConnection.setPerson(person);
+                eventConnection.setConnection(connectionDto.getConnection());
+                eventConnection.setComment(connectionDto.getComment());
+
+                eventConnectionList.add(eventConnection);
+            }
+        }
+
+        if (person.getIsourceConnections() == null) {
+            person.setIsourceConnections(eventConnectionList);
+        } else {
+            person.getIsourceConnections().addAll(eventConnectionList);
         }
 
         ///persons
@@ -585,27 +636,31 @@ public class PersonServiceImpl implements PersonService {
 //        BufferedImage image = null;
 
 
-        String base64Image;
-        if (personDto.getPhoto() != null) {
-            String[] base64ImageParts = personDto.getPhoto().split(",");
-            if (base64ImageParts.length > 1) {
-                base64Image = base64ImageParts[1];
-            } else {
-                base64Image = base64ImageParts[0];
-            }
-
-            byte[] imageByte;
-            try {
-                imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
+//******************working version
+//        String base64Image;
+//        if (personDto.getPhoto() != null) {
+//            String[] base64ImageParts = personDto.getPhoto().split(",");
+//            if (base64ImageParts.length > 1) {
+//                base64Image = base64ImageParts[1];
+//            } else {
+//                base64Image = base64ImageParts[0];
+//            }
+//            byte[] imageByte;
+//            try {
+//                imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 
                 // Converting a Base64 String into Image byte array
-//            imageByte = Base64.getDecoder().decode(personDto.getPhoto());
-                person.setPhoto(imageByte);
+//////            imageByte = Base64.getDecoder().decode(personDto.getPhoto());
+//                person.setPhoto(imageByte);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//************************
+
+
+
 
 //        byte[] imageByte;
 //        try {

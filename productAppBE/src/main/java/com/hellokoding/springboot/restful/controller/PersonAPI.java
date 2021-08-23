@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,6 +98,11 @@ public class PersonAPI {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/attachmentPhoto/{id}")
+    public ResponseEntity deleteAttachmentPhoto(@PathVariable Integer id) {
+        boolean res = attachmentService.deleteAttachmentPhoto(EntityType.PERSON, id);
+        return ResponseEntity.ok(res);
+    }
 
     @PostMapping("/attachment/{id}")
     public ResponseEntity<Integer> handleFileUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
@@ -104,11 +111,73 @@ public class PersonAPI {
         return ResponseEntity.ok(attachmentId);
     }
 
+
+    @PostMapping("/attachmentPhoto/{id}")
+    public ResponseEntity<Integer> handlePhotoUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
+        Integer attachmentId = attachmentService.createPhotoAttachment(EntityType.PERSON, id, Instant.now(), "admin", file.getOriginalFilename(), file.getBytes());
+        return ResponseEntity.ok(attachmentId);
+    }
+
+
     @GetMapping("/attachments/{id}")
     public ResponseEntity<List<AttachmentDTO>> getAttachments(@PathVariable Integer id) {
         List<AttachmentDTO> all = attachmentService.getAttachments(EntityType.PERSON, id);
         return ResponseEntity.ok(all);
     }
+
+
+//    @GetMapping("/attachmentPhoto/{id}")
+////    public ResponseEntity<AttachmentDTO> getAttachmentPhoto(@PathVariable Integer id) {
+//    public ResponseEntity<InputStreamResource> getAttachmentPhoto(@PathVariable Integer id) {
+//        AttachmentDTO photo = attachmentService.getAttachmentPhoto(EntityType.PERSON, id);
+//
+//        if (photo != null) {
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            ByteArrayInputStream bis = null;
+//            MediaType type = MediaType.APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
+//            Optional<String> extension;
+//
+//            try {
+//                bis = new ByteArrayInputStream(photo.getContent());
+//                String FN = photo.getName().replaceAll(",", ".");
+//                extension = getExtensionByStringHandling(FN);
+//
+//                String headerView = "inline; filename=" + FN;
+//                headers.add("Content-Disposition", headerView);
+//
+//                if (extension.isPresent()) {
+//                    switch (extension.get().toLowerCase()) {
+//                        case "png": {
+//                            type = MediaType.IMAGE_PNG;
+//                            break;
+//                        }
+//                        case "jpg":
+//                        case "jpeg": {
+//                            type = MediaType.IMAGE_JPEG;
+//                            break;
+//                        }
+//                        case "gif": {
+//                            type = MediaType.IMAGE_GIF;
+//                            break;
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                System.out.printf("Exception", e);
+//            }
+//
+//            return ResponseEntity
+//                    .ok()
+//                    .headers(headers)
+//                    .contentType(type)
+//                    .body(new InputStreamResource(bis));
+//
+//        } else {
+//            return ResponseEntity.badRequest().build();//  (HttpStatus.NOT_FOUND);
+//        }
+//    }
+
 
     public Optional<String> getExtensionByStringHandling(String filename) {
         return Optional.ofNullable(filename)
@@ -116,7 +185,7 @@ public class PersonAPI {
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
 
-    @GetMapping("/attachment")
+    @GetMapping("/attachment")  ///for preview in blank window
     public ResponseEntity<InputStreamResource> getAttachment(@RequestParam(name = "entityId", required = true) Integer entityId, @RequestParam(name = "id", required = true) Integer id) {
 
         HttpHeaders headers = new HttpHeaders();
@@ -177,6 +246,75 @@ public class PersonAPI {
                 .contentType(type)
                 .body(new InputStreamResource(bis));
     }
+
+//    @GetMapping("/attachmentPhoto/{entityId}")
+//    public ResponseEntity<InputStreamResource> getAttachmentPhoto(@PathVariable Integer entityId) {
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        ByteArrayInputStream bis = null;
+//
+//        AttachmentDTO attachmentDTO = attachmentService.getAttachmentPhoto(EntityType.PERSON, entityId);
+//        MediaType type = MediaType.IMAGE_JPEG;//APPLICATION_PROBLEM_JSON_UTF8; //APPLICATION_JSON_UTF8; //APPLICATION_OCTET_STREAM;  //APPLICATION_PROBLEM_JSON;
+////        application/json; charset=utf-8
+//        Optional<String> extension;
+//
+//        try {
+//            bis = new ByteArrayInputStream(attachmentDTO.getContent());
+//
+//            String FN = attachmentDTO.getName().replaceAll(",", ".");
+//            extension = getExtensionByStringHandling(FN);
+//
+//            String headerView = "inline; filename=" + FN;
+//            headers.add("Content-Disposition", headerView);
+//            headers.setContentType(MediaType.TEXT_PLAIN);
+//
+////            if (extension.isPresent()) {
+////                switch (extension.get().toLowerCase()) {
+////                    case "png": {
+////                        type = MediaType.IMAGE_PNG;
+////                        break;
+////                    }
+////                    case "jpg":
+////                    case "jpeg": {
+////                        type = MediaType.IMAGE_JPEG;
+////                        break;
+////                    }
+////                    case "gif": {
+////                        type = MediaType.IMAGE_GIF;
+////                        break;
+////                    }
+////                }
+////            }
+//        } catch (Exception e) {
+//            System.out.printf("Exception", e);
+//        }
+//
+//        return new ResponseEntity<InputStreamResource>(new InputStreamResource(bis), headers, HttpStatus.OK);
+////        return  ResponseEntity
+////                .ok()
+////                .headers(headers)
+////                .contentType(type)
+////                .body(new InputStreamResource(bis));
+//    }
+
+
+    @GetMapping("/attachmentPhoto/{entityId}")
+    public ResponseEntity<String> getAttachmentPhoto(@PathVariable Integer entityId) {
+
+        AttachmentDTO attachmentDTO = attachmentService.getAttachmentPhoto(EntityType.PERSON, entityId);
+
+        String encodedString = Base64.getEncoder().encodeToString(attachmentDTO.getContent());
+
+        HttpHeaders respHeaders = new HttpHeaders();
+        respHeaders.setContentType(MediaType.TEXT_PLAIN);
+        respHeaders.setContentLength(encodedString.length());
+        String FN = attachmentDTO.getName().replaceAll(",", ".");
+        respHeaders.setContentDispositionFormData("attachment", FN);
+
+//        InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(encodedString));
+        return new ResponseEntity<String>(encodedString, HttpStatus.OK);
+    }
+
 
     @GetMapping("/downloadAttachment")
     public ResponseEntity<InputStreamResource> downloadAttachment(@RequestParam(name = "entityId", required = true) Integer entityId, @RequestParam(name = "id", required = true) Integer id) {

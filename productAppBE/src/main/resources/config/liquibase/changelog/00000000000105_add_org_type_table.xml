@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="14072021-3">
+        <createTable tableName="t_org_type">
+
+            <column autoIncrement="true" name="org_type_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_org_type_pkey"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="miscellany" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша" id="14072021-4">
+        <addUniqueConstraint columnNames="name" tableName="t_org_type"/>
+        <addUniqueConstraint columnNames="parent_id, name" tableName="t_org_type"/>
+    </changeSet>
+</databaseChangeLog>

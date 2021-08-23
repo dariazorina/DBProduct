@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="01072021-1">
+        <createTable tableName="t_activity_type">
+
+            <column autoIncrement="true" name="activity_type_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_activity_type_pkey"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="miscellany" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Даша" id="01072021-2">
+        <addUniqueConstraint columnNames="name" tableName="t_activity_type"/>
+    </changeSet>
+</databaseChangeLog>

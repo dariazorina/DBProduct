@@ -30,104 +30,70 @@
 
         <form class="authorsFormCreation">
             <div class="form-row align-items-center" style="background-color: transparent">
-                <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
-                    <div class="col-12" style="background-color: transparent">
-                        <label>Текущее движение: {{currentUserMovement.name}} </label><br>
-                    </div>
-                    <label>Добавить дополнительное движение:</label>
-                    <div class="col-12" style="background-color: transparent">
+                <div class="col-12" style="background-color: transparent">
+                    <label>Текущее движение: {{currentUserMovement.name}} </label><br>
+                </div>
+                <div class="col-12" style="background-color: transparent">
+                    <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
+                        <label>Добавить дополнительное движение:</label>
                         <div v-for="(movement, index) in allMovements">
                             <input v-bind:value="movement.id" name="movement.name" type="checkbox"
                                    v-model="checkedMovements"/>
-                            <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
                             <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
                         </div>
                     </div>
-                </div>
-
-                <div v-else class="col-12">
-                    <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
-                            class="btn btn-info">Добавить дополнительное движение
-                    </button>
+                    <div v-else>
+                        <b-button size="sm" variant="info" @click="addAdditionalMovement">
+                            Добавить дополнительное движение
+                        </b-button>
+                    </div>
                 </div>
             </div>
 
             <div class="row" style="background-color: transparent">
-                <div class="col-md-9">
+                <div class="col-md-8">
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-surname-rus">Фамилия на русском*</label>
-                            <input class="form-control" id="add-surname-rus" v-model="person.surnameRus"
+                            <label for="add-surname">Фамилия на русском*</label>
+                            <input class="form-control" id="add-surname" v-model="personAddSurnameTFValues[0]"
                                    placeholder="Поле должно быть заполнено"/>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="add-surname">Фамилия</label>
-                            <input class="form-control" id="add-surname" v-model="person.surname"/>
+                            <label for="add-name">Имя на русском*</label>
+                            <input class="form-control" id="add-name" v-model="personAddNameTFValues[0]"/>
                         </div>
 
-                        <div class="col-md-4">
-                            <label for="add-surname-eng">Фамилия на английском</label>
-                            <input class="form-control" id="add-surname-eng" v-model="person.surnameEng"/>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <label for="add-name-rus">Имя на русском*</label>
-                            <input class="form-control" id="add-name-rus" v-model="person.nameRus"
-                                   placeholder="Поле должно быть заполнено"/>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="add-name">Имя</label>
-                            <input class="form-control" id="add-name" v-model="person.name"/>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="add-name-eng">Имя на английском</label>
-                            <input class="form-control" id="add-name-eng" v-model="person.nameEng"/>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
                         <div class="col-md-4">
                             <label for="add-patronymic">Отчество</label>
-                            <input class="form-control" id="add-patronymic" v-model="person.patronymic">
+                            <input class="form-control" id="add-patronymic" v-model="personAddPatrTFValues[0]">
                         </div>
+                    </div>
 
-                        <div class="col-md-4">
+                    <div class="form-row">
+                        <div class="col-md-3">
                             <label>Год рождения</label>
                             <b-form-select v-model="selectedBYear" class="mb-3" id="birth-year-selection">
                                 <option v-for="year in years">{{year}}</option>
                             </b-form-select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Год смерти</label>
                             <b-form-select v-model="selectedDYear" class="mb-3" id="death-year-selection">
                                 <option v-for="year in years">{{year}}</option>
                             </b-form-select>
                         </div>
                     </div>
-
-                    <!--                    <div class="form-row" style="background-color: transparent">-->
-                    <!--                        <div class="col-md-8">-->
-                    <!--                            <label>Местонахождение</label>-->
-                    <!--                            <b-form-select v-model="selectedCountry" class="mb-3" id="country-selection">-->
-                    <!--                                <option v-for="country in allCountries" v-bind:value="country.id">{{countryTitleCreation(country)}}-->
-                    <!--                                </option>-->
-                    <!--                            </b-form-select>-->
-                    <!--                            &lt;!&ndash;                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>&ndash;&gt;-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
+                    <b-button size="sm" variant="info" v-b-modal="'modalNames'">
+                        Добавить фамилии на других языках
+                    </b-button>
                 </div>
                 <div class="col-md-2" style="margin-top: 10px; background-color: transparent">
                     <div id="preview">
-                        <div v-if="avatar.imageUrl">
-                            <img :src="avatar.imageUrl" @load="setHeight"
+                        <div v-if="avatar.imageBase64">
+                            <img :src="avatar.imageBase64" @load="setHeight"
                                  :style="{ height: imageHeight + 'px' }"/>
                         </div>
                         <div v-else>
@@ -135,7 +101,7 @@
                                  :style="{ width: 250+'px' }"/>
                         </div>
                     </div>
-                    <div v-if="avatar.imageUrl" style="margin-top: 5px">
+                    <div v-if="avatar.imageBase64" style="margin-top: 5px">
                         <input type="file" accept="image/*" @change="onChange"/>
                     </div>
                     <div v-else style="margin-top: 30px">
@@ -189,25 +155,25 @@
                 <div class="col-3"
                      style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                     <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
-                        <label style="font-size: medium; font-weight: bold">Связанные организации</label>
-                        <v-autocomplete
-                                id="author-autocomplete"
-                                :items="orgItems"
-                                :loading="isLoadingOrg"
-                                :search-input.sync="orgSearch"
-                                color="green"
-                                hide-no-data
-                                hide-selected
+                        <label style="font-size: medium; font-weight: bold">Связанные организации -  <i>в процессе</i></label>
+<!--                        <v-autocomplete-->
+<!--                                id="org-autocomplete"-->
+<!--                                :items="orgItems"-->
+<!--                                :loading="isLoadingOrg"-->
+<!--                                :search-input.sync="orgSearch"-->
+<!--                                color="green"-->
+<!--                                hide-no-data-->
+<!--                                hide-selected-->
 
-                                v-model="selectedOrg"
+<!--                                v-model="selectedOrg"-->
 
-                                @change="addOrg(selectedOrg)"
-                                item-text="name"
-                                item-value="id"
-                                placeholder="Начните печатать, чтобы найти организацию"
-                                prepend-icon="mdi-database-search"
-                                return-object
-                        ></v-autocomplete>
+<!--                                @change="addOrg(selectedOrg)"-->
+<!--                                item-text="name"-->
+<!--                                item-value="id"-->
+<!--                                placeholder="Начните печатать, чтобы найти организацию"-->
+<!--                                prepend-icon="mdi-database-search"-->
+<!--                                return-object-->
+<!--                        ></v-autocomplete>-->
                     </v-card-text>
                 </div>
 
@@ -266,15 +232,90 @@
         </form>
 
 
-        <!--        <div style="background-color: transparent; margin-left: 30px">-->
-        <!--            <b-card class="col-md-9" style="background-color: #f8f8f8; font-size: small; text-align: left">-->
-        <!--                &lt;!&ndash;                <OccupationList v-if="!editMode" :allOrgs="allOrgs" :selected="selected" @update-occupation="updateOccupation"/>&ndash;&gt;-->
-        <!--                <OccupationList :allOrgs="allOrgs"-->
-        <!--                                :selected="selected"-->
-        <!--                                :todos="occupationWithIndexList"-->
-        <!--                                @update-occupation="updateOccupation"/>-->
-        <!--            </b-card>-->
-        <!--        </div>-->
+        <form class="authorsFormCreation"
+              style="background-color: transparent; padding: 25px 0 5px">
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные ресурсы - <i>в
+                            процессе</i></label>
+                        <!--                        <v-autocomplete-->
+                        <!--                                style="background-color: transparent"-->
+                        <!--                                id="author-autocomplete"-->
+                        <!--                                :items="isourceItems"-->
+                        <!--                                :loading="isLoadingIsource"-->
+                        <!--                                :search-input.sync="isourceSearch"-->
+                        <!--                                color="black"-->
+                        <!--                                hide-no-data-->
+                        <!--                                hide-selected-->
+
+                        <!--                                v-model="selectedIsource"-->
+
+                        <!--                                @change="addIsource(selectedIsource)"-->
+                        <!--                                item-text="title"-->
+                        <!--                                item-value="id"-->
+                        <!--                                placeholder="Начните печатать, чтобы найти ресурс"-->
+                        <!--                                prepend-icon="mdi-database-search"-->
+                        <!--                                return-object-->
+                        <!--                                :disabled="uploadMode"-->
+                        <!--                        ></v-autocomplete>-->
+                    </v-card-text>
+                </div>
+
+                <div v-if="isourceList.length>0" class="col-9"
+                     style="background-color: transparent; padding:0; margin: 0px">
+                    <ConnectionComponent :itemsList="isourceList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
+                </div>
+            </div>
+        </form>
+
+        <form class="authorsFormCreation"
+              style="background-color: transparent; padding: 25px 0 5px">
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные события - <i>в
+                            процессе</i></label>
+                        <!--                        <v-autocomplete-->
+                        <!--                                style="background-color: transparent"-->
+                        <!--                                id="event-autocomplete"-->
+                        <!--                                :items="eventItems"-->
+                        <!--                                :loading="isLoadingEvent"-->
+                        <!--                                :search-input.sync="eventSearch"-->
+                        <!--                                color="brown"-->
+                        <!--                                hide-no-data-->
+                        <!--                                hide-selected-->
+
+                        <!--                                v-model="selectedEvent"-->
+
+                        <!--                                @change="addEvent(selectedEvent)"-->
+                        <!--                                item-text="title"-->
+                        <!--                                item-value="id"-->
+                        <!--                                placeholder="Начните печатать, чтобы найти событие"-->
+                        <!--                                prepend-icon="mdi-database-search"-->
+                        <!--                                return-object-->
+                        <!--                                :disabled="uploadMode"-->
+                        <!--                        ></v-autocomplete>-->
+                    </v-card-text>
+                </div>
+
+                <div v-if="eventList.length>0" class="col-9"
+                     style="background-color: transparent; padding:0; margin: 0px">
+                    <ConnectionComponent :itemsList="eventList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
+                </div>
+            </div>
+        </form>
+
         <!--        component doesn't work correctly in form 'formCreation;-->
         <form class="formCreation">
             <div class="form-row">
@@ -335,44 +376,6 @@
                                         </v-treeview>
                                     </v-container>
                                 </v-col>
-
-                                <!--                                <v-divider vertical-->
-                                <!--                                           style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;"></v-divider>-->
-                                <!--                                <v-col-->
-                                <!--                                        style="background-color: transparent; margin-top: -10px; margin-left: -10px; margin-bottom: -10px;">-->
-
-                                <!--                                    <v-container-->
-                                <!--                                            id="scroll-target"-->
-                                <!--                                            style="max-height: 300px; background-color: transparent; margin-top: -10px;"-->
-                                <!--                                            class="overflow-y-auto">-->
-
-                                <!--                                        <template v-if="!selectedHashtag.length">-->
-                                <!--                                            No nodes selected.-->
-                                <!--                                        </template>-->
-
-                                <!--                                        <template v-else>-->
-                                <!--                                            <div v-for="node in selectedHashtag">-->
-                                <!--                                                <v-btn text icon x-small @click="removeSelectedHashtag(node)">-->
-                                <!--                                                    <v-icon style="color: red">mdi-delete-forever</v-icon>-->
-                                <!--                                                </v-btn>-->
-                                <!--                                                {{ node }}-->
-                                <!--                                            </div>-->
-
-                                <!--                                            <div class="form-group row" style="padding-top: 30px">-->
-
-                                <!--                                                <button type="button"-->
-                                <!--                                                        style="margin-right: 20px; margin-left: 15px"-->
-                                <!--                                                        @click="addHashtagToArticleList()"-->
-                                <!--                                                        class="btn btn-success">Add-->
-                                <!--                                                </button>-->
-
-                                <!--                                                <button type="button" class="btn btn-info"-->
-                                <!--                                                        @click="clearAllSelectedTags()">Clear All-->
-                                <!--                                                </button>-->
-                                <!--                                            </div>-->
-                                <!--                                        </template>-->
-                                <!--                                    </v-container>-->
-                                <!--                                </v-col>-->
                             </v-row>
 
                         </b-card>
@@ -386,7 +389,7 @@
                 <div class="col-md-6">
                     <label for="add-link">Хештеги</label>
                     <div>
-                        <input-tag id="add-hashtag" :add-tag-on-keys="addTagOnKeys"
+                        <input-tag id="add-hashtag" :add-tag-on-keys="hashAddTagOnKeys"
                                    v-model="tags"></input-tag>
 
                     </div>
@@ -398,7 +401,7 @@
                 <div class="col-md-6">
                     <label for="add-link">Link</label>
                     <div>
-                        <input-tag id="add-link" :add-tag-on-keys="addTagOnKeys"
+                        <input-tag id="add-link" :add-tag-on-keys="linkAddTagOnKeys"
                                    placeholder="enter links with 'return' or 'tab'" v-model="links"></input-tag>
                     </div>
                 </div>
@@ -421,8 +424,8 @@
                 <div class="col-3" style="background-color: transparent">
                     <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
                                    style="background-color: transparent;">
-                        <option v-for="status in statusOptions" v-bind:value="status.value">
-                            {{status.text}}
+                        <option v-for="status in statusList">
+                            {{status.name}}
                         </option>
                     </b-form-select>
                     <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
@@ -463,10 +466,10 @@
                             добавить файлы </label>
                     </div>
 
-                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[0])"
+                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(statusList[0])"
                             class="btn btn-warning">В работе
                     </button>
-                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[1])"
+                    <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(statusList[1])"
                             class="btn btn-success">Внесены
                     </button>
 
@@ -485,27 +488,99 @@
                     </button>
                 </div>
             </div>
-
-
-            <!--            <div v-if="editMode" class="form-group row align-items-center align-items-center">-->
-            <!--                <div class="offset-sm-4 col-sm-3">-->
-
-            <!--                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Update</button>-->
-            <!--                    <a class="btn btn-default">-->
-            <!--                        <router-link to="/article">Cancel</router-link>-->
-            <!--                    </a>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--            <div v-else class="form-group row">-->
-            <!--                <div class="col-sm-4">-->
-
-            <!--                    <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Save</button>-->
-            <!--                    <a class="btn btn-default">-->
-            <!--                        <router-link to="/person">Cancel</router-link>-->
-            <!--                    </a>-->
-            <!--                </div>-->
-            <!--            </div>-->
         </form>
+
+        <b-modal ref="modalNames" id="modalNames" size="lg" :hide-footer="true" :hide-header="true">
+            <template>
+                <b><p class="myHeader">Добавить имя, фамилию на других языках</p><br></b>
+                <div align="center">
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="add-surname"><b>Фамилия*</b></label>
+                            <input class="form-control" v-model="personAddSurnameTFValues[1]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="add-name">Имя</label>
+                            <input class="form-control" v-model="personAddNameTFValues[1]"/>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="add-patronymic">Отчество</label>
+                            <input class="form-control" v-model="personAddPatrTFValues[1]">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddSurnameTFValues[2]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddNameTFValues[2]"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddPatrTFValues[2]">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddSurnameTFValues[3]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddNameTFValues[3]"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddPatrTFValues[3]">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddSurnameTFValues[4]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddNameTFValues[4]"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddPatrTFValues[4]">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddSurnameTFValues[5]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddNameTFValues[5]"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" v-model="personAddPatrTFValues[5]">
+                        </div>
+                    </div>
+
+                    <b-button style="margin-right: 4px" size="sm" variant="success" @click="saveAdditionalNames()">
+                        Сохранить
+                    </b-button>
+                    <b-button size="sm" variant="info" @click="cancelModalNamesView()">
+                        Отмена
+                    </b-button>
+
+                    <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">* - Обязательное
+                        поле. Если хотя бы одно из обязательных полей не будет заполнено,
+                        то весь набор <br><b> Фамилия-Имя-Отчество </b> сохранен не будет
+                    </div>
+                </div>
+            </template>
+        </b-modal>
+
     </v-app>
 </template>
 
@@ -516,6 +591,7 @@
 <script>
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
+    import apiIsource from "./../isource/isource-api";
     import apiCountry from "./../country/country-api";
 
     import router from "./../../router";
@@ -523,6 +599,9 @@
     import OccupationList from "../components/person-occupation/OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMovement from "./../movement/movement-api";
+    import apiLanguage from "./../language/language-api";
+    import apiStatus from "./../status-api";
+
 
     import CKEditor from 'ckeditor4-vue';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
@@ -543,13 +622,16 @@
 
         data: () => ({
             test: "personProp",
-            addTagOnKeys: [], ///[13, 9],
+            linkAddTagOnKeys: [13, 9],
+            hashAddTagOnKeys: [],
             descriptionLimit: 60,
             entries: [],
 
             isLoadingLocation: false,
             isLoadingOrg: false,
             isLoadingPerson: false,
+            isLoadingIsource: false,
+            isLoadingEvent: false,
 
             model: null,
             search: null,
@@ -563,11 +645,13 @@
 
             selected: '',
             selectedS: null,
+            selectedL: null,
             selectedLocation: [],
             selectedOrg: [],
             selectedPerson: [],
+            selectedIsource: [],
+            selectedEvent: [],
             selectedM: null,
-            // selectedCountry: null,
             selectedBYear: null,
             selectedDYear: null,
 
@@ -578,11 +662,11 @@
             errors: [],
             validationErrors: {},
             hasError: false,
-            // allCountries: [],
 
             locationEntries: [],
             orgEntries: [],
             personEntries: [],
+            isourceEntries: [],
             connectionTypes: [],
 
             previewImage: null,
@@ -603,8 +687,23 @@
             orgSearch: null,
             occupationList: [],
 
-            personSearch: null,
+            statusList: [],
+            nameList: [],
+            personNameIds: [], //before request
+            personNameEntities: [], //after request
+
+            personAddSurnameTFValues: [],
+            personAddNameTFValues: [],
+            personAddPatrTFValues: [],
+
             personList: [],
+            personSearch: null,
+
+            isourceSearch: null,
+            isourceList: [],
+
+            eventSearch: null,
+            eventList: [],
 
             personLocationIds: [], //before request
             personLocationEntities: [], //after request
@@ -612,26 +711,49 @@
             personOrgEntities: [], //after request
             personPersonIds: [], //before request
             personPersonEntities: [], //after request
+            personIsourceIds: [], //before request
+            personIsourceEntities: [], //after request
+            personEventIds: [], //before request
+            personEventEntities: [], //after request
 
-            testList: [],
-            person: {hashtagList: [], linkList: [], testList: [], locationList: [], personList:[], movementList: []},
+            positionDtoList: [],
+            person: {
+                hashtagList: [],
+                linkList: [],
+                positionDtoList: [],
+                locationList: [],
+                personList: [],
+                isourceList: [],
+                eventList: [],
+                movementList: [],
+                snpList: []
+            },
+
+            // prioritySurname: '',
+            // priorityName: '',
+            // priorityPatronymic: '',
+            // snpList: [],
+
             years: [],
+            photoWasUploaded: false,
+            originalPhoto: null,
             editMode: false,
             uploadMode: false,
             uploadFilesCheckBoxValue: false,
-            status: ["statusProgress", "statusDone"],
-            statusOptions: [
-                {text: 'В работе', value: 0},
-                {text: 'Внесены', value: 1},
-                {text: 'На доработке', value: 2},
-                {text: 'Отработаны', value: 3},
-            ],
+            // status: ["statusProgress", "statusDone"],
+            // statusOptions: [
+            //     {text: 'В работе', value: 0},
+            //     {text: 'Внесены', value: 1},
+            //     {text: 'На доработке', value: 2},
+            //     {text: 'Отработаны', value: 3},
+            // ],
             loggedName: '',
             uploadedFiles: [],
             attachedFiles: [],
             isAdmin: 'false',
             addAdditionalMovementFlag: false,
             allMovements: [],
+            allLanguages: [],
             currentUserMovement: '',
             checkedMovements: [],
 
@@ -642,6 +764,19 @@
         }),
 
         methods: {
+            saveAdditionalNames() {
+                console.log(this.personAddSurnameTFValues);
+                console.log(this.personAddNameTFValues);
+                console.log(this.personAddPatrTFValues);
+
+                this.addAdditionalNameToList();
+                this.$refs.modalNames.hide();
+            },
+
+            cancelModalNamesView() {
+                this.$refs.modalNames.hide();
+            },
+
             addAdditionalMovement() {
                 this.addAdditionalMovementFlag = true;
             },
@@ -717,22 +852,32 @@
                 reader.readAsDataURL(file);  // reader.readAsBinaryString(file);
                 reader.onload = e => {
                     this.avatar.imageBase64 = e.target.result;
-                    console.log(this.avatar.imageBase64);
-                    ///////////api.getImage(this.avatar.imageBase64, config);
+                    console.log(this.avatar);
+
+                    console.log("photoWasUploaded", this.photoWasUploaded);
+                    console.log("originalPhoto", this.originalPhoto);
+                    console.log("this.avatar.imageBase64", this.avatar.imageBase64);
+
+                    if (this.originalPhoto !== this.avatar.imageBase64) {
+                        this.photoWasUploaded = true;
+                        console.log("-photoWasUploaded", this.photoWasUploaded);
+
+
+                    }
                 };
             },
 
-            uploadImage(e) {
-                console.log(e);
-
-                const image = e.target.files[0];
-                const reader = new FileReader();
-                reader.readAsDataURL(image);
-                reader.onload = e => {
-                    this.previewImage = e.target.result;
-                    // console.log(this.previewImage);
-                };
-            },
+            // uploadImage(e) {
+            //     console.log(e);
+            //
+            //     const image = e.target.files[0];
+            //     const reader = new FileReader();
+            //     reader.readAsDataURL(image);
+            //     reader.onload = e => {
+            //         this.previewImage = e.target.result;
+            //         // console.log(this.previewImage);
+            //     };
+            // },
 
             // uploadImage(event) {
             //
@@ -762,11 +907,6 @@
                     this.years.push(y);
                 }
             },
-
-            // updateOccupation(occupation) {   //occupation was sent by Property //todo to delete
-            //     //this.occupationList.push(occupation);
-            //     console.log("OCCUPATION PUSH", occupation.orgId, occupation.position, occupation.comment);
-            // },
 
             addLocation(obj) {
                 console.log("GET CHANGED LOCATION", obj);
@@ -834,6 +974,83 @@
                 }
             },
 
+            addIsource(obj) {
+                console.log("GET CHANGED ISOURCE", obj);
+                for (let i = 0; i < this.isourceList.length; i++) { //to exclude double values
+                    if (this.isourceList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.isourceList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.title,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.isourceList.push(connection);
+                    console.log("ADDED ISOURCE");
+                }
+            },
+
+            addEvent(obj) {
+                console.log("GET CHANGED EVENT", obj);
+                for (let i = 0; i < this.eventList.length; i++) { //to exclude double values
+                    if (this.eventList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.eventList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.title,
+                        "comment": '',
+                        "connection": '',
+                        "hasClicked": false
+                    };
+                    this.eventList.push(connection);
+                    console.log("ADDED EVENT");
+                }
+            },
+
+            addAdditionalNameToList() {
+                let connection = '';
+                for (let i = 1; i < this.personAddSurnameTFValues.length; i++) {
+                    console.log("iiiiii", i);
+                    if (this.personAddSurnameTFValues[i] != null) {
+                        // if (i > 0) {  //russian priority obligatory value
+                        //     connection = {
+                        //         "surname": this.personAddSurnameTFValues[i],
+                        //         "name": this.personAddNameTFValues[i],
+                        //         "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
+                        //         "priority": 1
+                        //     };
+                        //
+                        //     this.nameList.push(connection);
+                        //     console.log("ADDED NAME PERSON", connection);
+                        //     connection = '';
+                        //
+                        // } else {
+
+                        if (this.personAddSurnameTFValues[i] != null) {
+                            connection = {
+                                "surname": this.personAddSurnameTFValues[i],
+                                "name": this.personAddNameTFValues[i] != null ? this.personAddNameTFValues[i] : '',
+                                "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
+                                "priority": 0
+                            };
+
+                            this.nameList.push(connection);
+                            console.log("ADDED NAME PERSON", connection);
+                            connection = '';
+                        }
+                        // }
+                    }
+                }
+            },
 
             finalPositionListCreation(list, finalList) {
                 // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
@@ -864,6 +1081,19 @@
                     if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
                         finalList.push(a);
                     }
+                }
+            },
+
+            finalNameListCreation(list, finalList) {
+                console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
+                for (let i = 0; i < list.length; i++) {
+                    let a = {
+                        "surname": list[i].surname,
+                        "name": list[i].name,
+                        "patronymic": list[i].patronymic,
+                        "priority": list[i].priority
+                    };
+                    finalList.push(a);
                 }
             },
 
@@ -942,14 +1172,10 @@
             },
 
             formValidate() {
-                this.addStatus('add-surname-rus', (!this.person.surnameRus));
+                this.addStatus('add-surname', (!this.personAddSurnameTFValues[0]));
                 if (this.hasError) {
                 } else {
-                    this.addStatus('add-name-rus', (!this.person.nameRus));
-                    // if (this.hasError) {
-                    // } else {
-                    //     this.addStatus('country-selection', (!this.selectedC));
-                    // }
+                    this.addStatus('add-name', (!this.personAddNameTFValues[0]));
                 }
 
                 if (this.hasError)
@@ -982,7 +1208,7 @@
                     if (this.isObjectValidAndNotEmpty(this.occupationList)) {
                         g = this.checkConnection(this.occupationList);
 
-                        if (!g){
+                        if (!g) {
                             if (this.isObjectValidAndNotEmpty(this.personList)) {
                                 s = this.checkConnection(this.personList);
                             }
@@ -1004,12 +1230,8 @@
             },
 
             createPerson(currentStatus) {
-                // this.person.movement = {
-                //     "id": this.selectedM
-                // }; todo
-
-                // this.person.movement = {
-                //     "id": 1
+                // this.person.language = {
+                //     "id": this.selectedL
                 // };
 
                 if (this.selectedBYear) {
@@ -1020,10 +1242,10 @@
                     this.person.deathYear = this.selectedDYear;
                 }
 
-                if (currentStatus === this.status[0]) {
-                    this.person.status = 0;
+                if (currentStatus === this.statusList[0]) {
+                    this.person.status = this.statusList[0].name;
                 } else {
-                    this.person.status = 1;
+                    this.person.status = this.statusList[1].name;
                 }
 
                 // if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
@@ -1037,7 +1259,7 @@
                     this.person.linkList[i] = {
                         "content": this.links[i]
                     };
-                    // console.log("CREATE PERS link: ", this.links[i]);
+                    console.log("CREATE PERS link: ", this.links[i]);
                 }
 
                 for (let i = 0; i < this.tags.length; i++) {
@@ -1070,14 +1292,31 @@
                 //     this.person.testList.push(a);
                 // }
 
+                let connection = {
+                    "surname": this.personAddSurnameTFValues[0],
+                    "name": this.personAddNameTFValues[0],
+                    "patronymic": this.personAddPatrTFValues[0] != null ? this.personAddPatrTFValues[0] : '',
+                    "priority": 1
+                };
+
+                this.nameList.push(connection);
+                console.log("ADDED NAME PERSON", connection);
+
                 this.person.locationList.splice(0);
                 this.person.personList.splice(0);
-                this.person.testList.splice(0);
+                this.person.positionDtoList.splice(0);
+                this.person.isourceList.splice(0);
+                this.person.eventList.splice(0);
+                this.person.snpList.splice(0);
                 this.finalConnectionListCreation(this.locationList, this.person.locationList);
-                this.finalPositionListCreation(this.occupationList, this.person.testList);
+                this.finalPositionListCreation(this.occupationList, this.person.positionDtoList);
                 this.finalConnectionListCreation(this.personList, this.person.personList);
+                this.finalConnectionListCreation(this.isourceList, this.person.isourceList);
+                this.finalConnectionListCreation(this.eventList, this.person.eventList);
+                this.finalNameListCreation(this.nameList, this.person.snpList); // this.person.snpList = this.nameList;
 
-                this.person.photo = this.avatar.imageBase64;
+                // this.person.photo = this.avatar.imageBase64;
+
 
                 if (this.editMode) {
                     this.person.status = this.selectedS;
@@ -1085,6 +1324,12 @@
                     if (this.formValidate()) {
                         api.update(this.person.id, this.person, r => {
                             console.log(r);
+                            if (this.photoWasUploaded) {
+                                apiAttachment.deletePhoto('person', r.data.id, r => {});
+                                apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
+                                    console.log("ph was uplded");
+                                });
+                            }
                             for (let i = 0; i < this.attachedFiles.length; i++) {
                                 apiAttachment.uploadFile('person', this.person.id, this.attachedFiles[i], r => {
                                 });
@@ -1098,6 +1343,10 @@
                     if (this.formValidate()) {
                         api.create(this.person, r => {
                             console.log(r);
+
+                            apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
+                            });
+
                             if (!this.uploadFilesCheckBoxValue) {
                                 router.push('/person');
                             } else {
@@ -1112,6 +1361,7 @@
                 }
             },
 
+            //todo
             orgEditConnectionTitleCreation(org) {
                 let returnedTitle = org.nameRus;
 
@@ -1144,11 +1394,9 @@
             },
 
             personNameCreation(person) {
-                let personTitle = person.surnameRus;
+                let personTitle = person.snpList[0].surname;
+                personTitle += " " + person.snpList[0].name;
 
-                if (this.isArrayValidAndNotEmpty(person.nameRus)) {
-                    personTitle += " " + person.nameRus;
-                }
                 if (this.isArrayValidAndNotEmpty(person.birthYear)) {
                     personTitle += ", " + person.birthYear;
                 }
@@ -1161,20 +1409,74 @@
                 }
                 return true;
             },
+
+            // getPrioritySNP(currentPerson) {
+            //     let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
+            //
+            //     for (let i = 0; i < currentPerson.snpList.length; i++) {
+            //         console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
+            //
+            //         if (currentPerson.snpList[i].priority === 1) {
+            //             sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
+            //
+            //             if (currentPerson.snpList[i].patronymic != null)
+            //                 sss += currentPerson.snpList[i].patronymic;
+            //             console.log("******^^^^^^^^^^^^^****", sss);
+            //         }
+            //     }
+            //     // console.log("*************************", sss);
+            //     return sss;
+            // },
+
+            getSNPWithPriority(priority) {
+                let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
+                let currEl;
+
+                for (let i = 0; i < this.person.snpList.length; i++) {
+                    //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
+                    currEl = this.person.snpList[i];
+                    if (this.person.snpList[i].priority === priority) {
+                        console.log("SNP priority", priority, currEl.surname);
+
+                        if (priority === 1) {
+                            this.personAddSurnameTFValues[0] = currEl.surname;
+                            this.personAddNameTFValues[0] = currEl.name;
+                            if (this.person.snpList[i].patronymic != null)
+                                this.personAddPatrTFValues[0] = currEl.patronymic;
+                        } else {
+                            this.personAddSurnameTFValues[i + 1] = currEl.surname;
+                            this.personAddNameTFValues[i + 1] = currEl.name;
+                            if (this.person.snpList[i].patronymic != null)
+                                this.personAddPatrTFValues[i + 1] = currEl.patronymic;
+                        }
+                    }
+                }
+                return sss;
+            },
         },
+
         mounted() {
             this.getLoggedIn();
+            apiStatus.getAllStatuses(response => {
+                this.statusList = response.data;
+                console.log("STATUS LIST", this.statusList);
+            });
 
             apiMovement.getAllMovements(response => {
                 // this.getLoggedIn();
                 this.allMovements = response.data;
-               // console.log("MOVEMENTS", response.data);
+                // console.log("MOVEMENTS", response.data);
                 this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
 
                 let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
                 let ddd = this.allMovements.indexOf(currentIndex);
                 this.allMovements.splice(ddd, 1);
-               // console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+                // console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+
+                apiLanguage.getAllLanguages(response => {
+                    this.allLanguages = response.data;
+                    console.log(response.data)
+                });
             });
 
             if (this.$route.params.person_id != null) {
@@ -1189,6 +1491,9 @@
                 api.findById(this.$route.params.person_id, r => {
                     this.person = r.data;
 
+                    this.getSNPWithPriority(1);
+                    this.getSNPWithPriority(0);
+
                     this.selectedBYear = this.person.birthYear;
                     this.selectedDYear = this.person.deathYear;
                     this.selectedS = this.person.status;
@@ -1202,7 +1507,7 @@
                     }
 
                     for (let i = 0; i < this.person.movementList.length; i++) {
-                            this.checkedMovements.push(this.person.movementList[i].id);
+                        this.checkedMovements.push(this.person.movementList[i].id);
                     }
 
                     for (let j = 0; j < this.person.locationList.length; j++) {
@@ -1213,25 +1518,21 @@
                         this.personPersonIds.push(this.person.personList[j].itemId);
                     }
 
-                    for (let j = 0; j < this.person.testList.length; j++) {
-                        this.personOrgIds.push(this.person.testList[j].orgId);
+                    for (let j = 0; j < this.person.positionDtoList.length; j++) {
+                        this.personOrgIds.push(this.person.positionDtoList[j].orgId);
                     }
 
-                    // apiOrg.getAllOrgs(response => {
-                    //     this.allOrgs = response.data;
-                    //
-                    //     for (let i = 0; i < this.person.testList.length; i++) {
-                    //         let a = {
-                    //             "id": i,
-                    //             "org": this.allOrgs.find(org => org.id === this.person.testList[i].orgId).name,
-                    //             "orgId": this.person.testList[i].orgId,
-                    //             "position": this.person.testList[i].position,
-                    //             "comment": this.person.testList[i].comment
-                    //         };
-                    //         // console.log("GET PERS    ON A: ", a);
-                    //         this.occupationWithIndexList.push(a);
-                    //     }
-                    // });
+                    // for (let j = 0; j < this.person.isourceList.length; j++) {  //todo
+                    //     this.personIsourceIds.push(this.person.isourceList[j].itemId);
+                    // }
+                    // for (let j = 0; j < this.person.eventList.length; j++) {
+                    //     this.personEventIds.push(this.person.eventList[j].itemId);
+                    // }
+
+
+                    for (let j = 0; j < this.person.snpList.length; j++) {
+                        this.personNameIds.push(this.person.snpList[j].nameId);
+                    }
 
                     apiAttachment.getAttachments('person', this.person.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
@@ -1240,7 +1541,7 @@
                     });
 
                     apiCountry.getLocationsByIds(this.personLocationIds, response => {  ///returns List<Location>
-                        this.personLocationEntities = response.data;   //returns List<Org>
+                        this.personLocationEntities = response.data;
                         console.log("getLocationsBy#Entities locaList", this.personLocationEntities, this.person.locationList);
 
                         for (let i = 0; i < this.person.locationList.length; i++) {
@@ -1259,8 +1560,8 @@
                         }
                     });
 
-                    api.getPersonsByIds(this.personPersonIds, response => {  ///returns List<Location>
-                        this.personPersonEntities = response.data;   //returns List<Org>
+                    api.getPersonsByIds(this.personPersonIds, response => {
+                        this.personPersonEntities = response.data;
 
                         for (let i = 0; i < this.person.personList.length; i++) {
                             let element = this.person.personList[i];
@@ -1277,12 +1578,12 @@
                         }
                     });
 
-                    apiOrg.getOrgsByIds(this.personOrgIds, response => {  ///returns List<Location>
+                    apiOrg.getOrgsByIds(this.personOrgIds, response => {
                         this.personOrgEntities = response.data;   //returns List<Org>
                         console.log("apiOrg", this.personOrgEntities);
 
-                        for (let i = 0; i < this.person.testList.length; i++) {
-                            let element = this.person.testList[i];
+                        for (let i = 0; i < this.person.positionDtoList.length; i++) {
+                            let element = this.person.positionDtoList[i];
                             let currentOrgEntity = this.personOrgEntities.find(org => org.id === element.orgId);
                             console.log("currentOrgEntity", currentOrgEntity);
                             let connection = {
@@ -1292,13 +1593,127 @@
                                 "comment": element.comment,
                                 "hasClicked": true
                             };
-                            // console.log("CREATE PERS ON A: ", a);
                             this.occupationList.push(connection);
                         }
-                        //console.log("occupationWithIndexList: ", this.occupationWithIndexList);
                     });
 
-                    this.avatar.imageBase64 = this.person.photo;
+                    // api.getIsourceByIds(this.personPersonIds, response => {  //todo
+                    //     this.personPersonEntities = response.data;
+                    //
+                    //     for (let i = 0; i < this.person.personList.length; i++) {
+                    //         let element = this.person.personList[i];
+                    //         let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
+                    //         let connection = {
+                    //             "id": element.itemId,
+                    //             "name": this.personNameCreation(currentPersonEntity),
+                    //             "connection": element.connection,
+                    //             "comment": element.comment,
+                    //             "hasClicked": true
+                    //         };
+                    //         // console.log("CREATE PERS ON A: ", a);
+                    //         this.personList.push(connection);
+                    //     }
+                    // });
+                    // api.getEventByIds(this.personPersonIds, response => {
+                    //     this.personPersonEntities = response.data;
+                    //
+                    //     for (let i = 0; i < this.person.personList.length; i++) {
+                    //         let element = this.person.personList[i];
+                    //         let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
+                    //         let connection = {
+                    //             "id": element.itemId,
+                    //             "name": this.personNameCreation(currentPersonEntity),
+                    //             "connection": element.connection,
+                    //             "comment": element.comment,
+                    //             "hasClicked": true
+                    //         };
+                    //         // console.log("CREATE PERS ON A: ", a);
+                    //         this.personList.push(connection);
+                    //     }
+                    // });
+
+
+                    // api.getNamesByIds(this.personNameIds, response => {
+                    //     this.personNameEntities = response.data;
+                    //     console.log("api -n-a-m-e-", this.personNameEntities);
+                    //
+                    //     for (let i = 0; i < this.person.nameList.length; i++) {
+                    //         let element = this.person.nameList[i];
+                    //         let currentNameEntity = this.personNameEntities.find(name => name.id === element.nameId);
+                    //         console.log("currentNameEntity", currentNameEntity);
+                    //         let connection = {
+                    //              "id": element.id,
+                    //             // "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
+                    //             // "connection": element.position,
+                    //             // "comment": element.comment,
+                    //             // "hasClicked": true
+                    //         };
+                    //         // console.log("CREATE PERS ON A: ", a);
+                    //         this.nameList.push(connection);
+                    //     }
+                    //     //console.log("occupationWithIndexList: ", this.occupationWithIndexList);
+                    // });
+
+
+                    apiAttachment.getAttachmentPhoto('person', this.person.id, r => {
+                        console.log("R DATA", r);
+                        this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;//.content;
+
+                       // let buffer = (new Buffer(r.data.toString()));
+
+
+                        //console.log(buffer.toString("base64"));
+                       // console.log("avatar.imageBase64", this.avatar.imageBase64, buffer);
+
+                       // this.originalPhoto = this.avatar.imageBase64;
+
+
+                        // console.log("BYTE []", r.data.blobContent.binaryStream);
+
+
+                        // var buffer = new ArrayBuffer(r.data.content);
+                        // console.log("buffer", buffer);
+
+                        // let arrayBufferView = new Uint8Array( r.data.blobContent );
+                        // console.log("arrBuffer", arrayBufferView);
+                        //
+
+
+
+
+                       let blob = new Blob([r.data], { type: 'image/jpeg' });
+                       console.log("BLOB", blob);
+
+
+
+
+
+                        // var array = new Uint8Array([0x04, 0x06, 0x07, 0x08]);
+                        // var blob = new Blob([array]);
+
+
+                        ////// let bytes = new Uint8Array(r.data.content.length);
+                        //let bytes = new Uint8Array(r.data.content, r.data.content.length);
+
+//                        // for (let i = 0; i < bytes.length; i++) {
+//                        //     bytes[i] = r.data.content[i];
+//                        // }
+
+
+                        // console.log("Uint8Array", bytes);
+                        // let blob = new Blob([r.data.content], { type: 'image/jpeg' });
+                        //
+                        // console.log("BLOB", blob);
+                        //
+                        //  const reader = new FileReader();
+                        //  reader.readAsDataURL(blob);
+                        //  reader.onload = e => {
+                        //      this.avatar.imageBase64 = e.target.result;
+                        //     // console.log("image55555555555555555Base64", this.avatar.imageBase64);
+                        //  };
+                    });
+
+                    //this.avatar.imageBase64 = this.person.photo;
                 });
             }
 
@@ -1321,6 +1736,19 @@
                 })
             },
 
+            isourceItems() {
+                return this.isourceEntries.map(entry => {
+                    const surname = entry.title;
+                    return Object.assign({}, entry, {title})
+                })
+            },
+
+            eventItems() {
+                return this.eventEntries.map(entry => {
+                    const surname = entry.title;
+                    return Object.assign({}, entry, {title})
+                })
+            },
 
             locationItems() {
                 if (this.locationEntries) {      ///todo analyze why undefined (after selection in the search list)
@@ -1523,7 +1951,7 @@
                 if (val !== null)
                     if (val.length > 2) {
                         if (typeof this.selectedOrg !== 'undefined') {
-                            if (this.person.testList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.person.positionDtoList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedOrg = "";
                         }
 
@@ -1533,7 +1961,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, localStorage.getItem('movement'),  r => {
+                        apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             // console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -1554,9 +1982,49 @@
 
                         api.searchPerson(val, localStorage.getItem('movement'), r => {
                             this.personEntries = r;
-                            // console.log("***ПОИСК ******", this.personEntries);
+                            console.log("***ПОИСК ******", this.personEntries);
                             this.isLoadingPerson = false;
                         });
+                    }
+            },
+
+            isourceSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedIsource !== 'undefined') {
+                            if (this.person.isourceList.length > 1)
+                                this.selectedIsource = "";
+                        }
+                        // Items have already been requested
+                        if (this.isLoadingIsource) return;
+                        this.isLoadingIsource = true;
+
+                        //todo
+                        // apiIsource.searchIsource(val, localStorage.getItem('movement'), r => {
+                        //     this.isourceEntries = r;
+                        //     console.log("***ПОИСК ******", this.isourceEntries);
+                        //     this.isLoadingIsource = false;
+                        // });
+                    }
+            },
+
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.person.eventList.length > 1)
+                                this.selectedEvent = "";
+                        }
+                        // Items have already been requested
+                        if (this.isLoadingIsource) return;
+                        this.isLoadingIsource = true;
+
+                        //todo
+                        // apiEvent.searchEvent(val, localStorage.getItem('movement'), r => {
+                        //     this.eventEntries = r;
+                        //     console.log("***ПОИСК ******", this.eventEntries);
+                        //     this.isLoadingEvent = false;
+                        // });
                     }
             },
         },

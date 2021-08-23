@@ -4,12 +4,17 @@ import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
 import com.hellokoding.springboot.restful.service.dto.EntityType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+//import javax.sql.rowset.serial.SerialBlob;
+//import javax.sql.rowset.serial.SerialException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
+//import java.sql.Blob;
+//import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +43,7 @@ public class AttachmentService {
      */
     public Integer createAttachment(EntityType entityType, Integer entityId, Instant created, String user, String fileName, byte[] content) {
 
-        Path entityPath = entityPathProvider.get(entityType, entityId);
+        Path entityPath = entityPathProvider.getPath(entityType, entityId);
         Integer id = idProvider.get();
         Path attachmentPathAndName = pathProvider.get(entityPath, id, fileName);
 
@@ -51,6 +56,48 @@ public class AttachmentService {
             e.printStackTrace();
         }
         return id;
+    }
+
+    public Integer createPhotoAttachment(EntityType entityType, Integer entityId, Instant created, String user, String fileName, byte[] content) {
+
+        Path entityPath = entityPathProvider.getPhotoPath(entityType, entityId);
+        Integer id = idProvider.get();
+        Path attachmentPathAndName = pathProvider.get(entityPath, id, fileName);
+
+        try {
+            Files.createDirectories(attachmentPathAndName.getParent());
+            System.out.println(attachmentPathAndName.toAbsolutePath());
+            Files.write(attachmentPathAndName, content, StandardOpenOption.APPEND, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+    public boolean deleteAttachmentPhoto(EntityType entityType, Integer entityId) {
+
+        Path entityPath = entityPathProvider.getPhotoPath(entityType, entityId);
+        List<Path> pathFilesInFolder = new ArrayList<>();
+
+        try {
+            pathFilesInFolder = Files.walk(entityPath)
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (pathFilesInFolder.size() == 1) {
+            try {
+                Files.delete(pathFilesInFolder.get(0));
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return false;
     }
 
     /**
@@ -67,7 +114,7 @@ public class AttachmentService {
         // return attachment list with properties collected
         // for now we use file system as the only "source of truth" for entity attachments
 
-        Path entityPath = entityPathProvider.get(entityType, entityId);
+        Path entityPath = entityPathProvider.getPath(entityType, entityId);
         List<Path> pathFilesInFolder = new ArrayList<>();
 
         try {
@@ -123,7 +170,7 @@ public class AttachmentService {
         BasicFileAttributes attributes;
         String stringsAfterSplit[];
 
-        Path entityPath = entityPathProvider.get(entityType, entityId);
+        Path entityPath = entityPathProvider.getPath(entityType, entityId);
         List<Path> pathFilesInFolder = new ArrayList<>();
 
         try {
@@ -159,6 +206,58 @@ public class AttachmentService {
                 e.printStackTrace();
             }
 //            catch (SerialException e) {
+//                e.printStackTrace();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+        }
+        return null;
+    }
+
+    public AttachmentDTO getAttachmentPhoto(EntityType entityType, Integer entityId) {
+        // build attachment path and return content from file system
+
+        AttachmentDTO attachmentDTO;
+        BasicFileAttributes attributes;
+        String stringsAfterSplit[];
+
+        Path entityPath = entityPathProvider.getPhotoPath(entityType, entityId);
+        List<Path> pathFilesInFolder = new ArrayList<>();
+
+        try {
+            pathFilesInFolder = Files.walk(entityPath)
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        attachmentDTO = new AttachmentDTO();
+        for (Path pathFile : pathFilesInFolder) {
+            try {
+                stringsAfterSplit = pathFile.getFileName().normalize().toString().split("#", 2);
+
+                attributes = Files.getFileAttributeView(pathFile, BasicFileAttributeView.class).readAttributes();
+                attachmentDTO.setDate(attributes.creationTime());
+                attachmentDTO.setSize(attributes.size());
+                attachmentDTO.setId(stringsAfterSplit[0]);
+                attachmentDTO.setName(stringsAfterSplit[1]);
+
+//                Blob blob = new SerialBlob(Files.readAllBytes(pathFile));
+//                System.out.println("----------------------------------------");
+//                System.out.println(blob.length());
+
+//                attachmentDTO.setBlobContent(blob);//Files.readAllBytes(pathFile));
+                attachmentDTO.setContent(Files.readAllBytes(pathFile));
+
+//                System.out.println("----------------------------------------");
+//                System.out.println(attachmentDTO);
+
+                return attachmentDTO;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } //catch (SerialException e) {
 //                e.printStackTrace();
 //            } catch (SQLException e) {
 //                e.printStackTrace();

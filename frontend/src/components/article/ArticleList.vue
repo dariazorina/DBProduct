@@ -102,32 +102,25 @@
 
             <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////-->
 
-            <div class="form-group row col-2"
+            <div class="form-group row col-3"
                  style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
-                <div class="col-5" style="padding: 0px;  margin:0;">
+                <div class="col-12" style="padding: 0px;  margin:0; background-color: transparent">
+
                     <b-form-group label=""
-                                  style="text-align: left; padding: 0px;  margin:0; background-color: transparent">
-                        <b-form-checkbox
-                                v-for="option in options1"
-                                v-model="statusCheckBox"
-                                :key="option.key"
-                                :value="option.value"
-                                name="statusSelection">
-                            {{ option.text }}
-                        </b-form-checkbox>
-                    </b-form-group>
-                </div>
-                <div class="col-6" style="padding: 0;  margin:0; margin-left:auto; background-color: transparent">
-                    <b-form-group label=""
-                                  style="text-align: left;  padding: 0;  margin:0;  background-color: transparent">
-                        <b-form-checkbox
-                                v-for="option in options2"
-                                v-model="statusCheckBox"
-                                :key="option.key"
-                                :value="option.value"
-                                name="statusSelection">
-                            {{ option.text }}
-                        </b-form-checkbox>
+                                  style="text-align: left; padding: 0;  margin-right:0px; background-color: transparent">
+                        <div class="form-check form-check-inline"
+                             style="padding: 0px; margin:0; background-color: transparent">
+
+                            <b-form-checkbox
+                                    v-for="option in statusList"
+                                    v-model="statusCheckBox"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    name="statusSelection"
+                                    style="margin-right: 14px; background-color: transparent">
+                                {{ option.name }}
+                            </b-form-checkbox>
+                        </div>
                     </b-form-group>
                 </div>
             </div>
@@ -273,22 +266,29 @@
                 :id="article.id"
                 :class="{'active': ((article.id === selectedArticle)&&(previousSelectedArticle!==selectedArticle))}">
 
-                <!--                <td :key="article.status">-->
                 <td>
-                    <div v-if="article.status==0">
-                        <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                    <div v-if="statusList.length > 0">
+                        <div v-if="statusList[0].name === article.status">
+                            <v-icon style="color: orange">mdi-pencil-plus</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="article.status==1">
-                        <v-icon style="color: orange">mdi-check</v-icon>
+                    <div v-if="statusList.length > 1">
+                        <div v-if="statusList[1].name === article.status">
+                            <v-icon style="color: orange">mdi-check</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="article.status==2">
-                        <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                    <div v-if="statusList.length > 2">
+                        <div v-if="statusList[2].name === article.status">
+                            <v-icon style="color: red">mdi-clipboard-arrow-left</v-icon>
+                        </div>
                     </div>
 
-                    <div v-if="article.status==3">
-                        <v-icon style="color: green">mdi-check</v-icon>
+                    <div v-if="statusList.length > 3">
+                        <div v-if="statusList[3].name === article.status">
+                            <v-icon style="color: green">mdi-check</v-icon>
+                        </div>
                     </div>
                 </td>
                 <td>
@@ -388,8 +388,8 @@
         <context-menu id="context-menu" ref="ctxMenu">
             <li class="ctx-item" v-b-modal="'modal-color'">выделить...</li>
             <li class="ctx-item" @click="cancelRowSelection">отменить выделение</li>
-            <li class="ctx-item" @click="changeStatusReturned">изменить "На доработке"</li>
-            <li class="ctx-item" @click="changeStatusDone">изменить "Отработаны"</li>
+            <li class="ctx-item" @click="changeStatusReturned">изменить "{{statusList[2].name}}"</li>
+            <li class="ctx-item" @click="changeStatusDone">изменить "{{statusList[3].name}}"</li>
         </context-menu>
 
         <b-modal id="modal-color" :hide-footer=true :hide-header=true>
@@ -480,6 +480,7 @@
     import Vue from 'vue';
     import api from "./article-api";
     import apiPerson from "./../person/person-api";
+    import apiStatus from "./../status-api";
     import apiCountry from "./../country/country-api";
     import apiOrg from "./../org/org-api";
 
@@ -505,7 +506,7 @@
             return {
                 color: '#1CA085',
                 articles: [],
-                article: {status: 0, personList: [], locationList: [], orgList: [], hashtagList: []},
+                article: {status: '', personList: [], locationList: [], orgList: [], hashtagList: []},
                 authors: [],
                 articlePersonIds: [], //before request
                 articlePersonEntities: [], //after request
@@ -530,14 +531,13 @@
                 searchKey: '',
 
                 statusCheckBox: [],
-                options1: [
-                    {text: 'В работе', value: 0},
-                    {text: 'Внесены', value: 1},
-                ],
-                options2: [
-                    {text: 'На доработке', value: 2},
-                    {text: 'Отработаны', value: 3},
-                ],
+                statusList: [
+                    {id:1, name:''},  //to prevent access to undefined list
+                    {id:2, name:''},
+                    {id:3, name:''},
+                    {id:4, name:''}
+                    ],
+
                 connectionType: [
                     {text: 'потомок', value: 0},
                     {text: 'равноправные', value: 1},
@@ -646,17 +646,17 @@
 
         methods: {
 
-            pp() {
-                let getItem = localStorage.getItem;
-                localStorage.getItem = (key, target) => {
-                    console.info("Getting", key);
-                    // Создаем зависимый экземпляр Vue
-                    if (!storeItemSubscribers[key]) storeItemSubscribers[key] = [];
-                    if (target) storeItemSubscribers[key].push(target);
-                    // Вызываем оригинальную функцию
-                    return getItem.call(localStorage, key);
-                }
-            },
+            // pp() {  //todo what is it and what for
+            //     let getItem = localStorage.getItem;
+            //     localStorage.getItem = (key, target) => {
+            //         console.info("Getting", key);
+            //         // Создаем зависимый экземпляр Vue
+            //         if (!storeItemSubscribers[key]) storeItemSubscribers[key] = [];
+            //         if (target) storeItemSubscribers[key].push(target);
+            //         // Вызываем оригинальную функцию
+            //         return getItem.call(localStorage, key);
+            //     }
+            // },
 
 
             filterClearButtonActivity(hide, filterClearButtonId) {
@@ -776,12 +776,12 @@
 
             changeStatusReturned() {
                 let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
-                this.updateArticleStatus(currentArticle.id, 2);
+                this.updateArticleStatus(currentArticle.id, this.statusList[2].name);
             },
 
             changeStatusDone() {
                 let currentArticle = this.filteredArticles.find(x => x.id === this.selectedArticle);
-                this.updateArticleStatus(currentArticle.id, 3);
+                this.updateArticleStatus(currentArticle.id, this.statusList[3].name);
             },
 
             selectRow(articleId) {
@@ -1282,7 +1282,12 @@
         mounted() {
             this.getLoggedIn();
 
-           // console.log("ENTER MOUNTED");
+            apiStatus.getAllStatuses(response => {
+                this.statusList = response.data;
+                console.log("STATUS LIST", this.statusList);
+            });
+
+            // console.log("ENTER MOUNTED");
             window.addEventListener('storage', (event) => {
                 console.log("event", event);
 

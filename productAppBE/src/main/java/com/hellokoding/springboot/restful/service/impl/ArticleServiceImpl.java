@@ -28,6 +28,8 @@ public class ArticleServiceImpl implements ArticleService {
     private final OrgRepository orgRepository;
     private final MTypeRepository materialTypeRepository;
     private final ConnectionTypeRepository ctypeRepository;
+    private final StatusRepository statusRepository;
+
 
     @Override
     public List<ArticleDto> findAll() {
@@ -148,7 +150,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         article.setDate(articleDto.getDate());
-        article.setStatus(articleDto.getStatus());
+
+        Optional<Status> byName = statusRepository.getByName(articleDto.getStatus());
+        if (byName.isPresent()) {
+            article.setStatus(byName.get());
+        }
+
         article.setDescription(articleDto.getDescription());
         article.setText(articleDto.getText());
         article.setRgbSelection(articleDto.getRowColor());

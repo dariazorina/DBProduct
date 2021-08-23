@@ -39,7 +39,10 @@ public class Article {
 
     private Date date;
     private String title;
-    private Integer status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", nullable = false)
+    private Status status;
 
 
     @Column(name = "title_rus")

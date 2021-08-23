@@ -7,7 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.List;
 
-@Table(name="t_org")
+@Table(name = "t_org")
 @Entity
 @Data
 public class Org {
@@ -29,43 +29,39 @@ public class Org {
 
     @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude //    @JsonIgnore
-    private List<ArticleOrgConnection> connections;
+    private List<ArticleOrgConnection> articleConnections;  //todo to research
 
-    private String settlement;
-
-    @Column(name="name_rus")
-    private String nameRus;
-
-    @Column(name="abbr_rus")
-    private String abbrRus;
-
-    private String name;
-    private String abbr;
-
-    @Column(name="name_eng")
-    private String nameEng;
-
-    @Column(name="abbr_eng")
-    private String abbrEng;
-
-    private String type;
-    private Integer founded;
-    private Integer closed;
 
     @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
-//    @ToString.Exclude
-//    @JsonIgnore             //was active (without NewPersonDto)
-    private List<Position> occupation;
+    @ToString.Exclude
+    private List<OrgPersonConnection> personConnections;
 
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgLocationConnection> locationConnections;
+
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgOrgConnection> orgConnections;
+
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgIsourceConnection> isourceConnections;
+
+//    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    @ToString.Exclude
+//    private List<OrgName> nameList;
 
     @ManyToMany
     @JoinTable(
-            name = "org_actor",
+            name = "org_name",
             joinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"),
-            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"))
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Person> actorList;
+            inverseJoinColumns = @JoinColumn(name = "org_name_id", referencedColumnName = "org_name_id"))
+    private List<OrgName> nameList;
+
+//    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<Position> occupation;  //todo to delete?
+
 
     @ManyToMany
     @JoinTable(
@@ -74,6 +70,16 @@ public class Org {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
-    private String address;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "org", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgHashtag> hashtagList;
+
+
+    private String type;
+    //    @Column(name = "founded_year")
+    private Integer foundedYear;
+    private Integer closedYear;
     private String description;
+    private String miscellany;
 }

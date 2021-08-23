@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="14072021-18">
+        <createTable tableName="t_connect_org_location">
+
+            <column autoIncrement="true" name="connection_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_connect_org_location_pkey"/>
+            </column>
+
+            <column name="org_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="location_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="connection" type="TEXT"/>
+
+            <column name="comment" type="TEXT"/>
+
+        </createTable>
+        <addUniqueConstraint columnNames="org_id, location_id, connection" tableName="t_connect_org_location"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="14072021-19">
+        <addForeignKeyConstraint baseColumnNames="org_id"
+                                 baseTableName="t_connect_org_location"
+                                 constraintName="t_org_connect_org_location_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="org_id"
+                                 referencedTableName="t_org"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="14072021-20">
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="t_connect_org_location"
+                                 constraintName="t_location_connect_org_location_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="location_id"
+                                 referencedTableName="t_location1"/>
+    </changeSet>
+
+</databaseChangeLog>

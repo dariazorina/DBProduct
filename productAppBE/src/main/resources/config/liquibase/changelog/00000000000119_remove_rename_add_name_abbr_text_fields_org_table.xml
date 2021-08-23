@@ -1,0 +1,88 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="14072021-21">
+        <dropColumn columnName="name"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="abbr"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="name_eng"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="abbr_eng"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="name_rus"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="abbr_rus"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="settlement"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <dropColumn columnName="address"
+                    schemaName="public"
+                    tableName="t_org"/>
+
+        <renameColumn columnDataType="INT"
+                      newColumnName="founded_year"
+                      oldColumnName="founded"
+                      schemaName="public"
+                      tableName="t_org"/>
+
+        <renameColumn columnDataType="INT"
+                      newColumnName="closed_year"
+                      oldColumnName="closed"
+                      schemaName="public"
+                      tableName="t_org"/>
+
+        <addColumn schemaName="public"
+                   tableName="t_org">
+            <column name="rgb_selection" type="TEXT"/>
+        </addColumn>
+
+        <addColumn schemaName="public"
+                   tableName="t_org">
+            <column name="status" type="INT"/>
+        </addColumn>
+      </changeSet>
+
+    <changeSet author="Даша" id="14072021-222">
+
+        <modifyDataType columnName="type"
+                        newDataType="INT"
+                        schemaName="public"
+                        tableName="t_org"/>
+
+
+    </changeSet>
+    <changeSet author="Даша" id="14072021-22">
+        <addForeignKeyConstraint baseColumnNames="type"
+                                 baseTableName="t_org"
+                                 constraintName="t_org_type_org_type_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="org_type_id"
+                                 referencedTableName="t_org_type"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="14072021-23">
+        <addForeignKeyConstraint baseColumnNames="status"
+                                 baseTableName="t_org"
+                                 constraintName="t_org_status_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="status_id"
+                                 referencedTableName="t_status"/>
+    </changeSet>
+</databaseChangeLog>

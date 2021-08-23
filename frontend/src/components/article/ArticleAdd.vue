@@ -42,25 +42,23 @@
 
                 <form class="formCreation">
                     <div class="form-row align-items-center" style="background-color: transparent">
-                        <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
-                            <div class="col-12" style="background-color: transparent">
-                                <label>Текущее движение: {{currentUserMovement.name}} </label><br>
-                            </div>
-                            <label><b>Добавить дополнительное движение:</b></label>
-                            <div class="col-12" style="background-color: transparent">
+                        <div class="col-12" style="background-color: transparent">
+                            <label>Текущее движение: {{currentUserMovement.name}} </label><br>
+                        </div>
+                        <div class="col-12" style="background-color: transparent">
+                            <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
+                                <label>Добавить дополнительное движение:</label>
                                 <div v-for="(movement, index) in allMovements">
                                     <input v-bind:value="movement.id" name="movement.name" type="checkbox"
                                            v-model="checkedMovements"/>
-                                    <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
                                     <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div v-else class="col-12">
-                            <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
-                                    class="btn btn-info">Добавить дополнительное движение
-                            </button>
+                            <div v-else>
+                                <b-button size="sm" variant="info" @click="addAdditionalMovement">
+                                    Добавить дополнительное движение
+                                </b-button>
+                            </div>
                         </div>
                     </div>
 
@@ -454,9 +452,12 @@
                         <div class="col-3" style="background-color: transparent">
                             <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
                                            style="background-color: transparent;">
-                                <option v-for="status in statusOptions" v-bind:value="status.value">
-                                    {{status.text}}
+
+                                <option v-for="status in statusList">
+                                    <!--                                    v-bind:value="status.id"-->
+                                    {{status.name}}
                                 </option>
+
                             </b-form-select>
                             <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
@@ -498,10 +499,10 @@
                             <label for="checkbox">Нажмите "галочку", если хотите добавить файлы</label>
                         </div>
 
-                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[0])"
+                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(statusList[0])"
                                 class="btn btn-warning">В работе
                         </button>
-                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(status[1])"
+                        <button type="button" style="margin-right: 20px" @click="preliminaryDataCheck(statusList[1])"
                                 class="btn btn-success">Внесены
                         </button>
 
@@ -535,6 +536,7 @@
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
+    import apiStatus from "./../status-api";
 
     import FileAttachment from "../components/FileAttachment";
     import moment from "moment";
@@ -645,13 +647,7 @@
             articleMaterialIds: [], //before request
             articleMaterialEntities: [], //after request
 
-            status: ["statusProgress", "statusDone"],
-            statusOptions: [
-                {text: 'В работе', value: 0},
-                {text: 'Внесены', value: 1},
-                {text: 'На доработке', value: 2},
-                {text: 'Отработаны', value: 3},
-            ],
+            statusList: [],
             editMode: false,
 
             avatar: {
@@ -1044,12 +1040,7 @@
                     "id": this.selectedL
                 };
 
-                if (currentStatus === this.status[0]) {
-                    this.article.status = 0;
-                } else {
-                    this.article.status = 1;
-                }
-
+                this.article.status = currentStatus.name;
                 this.hasError = false;
 
                 for (let i = 0; i < this.tags.length; i++) {
@@ -1441,6 +1432,11 @@
                 console.log(response.data)
             });
 
+            apiStatus.getAllStatuses(response => {
+                this.statusList = response.data;
+                console.log("STATUS LIST", this.statusList);
+            });
+
             apiHashtag.getAllHashtags(response => {
                 // this.allTags = response.data;
                 this.hashtagFlatTree = this.createFlatTree(response.data);
@@ -1491,6 +1487,10 @@
                     console.log("article EDIT!", this.article);
 
                     this.selectedL = this.article.language.id;
+
+                    // let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
+                    // this.selectedS = this.statusList.find(status => status.name === this.article.status).id;
+
                     this.selectedS = this.article.status;
                     // console.log("STATUS", this.article.status);
                     this.article.date = this.formatDate(this.article.date);

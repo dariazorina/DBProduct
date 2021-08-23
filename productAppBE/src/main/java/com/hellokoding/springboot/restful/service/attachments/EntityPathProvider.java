@@ -20,7 +20,12 @@ class EntityPathProvider {
      * @param id    entity id
      * @return  entity home path
      */
-    Path get(EntityType type, Integer id) {
+    Path getPath(EntityType type, Integer id) {
         return Path.of(attachmentsRoot, type.getName(), id.toString());
+    }
+
+    Path getPhotoPath(EntityType type, Integer id) {
+        String s = id.toString()+"photo";
+        return Path.of(attachmentsRoot, type.getName(), s);
     }
 }

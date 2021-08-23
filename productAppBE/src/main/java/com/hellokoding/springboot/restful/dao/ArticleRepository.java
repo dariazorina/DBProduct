@@ -93,11 +93,13 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "left join aO.org aOrg " +
             "left join a.locationConnections aLo " +
             "left join aLo.location aLoc " +
-            "join a.language l " +
+            "left join a.language l " +
             "join a.movementList aML " +
-            "where ((:org is null  or lower(aOrg.nameRus) like :org) " +
+            "left join aP.snpList snpL " +
+            "left join aOrg.nameList nmL " +
+            "where ((:org is null  or lower(nmL.name) like :org) " +
             "and (:location is null or lower(aLoc.country) like :location) " +
-            "and (:author is null or lower(aP.surnameRus) like :author) " +
+            "and (:author is null or lower(snpL.surname) like :author) " +
             "and (:hashTag is null or assh.content like :hashTag) " +
             "and (:comment is null or lower(a.miscellany) like :comment) " +
             "and (:text is null or lower(a.text) like :text) " +
@@ -119,11 +121,14 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "left join aO.org aOrg " +
             "left join a.locationConnections aLo " +
             "left join aLo.location aLoc " +
-            "join a.language l " +
+            "left join a.language l " +
             "join a.movementList aML " +
-            "where ((:org is null  or lower(aOrg.nameRus) like :org) " +
+            "left join aP.snpList snpL " +
+            "left join aOrg.nameList nmL " +
+            "join a.status aSt " +
+            "where ((:org is null  or lower(nmL.name) like :org) " +
             "and (:location is null or lower(aLoc.country) like :location) " +
-            "and (:author is null or lower(aP.surnameRus) like :author) " +
+            "and (:author is null or lower(snpL.surname) like :author) " +
             "and (:hashTag is null or assh.content like :hashTag) " +
             "and (:comment is null or lower(a.miscellany) like :comment) " +
             "and (:text is null or lower(a.text) like :text) " +
@@ -131,7 +136,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and (:lang is null or lower(l.name) like :lang) " +
             "and (:title is null or lower(a.titleRus) like :title) " +
             "and (aML.id = :movement) " +
-            "and a.status in (:status) " +
+            "and aSt.id in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate))")
     Set<Article> findByFiltersAndDateAndStatusAndMovement(String title, String hashTag, String author, String org, String location,
                                                String lang, String comment, String text, String description, List<Integer> status, Date startDate, Date endDate, Integer movement);
@@ -164,8 +169,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     //    //search status+title+date
     @Query("from Article a " +
             "join a.movementList aML " +
+            "join a.status aSt " +
             "where (lower(a.title) like lower(:title) or lower(a.titleRus) like lower(:title)) " +
-            "and a.status in (:status) " +
+            "and aSt.id in (:status) " +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByTitleAndStatusAndDateAndMovement(@Param("title") String title, @Param("status") List<Integer> status, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Integer movement);
@@ -259,9 +265,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.personConnections aL " +
             "join aL.person aP " +
+            "join aP.snpList snpL " +
             "join a.movementList aML " +
-            "where (lower(aP.surname) like lower(:author) " +
-            "or lower(aP.surnameRus) like lower(:author) ) " +
+            "where (lower(snpL.surname) like lower(:author)) " +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByAuthorAndDateAndMovement(String author, Date startDate, Date endDate, Integer movement);
@@ -271,9 +277,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.personConnections aL " +
             "join aL.person aP " +
+            "join aP.snpList snpL " +
             "join a.movementList aML " +
-            "where (lower(aP.surname) like lower(:author) " +
-            "or lower(aP.surnameRus) like lower(:author)) " +
+            "where (lower(snpL.surname) like lower(:author)) " +
             "and a.status in :status " +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
@@ -304,9 +310,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.orgConnections aL " +
             "join aL.org aP " +
+            "join aP.nameList nmL " +
             "join a.movementList aML " +
-            "where (lower(aP.name) like lower(:org) " +
-            "or lower(aP.nameRus) like lower(:org)) " +
+            "where (lower(nmL.name) like lower(:org)) " +
             "and a.status in :status " +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
@@ -317,9 +323,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "from Article a " +
             "join a.orgConnections aL " +
             "join aL.org aP " +
+            "join aP.nameList nmL " +
             "join a.movementList aML " +
-            "where (lower(aP.name) like lower(:org) " +
-            "or lower(aP.nameRus) like lower(:org) ) " +
+            "where (lower(nmL.name) like lower(:org))" +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     List<Article> findByOrgAndDateAndMovement(String org, Date startDate, Date endDate, Integer movement);
@@ -360,7 +366,8 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     @Query("from Article a " +
             "join a.movementList aML " +
-            "where a.status in :status " +
+            "join a.status aSt " +
+            "where aSt.id in :status " +
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate)")
     Set<Article> findByDateAndStatusAndMovement(List<Integer> status, Date startDate, Date endDate, Integer movement);

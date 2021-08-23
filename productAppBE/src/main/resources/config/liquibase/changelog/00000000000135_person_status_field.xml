@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="30072021-1">
+        <renameColumn columnDataType="INT"
+                      newColumnName="status_id"
+                      oldColumnName="status"
+                      schemaName="public"
+                      tableName="t_person"/>
+
+
+    </changeSet>
+    <changeSet author="Даша" id="30072021-2">
+        <addForeignKeyConstraint baseColumnNames="status_id"
+                                 baseTableName="t_person"
+                                 constraintName="t_person_status_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="RESTRICT" onUpdate="NO ACTION"
+                                 referencedColumnNames="status_id" referencedTableName="t_status"/>
+    </changeSet>
+</databaseChangeLog>
