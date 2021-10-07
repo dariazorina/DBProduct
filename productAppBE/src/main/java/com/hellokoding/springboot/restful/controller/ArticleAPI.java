@@ -4,6 +4,8 @@ import com.hellokoding.springboot.restful.model.Article;
 import com.hellokoding.springboot.restful.model.ConnectionType;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 import com.hellokoding.springboot.restful.model.dto.IdContentDto;
+import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
+import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import com.hellokoding.springboot.restful.service.ConnectionTypeService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
@@ -95,8 +97,14 @@ public class ArticleAPI {
     }
 
     @PostMapping("/ids")
-    public ResponseEntity<List<Article>> getMaterialsByIds(@Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<IdContentDto>> getMaterialsByIds(@Valid @RequestBody List<Integer> idList) {
         return ResponseEntity.ok(articleService.findByIds(idList));
+    }
+
+    @PostMapping("/symmids/{id}")
+    public ResponseEntity<List<NameConnectionDto>> getMaterialsByIdsAndSymmetrically(@PathVariable Integer id, @Valid @RequestBody List<Integer> idList) {
+        //List<IdContentDto> rrr = orgService.findByIdsAndSymmetrically(idList, id);
+        return ResponseEntity.ok(articleService.findByIdsAndSymmetrically(idList, id));
     }
 
     @PostMapping("/connectionTypes")

@@ -1,18 +1,6 @@
 <template id="hashtag">
     <div>
         <link href="../dbnm.css" rel="stylesheet"/>
-        <div v-if="!isAddHashtagMode" class="form-group row" style="margin-bottom: -10px; margin-top: -20px">
-            <div class="col-3 col-form-label">
-                <p class="greetingsTitle">Welcome, {{loggedName}}!
-                    <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
-                    </button>
-                    <!--                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>-->
-                </p>
-                <!-- Modal Component -->
-                <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
-            </div>
-        </div>
-
 
         <!--//////////////////////////////////////////add/edit hashtag/////////////////////////////////////////////////////////////////-->
         <form class="hashtagAddVue">

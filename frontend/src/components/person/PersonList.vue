@@ -138,12 +138,11 @@
                     </div>
                 </td>
                 <td class='tdAlignLeft'>
-                    <!--                    <div v-for="occ in person.testList">{{occ.position}}</div>-->
+                                        <div v-for="org in person.orgList">{{org.connection}}</div>
                 </td>
 
                 <td class='tdAlignLeft'>
-                    <!--                    <div v-for="occ in person.testList">{{getOrgNameById(occ.orgId)}}</div>-->
-                    <!--                    <div v-for="org in person.orgList">{{org.name}}</div>-->
+                                        <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
                 </td>
                 <td class='tdAlignLeft'>
                     <div v-for="ph in person.hashtagList">
@@ -214,7 +213,7 @@
     import apiOrg from "./../org/org-api";
     import apiCountry from "./../country/country-api";
 
-    import OccupationList from "../components/person-occupation/OccupationList";
+    // import OccupationList from "../components/person-occupation/OccupationList";
     import contextMenu from 'vue-context-menu'
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'
@@ -224,7 +223,7 @@
 
     export default {
         components: {
-            OccupationList,
+            // OccupationList,
             contextMenu,
             VSwatches,
             CreatedList,
@@ -236,7 +235,7 @@
                 persons: [],
                 entries: [],
 
-                person: {status: 0, locationList: [], positionDtoList: [], hashtagList: [], snpList: []},
+                person: {status: 0, locationList: [], orgList: [], hashtagList: [], snpList: []},
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
                 personOrgIds: [], //before request
@@ -320,23 +319,20 @@
         methods: {
 
             getPrioritySNP(currentPerson) {
-
-                console.log("*************************", this.entries);
+              //  console.log("*************************", this.entries);
                 let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
 
-
                     for (let i = 0; i < currentPerson.snpList.length; i++) {
-                        console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
+                        //console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
 
                         if (currentPerson.snpList[i].priority === 1) {
                             sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
 
                             if (currentPerson.snpList[i].patronymic != null)
                                 sss += currentPerson.snpList[i].patronymic;
-                            console.log("******^^^^^^^^^^^^^****", sss);
+                           // console.log("******^^^^^^^^^^^^^****", sss);
                         }
                     }
-
                 // console.log("*************************", sss);
                 return sss;
             },
@@ -487,28 +483,33 @@
                 let result = '';
                 let currentOrg = this.personOrgEntities.find(x => x.id === id);
 
-                // console.log("ORG", currentOrg);
+                //console.log("ORG", currentOrg, id, this.personOrgEntities);
                 if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.nameRus;
-                    return result;
+                    result = currentOrg.content;
                 }
+                return result;
+            },
+
+            getOrgPositionById(id) {
+                let result = '';
+                let currentOrg = this.personOrgEntities.find(x => x.id === id);
+
+                console.log("ORG", currentOrg, id, this.personOrgEntities);
+                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+                    result = currentOrg.content;
+                }
+                return result;
             },
 
             getLocationCellById(id) {
                 let result = '';
                 let currentLocation = this.personLocationEntities.find(x => x.id === id);
+                //console.log("currLoc", currentLocation);
 
                 if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentLocation.country;
-
-                    if (this.isArrayValidAndNotEmpty(currentLocation.region)) {
-                        result += " / " + currentLocation.region;
-                    }
-                    if (this.isArrayValidAndNotEmpty(currentLocation.city)) {
-                        result += " / " + currentLocation.city;
-                    }
-                    return result;
+                    result = currentLocation.content;
                 }
+                return result;
             },
 
             isArrayValidAndNotEmpty(array) {
@@ -516,15 +517,6 @@
                     return false;
                 }
                 return true;
-            },
-
-            showCountry(country) {
-                if (country) {
-                    // console.log("COUNTRY " + country.name);
-                    return country.name;
-                }
-                // console.log("COUNTRY NULL")
-                return "";
             },
 
             filterAll() {
@@ -552,28 +544,33 @@
 
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
-                console.log("STATUS LIST", this.statusList);
+//                console.log("STATUS LIST", this.statusList);
             });
 
             api.getAllPersons(localStorage.getItem('movement'), response => {
                 // this.persons = response.data;
                 this.entries = response.data;
-                // console.log("PERSONS", response.data)
+               // console.log("PERSONS", response.data, this.entries.length);
 
                 for (let i = 0; i < this.entries.length; i++) {
-                    for (let j = 0; j < this.entries[i].positionDtoList.length; j++) {
-                        this.personOrgIds.push(this.entries[i].positionDtoList[j].orgId);
-                    }
+
+                   for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                       this.personOrgIds.push(this.entries[i].orgList[j].itemId);
+                   }
+
                     for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                        // console.log("^@@@@@@@@@^^^^^^^^^^^", this.entries[i].locationList);
                         this.personLocationIds.push(this.entries[i].locationList[j].itemId);
                     }
                 }
-                // apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                //     this.personOrgEntities = response.data;
-                // });
+
+                apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                    this.personOrgEntities = response.data;
+                });
 
                 apiCountry.getLocationsByIds(this.personLocationIds, response => {
                     this.personLocationEntities = response.data;
+                  //  console.log("^^^^^^^^^^^^^^^^^", this.personLocationEntities);
                 });
             });
         },

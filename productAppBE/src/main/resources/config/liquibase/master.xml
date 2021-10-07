@@ -105,5 +105,9 @@
     <include file="config/liquibase/changelog/00000000000139_remove_lang_fields_org_name_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000141_remove_org_field_org_name_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000143_add_org_name_connection_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000147_load_org_material_types.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000149_rename_org_type.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/000000000000151_drop_position_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000153_add_security_columns.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

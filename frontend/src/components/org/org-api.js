@@ -8,13 +8,26 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllOrgs(fn) {
+    getAllOrgs(mov, fn) {
         return AXIOS
-            .get(`/org`)
+            .get(`/org?mov=` + mov)
             .then(response => fn(response))
             .catch(error => {
+                console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
+                }
+            })
+    },
+
+    update(id, org, fn) {
+        AXIOS
+            .put('/org/' + id, org)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
                 }
             })
     },
@@ -25,7 +38,7 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 } else {
                     fnError(error.response.data);
                 }
@@ -39,7 +52,7 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
                 }
             })
     },
@@ -50,7 +63,19 @@ export default {
             .catch(error => {
                 console.log(error);
                 if (error.response.status === 401) {
-                    router.push('/login');
+                    this.error401Handling();
+                }
+            });
+    },
+
+    getOrgsByIdsAndSymmetrically(id, idList, fn) {
+        AXIOS
+            .post(`/org/symmids/` + id, idList)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
                 }
             });
     },
@@ -78,7 +103,12 @@ export default {
                 router.push('/login');
             }
         })
-    }
+    },
+
+    error401Handling() {
+        localStorage.clear();
+        router.push('/login');
+    },
 }
 
 

@@ -2,22 +2,12 @@
     <div>
         <!--        <link href="../dbnm.css" rel="stylesheet"/>-->
         <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px; background-color: transparent">
-            <div class="col-3 col-form-label">
-                <p class="greetingsTitle">Welcome, {{loggedName}}!
-                    <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
-                    </button>
-                    <!--                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>-->
-                </p>
-                <!-- Modal Component -->
-                <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
-            </div>
-
 
             <!--            ////////////////////////////////date period/////////////////////////////////////-->
-            <div class="form-group row col-9"
+            <div class="form-group row col-12"
                  style="margin: 0; background-color: transparent; padding-right: 0px; padding: 0;">
 
-                <div class="col-8"
+                <div class="col-9"
                      style="margin-top: 0px; background-color: transparent; padding:0">
                     <a class="btn btn-default">
                         <router-link :to="{name: 'article-add'}">Add article</router-link>
@@ -25,7 +15,7 @@
                     <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
                 </div>
 
-                <div class="form-group row col-4"
+                <div class="form-group row col-3"
                      style="margin: 0; margin-left: 0; padding:0; background-color: transparent">
 
                     <div class="col-5"
@@ -103,13 +93,13 @@
             <!--//////////////////////////////////STATUS////////////////////////////////////////////////////////////////-->
 
             <div class="form-group row col-3"
-                 style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0; margin-bottom: 0">
+                 style="margin-left:auto; margin-right:0; background-color: transparent; padding: 0;  margin-top: 0px; margin-bottom: 0">
                 <div class="col-12" style="padding: 0px;  margin:0; background-color: transparent">
 
                     <b-form-group label=""
                                   style="text-align: left; padding: 0;  margin-right:0px; background-color: transparent">
                         <div class="form-check form-check-inline"
-                             style="padding: 0px; margin:0; background-color: transparent">
+                             style="padding: 0px; margin:0px -5px 0px; background-color: transparent">
 
                             <b-form-checkbox
                                     v-for="option in statusList"
@@ -117,7 +107,7 @@
                                     :key="option.id"
                                     :value="option.id"
                                     name="statusSelection"
-                                    style="margin-right: 14px; background-color: transparent">
+                                    style="margin-right: 14px; margin-top: 24px; background-color: transparent">
                                 {{ option.name }}
                             </b-form-checkbox>
                         </div>
@@ -532,11 +522,11 @@
 
                 statusCheckBox: [],
                 statusList: [
-                    {id:1, name:''},  //to prevent access to undefined list
-                    {id:2, name:''},
-                    {id:3, name:''},
-                    {id:4, name:''}
-                    ],
+                    {id: 1, name: ''},  //to prevent access to undefined list
+                    {id: 2, name: ''},
+                    {id: 3, name: ''},
+                    {id: 4, name: ''}
+                ],
 
                 connectionType: [
                     {text: 'потомок', value: 0},
@@ -693,7 +683,7 @@
 
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
-               /////// this.currentFilterItems.push(item);  //push item(item: {id, content}
+                /////// this.currentFilterItems.push(item);  //push item(item: {id, content}
 
                 let key = this.filterTableFields.find(x => x === this.currentFilterField).key;
                 this.filterClearButtonActivity(false, this.filterTableFieldsForRequest[key].text + 'FilterId');
@@ -910,11 +900,7 @@
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
 
                 if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentPerson.surnameRus;
-
-                    if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
-                        result += " " + currentPerson.nameRus;
-                    }
+                    result = currentPerson.content;
                     return result;
                 }
             },
@@ -924,14 +910,7 @@
                 let currentLocation = this.articleLocationEntities.find(x => x.id === id);
 
                 if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentLocation.country;
-
-                    if (this.isArrayValidAndNotEmpty(currentLocation.region)) {
-                        result += " / " + currentLocation.region;
-                    }
-                    if (this.isArrayValidAndNotEmpty(currentLocation.city)) {
-                        result += " / " + currentLocation.city;
-                    }
+                    result = currentLocation.content;
                     return result;
                 }
             },
@@ -941,22 +920,10 @@
                 let currentOrg = this.articleOrgEntities.find(x => x.id === id);
 
                 if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.nameRus;
+                    result = currentOrg.content;
                     return result;
                 }
             },
-
-            // createComplexCellValue(valueRus, valueOrig) {
-            //     let result = '';
-            //
-            //     if (this.isArrayValidAndNotEmpty(valueRus)) {
-            //         result = valueRus;
-            //         if (this.isArrayValidAndNotEmpty(valueOrig))
-            //             result += " / " + valueOrig;
-            //     } else if (this.isArrayValidAndNotEmpty(valueOrig))
-            //         result += valueOrig;
-            //     return result;
-            // },
 
             updateArticleStatus(id, status) {
                 api.findById(id, r => {
@@ -975,23 +942,12 @@
                         this.deleteSearch();
                         this.filterAll(false);
                     });
-                    // this.article.date = this.formatDate(this.article.date);
-
-                    // this.tags = this.article.hashtagList;
-                    // for (let i = 0; i < this.article.hashtagList.length; i++) {
-                    //     this.tags.push(this.article.hashtagList[i].content);
-                    // }
-
-                    // for (let i = 0; i < this.article.linkList.length; i++) {
-                    //     this.links.push(this.article.linkList[i].content);
-                    // }
                 });
             },
 
             refreshPeriod() {
                 //console.log("ACHTUNG new start", this.startDate);
                 // console.log("ACHTUNG end start", this.endDate);
-
                 const moment = require('moment');
 
                 let d1 = moment(this.startDate);
@@ -1008,7 +964,6 @@
                 } else {
                     // Vue.prototype.startDate = this.startDate;
                     // Vue.prototype.endDate = this.endDate;
-
                     localStorage.setItem('startDate', this.startDate);
                     localStorage.setItem('endDate', this.endDate);
 
@@ -1107,7 +1062,6 @@
                         }
                     }
                 }
-
                 console.log("rrrrrrrrrrrrrrres", result);
                 return result;
             },
@@ -1291,7 +1245,7 @@
             window.addEventListener('storage', (event) => {
                 console.log("event", event);
 
-                if(event.key === 'startDate') {
+                if (event.key === 'startDate') {
                     console.log("CATCH STARTDATE");
                     this.startDate = localStorage.getItem('startDate');
 
@@ -1299,40 +1253,9 @@
                 }
             });
 
-        // let input = document.getElementById("add-level");
-        // if (input)
-        // // input.addEventListener("keyup", function (event) {
-        //     input.addEventListener("keyup", (event) => {
-        //         if (event.key === "Enter") {
-        //             console.log("CATCH ENTER");
-        //             event.preventDefault();
-        //             this.addOrUpdateHashtag();
-        //         }
-        //
-        //         if (event.key === "Backspace") {
-        //             event.preventDefault();
-        //             this.hashtagContentTitle();
-        //         }
-        //
-        //         if (event.key === "Delete") {
-        //             event.preventDefault();
-        //             this.hashtagContentTitle();
-        //         }
-        //     });
-
             this.startDate = localStorage.getItem('startDate');
             this.endDate = localStorage.getItem('endDate');
-
             // console.log("startDate", this.startDate);
-
-            // api.getAll().then(response => {
-            //     this.articles = response.data;
-            //     this.entries = this.articles;
-            //     // console.log(response.data)
-            // })
-            //     .catch(error => {
-            //         this.errors.push(error)
-            //     })
 
             api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
                 this.entries = r.data;
@@ -1368,17 +1291,9 @@
         },
 
         watch: {
-            // currentArticle: function () {
-            //     console.log("CURRENT ARTICLE WATCH", this.currentArticle);
-            // },
-
             startDate: function (newDate, oldDate) {
                 console.log(`We have ${newDate} fruits now, yay! ${oldDate}`)
             },
-
-            // localStorage: function(newV){
-            //     console.log("~~~~~~~~~~~ localSt", newV);
-            // },
 
             searchKey: function () {
                 //If empty search to renew the table
@@ -1409,13 +1324,6 @@
                 if (this.statusCheckBox[this.statusCheckBox.length - 1] === 3) {
                     console.log("this.statusCheckBox!!! == 3");
 
-                    // document.getElementById("startdate-input").style.backgroundColor = "lightgrey";
-                    // document.getElementById("enddate-input").style.backgroundColor = "lightgrey";
-                    //
-                    // document.getElementById("startdate-input").disabled = true;
-                    // document.getElementById("enddate-input").disabled = true;
-                    // document.getElementById("refreshButton").disabled = true;
-
                     for (let i = 0; i < this.statusCheckBox.length; i++) {
                         if (this.statusCheckBox[i] !== 3) {
                             this.statusCheckBox.shift();
@@ -1426,18 +1334,10 @@
 
                     console.log("AFTER", this.statusCheckBox);
                 } else {
-                    // document.getElementById("startdate-input").style.backgroundColor = "white";
-                    // document.getElementById("enddate-input").style.backgroundColor = "white";
-                    //
-                    // document.getElementById("startdate-input").disabled = false;
-                    // document.getElementById("enddate-input").disabled = false;
-                    // document.getElementById("refreshButton").disabled = false;
-
-                    for (let i = 0; i < this.statusCheckBox.length; i++) {
+                     for (let i = 0; i < this.statusCheckBox.length; i++) {
                         if (this.statusCheckBox[i] === 3) {
                             this.statusCheckBox.splice(i, 1);
                             console.log("SPLICE");
-
                             // document.getElementById("startdate-input").style.backgroundColor = "white";
                         }
                     }

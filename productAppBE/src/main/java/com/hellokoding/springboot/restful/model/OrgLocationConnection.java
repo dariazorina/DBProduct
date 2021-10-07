@@ -7,7 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name="t_connect_person_location")
+@Table(name="t_connect_org_location")
 @Data
 public class OrgLocationConnection {
 

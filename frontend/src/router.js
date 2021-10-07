@@ -16,6 +16,8 @@ import ArticleAdd from '@/components/article/ArticleAdd'
 
 import EventList from '@/components/event/EventList'
 import OrgList from '@/components/org/OrgList'
+import OrgAdd from '@/components/org/OrgAdd'
+import OrgDetails from '@/components/org/OrgDetails'
 
 import CountryList from '@/components/country/CountryList'
 import CountryEdit from '@/components/country/CountryEdit'
@@ -33,8 +35,6 @@ import LanguageEdit from '@/components/language/LanguageEdit';
 import HashtagList from '@/components/hashtag/HashtagList';
 
 import MaterialTypeList from '@/components/mtype/MaterialTypeList';
-
-import OrgAdd from '@/components/org/OrgAdd';
 
 import store from './store'
 // import HashtagList from "./components/hashtag/HashtagList";
@@ -66,8 +66,8 @@ const router = new Router({
         {path: '/person/add', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/edit', component: PersonAdd, name: 'person-add'},
         {path: '/person/:person_id/delete', component: PersonDelete, name: 'person-delete'},
-
         {path: '/person/:person_id/details', component: PersonDetails, name: 'person-details'},
+
         {path: '/article', component: ArticleList},
         {path: '/article/:article_id/details', component: ArticleDetails, name: 'article-details'},
         {path: '/article/add', component: ArticleAdd, name: 'article-add'},
@@ -75,36 +75,46 @@ const router = new Router({
         {path: '/article/:article_id/delete', component: ArticleDelete, name: 'article-delete'},
 
         {path: '/event', component: EventList},
-        {path: '/org', component: OrgList},
 
-        {path: '/country', component: CountryList},
-        {path: '/country/add', component: CountryAdd, name: 'country-add'},
-        {path: '/country/:country_id/edit', component: CountryEdit, name: 'country-edit'},
-        {path: '/country/:country_id/delete', component: CountryDelete, name: 'country-delete'},
+        {path: '/country', component: CountryList, meta: {isAdminPage: true}},
+        {path: '/country/add', component: CountryAdd, name: 'country-add', meta: {isAdminPage: true}},
+        {path: '/country/:country_id/edit', component: CountryEdit, name: 'country-edit', meta: {isAdminPage: true}},
+        {path: '/country/:country_id/delete', component: CountryDelete, name: 'country-delete', meta: {isAdminPage: true}},
 
-        {path: '/movement', component: MovementList},
-        {path: '/movement/add', component: MovementAdd, name: 'movement-add'},
-        {path: '/movement/:movement_id/edit', component: MovementEdit, name: 'movement-edit'},
+        {path: '/movement', component: MovementList, meta: {isAdminPage: true}},
+        {path: '/movement/add', component: MovementAdd, name: 'movement-add', meta: {isAdminPage: true}},
+        {path: '/movement/:movement_id/edit', component: MovementEdit, name: 'movement-edit', meta: {isAdminPage: true}},
 
-        {path: '/language', component: LanguageList},
-        {path: '/language/add', component: LanguageAdd, name: 'language-add'},
-        {path: '/language/:language_id/edit', component: LanguageEdit, name: 'language-edit'},
+        {path: '/language', component: LanguageList, meta: {isAdminPage: true}},
+        {path: '/language/add', component: LanguageAdd, name: 'language-add', meta: {isAdminPage: true}},
+        {path: '/language/:language_id/edit', component: LanguageEdit, name: 'language-edit', meta: {isAdminPage: true}},
 
-        {path: '/hashtag', component: HashtagList},
-        {path: '/hashtag/add', component: HashtagList, name: 'hashtag'},
+        {path: '/hashtag', component: HashtagList, meta: {isAdminPage: true}},
+        {path: '/hashtag/add', component: HashtagList, name: 'hashtag', meta: {isAdminPage: true}},
 
-        {path: '/mtype', component: MaterialTypeList},
+        {path: '/mtype', component: MaterialTypeList, meta: {isAdminPage: true}},
         // {path: '/mtype/add', component: MaterialTypeList, name: 'mtype'},
 
         {path: '/org', component: OrgList},
         {path: '/org/add', component: OrgAdd, name: 'org-add'},
+        {path: '/org/:org_id/details', component: OrgDetails, name: 'org-details'},
 
-        {path: '/uadmin', component: UserAdmin, name: 'user-admin'},
+        {path: '/uadmin', component: UserAdmin, meta: {isAdminPage: true}},
+        // {path: '/uadmin', component: UserAdmin, name: 'user-admin'},
 
         // otherwise redirect to home
         {path: '*', redirect: '/'}
     ]
 });
+
+//attempt to fix logout status
+// router.afterEach((to, from) => {
+//     // Use next tick to handle router history correctly
+//     // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+//     Vue.nextTick(() => {
+//         document.title = to.meta.title || DEFAULT_TITLE;
+//     });
+// });
 
 router.beforeEach((to, from, next) => {
     // if (to.matched.some(record => record.path=== '/login')) {
@@ -136,7 +146,15 @@ router.beforeEach((to, from, next) => {
                 path: '/login'
             })
         } else {
-            next();
+
+            if (to.matched.some(record => record.meta.isAdminPage)) {
+
+                if (localStorage.getItem('isAdmin') === 'true') {
+                    next();
+                }
+            } else {
+                next();
+            }
         }
 
     } else {

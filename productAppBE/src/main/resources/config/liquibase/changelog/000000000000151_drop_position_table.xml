@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="20092021-1">
+        <dropForeignKeyConstraint baseTableName="t_position"
+                                  baseTableSchemaName="public"
+                                  constraintName="t_person_position_ref_id_fkey"/>
+
+        <dropForeignKeyConstraint baseTableName="t_position"
+                                  baseTableSchemaName="public"
+                                  constraintName="t_org_position_ref_id_fkey"/>
+
+    </changeSet>
+
+    <changeSet author="Даша" id="20092021-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="t_position"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="t_position"/>
+
+    </changeSet>
+
+</databaseChangeLog>

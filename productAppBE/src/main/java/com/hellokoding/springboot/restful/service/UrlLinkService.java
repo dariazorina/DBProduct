@@ -13,4 +13,6 @@ public interface UrlLinkService {
     UrlLink save(UrlLink stock);
 
     void deleteById(Integer id);
+
+    public List<UrlLink> getLinkListID(List<UrlLink> linkList);
 }

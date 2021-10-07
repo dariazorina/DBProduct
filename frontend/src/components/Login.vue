@@ -1,19 +1,5 @@
 <template>
-    <div>
-        <div class="unprotected" v-if="loginError">
-            <div class="form-group row">
-                <div class="col-2 col-form-label">
-                    <p class="pageLoginErrorTitle">Authentication error, try again</p>
-                </div>
-            </div>
-        </div>
-        <div class="unprotected" v-else>
-            <div class="form-group row">
-                <div class="col-2 col-form-label">
-                    <p class="pageLoginTitle">Please login to get access</p>
-                </div>
-            </div>
-        </div>
+    <div style="background-color: transparent">
         <div>
             <form class="pageLoginForm" @submit.prevent="callLogin()">
 
@@ -60,6 +46,7 @@
 <script>
 
     import Vue from 'vue';
+    import EventBus from './event-bus';
 
     export default {
         name: 'login',
@@ -74,16 +61,30 @@
             }
         },
         methods: {
+
+            emitMethod() {
+                //console.log("+++++++++++++++++++++++++++++++++++++++++++++emit");
+                EventBus.$emit('EVENT_NAME', this.loginSuccess);
+            },
+
             callLogin() {
                 this.errors = [];
                 this.$store.dispatch("login", {user: this.user, password: this.password})
                     .then(() => {
-                        console.log("--login page--");
+                        //console.log("--login page--");
+                        this.loginSuccess = true;
+
+                        this.emitMethod();
+
                         this.$router.push('/')
                         // this.$router.push('/article')
                     })
                     .catch(error => {
                         this.loginError = true;
+                        this.loginSuccess = false;
+
+                        this.emitMethod();
+
                         this.errors.push(error);
                         this.error = true
                     })

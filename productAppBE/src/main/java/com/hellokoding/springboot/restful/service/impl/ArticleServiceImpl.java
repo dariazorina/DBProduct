@@ -5,8 +5,12 @@ import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.ArticleDto;
 import com.hellokoding.springboot.restful.model.dto.IdContentDto;
 import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
+import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
 import com.hellokoding.springboot.restful.service.ArticleService;
+import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
+//import org.hibernate.proxy.HibernateProxy;
+//import org.hibernate.proxy.LazyInitializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleMaterialRepository articleMaterialRepository;
     private final HashTagRepository hashTagRepository;
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
@@ -30,6 +35,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ConnectionTypeRepository ctypeRepository;
     private final StatusRepository statusRepository;
 
+    private final UrlLinkService urlLinkService;
 
     @Override
     public List<ArticleDto> findAll() {
@@ -85,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        UrlLink linkByContent;
 //        UrlLink linkWithID;
         List<UrlLink> linkList = articleDto.getLinkList();
-        List<UrlLink> linkListWithID = new ArrayList<>();
+//        List<UrlLink> linkListWithID = new ArrayList<>();
 
 //        for (UrlLink link : linkList) {
 //            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
@@ -100,8 +106,9 @@ public class ArticleServiceImpl implements ArticleService {
 //            }
 //        }
 
-        LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
-        ll.getLinkListID(linkList, linkListWithID);
+//        LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
+//        ll.getLinkListID(linkList, linkListWithID);
+        List<UrlLink> linkListWithID = urlLinkService.getLinkListID(linkList);
 
         Article article;
         if (articleDto.getId() == null) {
@@ -367,7 +374,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        return article;
     }
 
-    public List<Article> findByIds(List<Integer> idList) {
+    public List<IdContentDto> findByIds(List<Integer> idList) {
 
         List<Article> searchRes = new ArrayList<>();
         for (Integer id : idList) {
@@ -379,43 +386,148 @@ public class ArticleServiceImpl implements ArticleService {
 //                searchRes.add(l.get());
 //            }
         }
-        return searchRes;
+        return createResultSearchNameAndDate(searchRes, null);
     }
+
+    public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
+
+        Article connectedArticle, article;
+        String dtoName = "", connection = "", comment = "";
+       // Set<Article> searchRes = new TreeSet<>();
+        List<NameConnectionDto> finalList = new ArrayList<>();
+
+        List<ArticleMaterialConnection> searchResSymm;// = new ArrayList<>();
+
+        Optional<Article> articleOpt = articleRepository.findById(itemId);
+        if (articleOpt.isPresent()) {
+            article = articleOpt.get();             //   searchRes.add(l.get());
+
+            searchResSymm = articleMaterialRepository.findByIdSymm(itemId); //searching symm connections for this itemId
+//            for (ArticleMaterialConnection articleMaterialConnection : searchResSymm) {
+//                Article symmArticle = articleMaterialConnection.getArticle();
+//                Article unproxiedPlayer = new Article();
+//                if (symmArticle instanceof HibernateProxy) {
+//                    HibernateProxy hibernateProxy = (HibernateProxy) symmArticle;
+//                    LazyInitializer initializer =
+//                            hibernateProxy.getHibernateLazyInitializer();
+//                    unproxiedPlayer = (Article) initializer.getImplementation();
+//                }
+//
+//                if (unproxiedPlayer != null)
+//                    searchRes.add(unproxiedPlayer);
+//            }//for
+
+            for (Integer id : idList) { //simple connections
+                Optional<Article> connArticleOpt = articleRepository.findById(id);
+
+                if (connArticleOpt.isPresent()) {
+                    connectedArticle = connArticleOpt.get();             //   searchRes.add(l.get());
+                    if (connectedArticle.getTitleRus() != null) {
+                        if (connectedArticle.getTitleRus().length() > 0) {
+                            dtoName += connectedArticle.getTitleRus();
+                            if (connectedArticle.getTitle() != null) {
+                                if (connectedArticle.getTitle().length() > 0) {
+                                    dtoName += "/ " + connectedArticle.getTitle();
+                                }
+                            }
+                        }
+                    }
+                    LocalDate dateWithZeroTime = connectedArticle.getDate().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+
+                    if (dateWithZeroTime != null) dtoName += ", " + dateWithZeroTime; //article.getDate().;
+                    else {
+                        dtoName += "," + connectedArticle.getLinkList().get(0);  //as the first help in fail with date
+                    }
+
+                    for (ArticleMaterialConnection articleMaterialConnection : article.getMaterialConnections()) {
+                        if (articleMaterialConnection.getMaterial().getId().equals(connectedArticle.getId())) {
+                            Optional<ConnectionType> ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+                            if (ct.isPresent()) {
+                                connection = ct.get().getType();
+                            }
+                            if (articleMaterialConnection.getComment() != null) {
+                                if (articleMaterialConnection.getComment().length() != 0) {
+                                    comment = articleMaterialConnection.getComment();
+                                }
+                            }
+                        }
+                    }
+                    NameConnectionDto articleDto = new NameConnectionDto(connectedArticle.getId(), dtoName, connection, comment);
+                    dtoName = "";
+                    connection = "";
+                    comment = "";
+                    finalList.add(articleDto);
+                }
+            }//for
+
+            for (ArticleMaterialConnection articleMaterialConnection : searchResSymm) {
+                if (articleMaterialConnection.getMaterial().getId().equals(article.getId())) {
+
+                    dtoName = articleMaterialConnection.getArticle().getTitleRus();
+                    LocalDate dateWithZeroTime = articleMaterialConnection.getArticle().getDate().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    if (dateWithZeroTime != null) {
+                        dtoName += ", " + dateWithZeroTime;
+                    }
+                    Optional<ConnectionType> ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+                    if (ct.isPresent()) {
+                        connection = ct.get().getType();
+                    }
+                    if (articleMaterialConnection.getComment() != null) {
+                        if (articleMaterialConnection.getComment().length() != 0) {
+                            comment = articleMaterialConnection.getComment();
+                        }
+                    }
+                    NameConnectionDto articleDto = new NameConnectionDto(articleMaterialConnection.getMaterial().getId(), dtoName, connection, comment);
+                    finalList.add(articleDto);
+                }
+            }
+        }
+        return finalList;
+    }
+
 
     @Override
     public List<IdContentDto> searchMaterial(String q, Integer mov) {
         List<Article> rrr = articleRepository.findMaterialByTitleAndMovement("%" + q + "%", mov);
-        return createResultSearchNameAndDate(rrr);
+        return createResultSearchNameAndDate(rrr, null);
     }
 
     @Override
     public List<IdContentDto> searchMaterialById(Integer id) {
         Optional<Article> rrr = articleRepository.findById(id);
-        if (rrr != null) {
+        if (rrr.isPresent()) {
             List<Article> finalList = new ArrayList<>();
             finalList.add(rrr.get());
-            return createResultSearchNameAndDate(finalList);
+            return createResultSearchNameAndDate(finalList, null);
         }
         return null;
     }
 
 
-    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch) {
+    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
 
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
 
         for (Article article : resultSearch) {
-            if (article.getTitle() != null) {
-                if (article.getTitle().length() > 0) {
-                    dtoName += article.getTitle();
+            if (article.getTitleRus() != null) {
+                if (article.getTitleRus().length() > 0) {
+                    dtoName += article.getTitleRus();
 
-                    if (article.getTitleRus() != null) {
-                        dtoName += "/ " + article.getTitleRus();
+                    if (article.getTitle() != null) {
+                        if (article.getTitle().length() > 0) {
+                            dtoName += "/ " + article.getTitle();
+                        }
                     }
                 }
-            } else if (article.getTitleRus() != null) {
-                dtoName += article.getTitleRus();
+            } else if (article.getTitle() != null) {
+                if (article.getTitle().length() > 0) {
+                    dtoName += article.getTitle();
+                }
             }
 
             LocalDate dateWithZeroTime = article.getDate().toInstant()
@@ -428,13 +540,25 @@ public class ArticleServiceImpl implements ArticleService {
                 dtoName += "," + article.getLinkList().get(0);  //as the first help in fail with date
             }
 
+            if (resultSearchConnection != null) {
+                for (ArticleMaterialConnection articleMaterialConnection : resultSearchConnection) {
+                    if (articleMaterialConnection.getArticle().getId() == article.getId()) {
+                        dtoName += "/ " + articleMaterialConnection.getConnection();
+                        if (articleMaterialConnection.getComment() != null) {
+                            if (articleMaterialConnection.getComment().length() != 0) {
+                                dtoName += "/ " + articleMaterialConnection.getComment();
+                            }
+                        }
+                    }
+                }
+            }
+
             IdContentDto articleDto = new IdContentDto(article.getId(), dtoName);
             dtoName = "";
             fooSet.add(articleDto);
         }
         List<IdContentDto> finalList = new ArrayList<>(fooSet);
         return finalList;
-
     }
 
     public List<ArticleDto> search(String description, String text, List<Integer> status, String startDate, String endDate, Integer movement) {
@@ -483,8 +607,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
     public List<ArticleDto> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
-                                   List<String> location, List<String> language, String description, String text, List<String> misc,
-                                   List<Integer> status, String startDate, String endDate, Integer movement){
+     List<String> location, List<String> language, String description, String text, List<String> misc,
+     List<Integer> status, String startDate, String endDate, Integer movement){
 
         boolean isSingleFilter = false;
         int hashCurrentSize = 0;
@@ -810,7 +934,7 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             if (status.get(0) == -1) {
 //                if (movement != null){  //to delete
-                    searchList = articleRepository.findAllByDateBetweenAndMovement(frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findAllByDateBetweenAndMovement(frmtStartDate, frmtEndDate, movement);
 //                } else {
 //                    searchList = articleRepository.findAllByDateBetween(frmtStartDate, frmtEndDate);
 //                }
@@ -818,7 +942,7 @@ public class ArticleServiceImpl implements ArticleService {
 //            searchList = articleRepository.findAllByStatus(status);
             } else {
 //                if (movement != null) {  //
-                    searchList = articleRepository.findByDateAndStatusAndMovement(status, frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findByDateAndStatusAndMovement(status, frmtStartDate, frmtEndDate, movement);
 //                } else {
 //                    searchList = articleRepository.findByDateAndStatus(status, frmtStartDate, frmtEndDate);
 //                }

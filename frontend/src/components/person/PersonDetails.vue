@@ -3,22 +3,15 @@
         <link href="../dbnm.css" rel="stylesheet"/>
         <iframe id="iframeToDownload" style="display:none;"></iframe>
 
-        <div class="form-group row">
-            <div class="col-2 col-form-label">
-                <p class="pageDetailsTitle">Person Details</p>
-            </div>
-        </div>
-
         <div class="row">
             <!--            ////////////////photo exists!/////////////////////////-->
             <div v-if="avatar.imageBase64" class="col-sm-2" style="background-color: transparent">
-
                 <div id="preview" style="background-color: transparent">
                     <img v-bind:src="avatar.imageBase64" :style="{ width: 250+'px' }"/>
                 </div>
             </div>
 
-            <div v-if="avatar.imageBase64" class="col-sm-10">
+            <div v-bind:class="[avatar.imageBase64 ? 'col-sm-10' : 'col-sm-12']">
                 <div class="details" style="background-color: transparent">
                     <!--        ///////////////////////////////////////////////////////////-->
                     <div class="row">
@@ -83,7 +76,7 @@
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
                             <div>
-                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}<br></a>
+                                <a v-for="org in person.orgList">{{showOrgAndPosition(org.itemId)}}<br></a>
                             </div>
                         </div>
                     </div>
@@ -94,7 +87,7 @@
                         </div>
                         <div class="col-sm-10 back1" style="text-align: left;">
                             <div>
-                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>
+                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn)}}<br></a>
                             </div>
                         </div>
                     </div>
@@ -166,150 +159,11 @@
 
                 </div>
             </div>
-            <!--            /////////////////photo is absent////////////////-->
-            <div v-else class="col-sm-12">
-                <div class="details" style="background-color: transparent">
-                    <!--        ///////////////////////////////////////////////////////////-->
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                                <span class="float-left">ФИО</span></div>
-                        </div>
-                        <div class="col-sm-10">
-                            <span class="float-left"> {{getSNPWithPriority(1)}}</span></div>
-                    </div>
-
-                    <!--//////////////////////////////////////////////////////////////////-->
-                    <div class="row">
-                        <div class="col-sm-2 back1">
-                            <div class="cellTitle">
-                                <span class="float-left">Прочие написания ФИО</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-10 back1"><span class="float-left">{{getSNPWithPriority(0)}}</span>
-                        </div>
-                    </div>
-
-                    <!--        //////////////////////////////////////////////////////////////////////-->
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="cellTitle">
-                                <span class="float-left">Годы жизни</span></div>
-                        </div>
-                        <div class="col-sm-10"><span
-                                class="float-left"> {{person.birthYear}} - {{person.deathYear}}</span>
-                        </div>
-                    </div>
-
-                    <!--/////////////////////////////////////////////////////////////////////////////////////////////-->
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Местонахождение</span></div>
-                        </div>
-                        <!--                        <div class="col-sm-10 back1"><span-->
-                        <!--                                class="float-left"> {{showCountry(person.country)}} </span>-->
-                        <!--                        </div>-->
-
-                        <div class="col-sm-10 back1">
-                            <div v-for="location in personLocationEntities">
-                                {{createComplexLocationById(location.id)}}<br>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="cellTitle"><span class="float-left">Организация / Должность</span></div>
-                        </div>
-                        <div class="col-sm-10" style="text-align: left;">
-                            <div>
-                                <a v-for="test in person.testList">{{showOrgAndPosition(test)}}<br></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Связанные персоны</span></div>
-                        </div>
-                        <div class="col-sm-10 back1" style="text-align: left;">
-                            <div>
-                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="cellTitle"><span class="float-left">Описание</span></div>
-                        </div>
-
-                        <div class="col-sm-10" style="text-align: left; padding-bottom: 0">
-                            <span v-html="person.description"></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Хештеги</span></div>
-                        </div>
-                        <div class="col-sm-10 back1"><span class="float-left">
-                <div style="text-align: left" v-for="ht in person.hashtagList">{{ht}}</div></span>
-                        </div>
-                    </div>
-
-                    <!--        <div class="row">-->
-                    <!--            <div class="col-sm-2" style="background-color:lavender;">-->
-                    <!--                <div class="cellTitle"><span class="float-left">Movement</span></div>-->
-                    <!--            </div>-->
-
-                    <!--            <div class="col-sm-10" style="background-color:lavender;"><span-->
-                    <!--                    class="float-left">{{person.movement.name}} </span></div>-->
-                    <!--        </div>-->
-
-
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="cellTitle"><span class="float-left">Links</span></div>
-                        </div>
-
-                        <div class="col-sm-10">
-                            <span class="float-left">
-                                <div class="linkButton" v-for="link in person.linkList">
-                                    <span class="float-left">
-                                        <button class="btn btn-link" style="font-size: small"
-                                                @click="goURL(link.content)">{{link.content}}</button>
-                                     </span>
-                                 </div>
-                             </span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-2 back1">
-                            <div class="cellTitle"><span class="float-left">Статус</span></div>
-                        </div>
-                        <div class="col-sm-10 back1"><span class="float-left"> {{person.status}}</span>
-                        </div>
-                    </div>
-
-                    <div v-if="uploadedFiles.length > 0" style="background-color: transparent">
-                        <file-attachment @getAttachment="getAttachment"
-                                         @downloadAttachment="downloadAttachment"
-                                         :userName="loggedName"
-                                         :already-uploaded-files="uploadedFiles"
-                                         :is-details-mode="true"/>
-                    </div>
-
-                </div>
-            </div>
         </div>
 
         <div class="my-md-4">
             <a class="btn btn-outline-info btn-sm mr-2">
-                <router-link to="/person">Back To Person List</router-link>
+                <router-link to="/person">Обратно к списку персон</router-link>
             </a>
         </div>
     </div>
@@ -345,8 +199,12 @@
         },
         data() {
             return {
+                className: null,
                 persons: [],
-                person: {country: {}, hashtagList: [], linkList: [], locationList: []},
+                person: {
+                    hashtagList: [], linkList: [], locationList: [], orgList: [], personList: [],
+                    isourceList: [], movementList: [], snpList: []
+                },
 
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
@@ -366,19 +224,6 @@
                 errors: [],
                 showResponse: false,
 
-                // statusList: [
-                //     {id: 1, name: ''},  //to prevent access to undefined list
-                //     {id: 2, name: ''},
-                //     {id: 3, name: ''},
-                //     {id: 4, name: ''}
-                // ],
-                // statusOptions: [
-                //     {text: 'В работе', value: 0},
-                //     {text: 'Внесены', value: 1},
-                //     {text: 'На доработке', value: 2},
-                //     {text: 'Отработаны', value: 3},
-                // ],
-
                 avatar: {
                     image: null,
                     imageUrl: null,
@@ -388,34 +233,6 @@
         },
 
         methods: {
-            getSNPWithPriority(priority) {
-
-                //console.log("*************************", this.entries);
-                let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
-
-                for (let i = 0; i < this.person.snpList.length; i++) {
-                    //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
-
-                    if (this.person.snpList[i].priority === priority) {
-                        console.log("SNP priority", priority, this.person.snpList[i].surname);
-
-                        if (priority === 1) {
-                            this.personAddSurnameTFValues[0] = this.person.snpList[i].surname;
-                            this.personAddNameTFValues[0] = this.person.snpList[i].name;
-                            if (this.person.snpList[i].patronymic != null)
-                                this.personAddPatrTFValues[0] = this.person.snpList[i].patronymic;
-                        } else {
-                            this.personAddSurnameTFValues[i + 1] = this.person.snpList[i].surname;
-                            this.personAddNameTFValues[i + 1] = this.person.snpList[i].name;
-                            if (this.person.snpList[i].patronymic != null)
-                                this.personAddPatrTFValues[i + 1] = this.person.snpList[i].patronymic;
-                        }
-                        //console.log("******^^^^^^^^^^^^^****", sss);
-                    }
-                }
-                // console.log("*************************", sss);
-                return sss;
-            },
 
             downloadAttachment(file) {
                 document.getElementById('iframeToDownload').src = '/api/v1/person/downloadAttachment?entityId=' + this.person.id + '&id=' + file.id;
@@ -432,65 +249,26 @@
                 this.loggedName = this.$store.getters.getUserName;
             },
 
-            // getOrgNameById(orgId) {
-            //     if (this.allOrgs !== null) {
-            //         for (let i = 0; i < this.allOrgs.length; i++) {
-            //             if (this.allOrgs[i].id === orgId) {
-            //                 return this.allOrgs[i].name;
-            //             }
-            //         }
-            //     }
-            // },
+            showOrgAndPosition(id) {
 
-            getOrgNameById(id) {
                 let result = '';
                 let currentOrg = this.personOrgEntities.find(x => x.id === id);
-
-                // console.log("ORG", currentOrg);
-                if (this.isObjectValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.nameRus;
-                    return result;
+                if (currentOrg != null) {
+                    result = currentOrg.content;
                 }
-            },
+//                console.log("00000000000000000000", currentOrg, id, this.personOrgEntities);
 
-            // createComplexOrgById(id) {
-            //     let currentOrg = this.articleOrgEntities.find(x => x.id === id);
-            //     let connection = this.article.orgList.find(x => x.itemId === id);
-            //     let result;
-            //
-            //     if (this.isObjectValidAndNotEmpty(currentOrg.name)) {
-            //         result = currentOrg.name + "/ " + currentOrg.nameRus;
-            //     } else {
-            //         result = currentOrg.nameRus;
-            //     }
-            //
-            //     if (this.isObjectValidAndNotEmpty(currentOrg.abbr)) {
-            //         result += "/ " + currentOrg.abbr;
-            //     }
-            //
-            //     if (this.isObjectValidAndNotEmpty(currentOrg.abbrRus)) {
-            //         result += "/ " + currentOrg.abbrRus;
-            //     }
-            //
-            //     if (this.isObjectValidAndNotEmpty(connection.connection))
-            //         result += "/ " + connection.connection;
-            //
-            //     if (this.isObjectValidAndNotEmpty(connection.comment))
-            //         result += "/ " + connection.comment;
-            //
-            //     return result;
-            // },
+                let connection = this.person.orgList.find(x => x.itemId === id);
+                if (connection != null) {
+                    console.log("1111111111", connection);
 
-            showOrgAndPosition(occ) {
-                if (occ.comment !== null) {
-                    if (occ.comment.length === 0) {
-                        return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
-                    } else {
-                        return this.getOrgNameById(occ.orgId) + " / " + occ.position + " / " + occ.comment + "; ";
-                    }
-                } else {
-                    return this.getOrgNameById(occ.orgId) + " / " + occ.position + "; ";
+                    if (this.isObjectValidAndNotEmpty(connection.connection))
+                        result += "/ " + connection.connection;
+
+                    if (this.isObjectValidAndNotEmpty(connection.comment))
+                        result += "/ " + connection.comment;
                 }
+                return result;
             },
 
             goURL(url) {
@@ -498,10 +276,7 @@
             },
 
             getSNPWithPriority(priority) {
-
-                //console.log("*************************", this.entries);
                 let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
-
 
                 for (let i = 0; i < this.person.snpList.length; i++) {
                     //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
@@ -519,39 +294,13 @@
                         //console.log("******^^^^^^^^^^^^^****", sss);
                     }
                 }
-
-                // console.log("*************************", sss);
                 return sss;
             },
 
             createComplexLocationById(id) {
                 let currentLocation = this.personLocationEntities.find(x => x.id === id);
-                let result = currentLocation.country;
-
-                // console.log("00000000000000000000", currentPerson);
-
+                let result = currentLocation.content;
                 let connection = this.person.locationList.find(x => x.itemId === id);
-                // console.log("1111111111", connection);
-
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.region)) {
-                    result += ", " + currentLocation.region;
-                }
-                if (this.isObjectValidAndNotEmpty(currentLocation.city)) {
-                    result += ", " + currentLocation.city;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.address)) {
-                    result += ", " + currentLocation.address;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.placement)) {
-                    result += ", " + currentLocation.placement;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.miscellany)) {
-                    result += "/ " + currentLocation.miscellany;
-                }
 
                 if (this.isObjectValidAndNotEmpty(connection.connection))
                     result += "/ " + connection.connection;
@@ -562,38 +311,22 @@
                 return result;
             },
 
-            createComplexPersonById(id) {
-                let currentPerson = this.personPersonEntities.find(x => x.id === id);
+            createComplexPersonById(prsn) {
                 let result = '';
+                let currentPerson = prsn;//this.personPersonEntities.find(x => x.itemId === id);
+                //console.log("IIIIIIIIIIIIIIIIIID", id, this.personPersonEntities, currentPerson);
 
-                let priorSNP = currentPerson.snpList.find(x => x.priority === 1);
-                result = priorSNP.surname;
-                let connection = this.person.personList.find(x => x.itemId === id);
+                if (currentPerson != null) {
+                    result = currentPerson.name;
 
+                    if (this.isObjectValidAndNotEmpty(currentPerson.connection))
+                        result += "/ " + currentPerson.connection;
 
-                if (this.isObjectValidAndNotEmpty(priorSNP.name)) {
-                    result += " " + priorSNP.name;
-                }
-                if (this.isObjectValidAndNotEmpty(priorSNP.patronymic)) {
-                    result += " " + priorSNP.patronymic;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentPerson.birthYear)) {
-                    result += ", " + currentPerson.birthYear;
-                }
-
-                if (this.isObjectValidAndNotEmpty(connection.connection)) {
-                    result += " / " + connection.connection;
-                }
-
-                if (this.isObjectValidAndNotEmpty(connection.comment)) {
-                    result += "/ " + connection.comment;
+                    if (this.isObjectValidAndNotEmpty(currentPerson.comment))
+                        result += "/ " + currentPerson.comment;
                 }
 
                 result += "\n";
-
-                console.log("res", result);
-
                 return result;
             },
 
@@ -606,6 +339,7 @@
             },
         },
         mounted() {
+            this.className = "col-sm-2";
             this.getLoggedIn();
 
             // apiStatus.getAllStatuses(response => {
@@ -628,7 +362,7 @@
 
             api.findById(this.$route.params.person_id, r => {
                 this.person = r.data;
-                console.log(r.data);
+                //console.log("_____person__________________", r.data);
 
                 for (let j = 0; j < this.person.locationList.length; j++) {
                     this.personLocationIds.push(this.person.locationList[j].itemId);
@@ -643,25 +377,24 @@
 
                 for (let j = 0; j < this.person.personList.length; j++) {
                     this.personPersonIds.push(this.person.personList[j].itemId);
+                   // console.log("PRSN person", this.person.personList, this.personPersonIds);
                 }
 
-                api.getPersonsByIds(this.personPersonIds, response => {
+                api.getPersonsByIdsAndSymmetrically(this.person.id, this.personPersonIds, response => {
                     this.personPersonEntities = response.data;
+                    //console.log("``````````````````persperspers", this.personPersonEntities);
+
                 });
 
-                for (let j = 0; j < this.person.testList.length; j++) {
-                    this.personOrgIds.push(this.person.testList[j].orgId);
-                    //console.log("+", j);
+                for (let j = 0; j < this.person.orgList.length; j++) {
+                    this.personOrgIds.push(this.person.orgList[j].itemId);
+                  //  console.log("+ * % ^ & U OIUOI OI", this.personOrgIds);
                 }
 
                 apiOrg.getOrgsByIds(this.personOrgIds, response => {
                     this.personOrgEntities = response.data;
                     //console.log("apiOrga", this.personOrgEntities);
                 });
-
-
-
-
             });
         },
     }

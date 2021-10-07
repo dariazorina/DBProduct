@@ -4,11 +4,12 @@ import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.PersonService;
+import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.access.method.P;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 
 @Service
@@ -18,24 +19,21 @@ public class PersonServiceImpl implements PersonService {
 
     private final ArticleRepository articleRepository;
     private final PersonRepository personRepository;
-    private final PositionRepository positionRepository;
+    private final PersonPersonRepository personPersonRepository;
+
     private final EventRepository eventRepository;
     private final OrgRepository orgRepository;
     private final ScpaperRepository scpaperRepository;
     private final IsourceRepository isourceRepository;
     private final HashTagRepository hashTagRepository;
-    //    private final PersonHashtagRepository personHashtagRepository;
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
-//    private final LanguageRepository languageRepository;
     private final SnpRepository snpRepository;
     private final StatusRepository statusRepository;
 
-    @Override
-//    public List<Person> findAll() {
-//        return personRepository.findAll();
-//    }
+    private final UrlLinkService urlLinkService;
 
+    @Override
     public List<NewPersonDto> findAll(Integer mov) {
 
         List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
@@ -57,10 +55,8 @@ public class PersonServiceImpl implements PersonService {
         for (Person p : allPerson) {
             currentNewDtoP = new NewPersonDto(p);
 //            currentNewDtoP.newPersonDtoConverter(p);
-
             dtoAllPersonList.add(currentNewDtoP);
         }
-
         return dtoAllPersonList;
     }
 
@@ -78,20 +74,118 @@ public class PersonServiceImpl implements PersonService {
         return newPersonDto;
     }
 
+    public List<IdContentDto> findByIds(List<Integer> idList) {
 
-    public List<NewPersonDto> findByIds(List<Integer> idList) {
-
-        List<NewPersonDto> searchRes = new ArrayList<>();
+        List<Person> searchRes = new ArrayList<>();
         for (Integer id : idList) {
             Optional<Person> p = personRepository.findById(id);
-            NewPersonDto newPersonDto;
 
             if (p != null) {
-                newPersonDto = new NewPersonDto(p.get());
-                searchRes.add(newPersonDto);
+                searchRes.add(p.get());
             }
         }
-        return searchRes;
+        return transformOriginToDto(searchRes);
+    }
+
+    public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
+
+        Person connectedPerson, person;
+        String dtoName = "", connection = "", comment = "";
+        List<NameConnectionDto> finalList = new ArrayList<>();
+
+        List<PersonPersonConnection> searchResSymm;// = new ArrayList<>();
+
+        Optional<Person> personOpt = personRepository.findById(itemId);
+        if (personOpt.isPresent()) {
+            person = personOpt.get();             //   searchRes.add(l.get());
+
+            searchResSymm = personPersonRepository.findByIdSymm(itemId); //searching symm connections for this itemId
+            for (Integer id : idList) { //simple connections
+                Optional<Person> connPersonOpt = personRepository.findById(id);
+
+                if (connPersonOpt.isPresent()) {
+                    connectedPerson = connPersonOpt.get();             //   searchRes.add(l.get());
+                    if (connectedPerson.getSnpList() != null) {
+                        for (SurnameNamePatr name : connectedPerson.getSnpList()) {
+                            if (name.getPriority() == 1) {
+                                dtoName = name.getSurname();
+                                dtoName += " " + name.getName();
+                                if (name.getPatronymic() != null) {
+                                    dtoName += " " + name.getPatronymic();
+                                }
+                            }
+                        }
+                    }
+                    for (PersonPersonConnection personPersonConnection : person.getPersonConnections()) {
+                        if (personPersonConnection.getConnectedPerson().getId().equals(connectedPerson.getId())) {
+                            connection = personPersonConnection.getConnection();
+
+                            if (personPersonConnection.getComment() != null) {
+                                if (personPersonConnection.getComment().length() != 0) {
+                                    comment = personPersonConnection.getComment();
+                                }
+                            }
+                        }
+                    }
+                    NameConnectionDto personDto = new NameConnectionDto(connectedPerson.getId(), dtoName, connection, comment);
+                    dtoName = "";
+                    connection = "";
+                    comment = "";
+                    finalList.add(personDto);
+                }
+            }//for
+
+            for (PersonPersonConnection personPersonConnection : searchResSymm) {
+                if (personPersonConnection.getConnectedPerson().getId().equals(person.getId())) {
+
+                    if (personPersonConnection.getPerson().getSnpList() != null) {
+                        for (SurnameNamePatr name : personPersonConnection.getPerson().getSnpList()) {
+                            if (name.getPriority() == 1) {
+                                dtoName = name.getSurname();
+                                dtoName += " " + name.getName();
+                                if (name.getPatronymic() != null) {
+                                    dtoName += " " + name.getPatronymic();
+                                }
+                            }
+                        }
+                    }
+
+                    connection = personPersonConnection.getConnection();
+                    if (personPersonConnection.getComment() != null) {
+                        if (personPersonConnection.getComment().length() != 0) {
+                            comment = personPersonConnection.getComment();
+                        }
+                    }
+                    NameConnectionDto personDto = new NameConnectionDto(personPersonConnection.getPerson().getId(), dtoName, connection, comment);
+                    finalList.add(personDto);
+                }
+            }
+        }
+        return finalList;
+    }
+
+    public List<IdContentDto> transformOriginToDto(List<Person> list) {
+        Set<IdContentDto> fooSet = new TreeSet<>();
+        String dtoName = "";
+
+        for (Person person : list) {
+            if (person.getSnpList() != null) {
+                for (SurnameNamePatr name : person.getSnpList()) {
+                    if (name.getPriority() == 1) {
+                        dtoName += name.getSurname();
+
+                        if (name.getName() != null) {
+                            dtoName += " " + name.getName();
+                        }
+                    }
+                }
+            }
+            IdContentDto pDto = new IdContentDto(person.getId(), dtoName);
+            dtoName = "";
+            fooSet.add(pDto);
+        }
+        List<IdContentDto> finalList = new ArrayList<>(fooSet);
+        return finalList;
     }
 
     @Override
@@ -216,79 +310,49 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<PersonDto> searchBySurname(String q, Integer mov) {
+    public List<IdContentDto> searchBySurname(String q, Integer mov) {
 
         List<Person> surnameSearchList = personRepository.findBySurnameAndMovement(q.toLowerCase() + "%", mov);//findBySurnameStartsWithIgnoreCase(q);
-      //  List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
-      //  List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
+        //  List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
+        //  List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
 
-        Set<PersonDto> fooSet = new TreeSet<>();
-        List<SurnameNamePatr> snpList;
-        String dtoName = "";
-
-        for (Person person : surnameSearchList) {
-            snpList = person.getSnpList();
-            for (SurnameNamePatr snp : snpList) {
-                if (snp.getSurname() != null) {
-                    dtoName = snp.getSurname();
-                    if (snp.getName() != null) {
-                        dtoName += " " + snp.getName();
-                    }
-                }
-                PersonDto personDto = new PersonDto(person.getId(), dtoName);
-                fooSet.add(personDto);
-            }
-        }
-
-        List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
-        return finalList;
+//        Set<PersonDto> fooSet = new TreeSet<>();
+//        List<SurnameNamePatr> snpList;
+//        String dtoName = "";
+//
+//        for (Person person : surnameSearchList) {
+//            snpList = person.getSnpList();
+//            for (SurnameNamePatr snp : snpList) {
+//                if (snp.getSurname() != null) {
+//                    dtoName = snp.getSurname();
+//                    if (snp.getName() != null) {
+//                        dtoName += " " + snp.getName();
+//                    }
+//                }
+//                PersonDto personDto = new PersonDto(person.getId(), dtoName);
+//                fooSet.add(personDto);
+//            }
+//        }
+//
+//        List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
+        return transformOriginToDto(surnameSearchList);
     }
 
     @Override
     public Person save(NewPersonDto personDto) {
 
-//        HashTag hashTagByContent;
-//        HashTag hashTagWithID;
-//        List<HashTag> hashTagList = personDto.getHashtagList();
-//        List<HashTag> hashTagListWithID = new ArrayList<>();
-        //        for (HashTag hashtag : hashTagList) {
-//            hashTagByContent = hashTagRepository.getHashTagByContent(hashtag.getContent()); //ищем хештег в БД
-//            if (hashTagByContent == null) {
-//                hashTagRepository.save(hashtag);
-//
-//                hashTagWithID = hashTagRepository.getHashTagByContent(hashtag.getContent());
-//                hashTagListWithID.add(hashTagWithID);
-//
-//            } else {
-//                hashTagListWithID.add(hashTagByContent);
-//            }
-//        }
-        //        person.setHashtagList(hashTagListWithID);
-
-
-//        UrlLink linkByContent;
-//        UrlLink linkWithID;
         List<UrlLink> linkList = personDto.getLinkList();
-        List<UrlLink> linkListWithID = new ArrayList<>();
+        List<UrlLink> linkListWithID = urlLinkService.getLinkListID(linkList);
+        Person person;
 
-//        for (UrlLink link : linkList) {
-//            linkByContent = linkRepository.getUrlLinkByContent(link.getContent()); //ищем хештег в БД
-//            if (linkByContent == null) {
-//                linkRepository.save(link);
-//
-//                linkWithID = linkRepository.getUrlLinkByContent(link.getContent());
-//                linkListWithID.add(linkWithID);
-//
-//            } else {
-//                linkListWithID.add(linkByContent);
-//            }
-//        }
-
-        LinkListIDCreation ll = new LinkListIDCreation(linkRepository);
-        ll.getLinkListID(linkList, linkListWithID);  //todo - maybe.. to remove this class?
-
-
-        Person person;// = new Person();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = "";
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println(username);
 
         if (personDto.getId() == null) {
             person = new Person();
@@ -298,21 +362,13 @@ public class PersonServiceImpl implements PersonService {
             return null;
 
 
-        //todo with Location when remember the sense))
-        if (personDto.getLocation_id() != null) { //to avoid hiber error when country is empty (from user form)
-//            Country c = new Country();
-//            person.setCountry(c);
-//            person.getCountry().setId(personDto.getCountry_id());
-
-            ItemConnectionDto l = new ItemConnectionDto();
-            List<ItemConnectionDto> locationList = new ArrayList<>();
-        }
+//        //todo with Location when remember the sense))
+//        if (personDto.getLocation_id() != null) {        //to avoid hiber error when country is empty (from user form)
+//            List<ItemConnectionDto> locationList = new ArrayList<>();
+//        }
 
 
         if (person.getLinkList() != null) {
-//            for (UrlLink lnk : person.getLinkList()) {
-//                lnk.setArticle(null);
-//            }
             person.getLinkList().clear();
             personRepository.flush();
         } else {
@@ -324,7 +380,6 @@ public class PersonServiceImpl implements PersonService {
         } else {
             person.getLinkList().addAll(linkListWithID);
         }
-        //person.setLinkList(linkListWithID);
 
         if (person.getMovementList() != null) {
             person.getMovementList().clear();
@@ -351,7 +406,7 @@ public class PersonServiceImpl implements PersonService {
 
         List<SnpDto> snpDtoList = personDto.getSnpList();
         SurnameNamePatr snp;
-        for (SnpDto snpDto: snpDtoList){
+        for (SnpDto snpDto : snpDtoList) {
             snp = new SurnameNamePatr();
             snp.setSurname(snpDto.getSurname());
             snp.setName(snpDto.getName());
@@ -382,35 +437,35 @@ public class PersonServiceImpl implements PersonService {
         }
 
 
-        if (person.getOccupation() != null) {
-            person.getOccupation().clear();
+        if (person.getOrgConnections() != null) {
+            person.getOrgConnections().clear();
             personRepository.flush();
         }
 
         Integer orgId;
-        Position position;
-        List<Position> occList = new ArrayList<>();
-        for (PositionDto posDto : personDto.getPositionDtoList()) {
+        OrgPersonConnection position;
+        List<OrgPersonConnection> occList = new ArrayList<>();
+        for (ItemConnectionDto posDto : personDto.getOrgList()) {
 
-            orgId = posDto.getOrgId();
+            orgId = posDto.getItemId();
             if (orgRepository.findById(orgId).isPresent()) {
-                position = new Position();
+                position = new OrgPersonConnection();
                 position.setOrg(orgRepository.findById(orgId).get());
                 position.setPerson(person);
-                position.setPosition(posDto.getPosition());
+                position.setConnection(posDto.getConnection());
                 position.setComment(posDto.getComment());
 
                 occList.add(position);
             }
         }
 
-        if (person.getOccupation() == null) {
-            person.setOccupation(occList);
+        if (person.getOrgConnections() == null) {
+            person.setOrgConnections(occList);
         } else {
-            person.getOccupation().addAll(occList);
+            person.getOrgConnections().addAll(occList);
         }
 
-            ///location
+        ///location
         if (person.getLocationConnections() != null) {
             person.getLocationConnections().clear();
             personRepository.flush();
@@ -440,63 +495,63 @@ public class PersonServiceImpl implements PersonService {
         }
 
 
-        //isource
-        if (person.getIsourceConnections() != null) {
-            person.getIsourceConnections().clear();
-            personRepository.flush();
-        }
-
-        Integer isourceId;
-        PersonIsourceConnection isourceConnection;
-        List<PersonIsourceConnection> isourceConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : personDto.getIsourceList()) {
-
-            isourceId = connectionDto.getItemId();
-            if (isourceRepository.findById(isourceId).isPresent()) {
-                isourceConnection = new PersonIsourceConnection();
-                isourceConnection.setIsource(isourceRepository.findById(isourceId).get());
-                isourceConnection.setPerson(person);
-                isourceConnection.setConnection(connectionDto.getConnection());
-                isourceConnection.setComment(connectionDto.getComment());
-
-                isourceConnectionList.add(isourceConnection);
-            }
-        }
-
-        if (person.getIsourceConnections() == null) {
-            person.setIsourceConnections(isourceConnectionList);
-        } else {
-            person.getIsourceConnections().addAll(isourceConnectionList);
-        }
+//        //isource
+//        if (person.getIsourceConnections() != null) {
+//            person.getIsourceConnections().clear();
+//            personRepository.flush();
+//        }
+//
+//        Integer isourceId;
+//        PersonIsourceConnection isourceConnection;
+//        List<PersonIsourceConnection> isourceConnectionList = new ArrayList<>();
+//        for (ItemConnectionDto connectionDto : personDto.getIsourceList()) {
+//
+//            isourceId = connectionDto.getItemId();
+//            if (isourceRepository.findById(isourceId).isPresent()) {
+//                isourceConnection = new PersonIsourceConnection();
+//                isourceConnection.setIsource(isourceRepository.findById(isourceId).get());
+//                isourceConnection.setPerson(person);
+//                isourceConnection.setConnection(connectionDto.getConnection());
+//                isourceConnection.setComment(connectionDto.getComment());
+//
+//                isourceConnectionList.add(isourceConnection);
+//            }
+//        }
+//
+//        if (person.getIsourceConnections() == null) {
+//            person.setIsourceConnections(isourceConnectionList);
+//        } else {
+//            person.getIsourceConnections().addAll(isourceConnectionList);
+//        }
 
         //event
-        if (person.getEventConnections() != null) {
-            person.getEventConnections().clear();
-            personRepository.flush();
-        }
-
-        Integer eventId;
-        PersonIsourceConnection eventConnection;
-        List<PersonIsourceConnection> eventConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : personDto.getEventList()) {
-
-            eventId = connectionDto.getItemId();
-            if (isourceRepository.findById(eventId).isPresent()) {
-                eventConnection = new PersonIsourceConnection();
-                eventConnection.setIsource(isourceRepository.findById(eventId).get());
-                eventConnection.setPerson(person);
-                eventConnection.setConnection(connectionDto.getConnection());
-                eventConnection.setComment(connectionDto.getComment());
-
-                eventConnectionList.add(eventConnection);
-            }
-        }
-
-        if (person.getIsourceConnections() == null) {
-            person.setIsourceConnections(eventConnectionList);
-        } else {
-            person.getIsourceConnections().addAll(eventConnectionList);
-        }
+//        if (person.getEventConnections() != null) {
+//            person.getEventConnections().clear();
+//            personRepository.flush();
+//        }
+//
+//        Integer eventId;
+//        PersonIsourceConnection eventConnection;
+//        List<PersonIsourceConnection> eventConnectionList = new ArrayList<>();
+//        for (ItemConnectionDto connectionDto : personDto.getEventList()) {
+//
+//            eventId = connectionDto.getItemId();
+//            if (isourceRepository.findById(eventId).isPresent()) {
+//                eventConnection = new PersonIsourceConnection();
+//                eventConnection.setIsource(isourceRepository.findById(eventId).get());
+//                eventConnection.setPerson(person);
+//                eventConnection.setConnection(connectionDto.getConnection());
+//                eventConnection.setComment(connectionDto.getComment());
+//
+//                eventConnectionList.add(eventConnection);
+//            }
+//        }
+//
+//        if (person.getIsourceConnections() == null) {
+//            person.setIsourceConnections(eventConnectionList);
+//        } else {
+//            person.getIsourceConnections().addAll(eventConnectionList);
+//        }
 
         ///persons
         if (person.getPersonConnections() != null) {
@@ -649,7 +704,7 @@ public class PersonServiceImpl implements PersonService {
 //            try {
 //                imageByte = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 
-                // Converting a Base64 String into Image byte array
+        // Converting a Base64 String into Image byte array
 //////            imageByte = Base64.getDecoder().decode(personDto.getPhoto());
 //                person.setPhoto(imageByte);
 
@@ -658,8 +713,6 @@ public class PersonServiceImpl implements PersonService {
 //            }
 //        }
 //************************
-
-
 
 
 //        byte[] imageByte;

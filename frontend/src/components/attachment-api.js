@@ -82,7 +82,7 @@ export default {
                 if (error.response.status === 401) {
                     router.push('/login');
                 }
-                if (error.response.status === 400) {
+                if (error.response.status === 400 || error.response.status === 500) {
                     console.log("No such file");
                 }
             });

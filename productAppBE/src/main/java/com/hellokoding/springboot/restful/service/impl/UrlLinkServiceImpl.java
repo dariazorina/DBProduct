@@ -6,6 +6,7 @@ import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +15,6 @@ import java.util.Optional;
 public class UrlLinkServiceImpl implements UrlLinkService {
 
     private final UrlLinkRepository urlLinkRepository;
-    private final ArticleRepository articleRepository;
-    private final EventRepository eventRepository;
-    private final ScpaperRepository scpaperRepository;
-    private final IsourceRepository isourceRepository;
-    private final OrgRepository orgRepository;
-
 
     @Override
     public List<UrlLink> findAll() {
@@ -39,6 +34,28 @@ public class UrlLinkServiceImpl implements UrlLinkService {
     @Override
     public void deleteById(Integer id) {
         urlLinkRepository.deleteById(id);
+    }
+
+    public List<UrlLink> getLinkListID(List<UrlLink> linkList){ //}, UrlLinkRepository linkRepository) {
+
+        UrlLink linkByContent;
+        UrlLink linkWithID;
+        List<UrlLink> linkListWithID = new ArrayList<>();
+
+        for (UrlLink link : linkList) {
+            linkByContent = urlLinkRepository.getUrlLinkByContent(link.getContent()); //ищем в БД
+            if (linkByContent == null) {
+                urlLinkRepository.save(link);
+
+                linkWithID = urlLinkRepository.getUrlLinkByContent(link.getContent());
+                linkListWithID.add(linkWithID);
+
+            } else {
+                linkListWithID.add(linkByContent);
+            }
+        }
+
+        return linkListWithID;
     }
 
    /* public void fillLinkTableFromArticle() {   //step1: create link table

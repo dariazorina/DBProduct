@@ -76,8 +76,8 @@
                     let currentOccupation = {
                         "id": nextTodoId++,
                         "org": this.allOrgs.find(org => org.id === this.selectedOrg).name,
-                        "orgId": this.selectedOrg,
-                        "position": trimmedPositionText,
+                        "itemId": this.selectedOrg,
+                        "connection": trimmedPositionText,
                         "comment": trimmedCommentText
                     };
 

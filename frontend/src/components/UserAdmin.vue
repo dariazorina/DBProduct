@@ -1,16 +1,5 @@
 <template>
     <div class="hello">
-        <div class="col-3 col-form-label">
-
-            <p class="greetingsTitle">Welcome, {{loggedName}}!
-                <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
-                </button>
-                <!--                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>-->
-            </p>
-            <!-- Modal Component -->
-            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
-        </div>
-
         <form class="formCreation">
             <b-card style="background-color: transparent">
                 <div class="form-row align-items-top">

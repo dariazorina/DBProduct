@@ -1,45 +1,15 @@
 <template id="article-add">
     <v-app id="inspire">
         <div>
-
             <iframe id="iframeToDownload" style="display:none;"></iframe>
 
             <div class="form-group row" style="margin-bottom: 0">
-
-                <div v-if="editMode" class="col-5 col-form-label">
-
-                    <!--                    <div v-if="article.titleRus == null">-->
-                    <!--                        <p class="pageEditTitle">Редактирование <i>"{{article.title}}"</i></p>-->
-                    <!--                    </div>-->
-                    <!--                    <div v-else>-->
-                    <!--                        <p class="pageEditTitle">Редактирование <i>"{{article.titleRus}}"</i></p>-->
-                    <!--                    </div>-->
-
-                    <div>
-                        <p class="pageEditTitle">Редактирование материала</p>
-                    </div>
-                </div>
-
-                <div v-else="editMode" class="col-3 col-form-label">
-                    <p class="pageCreateTitle">Добавление нового материала</p>
-                </div>
-
                 <div class="unprotected" v-if="errorFlag">
                     <h5>Error: {{errors}}</h5>
                 </div>
             </div>
 
-            <!--            <h3 class="mb-5">Add new article</h3>-->
-            <!--            <div class="unprotected" v-if="errorFlag">-->
-            <!--                <h5>Error: {{errors}}</h5>-->
-            <!--            </div>-->
-            <!--       url="http://localhost:8080/api/v1/person"-->
-            <!--            http://localhost:8081/article/add-->
-            <!--            <form>-->
-
-            <!--            <div class="row" style="background-color: black">-->
             <div class="col-lg-12" style="background-color: transparent; padding-top: 0">
-
                 <form class="formCreation">
                     <div class="form-row align-items-center" style="background-color: transparent">
                         <div class="col-12" style="background-color: transparent">
@@ -190,9 +160,7 @@
                                    :disabled="uploadMode"
                                    v-model="article.title"/>
                         </div>
-
                     </div>
-
                 </form>
 
                 <form class="authorsFormCreation"
@@ -216,8 +184,7 @@
                                         v-model="selected"
 
                                         @change="addAuthor(selected)"
-                                        @focus="testFocus(selected)"
-                                        item-text="surname"
+                                        item-text="content"
                                         item-value="id"
                                         placeholder="Начните печатать, чтобы найти автора"
                                         prepend-icon="mdi-database-search"
@@ -259,7 +226,6 @@
                                         v-model="selectedLocation"
 
                                         @change="addLocation(selectedLocation)"
-                                        @focus="testFocus(selectedLocation)"
                                         item-text="country"
                                         item-value="id"
                                         placeholder="Начните печатать, чтобы найти локацию"
@@ -301,8 +267,7 @@
                                         v-model="selectedOrg"
 
                                         @change="addOrg(selectedOrg)"
-                                        @focus="testFocus(selectedOrg)"
-                                        item-text="org"
+                                        item-text="content"
                                         item-value="id"
                                         placeholder="Начните печатать, чтобы найти организацию"
                                         prepend-icon="mdi-database-search"
@@ -413,7 +378,6 @@
                                                  :isSelectionMode="true"
                                                  :allTypes="connectionTypes"
                                                  style="background-color: transparent; padding:0" class="col-12"
-                                                 @update-item="updateItem"
                                                  @update-selection="updateSelection"/>
                         </div>
                     </div>
@@ -452,12 +416,9 @@
                         <div class="col-3" style="background-color: transparent">
                             <b-form-select v-model="selectedS" class="mb-0" id="status-selection"
                                            style="background-color: transparent;">
-
                                 <option v-for="status in statusList">
-                                    <!--                                    v-bind:value="status.id"-->
                                     {{status.name}}
                                 </option>
-
                             </b-form-select>
                             <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
@@ -478,7 +439,6 @@
                                          :is-details-mode="false"/>
                     </div>
                 </form>
-                <!--                </div>-->
 
                 <div v-if="editMode" class="form-group row align-items-center">
                     <div class="offset-sm-4 col-sm-3">
@@ -517,7 +477,6 @@
                         </button>
                         <button type="button" class="btn btn-info">
                             <router-link to="/article" style="color: white">Cancel</router-link>
-
                         </button>
                     </div>
                 </div>
@@ -603,12 +562,6 @@
             tags: [],    //connected with hashtag input
             mtype: '',
             connectionTypes: [],
-            //     {name: '1-1', id: 1},
-            //     {name: '1-2', id: 2},
-            //     {name: '2-1', id: 3},
-            // ],
-            // connectionTypes : ["1-1", "1-2", "2-1"],
-
             selectionType: 'independent',
 
             // selectedHashtag: [],
@@ -621,7 +574,6 @@
             allMovements: [],
             checkedMovements: [],
             currentUserMovement: '',
-            // toKey: '',
             addAdditionalMovementFlag: false,
 
             article: {
@@ -781,7 +733,7 @@
                 if (i === this.personConnectionList.length) {
                     let connection = {
                         "id": obj.id,
-                        "name": obj.surname,// + " " + obj.name,
+                        "name": obj.content,// + " " + obj.name,
                         "connection": '',
                         "comment": '',
                         "hasClicked": false
@@ -814,7 +766,7 @@
                     if (i === this.locationConnectionList.length) {
                         let connection = {
                             "id": obj.id,
-                            "name": obj.country,
+                            "name": obj.content,
                             "comment": '',
                             "connection": '',
                             "hasClicked": false
@@ -837,7 +789,7 @@
                 if (i === this.orgConnectionList.length) {
                     let connection = {
                         "id": obj.id,
-                        "name": obj.name,
+                        "name": obj.content,
                         "comment": '',
                         "connection": '',
                         "hasClicked": false
@@ -857,21 +809,6 @@
                 }
 
                 if (i === this.materialConnectionList.length) {
-
-                    // let t = '';
-                    // if (obj.title != null) {
-                    //     if (obj.title.length != 0) {
-                    //         t = obj.title;
-                    //         if (obj.titleRus != null) {
-                    //             if (obj.titleRus.length != 0)
-                    //                 t += " / " + obj.titleRus;
-                    //         }
-                    //     }
-                    // } else {                    ///one of the two titles is mandatory
-                    //     t = obj.titleRus;
-                    // }
-
-
                     let connection = {
                         "id": obj.id,
                         "name": obj.content,  //title was created in ArticleServiceImpl
@@ -932,10 +869,10 @@
             },
 
             //////todo delete/////
-            updateItem(item) {
-                console.log("<3 ITEM AFTER COMPONENT", item);
-                console.log("LIST AFTER COMPONENT", this.personConnectionList);
-            },
+            // updateItem(item) {
+            //     console.log("<3 ITEM AFTER COMPONENT", item);
+            //     console.log("LIST AFTER COMPONENT", this.personConnectionList);
+            // },
 
             updateSelection(item) {
                 let index = this.connectionTypes.findIndex(x => x.id === item);
@@ -1254,34 +1191,34 @@
                 return returnedTitle;
             },
 
-            materialEditConnectionTitleCreation(material) {
-                let returnedTitle = '';
+            // materialEditConnectionTitleCreation(material) {
+            //     let returnedTitle = '';
+            //
+            //     if (this.isArrayValidAndNotEmpty(material.title)) {
+            //         returnedTitle += material.title;
+            //
+            //         if (this.isArrayValidAndNotEmpty(material.titleRus)) {
+            //             returnedTitle += "/ " + material.titleRus;
+            //         }
+            //     } else {
+            //         returnedTitle = material.titleRus;
+            //     }
+            //     return returnedTitle;
+            // },
 
-                if (this.isArrayValidAndNotEmpty(material.title)) {
-                    returnedTitle += material.title;
-
-                    if (this.isArrayValidAndNotEmpty(material.titleRus)) {
-                        returnedTitle += "/ " + material.titleRus;
-                    }
-                } else {
-                    returnedTitle = material.titleRus;
-                }
-                return returnedTitle;
-            },
-
-            orgEditConnectionTitleCreation(org) {
-                let returnedTitle = org.nameRus;
-
-                if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
-                    returnedTitle += ", " + org.abbrRus;
-                }
-                if (this.isArrayValidAndNotEmpty(org.name)) {
-                    returnedTitle += ", " + org.name;
-                }
-                //todo add fields
-
-                return returnedTitle;
-            },
+            // orgEditConnectionTitleCreation(org) {
+            //     let returnedTitle = org.nameRus;
+            //
+            //     if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
+            //         returnedTitle += ", " + org.abbrRus;
+            //     }
+            //     if (this.isArrayValidAndNotEmpty(org.name)) {
+            //         returnedTitle += ", " + org.name;
+            //     }
+            //     //todo add fields
+            //
+            //     return returnedTitle;
+            // },
 
             //////////////////tree/////////////////////////////////////
             searchTree(flatTree, searchEntity) {
@@ -1478,7 +1415,6 @@
                 console.log("EDIT MODE");
                 this.editMode = true;
                 this.uploadFilesCheckBoxValue = true;
-
             }
 
             if (this.editMode) {
@@ -1557,7 +1493,7 @@
                             let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
                             let connection = {
                                 "id": element.itemId,
-                                "name": currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
+                                "name": currentPersonEntity.content, //currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
                                 "connection": element.connection,
                                 "comment": element.comment,
                                 "hasClicked": true
@@ -1576,7 +1512,7 @@
                             let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
                             let connection = {
                                 "id": element.itemId,
-                                "name": this.locationEditConnectionTitleCreation(currentLocationEntity),
+                                "name": currentLocationEntity.content, //this.locationEditConnectionTitleCreation(currentLocationEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
                                 "hasClicked": true
@@ -1597,7 +1533,7 @@
                             console.log("currentOrgEntity", currentOrgEntity);
                             let connection = {
                                 "id": element.itemId,
-                                "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "name": currentOrgEntity.content, //this.orgEditConnectionTitleCreation(currentOrgEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
                                 "hasClicked": true
@@ -1609,29 +1545,23 @@
                     });
 
 
-                    api.getMaterialsByIds(this.articleMaterialIds, response => {  ///returns List<Location>
-                        this.articleMaterialEntities = response.data;  //returns list<Article>
-                        // console.log("articleMaterialEntities", this.articleMaterialEntities);
 
-                        for (let i = 0; i < this.article.materialList.length; i++) {
-                            let element = this.article.materialList[i];
-                            let currentMaterialEntity = this.articleMaterialEntities.find(material => material.id === element.itemId);
-                            // console.log("currentMaterialEntity", currentMaterialEntity);
+                    api.getMaterialsByIdsAndSymmetrically(this.article.id, this.articleMaterialIds, response => {
+                        this.articleMaterialEntities = response.data;  //returns list<NameConnectionDto>
+                         console.log("articleMaterialEntities", this.articleMaterialEntities);
 
-                            //  let connectionType = this.connectionTypes.find(x => x.id === Number.parseInt(element.connection));
-                            //  console.log("connectionTypes@@@@@@@@@@@@@@@@@@@@@@@@@@@", this.connectionTypes, element, connectionType);
-
-                            let connection = {
-                                "id": element.itemId,
-                                "name": this.materialEditConnectionTitleCreation(currentMaterialEntity),
-                                "connection": element.connection, //connectionType.type,
-                                "comment": element.comment,
+                        for (let i = 0; i < this.articleMaterialEntities.length; i++) {
+                             let connection = {
+                                "id": this.articleMaterialEntities[i].itemId,
+                                "name": this.articleMaterialEntities[i].name, //this.materialEditConnectionTitleCreation(currentMaterialEntity),
+                                "connection": this.articleMaterialEntities[i].connection, //connectionType.type,
+                                "comment": this.articleMaterialEntities[i].comment,
                                 "hasClicked": true
                             };
-                            console.log("CREATE MATERIALS: ", connection);
+                        //    console.log("CREATE MATERIALS: ", connection);
                             this.materialConnectionList.push(connection);
                         }
-                        console.log("materialConnectionList: ", this.materialConnectionList);
+                        //console.log("materialConnectionList: ", this.materialConnectionList);
                     });
                 });
             }
@@ -1641,17 +1571,17 @@
         computed: {
             items() {
                 return this.personEntries.map(entry => {
-                    const surname = entry.surname;
+                    const surname = entry.content;
                     return Object.assign({}, entry, {surname})
                 })
             },
 
             itemsLocation() {
                 //console.log("itemsLocation", this.locationEntries.map);
-                // console.log("itemsLocation", this.locationEntries);
+                console.log("itemsLocation", this.locationEntries);
 
                 return this.locationEntries.map(entry => {
-                    const country = entry.country;
+                    const country = entry.content;
                     return Object.assign({}, entry, {country})
                 })
             },
@@ -1661,9 +1591,11 @@
                 //console.log("itemsOrg", this.orgEntries);
 
                 if (this.orgEntries) {      ///todo analyze why undefined (after selection in the search list)
+                    //console.log("~@~@~@~@~", this.orgEntries);
                     return this.orgEntries.map(entry => {
-                        const org = entry.name;
-                        return Object.assign({}, entry, {org})
+                        const org = entry.content;
+                       // console.log("~@~@55555555555555555~@~@~", org);
+                        return Object.assign({}, entry)
                     })
                 }
                 // return this.orgEntries;
@@ -1833,8 +1765,6 @@
             // },
 
             filteredOpenHashtags() {
-                // console.log("filteredOpenHashtags", this.filteredHashtags);
-
                 if (this.searchHashtag != null)   //for start view without search
                     if (this.searchHashtagLength === 0) {
                         return this.filteredHashtags.map((top) => {
@@ -1954,7 +1884,7 @@
 
                         apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
-                            // console.log("****", this.orgEntries);
+                            //console.log("**орг**", this.orgEntries);
                             this.isLoadingOrg = false;
                         });
                     }
@@ -1977,7 +1907,7 @@
 
                         api.searchMaterial(val, localStorage.getItem('movement'), r => {
                             this.materialEntries = r;
-                            console.log("*№*№*№*", this.materialEntries);
+                          //  console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;
                         });
                     }

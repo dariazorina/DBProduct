@@ -3,32 +3,13 @@
         <div>
             <iframe id="iframeToDownload" style="display:none;"></iframe>
             <div class="form-group row">
-                <!--                <div class="col-2 col-form-label">-->
-                <!--                    <p class="pageCreateTitle">Add New Person</p>-->
-                <!--                </div>-->
-
-                <!--                <div class="unprotected" v-if="errorFlag">-->
-                <!--                    <h5>Error: {{errors}}</h5>-->
-                <!--                </div>-->
-
-
-                <div v-if="editMode" class="col-5 col-form-label">
-                    <p class="pageEditTitle">Edit Person <i>{{person.surname}}</i></p>
-                </div>
-
-                <div v-else="editMode" class="col-2 col-form-label">
-                    <p class="pageCreateTitle">Add New Person</p>
-                </div>
-
-                <div class="unprotected" v-if="errorFlag">
+                  <div class="unprotected" v-if="errorFlag">
                     <h5>Error: {{errors}}</h5>
                 </div>
-
-
             </div>
         </div>
 
-        <form class="authorsFormCreation">
+        <form class="formCreation">
             <div class="form-row align-items-center" style="background-color: transparent">
                 <div class="col-12" style="background-color: transparent">
                     <label>Текущее движение: {{currentUserMovement.name}} </label><br>
@@ -37,9 +18,10 @@
                     <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
                         <label>Добавить дополнительное движение:</label>
                         <div v-for="(movement, index) in allMovements">
-                            <input v-bind:value="movement.id" name="movement.name" type="checkbox"
+                            <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
+                                   type="checkbox"
                                    v-model="checkedMovements"/>
-                            <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
+                            <label :for="movement.id"><span>{{movement.name}}</span></label>
                         </div>
                     </div>
                     <div v-else>
@@ -49,7 +31,8 @@
                     </div>
                 </div>
             </div>
-
+        </form>
+        <form class="authorsFormCreation">
             <div class="row" style="background-color: transparent">
                 <div class="col-md-8">
 
@@ -96,15 +79,15 @@
                             <img :src="avatar.imageBase64" @load="setHeight"
                                  :style="{ height: imageHeight + 'px' }"/>
                         </div>
-                        <div v-else>
-                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"
-                                 :style="{ width: 250+'px' }"/>
-                        </div>
+                        <!--                        <div v-else>-->
+                        <!--                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"-->
+                        <!--                                 :style="{ width: 250+'px' }"/>-->
+                        <!--                        </div>-->
                     </div>
-                    <div v-if="avatar.imageBase64" style="margin-top: 5px">
-                        <input type="file" accept="image/*" @change="onChange"/>
-                    </div>
-                    <div v-else style="margin-top: 30px">
+                    <!--                    <div v-if="avatar.imageBase64" style="margin-top: 5px">-->
+                    <!--                        <input type="file" accept="image/*" @change="onChange"/>-->
+                    <!--                    </div>-->
+                    <div style="margin-top: 30px">
                         <input type="file" accept="image/*" @change="onChange"/>
                     </div>
                 </div>
@@ -129,7 +112,7 @@
                                 v-model="selectedLocation"
 
                                 @change="addLocation(selectedLocation)"
-                                item-text="country"
+                                item-text="content"
                                 item-value="id"
                                 placeholder="Начните печатать, чтобы найти локацию"
                                 prepend-icon="mdi-database-search"
@@ -155,31 +138,31 @@
                 <div class="col-3"
                      style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                     <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
-                        <label style="font-size: medium; font-weight: bold">Связанные организации -  <i>в процессе</i></label>
-<!--                        <v-autocomplete-->
-<!--                                id="org-autocomplete"-->
-<!--                                :items="orgItems"-->
-<!--                                :loading="isLoadingOrg"-->
-<!--                                :search-input.sync="orgSearch"-->
-<!--                                color="green"-->
-<!--                                hide-no-data-->
-<!--                                hide-selected-->
+                        <label style="font-size: medium; font-weight: bold">Связанные организации</label>
+                        <v-autocomplete
+                                id="org-autocomplete"
+                                :items="orgItems"
+                                :loading="isLoadingOrg"
+                                :search-input.sync="orgSearch"
+                                color="green"
+                                hide-no-data
+                                hide-selected
 
-<!--                                v-model="selectedOrg"-->
+                                v-model="selectedOrg"
 
-<!--                                @change="addOrg(selectedOrg)"-->
-<!--                                item-text="name"-->
-<!--                                item-value="id"-->
-<!--                                placeholder="Начните печатать, чтобы найти организацию"-->
-<!--                                prepend-icon="mdi-database-search"-->
-<!--                                return-object-->
-<!--                        ></v-autocomplete>-->
+                                @change="addOrg(selectedOrg)"
+                                item-text="content"
+                                item-value="id"
+                                placeholder="Начните печатать, чтобы найти организацию"
+                                prepend-icon="mdi-database-search"
+                                return-object
+                        ></v-autocomplete>
                     </v-card-text>
                 </div>
 
-                <div v-if="occupationList.length>0" class="col-9"
+                <div v-if="orgList.length>0" class="col-9"
                      style="background-color: transparent; padding:0; margin: 0px">
-                    <ConnectionComponent :itemsList="occupationList"
+                    <ConnectionComponent :itemsList="orgList"
                                          :isLinkMode="false"
                                          :isSelectionMode="false"
                                          :allTypes="connectionTypes"
@@ -209,7 +192,7 @@
                                 v-model="selectedPerson"
 
                                 @change="addPerson(selectedPerson)"
-                                item-text="surname"
+                                item-text="content"
                                 item-value="id"
                                 placeholder="Начните печатать, чтобы найти автора"
                                 prepend-icon="mdi-database-search"
@@ -266,48 +249,6 @@
                 <div v-if="isourceList.length>0" class="col-9"
                      style="background-color: transparent; padding:0; margin: 0px">
                     <ConnectionComponent :itemsList="isourceList"
-                                         :isLinkMode="false"
-                                         :isSelectionMode="false"
-                                         :allTypes="connectionTypes"
-                                         style="background-color: transparent; padding:0px" class="col-12"/>
-                </div>
-            </div>
-        </form>
-
-        <form class="authorsFormCreation"
-              style="background-color: transparent; padding: 25px 0 5px">
-            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
-                <div class="col-3"
-                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
-                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
-                        <label style="font-size: medium; font-weight: bold">Связанные события - <i>в
-                            процессе</i></label>
-                        <!--                        <v-autocomplete-->
-                        <!--                                style="background-color: transparent"-->
-                        <!--                                id="event-autocomplete"-->
-                        <!--                                :items="eventItems"-->
-                        <!--                                :loading="isLoadingEvent"-->
-                        <!--                                :search-input.sync="eventSearch"-->
-                        <!--                                color="brown"-->
-                        <!--                                hide-no-data-->
-                        <!--                                hide-selected-->
-
-                        <!--                                v-model="selectedEvent"-->
-
-                        <!--                                @change="addEvent(selectedEvent)"-->
-                        <!--                                item-text="title"-->
-                        <!--                                item-value="id"-->
-                        <!--                                placeholder="Начните печатать, чтобы найти событие"-->
-                        <!--                                prepend-icon="mdi-database-search"-->
-                        <!--                                return-object-->
-                        <!--                                :disabled="uploadMode"-->
-                        <!--                        ></v-autocomplete>-->
-                    </v-card-text>
-                </div>
-
-                <div v-if="eventList.length>0" class="col-9"
-                     style="background-color: transparent; padding:0; margin: 0px">
-                    <ConnectionComponent :itemsList="eventList"
                                          :isLinkMode="false"
                                          :isSelectionMode="false"
                                          :allTypes="connectionTypes"
@@ -497,72 +438,72 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <label for="add-surname"><b>Фамилия*</b></label>
-                            <input class="form-control" v-model="personAddSurnameTFValues[1]"
+                            <input class="form-control" id="idsrnm0" v-model="preSurname[0]"
                                    placeholder="Обязательное поле"/>
                         </div>
 
                         <div class="col-md-4">
                             <label for="add-name">Имя</label>
-                            <input class="form-control" v-model="personAddNameTFValues[1]"/>
+                            <input class="form-control" id="idnm0" v-model="preName[0]"/>
                         </div>
 
                         <div class="col-md-4">
                             <label for="add-patronymic">Отчество</label>
-                            <input class="form-control" v-model="personAddPatrTFValues[1]">
+                            <input class="form-control" id="idptrnmc0" v-model="prePatr[0]">
                         </div>
                     </div>
 
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddSurnameTFValues[2]"
+                            <input class="form-control" id="idsrnm1" v-model="preSurname[1]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddNameTFValues[2]"/>
+                            <input class="form-control" id="idnm1" v-model="preName[1]"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddPatrTFValues[2]">
+                            <input class="form-control" id="idptrnmc1" v-model="prePatr[1]">
                         </div>
                     </div>
 
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddSurnameTFValues[3]"
+                            <input class="form-control" id="idsrnm2" v-model="preSurname[2]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddNameTFValues[3]"/>
+                            <input class="form-control" id="idnm2" v-model="preName[2]"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddPatrTFValues[3]">
+                            <input class="form-control" id="idptrnmc2" v-model="prePatr[2]">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddSurnameTFValues[4]"
+                            <input class="form-control" id="idsrnm3" v-model="preSurname[3]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddNameTFValues[4]"/>
+                            <input class="form-control" id="idnm3" v-model="preName[3]"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddPatrTFValues[4]">
+                            <input class="form-control" id="idptrnmc3" v-model="prePatr[3]">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddSurnameTFValues[5]"
+                            <input class="form-control" id="idsrnm4" v-model="preSurname[4]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddNameTFValues[5]"/>
+                            <input class="form-control" id="idnm4" v-model="preName[4]"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" v-model="personAddPatrTFValues[5]">
+                            <input class="form-control" id="idptrnmc4" v-model="prePatr[4]">
                         </div>
                     </div>
 
@@ -596,7 +537,7 @@
 
     import router from "./../../router";
     import Vuetify from 'vuetify';
-    import OccupationList from "../components/person-occupation/OccupationList";
+    // import OccupationList from "../components/person-occupation/OccupationList";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMovement from "./../movement/movement-api";
     import apiLanguage from "./../language/language-api";
@@ -611,7 +552,7 @@
 
     export default {
         components: {
-            OccupationList,
+            // OccupationList,
             ConnectionComponent,
             ckeditor: CKEditor.component, // to use the component locally
             FileAttachment,
@@ -631,7 +572,7 @@
             isLoadingOrg: false,
             isLoadingPerson: false,
             isLoadingIsource: false,
-            isLoadingEvent: false,
+            // isLoadingEvent: false,
 
             model: null,
             search: null,
@@ -650,7 +591,7 @@
             selectedOrg: [],
             selectedPerson: [],
             selectedIsource: [],
-            selectedEvent: [],
+            // selectedEvent: [],
             selectedM: null,
             selectedBYear: null,
             selectedDYear: null,
@@ -685,13 +626,16 @@
             locationList: [],
 
             orgSearch: null,
-            occupationList: [],
+            orgList: [],
 
             statusList: [],
             nameList: [],
             personNameIds: [], //before request
             personNameEntities: [], //after request
 
+            preSurname: [],
+            preName: [],
+            prePatr: [],
             personAddSurnameTFValues: [],
             personAddNameTFValues: [],
             personAddPatrTFValues: [],
@@ -702,8 +646,8 @@
             isourceSearch: null,
             isourceList: [],
 
-            eventSearch: null,
-            eventList: [],
+            // eventSearch: null,
+            // eventList: [],
 
             personLocationIds: [], //before request
             personLocationEntities: [], //after request
@@ -713,18 +657,18 @@
             personPersonEntities: [], //after request
             personIsourceIds: [], //before request
             personIsourceEntities: [], //after request
-            personEventIds: [], //before request
-            personEventEntities: [], //after request
+            // personEventIds: [], //before request
+            // personEventEntities: [], //after request
 
-            positionDtoList: [],
+            orgList: [],
             person: {
                 hashtagList: [],
                 linkList: [],
-                positionDtoList: [],
+                orgList: [],
                 locationList: [],
                 personList: [],
                 isourceList: [],
-                eventList: [],
+                // eventList: [],
                 movementList: [],
                 snpList: []
             },
@@ -740,13 +684,6 @@
             editMode: false,
             uploadMode: false,
             uploadFilesCheckBoxValue: false,
-            // status: ["statusProgress", "statusDone"],
-            // statusOptions: [
-            //     {text: 'В работе', value: 0},
-            //     {text: 'Внесены', value: 1},
-            //     {text: 'На доработке', value: 2},
-            //     {text: 'Отработаны', value: 3},
-            // ],
             loggedName: '',
             uploadedFiles: [],
             attachedFiles: [],
@@ -769,11 +706,36 @@
                 console.log(this.personAddNameTFValues);
                 console.log(this.personAddPatrTFValues);
 
+                for (let i = 1; i < 6; i++) {
+                    this.personAddSurnameTFValues[i] = this.preSurname[i - 1];
+                    this.personAddNameTFValues[i] = this.preName[i - 1];
+                    this.personAddPatrTFValues[i] = this.prePatr[i - 1];
+                }
+
+                //console.log("SAVE ADD NAMES", this.personAddSurnameTFValues);
+
                 this.addAdditionalNameToList();
                 this.$refs.modalNames.hide();
             },
 
+
             cancelModalNamesView() {
+               // console.log("22222222222", this.personAddSurnameTFValues);
+                if (!this.isAdditionalNamesAlreadyExist()) {
+                    // if (this.personAddSurnameTFValues.length > 0){
+                    //
+                    // } else {
+                    for (let i = 0; i < 5; i++) {
+                        document.getElementById("idsrnm" + i).value = '';
+                        document.getElementById("idnm" + i).value = '';
+                        document.getElementById("idptrnmc" + i).value = '';
+                    }
+
+                    this.preSurname.splice(0);
+                    this.preName.splice(0);
+                    this.prePatr.splice(0);
+                }
+
                 this.$refs.modalNames.hide();
             },
 
@@ -920,7 +882,7 @@
                 if (i === this.locationList.length) {
                     let connection = {
                         "id": obj.id,
-                        "name": obj.country,
+                        "name": obj.content,
                         "comment": '',
                         "connection": '',
                         "hasClicked": false
@@ -933,21 +895,21 @@
             addOrg(obj) {
                 console.log("GET CHANGED ORG", obj);
                 let i = 0;
-                for (i = 0; i < this.occupationList.length; i++) { //to exclude double values
-                    if (this.occupationList[i].id === obj.id) {
+                for (i = 0; i < this.orgList.length; i++) { //to exclude double values
+                    if (this.orgList[i].id === obj.id) {
                         break;
                     }
                 }
 
-                if (i === this.occupationList.length) {
+                if (i === this.orgList.length) {
                     let connection = {
                         "id": obj.id,
-                        "name": obj.name,
+                        "name": obj.content,
                         "comment": '',
                         "connection": '',
                         "hasClicked": false
                     };
-                    this.occupationList.push(connection);
+                    this.orgList.push(connection);
                     console.log("ADDED");
                 }
             },
@@ -964,7 +926,7 @@
                 if (i === this.personList.length) {
                     let connection = {
                         "id": obj.id,
-                        "name": obj.surname,
+                        "name": obj.content,
                         "comment": '',
                         "connection": '',
                         "hasClicked": false
@@ -995,32 +957,35 @@
                 }
             },
 
-            addEvent(obj) {
-                console.log("GET CHANGED EVENT", obj);
-                for (let i = 0; i < this.eventList.length; i++) { //to exclude double values
-                    if (this.eventList[i].id === obj.id) {
-                        break;
-                    }
-                }
-
-                if (i === this.eventList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.title,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.eventList.push(connection);
-                    console.log("ADDED EVENT");
-                }
-            },
+            // addEvent(obj) {
+            //     console.log("GET CHANGED EVENT", obj);
+            //     for (let i = 0; i < this.eventList.length; i++) { //to exclude double values
+            //         if (this.eventList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.eventList.length) {
+            //         let connection = {
+            //             "id": obj.id,
+            //             "name": obj.title,
+            //             "comment": '',
+            //             "connection": '',
+            //             "hasClicked": false
+            //         };
+            //         this.eventList.push(connection);
+            //         console.log("ADDED EVENT");
+            //     }
+            // },
 
             addAdditionalNameToList() {
                 let connection = '';
+                this.nameList.splice(0);
+
                 for (let i = 1; i < this.personAddSurnameTFValues.length; i++) {
-                    console.log("iiiiii", i);
                     if (this.personAddSurnameTFValues[i] != null) {
+                        console.log("personAddSurnameTFValues, add to nameList", i);
+
                         // if (i > 0) {  //russian priority obligatory value
                         //     connection = {
                         //         "surname": this.personAddSurnameTFValues[i],
@@ -1034,8 +999,13 @@
                         //     connection = '';
                         //
                         // } else {
+                        //
+                        //     if (this.personAddSurnameTFValues[i] != null) {
 
-                        if (this.personAddSurnameTFValues[i] != null) {
+                        //item with index = 0 pushed in createPerson()
+
+                        if (this.personAddSurnameTFValues[i].length > 0) {  //to exclude empty strings
+
                             connection = {
                                 "surname": this.personAddSurnameTFValues[i],
                                 "name": this.personAddNameTFValues[i] != null ? this.personAddNameTFValues[i] : '',
@@ -1047,28 +1017,48 @@
                             console.log("ADDED NAME PERSON", connection);
                             connection = '';
                         }
-                        // }
                     }
+                    //  }
+                    //        }
                 }
             },
 
-            finalPositionListCreation(list, finalList) {
-                // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "orgId": list[i].id,
-                        "position": list[i].connection,
-                        "comment": list[i].comment
-                    };
-                    // console.log("CREATE PERS ON A: ", a);
+            isAdditionalNamesAlreadyExist() {
+                //????cannot use nameList before person saving, then needs to add/delete nameList elements every time
+                //preSurname -> personAddSurnameTFValues -> nameList
 
-                    if (a.position.length > 0) { //to avoid add empty connections (wasn't entered)
-                        // console.log("PUSH PERS ON A: ", a);
-                        finalList.push(a);
-                    }
-                    // console.log("CREATE PERS ON A: ", this.article.personList);
+                let res = this.nameList.find(x => x.priority === 0);
+
+                let count = 0;
+                for (let i = 0; i < this.nameList.length; i++) {
+                    if (this.nameList[i].priority === 0)
+                        count++;
                 }
+                console.log("IS EXIST", res, count, this.nameList);
+
+                if (res)
+                    return true;
+
+                return false;
             },
+
+            // finalPositionListCreation(list, finalList) {
+            //     // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
+            //     for (let i = 0; i < list.length; i++) {
+            //         let a = {
+            //             "orgId": list[i].id,
+            //             "position": list[i].connection,
+            //             "comment": list[i].comment
+            //         };
+            //         // console.log("CREATE PERS ON A: ", a);
+            //
+            //         if (a.position.length > 0) { //to avoid add empty connections (wasn't entered)
+            //             // console.log("PUSH PERS ON A: ", a);
+            //             finalList.push(a);
+            //         }
+            //         // console.log("CREATE PERS ON A: ", this.article.personList);
+            //     }
+            // },
 
             finalConnectionListCreation(list, finalList) {
                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
@@ -1205,8 +1195,8 @@
                     t = this.checkConnection(this.locationList);
                 }
                 if (!t) {
-                    if (this.isObjectValidAndNotEmpty(this.occupationList)) {
-                        g = this.checkConnection(this.occupationList);
+                    if (this.isObjectValidAndNotEmpty(this.orgList)) {
+                        g = this.checkConnection(this.orgList);
 
                         if (!g) {
                             if (this.isObjectValidAndNotEmpty(this.personList)) {
@@ -1304,15 +1294,15 @@
 
                 this.person.locationList.splice(0);
                 this.person.personList.splice(0);
-                this.person.positionDtoList.splice(0);
+                this.person.orgList.splice(0);
                 this.person.isourceList.splice(0);
-                this.person.eventList.splice(0);
+                // this.person.eventList.splice(0);
                 this.person.snpList.splice(0);
                 this.finalConnectionListCreation(this.locationList, this.person.locationList);
-                this.finalPositionListCreation(this.occupationList, this.person.positionDtoList);
+                this.finalConnectionListCreation(this.orgList, this.person.orgList);
                 this.finalConnectionListCreation(this.personList, this.person.personList);
                 this.finalConnectionListCreation(this.isourceList, this.person.isourceList);
-                this.finalConnectionListCreation(this.eventList, this.person.eventList);
+                // this.finalConnectionListCreation(this.eventList, this.person.eventList);
                 this.finalNameListCreation(this.nameList, this.person.snpList); // this.person.snpList = this.nameList;
 
                 // this.person.photo = this.avatar.imageBase64;
@@ -1363,31 +1353,31 @@
 
             //todo
             orgEditConnectionTitleCreation(org) {
-                let returnedTitle = org.nameRus;
+                let returnedTitle = org.content;
 
-                if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
-                    returnedTitle += ", " + org.abbrRus;
-                }
-                if (this.isArrayValidAndNotEmpty(org.name)) {
-                    returnedTitle += ", " + org.name;
-                }
-                //todo add fields
+                // if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
+                //     returnedTitle += ", " + org.abbrRus;
+                // }
+                // if (this.isArrayValidAndNotEmpty(org.name)) {
+                //     returnedTitle += ", " + org.name;
+                // }
+                // //todo add fields
 
                 return returnedTitle;
             },
 
             countryTitleCreation(country) {
-                let returnedTitle = country.country;
+                let returnedTitle = country.content;
 
-                if (this.isArrayValidAndNotEmpty(country.region)) {
-                    returnedTitle += ", " + country.region;
-                }
-                if (this.isArrayValidAndNotEmpty(country.city)) {
-                    returnedTitle += ", " + country.city;
-                }
-                if (this.isArrayValidAndNotEmpty(country.address)) {
-                    returnedTitle += ", " + country.address;
-                }
+                // if (this.isArrayValidAndNotEmpty(country.region)) {
+                //     returnedTitle += ", " + country.region;
+                // }
+                // if (this.isArrayValidAndNotEmpty(country.city)) {
+                //     returnedTitle += ", " + country.city;
+                // }
+                // if (this.isArrayValidAndNotEmpty(country.address)) {
+                //     returnedTitle += ", " + country.address;
+                // }
                 //placement?
 
                 return returnedTitle;
@@ -1457,6 +1447,29 @@
 
         mounted() {
             this.getLoggedIn();
+
+            // document.addEventListener('keydown', function(event){
+            //     if(event.key === "Escape"){
+            //         //do something
+            //
+            //         console.log("E*S*C*A*P*E", this.preSurname);
+            //         this.cancelModalNamesView();
+            //
+            //         // for (let i = 0; i < 5; i++){
+            //         //     // this.preSurname[i] = '';
+            //         //     // this.preName[i] = '';
+            //         //     // this.prePatr[i] = '';
+            //         //
+            //         //     document.getElementById("idsrnm" + i).value = '';
+            //         //     document.getElementById("idnm" + i).value = '';
+            //         //     document.getElementById("idptrnmc" + i).value = '';
+            //         //}
+            //
+            //         //this.$refs.modalNames.hide();
+            //     }
+            // });
+
+
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
                 console.log("STATUS LIST", this.statusList);
@@ -1518,15 +1531,12 @@
                         this.personPersonIds.push(this.person.personList[j].itemId);
                     }
 
-                    for (let j = 0; j < this.person.positionDtoList.length; j++) {
-                        this.personOrgIds.push(this.person.positionDtoList[j].orgId);
+                    for (let j = 0; j < this.person.orgList.length; j++) {
+                        this.personOrgIds.push(this.person.orgList[j].itemId);
                     }
 
                     // for (let j = 0; j < this.person.isourceList.length; j++) {  //todo
                     //     this.personIsourceIds.push(this.person.isourceList[j].itemId);
-                    // }
-                    // for (let j = 0; j < this.person.eventList.length; j++) {
-                    //     this.personEventIds.push(this.person.eventList[j].itemId);
                     // }
 
 
@@ -1550,7 +1560,7 @@
                             console.log("--------------------------> currentLocationEntity", currentLocationEntity);
                             let connection = {
                                 "id": element.itemId,
-                                "name": this.countryTitleCreation(currentLocationEntity),
+                                "name": currentLocationEntity.content, //this.countryTitleCreation(currentLocationEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
                                 "hasClicked": true
@@ -1560,19 +1570,18 @@
                         }
                     });
 
-                    api.getPersonsByIds(this.personPersonIds, response => {
+                    api.getPersonsByIdsAndSymmetrically(this.person.id, this.personPersonIds, response => {
                         this.personPersonEntities = response.data;
 
-                        for (let i = 0; i < this.person.personList.length; i++) {
-                            let element = this.person.personList[i];
-                            let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
+                        for (let i = 0; i < this.personPersonEntities.length; i++) {
                             let connection = {
-                                "id": element.itemId,
-                                "name": this.personNameCreation(currentPersonEntity),
-                                "connection": element.connection,
-                                "comment": element.comment,
+                                "id": this.personPersonEntities[i].itemId,
+                                "name": this.personPersonEntities[i].name, //this.personNameCreation(currentPersonEntity),
+                                "connection": this.personPersonEntities[i].connection,
+                                "comment": this.personPersonEntities[i].comment,
                                 "hasClicked": true
                             };
+
                             // console.log("CREATE PERS ON A: ", a);
                             this.personList.push(connection);
                         }
@@ -1582,39 +1591,22 @@
                         this.personOrgEntities = response.data;   //returns List<Org>
                         console.log("apiOrg", this.personOrgEntities);
 
-                        for (let i = 0; i < this.person.positionDtoList.length; i++) {
-                            let element = this.person.positionDtoList[i];
-                            let currentOrgEntity = this.personOrgEntities.find(org => org.id === element.orgId);
+                        for (let i = 0; i < this.person.orgList.length; i++) {
+                            let element = this.person.orgList[i];
+                            let currentOrgEntity = this.personOrgEntities.find(org => org.id === element.itemId);
                             console.log("currentOrgEntity", currentOrgEntity);
                             let connection = {
-                                "id": element.orgId,
-                                "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
-                                "connection": element.position,
+                                "id": element.itemId,
+                                "name": currentOrgEntity.content, //this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "connection": element.connection,
                                 "comment": element.comment,
                                 "hasClicked": true
                             };
-                            this.occupationList.push(connection);
+                            this.orgList.push(connection);
                         }
                     });
 
                     // api.getIsourceByIds(this.personPersonIds, response => {  //todo
-                    //     this.personPersonEntities = response.data;
-                    //
-                    //     for (let i = 0; i < this.person.personList.length; i++) {
-                    //         let element = this.person.personList[i];
-                    //         let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
-                    //         let connection = {
-                    //             "id": element.itemId,
-                    //             "name": this.personNameCreation(currentPersonEntity),
-                    //             "connection": element.connection,
-                    //             "comment": element.comment,
-                    //             "hasClicked": true
-                    //         };
-                    //         // console.log("CREATE PERS ON A: ", a);
-                    //         this.personList.push(connection);
-                    //     }
-                    // });
-                    // api.getEventByIds(this.personPersonIds, response => {
                     //     this.personPersonEntities = response.data;
                     //
                     //     for (let i = 0; i < this.person.personList.length; i++) {
@@ -1659,13 +1651,13 @@
                         console.log("R DATA", r);
                         this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;//.content;
 
-                       // let buffer = (new Buffer(r.data.toString()));
+                        // let buffer = (new Buffer(r.data.toString()));
 
 
                         //console.log(buffer.toString("base64"));
-                       // console.log("avatar.imageBase64", this.avatar.imageBase64, buffer);
+                        // console.log("avatar.imageBase64", this.avatar.imageBase64, buffer);
 
-                       // this.originalPhoto = this.avatar.imageBase64;
+                        // this.originalPhoto = this.avatar.imageBase64;
 
 
                         // console.log("BYTE []", r.data.blobContent.binaryStream);
@@ -1679,13 +1671,8 @@
                         //
 
 
-
-
-                       let blob = new Blob([r.data], { type: 'image/jpeg' });
-                       console.log("BLOB", blob);
-
-
-
+                        let blob = new Blob([r.data], {type: 'image/jpeg'});
+                        console.log("BLOB", blob);
 
 
                         // var array = new Uint8Array([0x04, 0x06, 0x07, 0x08]);
@@ -1731,21 +1718,14 @@
         computed: {
             itemsPerson() {
                 return this.personEntries.map(entry => {
-                    const surname = entry.surname;
+                    const surname = entry.content;
                     return Object.assign({}, entry, {surname})
                 })
             },
 
             isourceItems() {
                 return this.isourceEntries.map(entry => {
-                    const surname = entry.title;
-                    return Object.assign({}, entry, {title})
-                })
-            },
-
-            eventItems() {
-                return this.eventEntries.map(entry => {
-                    const surname = entry.title;
+                    const surname = entry.content;
                     return Object.assign({}, entry, {title})
                 })
             },
@@ -1764,14 +1744,15 @@
                 if (this.orgEntries) {      ///todo analyze why undefined (after selection in the search list)
                     // console.log("####################", this.orgEntries);
 
-                    return this.orgEntries;
-                    //     .map(entry => {
-                    //     const id = entry.id;
-                    //     const org = entry.name;
-                    //     return Object.assign({}, {id}, {org})
-                    // })
+                    return this.orgEntries.map(entry => {
+                        return Object.assign({}, entry)
+                        //     .map(entry => {
+                        //     const id = entry.id;
+                        //     const org = entry.name;
+                        //     return Object.assign({}, {id}, {org})
+                        // })
+                    })
                 }
-                // return this.orgEntries;
             },
 
             searchLength() {
@@ -1951,7 +1932,7 @@
                 if (val !== null)
                     if (val.length > 2) {
                         if (typeof this.selectedOrg !== 'undefined') {
-                            if (this.person.positionDtoList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.person.orgList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedOrg = "";
                         }
 
@@ -1962,8 +1943,8 @@
                         //console.log("seracg org", val);
 
                         apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
-                            this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
-                            // console.log("****", this.orgEntries);
+                            this.orgEntries = r;  //returns IdContentDto (id, name(connected from different Org fields in OrgServImpl))
+                         //   console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
                         });
                     }
@@ -1982,7 +1963,7 @@
 
                         api.searchPerson(val, localStorage.getItem('movement'), r => {
                             this.personEntries = r;
-                            console.log("***ПОИСК ******", this.personEntries);
+                           // console.log("***ПОИСК ******", this.personEntries);
                             this.isLoadingPerson = false;
                         });
                     }
@@ -2004,26 +1985,6 @@
                         //     this.isourceEntries = r;
                         //     console.log("***ПОИСК ******", this.isourceEntries);
                         //     this.isLoadingIsource = false;
-                        // });
-                    }
-            },
-
-            eventSearch(val) {
-                if (val !== null)
-                    if (val.length > 2) {
-                        if (typeof this.selectedEvent !== 'undefined') {
-                            if (this.person.eventList.length > 1)
-                                this.selectedEvent = "";
-                        }
-                        // Items have already been requested
-                        if (this.isLoadingIsource) return;
-                        this.isLoadingIsource = true;
-
-                        //todo
-                        // apiEvent.searchEvent(val, localStorage.getItem('movement'), r => {
-                        //     this.eventEntries = r;
-                        //     console.log("***ПОИСК ******", this.eventEntries);
-                        //     this.isLoadingEvent = false;
                         // });
                     }
             },

@@ -1,7 +1,8 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Location;
-import com.hellokoding.springboot.restful.model.dto.LocationDto;
+import com.hellokoding.springboot.restful.model.dto.IdContentDto;
+//import com.hellokoding.springboot.restful.model.dto.LocationDto;
 import com.hellokoding.springboot.restful.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,8 @@ public class LocationAPI {
     private final LocationService locationService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<LocationDto>> search(@RequestParam(name = "q", required = true) String q) {
-        List<LocationDto> search = locationService.search(q);
+    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q) {
+        List<IdContentDto> search = locationService.search(q);
         return ResponseEntity.ok(search);
     }
     @GetMapping
@@ -32,7 +33,7 @@ public class LocationAPI {
     }
 
     @PostMapping("/ids")
-    public ResponseEntity<List<Location>> getLocationsByIds(@Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<IdContentDto>> getLocationsByIds(@Valid @RequestBody List<Integer> idList) {
         return ResponseEntity.ok(locationService.findByIds(idList));
     }
 

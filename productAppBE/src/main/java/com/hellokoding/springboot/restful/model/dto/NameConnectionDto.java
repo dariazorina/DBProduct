@@ -1,19 +1,18 @@
 package com.hellokoding.springboot.restful.model.dto;
 
-//dto for all location connections
-public class ItemConnectionDto implements Comparable<ItemConnectionDto> {
-
-
+//dto for add/edit page for article-article, person-person, org-org
+public class NameConnectionDto implements Comparable<NameConnectionDto> {
     private Integer itemId;
+    private String name;
     private String connection;
     private String comment;
 
-
-    public ItemConnectionDto() {
+    public NameConnectionDto() {
     }
 
-    public ItemConnectionDto(Integer itemId, String connection, String comment) {
+    public NameConnectionDto(Integer itemId, String name, String connection, String comment) {
         this.itemId = itemId;
+        this.name = name;
         this.connection = connection;
         this.comment = comment;
     }
@@ -24,6 +23,14 @@ public class ItemConnectionDto implements Comparable<ItemConnectionDto> {
 
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getConnection() {
@@ -45,7 +52,7 @@ public class ItemConnectionDto implements Comparable<ItemConnectionDto> {
 
     @Override
     public boolean equals(Object obj) {
-        return ((ItemConnectionDto) obj).itemId.equals(itemId)&&((ItemConnectionDto) obj).connection.equals(connection);
+        return ((NameConnectionDto) obj).itemId.equals(itemId)&&((NameConnectionDto) obj).name.equals(name);
     }
 
     @Override
@@ -54,7 +61,7 @@ public class ItemConnectionDto implements Comparable<ItemConnectionDto> {
     }
 
     @Override
-    public int compareTo(ItemConnectionDto obj) {
+    public int compareTo(NameConnectionDto obj) {
         return connection.compareToIgnoreCase(obj.getConnection());
     }
 }

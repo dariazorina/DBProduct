@@ -13,7 +13,6 @@ export default {
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
-                // if (error.response !== undefined)
                 if (error.response.status === 401) {
                     this.error401Handling();
                 }
@@ -23,6 +22,18 @@ export default {
     getPersonsByIds(idList, fn) {
         AXIOS
             .post(`/person/ids`, idList)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            });
+    },
+
+    getPersonsByIdsAndSymmetrically(id, idList, fn) {
+        AXIOS
+            .post(`/person/symmids/` + id, idList)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

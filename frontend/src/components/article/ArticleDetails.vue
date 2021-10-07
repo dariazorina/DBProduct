@@ -3,12 +3,6 @@
         <link href="../dbnm.css" rel="stylesheet"/>
         <iframe id="iframeToDownload" style="display:none;"></iframe>
 
-        <div class="form-group row">
-            <div class="col-2 col-form-label">
-                <p class="pageDetailsTitle">Article Details</p>
-            </div>
-        </div>
-
         <div class="details">
 
             <div class="row">
@@ -53,10 +47,10 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-2"  style="background-color:lavender;">
+                <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Язык</span></div>
                 </div>
-                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left"> {{article.language.name}} </span>
+                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.language.name}} </span>
                 </div>
             </div>
 
@@ -71,16 +65,14 @@
             </div>
 
 
-
-
             <div class="row">
-                <div class="col-sm-2"  style="background-color:lavender;">
+                <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle">
                         <span class="float-left">Авторы</span>
                     </div>
                 </div>
 
-                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left">
+                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
                      <div v-for="author in articlePersonEntities">
                             {{createComplexPersonById(author.id)}}
                     </div>
@@ -108,7 +100,7 @@
                 <div class="col-sm-10" style="background-color:lavender;">
                                        <span class="float-left">
                                            <div v-for="org in articleOrgEntities">
-                                                {{createComplexOrgById(org.id)}}
+                                                {{ createComplexOrgById(org.id)}}
                                            </div>
                                        </span>
                 </div>
@@ -132,7 +124,7 @@
                     <div v-for="material in articleMaterialEntities">
                        <a><router-link
                                :to="{name: 'article-details', params: {article_id: material.id}}" target="_blank">
-                              {{createComplexMaterialById(material.id)}} </router-link></a>
+                              {{createComplexMaterialById(material)}} </router-link></a>
 
                         <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
                         <!--                            {{createComplexMaterialById(material.id)}}-->
@@ -169,10 +161,10 @@
             </div>
 
             <div class="row" v-if="article.miscellany!=null">
-                <div class="col-sm-2"  style="background-color:lavender;">
+                <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle"><span class="float-left">Комментарии</span></div>
                 </div>
-                <div class="col-sm-10"  style="background-color:lavender;"><span class="float-left"> {{article.miscellany}}</span>
+                <div class="col-sm-10" style="background-color:lavender;"><span class="float-left"> {{article.miscellany}}</span>
                 </div>
             </div>
 
@@ -187,7 +179,8 @@
 
         <div class="offset-sm-1 col-sm-3">
             <button type="button" class="btn btn-info">
-                <router-link to="/article" style="color: white; font-size: medium">Back To Article List</router-link>
+                <router-link to="/article" style="color: white; font-size: medium">Обратно к списку материалов
+                </router-link>
             </button>
         </div>
     </div>
@@ -293,31 +286,11 @@
             createComplexPersonById(id) {
                 let result = '';
                 let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-
                 // console.log("00000000000000000000", currentPerson);
 
-                let valueOrig = currentPerson.surname;// + " " + currentPerson.name;
-                let valueRus = currentPerson.surnameRus;// + " " + currentPerson.nameRus;
-
+                result = currentPerson.content;
                 let connection = this.article.personList.find(x => x.itemId === id);
                 // console.log("1111111111", connection);
-
-                if (this.isObjectValidAndNotEmpty(currentPerson.name)) {
-                    valueOrig += " " + currentPerson.name;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentPerson.nameRus)) {
-                    valueRus += " " + currentPerson.nameRus;
-                }
-
-                if (this.isObjectValidAndNotEmpty(valueRus)) {
-                    result = valueRus;
-                    if (this.isObjectValidAndNotEmpty(valueOrig)) {
-                        if (valueRus.localeCompare(valueOrig) !== 0)
-                            result += "/ " + valueOrig;
-                    }
-                } else if (this.isObjectValidAndNotEmpty(valueOrig))
-                    result += valueOrig;
 
                 if (this.isObjectValidAndNotEmpty(connection.connection))
                     result += "/ " + connection.connection;
@@ -331,32 +304,10 @@
 
             createComplexLocationById(id) {
                 let currentLocation = this.articleLocationEntities.find(x => x.id === id);
-                let result = currentLocation.country;
-
-                // console.log("00000000000000000000", currentPerson);
+                let result = currentLocation.content;
 
                 let connection = this.article.locationList.find(x => x.itemId === id);
                 // console.log("1111111111", connection);
-
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.region)) {
-                    result += ", " + currentLocation.region;
-                }
-                if (this.isObjectValidAndNotEmpty(currentLocation.city)) {
-                    result += ", " + currentLocation.city;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.address)) {
-                    result += ", " + currentLocation.address;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.placement)) {
-                    result += ", " + currentLocation.placement;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentLocation.miscellany)) {
-                    result += "/ " + currentLocation.miscellany;
-                }
 
                 if (this.isObjectValidAndNotEmpty(connection.connection))
                     result += "/ " + connection.connection;
@@ -367,45 +318,26 @@
                 return result;
             },
 
-            createComplexMaterialById(id) {
-                let currentMaterial = this.articleMaterialEntities.find(x => x.id === id);
-                let result;
+            createComplexMaterialById(art) {
+                let currentMaterial = art;
+                let result = '';
 
-                let connection = this.article.materialList.find(x => x.itemId === id);
+                if (currentMaterial != null) {
+                    result = currentMaterial.name;
 
-                if (this.isObjectValidAndNotEmpty(currentMaterial.title)) {
-                    result = currentMaterial.title;
-                } else {
-                    result = currentMaterial.titleRus;
+                    if (this.isObjectValidAndNotEmpty(currentMaterial.connection))
+                        result += "/ " + currentMaterial.connection;
+
+                    if (this.isObjectValidAndNotEmpty(currentMaterial.comment))
+                        result += "/ " + currentMaterial.comment;
                 }
-
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
-
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
-
                 return result;
             },
 
             createComplexOrgById(id) {
                 let currentOrg = this.articleOrgEntities.find(x => x.id === id);
                 let connection = this.article.orgList.find(x => x.itemId === id);
-                let result;
-
-                if (this.isObjectValidAndNotEmpty(currentOrg.name)) {
-                    result = currentOrg.name + "/ " + currentOrg.nameRus;
-                } else {
-                    result = currentOrg.nameRus;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentOrg.abbr)) {
-                    result += "/ " + currentOrg.abbr;
-                }
-
-                if (this.isObjectValidAndNotEmpty(currentOrg.abbrRus)) {
-                    result += "/ " + currentOrg.abbrRus;
-                }
+                let result = currentOrg.content;
 
                 if (this.isObjectValidAndNotEmpty(connection.connection))
                     result += "/ " + connection.connection;
@@ -427,7 +359,7 @@
                     result = valueRus;
                     if (this.isObjectValidAndNotEmpty(valueOrig)) {
                         if (valueRus.localeCompare(valueOrig) !== 0)
-                            result += " / " + valueOrig;
+                            result += "/ " + valueOrig;
                     }
                 } else if (this.isObjectValidAndNotEmpty(valueOrig))
                     result += valueOrig;
@@ -446,14 +378,13 @@
             this.getLoggedIn();
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;
-                console.log("-------------------", this.article);
+                // console.log("-------------------", this.article);
                 this.article.date = this.formatDate(this.article.date);
 
                 apiStatus.getAllStatuses(response => {
                     this.statusList = response.data;
                     console.log("STATUS LIST", this.statusList);
                 });
-
 
                 for (let j = 0; j < this.article.personList.length; j++) {
                     this.articlePersonIds.push(this.article.personList[j].itemId);
@@ -489,9 +420,14 @@
                     console.log("apiOrga", this.articleOrgEntities);
                 });
 
-                api.getMaterialsByIds(this.articleMaterialIds, response => {
+                // api.getMaterialsByIds(this.articleMaterialIds, response => {
+                //     this.articleMaterialEntities = response.data;
+                //     console.log("apiMater", this.articleMaterialEntities);
+                // });
+
+                api.getMaterialsByIdsAndSymmetrically(this.article.id, this.articleMaterialIds, response => {
                     this.articleMaterialEntities = response.data;
-                    console.log("apiMater", this.articleMaterialEntities);
+                    // console.log("```````````````````````````````````````````apiMater", this.articleMaterialEntities);
                 });
 
                 apiAttachment.getAttachments('article', this.article.id, r => {

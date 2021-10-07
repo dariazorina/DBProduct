@@ -13,7 +13,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private List <SnpDto> snpList;
 
     private Integer location_id;
-    private Location location;
     private String description;
     private String miscellany;
     private String rowColor;
@@ -23,11 +22,10 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     private List<UrlLink> linkList;
     private List<String> hashtagList;
-    private List<PositionDto> positionDtoList;
+    private List<ItemConnectionDto> orgList;
     private List<ItemConnectionDto> locationList;
     private List<ItemConnectionDto> personList;
     private List<ItemConnectionDto> isourceList;
-    private List<ItemConnectionDto> eventList;
     private List<Movement> movementList;
 //    private String photo;
 //    private byte[] photo;
@@ -37,8 +35,8 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public NewPersonDto(Integer id, List<Movement> movementList, List<SnpDto> snpList, String description,
                         String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                        List<PositionDto> positionList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList,
-                        List<ItemConnectionDto> isourceList, List<ItemConnectionDto> eventList, Integer bYear, Integer dYear, String status) {
+                        List<ItemConnectionDto> orgList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList,
+                        List<ItemConnectionDto> isourceList, Integer bYear, Integer dYear, String status) {
         this.id = id;
         this.movementList = movementList;
         this.snpList = snpList;
@@ -48,10 +46,9 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.rowColor = rowColor;
         this.linkList = linkList;
         this.hashtagList = hashtagList;
-        this.positionDtoList = positionList;
+        this.orgList = orgList;
         this.locationList = locationList;
         this.isourceList = isourceList;
-        this.eventList = eventList;
         this.personList = personList;
         this.birthYear = bYear;
         this.deathYear = dYear;
@@ -75,22 +72,21 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
                 this.hashtagList.add(pers.getHashtag().getContent());
         }
 
-        this.positionDtoList = new ArrayList<>();
+        this.orgList = new ArrayList<>();
         this.locationList = new ArrayList<>();
         this.personList = new ArrayList<>();
         this.snpList = new ArrayList<>();
         this.isourceList = new ArrayList<>();
-        this.eventList = new ArrayList<>();
 
 
-        PositionDto posDto;
-        for (Position pos : p.getOccupation()) {
-            posDto = new PositionDto();
-            posDto.setOrgId(pos.getOrg().getId());
-            posDto.setPosition(pos.getPosition());
-            posDto.setComment(pos.getComment());
+        ItemConnectionDto orgConnectionDto;
+        for (OrgPersonConnection connection : p.getOrgConnections()) {
+            orgConnectionDto = new ItemConnectionDto();
+            orgConnectionDto.setItemId(connection.getOrg().getId());
+            orgConnectionDto.setConnection(connection.getConnection());
+            orgConnectionDto.setComment(connection.getComment());
 
-            this.positionDtoList.add(posDto);
+            this.orgList.add(orgConnectionDto);
         }
 
         ItemConnectionDto locationConnectionDto;
@@ -111,16 +107,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             isourceConnectionDto.setComment(connection.getComment());
 
             this.isourceList.add(isourceConnectionDto);
-        }
-
-        ItemConnectionDto eventConnectionDto;
-        for (PersonEventConnection connection : p.getEventConnections()) {
-            eventConnectionDto = new ItemConnectionDto();
-            eventConnectionDto.setItemId(connection.getEvent().getId());
-            eventConnectionDto.setConnection(connection.getConnection());
-            eventConnectionDto.setComment(connection.getComment());
-
-            this.eventList.add(eventConnectionDto);
         }
 
         ItemConnectionDto personConnectionDto;
@@ -175,14 +161,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.location_id = location_id;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -207,10 +185,12 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.hashtagList = hashtagList;
     }
 
-    public List<PositionDto> getPositionDtoList() { return positionDtoList;  }
+    public List<ItemConnectionDto> getOrgList() {
+        return orgList;
+    }
 
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
+    public void setOrgList(List<ItemConnectionDto> orgList) {
+        this.orgList = orgList;
     }
 
     public List<ItemConnectionDto> getLocationList() {
@@ -267,15 +247,6 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public void setIsourceList(List<ItemConnectionDto> isourceList) {
         this.isourceList = isourceList;
-    }
-
-
-    public List<ItemConnectionDto> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(List<ItemConnectionDto> eventList) {
-        this.eventList = eventList;
     }
 
     public List<ItemConnectionDto> getPersonList() {

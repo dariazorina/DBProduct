@@ -31,7 +31,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "from Person as a " +
             "left join a.hashtagList h " +
             "left join h.assigned_hashtag assh " +
-            "left join a.occupation aO " +
+            "left join a.orgConnections aO " +
             "left join aO.org aOrg " +
             "left join aOrg.nameList nmL " +
             "left join a.locationConnections aLo " +
@@ -68,7 +68,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("select distinct p " +
             "from Person p " +
-            "join p.occupation aL " +
+            "join p.orgConnections aL " +
             "join aL.org aP " +
             "join aP.nameList nmL " +
             "where (lower(nmL.name) like lower(:org)) ")

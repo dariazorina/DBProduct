@@ -1,16 +1,5 @@
 <template>
     <div class="hello">
-        <div class="col-3 col-form-label">
-
-            <p class="greetingsTitle">Welcome, {{loggedName}}!
-                <button type="button" v-if="loggedInFlag" class="btnXSmall btn-link" v-b-modal.modal1>Logout
-                </button>
-                <!--                <b-btn v-if="loggedInFlag" size="xs" variant="btn btn-link  btn-xs"  v-b-modal.modal1>Logout</b-btn>-->
-            </p>
-            <!-- Modal Component -->
-            <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
-        </div>
-
         <!--        <img src="./../assets/spring-boot-vuejs-logo.png">-->
         <!--        <h1>{{ hellomsg }}</h1>-->
 
@@ -115,14 +104,14 @@
                     }
 
                     if (response.data.movementList.length > 1) {
-                        //alert("бздынь!");
+                        // alert("бздынь!");
                         this.userMovements = response.data.movementList;
                         console.log("USER MOVEMENTS", this.userMovements);
                     }
 
                     apiMovement.getAllMovements(response => {
                         this.allMovements = response.data;
-                        console.log("MOVEMENTS", response.data);
+                        console.log("HELLO MOVEMENTS", response.data);
                     });
                 }
             ).catch(

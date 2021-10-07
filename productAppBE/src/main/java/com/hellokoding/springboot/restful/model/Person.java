@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "t_person")
 @Data
-public class Person {
+public class Person implements Comparable<Person> {
     @Id
     @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +39,6 @@ public class Person {
 //    private List<SurnameNamePatr> snpList;
 
 
-
-
     @ManyToMany
     @JoinTable(
             name = "person_snp",
@@ -56,9 +54,14 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "activity_type_id", referencedColumnName = "activity_type_id"))
     private List<ActivityType> activityTypeList;
 
+//    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    @ToString.Exclude //    @JsonIgnore
+//    private List<Position> occupation;
+
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @ToString.Exclude //    @JsonIgnore
-    private List<Position> occupation;
+    @ToString.Exclude
+    private List<OrgPersonConnection> orgConnections;
+
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude //    @JsonIgnore
@@ -66,7 +69,8 @@ public class Person {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @JsonIgnore  //todo? JsonManagedReference and JsonBackReference https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
+    @JsonIgnore
+    //todo? JsonManagedReference and JsonBackReference https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
     private List<PersonHashtag> hashtagList;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -83,10 +87,10 @@ public class Person {
     @JsonIgnore
     private List<PersonIsourceConnection> isourceConnections;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @ToString.Exclude
-    @JsonIgnore
-    private List<PersonEventConnection> eventConnections;
+//    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    @ToString.Exclude
+//    @JsonIgnore
+//    private List<PersonEventConnection> eventConnections;
 
 
     @ManyToMany
@@ -110,4 +114,33 @@ public class Person {
 //    @Column(name = "photo")   //, columnDefinition="mediumblob")
 //    @Basic(fetch = FetchType.LAZY)
 //    private byte[] photo;
+
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Person) obj).id.equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(Person obj) {
+
+        String name = "", name1 = "";
+
+        for (int i = 0; i < snpList.size(); i++)
+            if (snpList.get(i).getPriority() == 1) {
+                name = snpList.get(i).getSurname();
+            }
+
+        for (int i = 0; i < obj.snpList.size(); i++)
+            if (obj.snpList.get(i).getPriority() == 1) {
+                name1 = obj.snpList.get(i).getSurname();
+            }
+
+        return name.compareToIgnoreCase(name1);
+    }
 }

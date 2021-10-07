@@ -2,8 +2,10 @@ package com.hellokoding.springboot.restful.controller;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.hellokoding.springboot.restful.model.dto.IdContentDto;
+import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
-import com.hellokoding.springboot.restful.model.dto.PersonDto;
+//import com.hellokoding.springboot.restful.model.dto.PersonDto;
 import com.hellokoding.springboot.restful.service.PersonService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
 import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
@@ -36,9 +38,9 @@ public class PersonAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping("/searchBySurname")
-    public ResponseEntity<List<PersonDto>> search(@RequestParam(name = "q", required = true) String q,
-                                                  @RequestParam(name = "mov", required = true) Integer mov) {
-        List<PersonDto> search = personService.searchBySurname(q, mov);   //used for ex in material creation
+    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q,
+                                                     @RequestParam(name = "mov", required = true) Integer mov) {
+        List<IdContentDto> search = personService.searchBySurname(q, mov);   //used for ex in material creation
         return ResponseEntity.ok(search);
     }
 
@@ -64,8 +66,14 @@ public class PersonAPI {
     }
 
     @PostMapping("/ids")
-    public ResponseEntity<List<NewPersonDto>> getPersonsByIds(@Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<IdContentDto>> getPersonsByIds(@Valid @RequestBody List<Integer> idList) {
         return ResponseEntity.ok(personService.findByIds(idList));
+    }
+
+    @PostMapping("/symmids/{id}")
+    public ResponseEntity<List<NameConnectionDto>> getPersonsByIdsAndSymmetrically(@PathVariable Integer id, @Valid @RequestBody List<Integer> idList) {
+//        List<NameConnectionDto> eee = personService.findByIdsAndSymmetrically(idList, id);
+        return ResponseEntity.ok(personService.findByIdsAndSymmetrically(idList, id));
     }
 
     @GetMapping("/{id}")

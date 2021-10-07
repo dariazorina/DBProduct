@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "t_article")
 @Data
 @ToString
-public class Article {
+public class Article implements Comparable<Article> {
 
     @Id
     @Column(name = "article_id")
@@ -83,4 +83,19 @@ public class Article {
     private List<ArticleLocationConnection> locationConnections;
 
     private String miscellany;
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Article) obj).id.equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(Article obj) {
+        return titleRus.compareToIgnoreCase(obj.getTitleRus());
+    }
 }
