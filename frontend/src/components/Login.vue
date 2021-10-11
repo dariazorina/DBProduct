@@ -47,10 +47,11 @@
 
     import Vue from 'vue';
     import EventBus from './event-bus';
+  //  import InputTextField from "./components/multiple-enter-list/InputTextField";
 
     export default {
         name: 'login',
-
+     //   components: {InputTextField},
         data() {
             return {
                 loginError: false,
@@ -69,7 +70,7 @@
 
             callLogin() {
                 this.errors = [];
-                this.$store.dispatch("login", {user: this.user, password: this.password})
+                this.$store.dispatch("login", {user: this.user.toLowerCase(), password: this.password})
                     .then(() => {
                         //console.log("--login page--");
                         this.loginSuccess = true;

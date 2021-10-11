@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <property name="autoIncrement" value="true"/>
+    <changeSet author="Даша" id="081021-01">
+        <dropForeignKeyConstraint baseTableName="user_authority"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_user_id"/>
+
+        <dropForeignKeyConstraint baseTableName="persistent_token"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_user_persistent_token"/>
+
+    </changeSet>
+
+    <changeSet author="Даша" id="081021-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="user_credentials"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="user_credentials"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="081021-3">
+        <dropForeignKeyConstraint baseTableName="user_authority"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_authority_name"/>
+
+    </changeSet>
+    <changeSet author="Даша" id="081021-4">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="user_authority"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="user_authority"/>
+
+    </changeSet>
+
+    <changeSet author="Даша" id="081021-5">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="persistent_token"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="persistent_token"/>
+
+
+    </changeSet>
+    <changeSet author="Даша" id="081021-6">
+        <dropForeignKeyConstraint baseTableName="user_movement"
+                                  baseTableSchemaName="public"
+                                  constraintName="t_movement_user_ref_id_fkey"/>
+
+<!--        <dropForeignKeyConstraint baseTableName="user_movement"-->
+<!--                                  baseTableSchemaName="public"-->
+<!--                                  constraintName="t_user_movement_ref_id_fkey"/>-->
+
+    </changeSet>
+
+    <changeSet author="Даша" id="12052021-6">
+        <preConditions onFail="MARK_RAN">
+            <tableExists schemaName="public" tableName="user_movement"/>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   schemaName="public"
+                   tableName="user_movement"/>
+    </changeSet>
+</databaseChangeLog>

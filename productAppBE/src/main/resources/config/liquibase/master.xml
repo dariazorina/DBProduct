@@ -109,5 +109,7 @@
     <include file="config/liquibase/changelog/00000000000149_rename_org_type.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/000000000000151_drop_position_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000153_add_security_columns.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000155_temp_load_data.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000157_new_user_data.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

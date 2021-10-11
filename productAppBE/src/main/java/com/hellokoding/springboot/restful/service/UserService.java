@@ -273,13 +273,13 @@ public class UserService {
             user.setMovementList(new ArrayList<>());
         }
        // if (user.getMovementList() == null) {
-            for (Integer m : movementList) {
-                Movement mov = movementRepository.findById(m).get();
-                if (mov != null) {
-                    mList.add(mov);
-                }
+        for (Integer m : movementList) {
+            Movement mov = movementRepository.findById(m).get();
+            if (mov != null) {
+                mList.add(mov);
             }
-            user.setMovementList(mList);
+        }
+        user.setMovementList(mList);
         //}
 
 //        if (user.getAuthorities() != null) {
@@ -323,6 +323,12 @@ public class UserService {
                     log.debug("Changed password for User: {}", user);
                 });
     }
+
+    //#getHash
+//    public void getHashPassword(String newPassword) {
+//        String encryptedPassword = passwordEncoder.encode(newPassword);
+//        log.debug("Hash password for: {} {}", newPassword, encryptedPassword );
+//    }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {

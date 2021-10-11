@@ -1,0 +1,8 @@
+id;login;password_hash;first_name;last_name;email;image_url;activated;lang_key;created_by;last_modified_by
+1;system;$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG;System;System;system@localhost;;true;en;system;system
+2;krs;$2a$10$lG.1gSi0FCHvnqfc5kQOg.fKK0lEDFHXujOQeRyq2rYy/I9y.dy6y;KRS;User;KRS@localhost;;true;en;system;system
+3;admin;$2a$10$/CvUNPAQYAMN1erD/k..EueOZkqq99PG5ADKPAoEfGDTdvEp/P4jG;Administrator;Administrator;admin@localhost;;true;en;system;system
+4;pev;$2a$10$Zvt.rhCIOx3Yd9K5DOZws..Fv3cKPDUBe/.JHdihZ.UDbcV2rm0Ay;PEV;User;PEV@localhost;;true;en;system;system
+5;iav;$2a$10$TugGT/ZQa8WPlseSje.VlO0orVv/lx0VZ0x5QpKtgNnHGG2elNTya;IAV;User;IAV@localhost;;true;en;system;system
+6;knu;$2a$10$9k90a1SXHjIh9RkGkE0DjOfiCtzfnt8exEMIh/9S6CfN8os7UYZHC;KNU;User;KNU@localhost;;true;en;system;system
+7;yad;$2a$10$m6qWQMqkMyfA2yZ6Z58uLuETppOpZYooH/HvhKL6T/eKV7DLTjgLG;YAD;User;YAD@localhost;;true;en;system;system

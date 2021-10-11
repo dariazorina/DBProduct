@@ -24,7 +24,12 @@ export default {
 
     logout() {
         return AXIOS.post(`logout`);
-    }
+    },
+
+    //#getHash
+    // getPasswdHash(psswd){
+    //     return AXIOS.get(`/hash/?pssw=`+ psswd);
+    // }
 
 
 }

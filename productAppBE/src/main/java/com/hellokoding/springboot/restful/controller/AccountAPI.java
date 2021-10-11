@@ -138,6 +138,12 @@ public class AccountAPI {
         return ty;
     }
 
+    //#getHash
+//    @GetMapping("/hash/")
+//    public void getHashPasswd(@RequestParam(value = "pssw") String pssw) {
+//        userService.getHashPassword(pssw);
+//    }
+
     /**
      * {@code POST  /account} : update the current user information.
      *

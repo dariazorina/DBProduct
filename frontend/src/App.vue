@@ -44,6 +44,18 @@
 
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
+
+<!--        //#getHash-->
+<!--        <div class="form-group row">-->
+<!--            <div class="offset-sm-1 col-sm-3">-->
+<!--                <input type="text" placeholder="" class="form-control"-->
+<!--                       v-model="getPsswd"/>-->
+<!--                <button type="button" @click="getHash(getPsswd)" class="btn btn-outline-dark">get hash</button>-->
+<!--                &lt;!&ndash;                        <b-btn size="sm" variant="btn btn-outline-info" @click="getHash(getPsswd)">get hash</b-btn>&ndash;&gt;-->
+<!--                &lt;!&ndash;                    <p v-if="error" class="error">Bad login information</p>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+
         <router-view/>
         <!--        <router-view :hellomsg="msg"></router-view>-->
     </div>
@@ -53,6 +65,7 @@
 
     import router from "./router";
     import EventBus from "./components/event-bus";
+   // import apiLogin from "./components/login-api";
 
     export default {
         name: 'app',
@@ -83,10 +96,28 @@
                 isAdmin: '',
                 loggedName: '',
                 loginError: false,
+              //  getPsswd: '', //#getHash
             }
         },
 
         methods: {
+
+            //#getHash
+            // getHash(psswd){
+            //     console.log("pswwd", psswd);
+            //
+            //     apiLogin.getPasswdHash(psswd).then(
+            //         response => {
+            //             console.log("RESPONSE SUCCES");
+            //         }
+            //     ).catch(
+            //         error => {
+            //             console.log("Error: " + error);
+            //         }
+            //     );
+            //
+            // },
+
             logout() {
                 this.$store.dispatch("logout", {}).then(result => {
                     this.loggedName = '';
