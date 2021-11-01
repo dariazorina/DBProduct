@@ -76,10 +76,10 @@ const router = new Router({
 
         {path: '/event', component: EventList},
 
-        {path: '/country', component: CountryList, meta: {isAdminPage: true}},
-        {path: '/country/add', component: CountryAdd, name: 'country-add', meta: {isAdminPage: true}},
-        {path: '/country/:country_id/edit', component: CountryEdit, name: 'country-edit', meta: {isAdminPage: true}},
-        {path: '/country/:country_id/delete', component: CountryDelete, name: 'country-delete', meta: {isAdminPage: true}},
+        {path: '/country', component: CountryList},
+        {path: '/country/add', component: CountryAdd, name: 'country-add'},
+        {path: '/country/:country_id/edit', component: CountryEdit, name: 'country-edit'},
+        {path: '/country/:country_id/delete', component: CountryDelete, name: 'country-delete'},
 
         {path: '/movement', component: MovementList, meta: {isAdminPage: true}},
         {path: '/movement/add', component: MovementAdd, name: 'movement-add', meta: {isAdminPage: true}},
@@ -130,7 +130,7 @@ router.beforeEach((to, from, next) => {
 
         // this route requires auth, check if logged in
         // if not, redirect to login page.
-        //console.log("check auth " + store.getters.isLoggedIn);
+        console.log("check auth " + store.getters.isLoggedIn);
 
 
         // console.log("COOKIES =)", window.$cookies.keys());
@@ -145,19 +145,25 @@ router.beforeEach((to, from, next) => {
             next({
                 path: '/login'
             })
+
+                 console.log("to login");
         } else {
 
             if (to.matched.some(record => record.meta.isAdminPage)) {
+
+                console.log("record.meta.isAdminPage");
 
                 if (localStorage.getItem('isAdmin') === 'true') {
                     next();
                 }
             } else {
+                console.log("record.meta.isAdminPage else");
                 next();
             }
         }
 
     } else {
+        console.log("record.meta.isAdminPage else else");
         next(); // make sure to always call next()!
     }
 });

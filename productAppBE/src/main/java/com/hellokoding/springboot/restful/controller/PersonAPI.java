@@ -112,6 +112,15 @@ public class PersonAPI {
         return ResponseEntity.ok(res);
     }
 
+    @DeleteMapping("/attachment")
+    public ResponseEntity deleteAttachment(@RequestParam(name = "entityId", required = true) Integer entityId,
+                                           @RequestParam(name = "fileId", required = true) Integer fileId,
+                                           @RequestParam(name = "fileName", required = true) String fileName) {
+
+        boolean res = attachmentService.deleteAttachment(EntityType.PERSON, entityId, fileId, fileName);
+        return ResponseEntity.ok(res);
+    }
+
     @PostMapping("/attachment/{id}")
     public ResponseEntity<Integer> handleFileUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
         Integer attachmentId = attachmentService.createAttachment(EntityType.PERSON, id, Instant.now(), "admin", file.getOriginalFilename(), file.getBytes());

@@ -68,9 +68,9 @@ export default {
             });
     },
 
-    getOrgsByIdsAndSymmetrically(id, idList, fn) {
+    getOrgsByIdsAndSymmetrically(id, fn) {
         AXIOS
-            .post(`/org/symmids/` + id, idList)
+            .post(`/org/symmids/` + id)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

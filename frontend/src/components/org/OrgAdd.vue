@@ -46,7 +46,7 @@
             <form class="authorsFormCreation"
                   style="background-color: transparent; padding: 25px 0 5px">
                 <div class="row" style="background-color: transparent">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
 
                         <div class="form-row">
                             <div class="col-md-6">
@@ -55,15 +55,28 @@
                                        placeholder="Поле должно быть заполнено"/>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-2" style="background-color: transparent">
                                 <label for="add-abbr">Аббревиатура</label>
                                 <input class="form-control" id="add-abbr" v-model="orgAbbrTFValues[0]"/>
                             </div>
 
+                            <div class="col-md-2" style="background-color: transparent; vertical-align: bottom">
+                                <b-button variant="info" v-b-modal="'modalOrgNames'" style="margin-top: 32px">
+                                    Добавить названия на других языках
+                                </b-button>
+                            </div>
                         </div>
-                        <b-button size="sm" variant="info" v-b-modal="'modalOrgNames'">
-                            Добавить названия на других языках
-                        </b-button>
+
+                        <div v-if="orgNameTFValues[1]!=null">
+                            <label for="add-name">Дополнительные названия:
+                                <span class='notbold'><br>{{orgNameTFValues[1]}} {{orgAbbrTFValues[1]}} </span>
+                                <span v-if="orgNameTFValues[2]!=null" class='notbold'><br>{{orgNameTFValues[2]}} {{orgAbbrTFValues[2]}} </span>
+                                <span v-if="orgNameTFValues[3]!=null" class='notbold'><br>{{orgNameTFValues[3]}} {{orgAbbrTFValues[3]}} </span>
+                                <span v-if="orgNameTFValues[4]!=null" class='notbold'><br>{{orgNameTFValues[4]}} {{orgAbbrTFValues[4]}} </span>
+
+                            </label>
+                            <!--                            <input class="form-control" v-model="orgNameTFValues[1]" disabled/>-->
+                        </div>
 
                     </div>
                 </div>
@@ -210,7 +223,7 @@
                          style="background-color: transparent; padding:0">
                         <ConnectionComponent :itemsList="articleList"
                                              :isLinkMode="true"
-                                             :isSelectionMode="true"
+                                             :isSelectionMode="false"
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0" class="col-12"/>
                     </div>
@@ -484,6 +497,7 @@
                     <file-attachment @attachFiles="createAttachment"
                                      @getAttachment="getAttachment"
                                      @downloadAttachment="downloadAttachment"
+                                     @removeAttachment="removeAttachment"
                                      :userName="loggedName"
                                      :already-uploaded-files="uploadedFiles"
                                      :is-details-mode="false"/>
@@ -848,22 +862,26 @@
                         this.orgLocationIds.push(this.org.locationList[j].itemId);
                     }
 
+                    for (let j = 0; j < this.org.articleList.length; j++) {
+                        this.orgArticleIds.push(this.org.articleList[j].itemId);
+                    }
+
                     for (let j = 0; j < this.org.personList.length; j++) {
                         this.orgPersonIds.push(this.org.personList[j].itemId);
                     }
 
-                    for (let j = 0; j < this.org.orgList.length; j++) {
-                        this.orgOrgIds.push(this.org.orgList[j].itemId);
-                    }
+                    // for (let j = 0; j < this.org.orgList.length; j++) {
+                    //     this.orgOrgIds.push(this.org.orgList[j].itemId);
+                    // }
 
                     // for (let j = 0; j < this.person.isourceList.length; j++) {  //todo
                     //     this.personIsourceIds.push(this.person.isourceList[j].itemId);
                     // }
 
 
-                    for (let j = 0; j < this.org.nameList.length; j++) {
-                        this.nameList.push(this.org.nameList[j].id);
-                    }
+                    // for (let j = 0; j < this.org.nameList.length; j++) {
+                    //     this.nameList.push(this.org.nameList[j].id);
+                    // }
 
                     apiAttachment.getAttachments('org', this.org.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
@@ -909,7 +927,7 @@
                         }
                     });
 
-                    apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, this.orgOrgIds, response => {
+                    apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, response => {
                         this.orgOrgEntities = response.data;   //returns List<Org>
                         console.log("apiOrg", this.orgOrgEntities);
 
@@ -919,7 +937,7 @@
                         //     let currentOrgEntity = this.orgOrgEntities.find(org => org.id === element.itemId);
                         //     console.log("currentOrgEntity", currentOrgEntity);
 
-                        for (let i = 0; i < this.orgOrgEntities.length; i++) {
+                        for (let i = 0; i < this.orgOrgEntities.length; i++) {   ///todo is it necessary? to rewrite from one array to another
                             let connection = {
                                 "id": this.orgOrgEntities[i].itemId, //element.itemId,
                                 "name": this.orgOrgEntities[i].name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
@@ -968,29 +986,6 @@
                     //     }
                     // });
 
-
-                    // api.getNamesByIds(this.personNameIds, response => {
-                    //     this.personNameEntities = response.data;
-                    //     console.log("api -n-a-m-e-", this.personNameEntities);
-                    //
-                    //     for (let i = 0; i < this.person.nameList.length; i++) {
-                    //         let element = this.person.nameList[i];
-                    //         let currentNameEntity = this.personNameEntities.find(name => name.id === element.nameId);
-                    //         console.log("currentNameEntity", currentNameEntity);
-                    //         let connection = {
-                    //              "id": element.id,
-                    //             // "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
-                    //             // "connection": element.position,
-                    //             // "comment": element.comment,
-                    //             // "hasClicked": true
-                    //         };
-                    //         // console.log("CREATE PERS ON A: ", a);
-                    //         this.nameList.push(connection);
-                    //     }
-                    //     //console.log("occupationWithIndexList: ", this.occupationWithIndexList);
-                    // });
-
-
                     // console.log("---ORG---TYPE", this.org.type);
                     if (this.isObjectValidAndNotEmpty(this.org.type)) {
                         this.selectedOrgType = {
@@ -1012,25 +1007,44 @@
         },
 
         methods: {
+           removeAttachment(file) {
+                // console.log("removeAtt ORG", file);
+                apiAttachment.removeAttachment('org', this.org.id, file.id, file.name, r => {
+                    console.log("result", r.data);
+                    if (r.data === true) {
+                        const index = this.uploadedFiles.indexOf(file);
+                        if (index > -1) {
+                            this.uploadedFiles.splice(index, 1);
+                        }
+                    } else {
+                        alert("file deletion error");
+                    }
+                });
+            },
+
             getNameWithPriority(priority) {
-                let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
-                let currEl;
-
-               // console.log("getNameWithPriority", this.org, priority);
-
+                let currEl, j = 1;
                 for (let i = 0; i < this.org.nameList.length; i++) {
-                    //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
                     currEl = this.org.nameList[i];
                     if (this.org.nameList[i].priority === priority) {
                         //console.log("NAME priority", priority, currEl.name);
 
-                        // if (priority === 1) {
-                        this.orgNameTFValues[(priority === 1 ? 0 : i + 1)] = currEl.name;
-                        if (this.org.nameList[i].abbr != null)
-                            this.orgAbbrTFValues[(priority === 1 ? 0 : i + 1)] = currEl.abbr;
+                        // this.orgNameTFValues[(priority === 1 ? 0 : j)] = currEl.name;
+                        // if (this.org.nameList[i].abbr != null)
+                        //     this.orgAbbrTFValues[(priority === 1 ? 0 : j)] = currEl.abbr;
+                        //
+                        if (priority === 1) {
+                            this.orgNameTFValues[0] = currEl.name;
+                            if (this.org.nameList[i].abbr != null)
+                                this.orgAbbrTFValues[0] = currEl.abbr;
+                        } else {
+                            this.orgNameTFValues[j] = currEl.name;
+                            if (this.org.nameList[i].abbr != null)
+                                this.orgAbbrTFValues[j] = currEl.abbr;
+                            j++;
+                        }
                     }
                 }
-                return sss;
             },
 
             getLoggedIn() {
@@ -1045,36 +1059,39 @@
             clearFields(index) {
                 document.getElementById("nameTF" + index).value = '';
                 document.getElementById("abbrTF" + index).value = '';
+
                 this.orgNameTFValues.splice(index, 1);
-                this.orgAbbrTFValues[index] = '';
+                this.orgAbbrTFValues.splice(index, 1);
+
+                //this.orgAbbrTFValues[index] = '';
             },
 
             saveAdditionalOrgNames() {
-                this.addAdditionalNameToList();
+                //this.addAdditionalNameToList();
                 this.$refs.modalOrgNames.hide();
             },
 
-            addAdditionalNameToList() {
-                let name = '';
-                this.nameList.splice(0);
-                for (let i = 1; i < this.orgNameTFValues.length; i++) {
-                    console.log("iiiiii", i);
-                    if (this.orgNameTFValues[i] != null) {
-                        //item with index = 0 pushed in createOrg()
-
-                        if (this.orgNameTFValues[i].length > 0) {
-                            name = {
-                                "name": this.orgNameTFValues[i],
-                                "abbr": this.orgAbbrTFValues[i] != null ? this.orgAbbrTFValues[i] : '',
-                                "priority": 0
-                            };
-                            this.nameList.push(name);
-                            console.log("ADDED NAME PERSON", name, this.orgNameTFValues);
-                            name = '';
-                        }
-                    }
-                }
-            },
+            // addAdditionalNameToList() {
+            //     let name = '';
+            //     this.nameList.splice(0);
+            //     for (let i = 1; i < this.orgNameTFValues.length; i++) {
+            //         console.log("iiiiii", i);
+            //         if (this.orgNameTFValues[i] != null) {
+            //             //item with index = 0 pushed in createOrg()
+            //
+            //             if (this.orgNameTFValues[i].length > 0) {
+            //                 name = {
+            //                     "name": this.orgNameTFValues[i],
+            //                     "abbr": this.orgAbbrTFValues[i] != null ? this.orgAbbrTFValues[i] : '',
+            //                     "priority": 0
+            //                 };
+            //                 this.nameList.push(name);
+            //                 console.log("ADDED NAME PERSON", name, this.orgNameTFValues);
+            //                 name = '';
+            //             }
+            //         }
+            //     }
+            // },
 
             onHashtagSelect(item) {
                 const index = this.tags.indexOf(item.name);
@@ -1143,10 +1160,10 @@
 
                 console.log("preliminaryDataCheck", currentStatus);
 
-                if (this.isObjectValidAndNotEmpty(this.locationList)) {
-                    t = this.checkConnection(this.locationList);
-                }
-                if (!t) {
+                // if (this.isObjectValidAndNotEmpty(this.locationList)) {
+                //     t = this.checkConnection(this.locationList);
+                // }
+                // if (!t) {
                     if (this.isObjectValidAndNotEmpty(this.orgList)) {
                         g = this.checkConnection(this.orgList);
 
@@ -1156,9 +1173,9 @@
                             }
                         }
                     }
-                }
+                // }
 
-                if (t || g || s) {
+                if (g || s) {
                     alert("Укажите связь для сущностей, которые вы добавили");
                     // console.log("ALERT");
                 } else {
@@ -1247,12 +1264,12 @@
                         this.org.closureYear = this.selectedCYear;
                     }
 
-                    let name = {
-                        "name": this.orgNameTFValues[0],
-                        "abbr": this.orgAbbrTFValues[0] != null ? this.orgAbbrTFValues[0] : '',
-                        "priority": 1
-                    };
-                    this.nameList.push(name);
+                    // let name = {
+                    //     "name": this.orgNameTFValues[0],
+                    //     "abbr": this.orgAbbrTFValues[0] != null ? this.orgAbbrTFValues[0] : '',
+                    //     "priority": 1
+                    // };
+                    // this.nameList.push(name);
 
                     this.org.linkList = [];
                     this.org.hashtagList = [];
@@ -1287,12 +1304,12 @@
                     this.org.isourceList.splice(0);
                     this.org.articleList.splice(0);
                     this.org.nameList.splice(0);
-                    this.finalConnectionListCreation(this.locationList, this.org.locationList);
-                    this.finalConnectionListCreation(this.orgList, this.org.orgList);
-                    this.finalConnectionListCreation(this.personList, this.org.personList);
-                    this.finalConnectionListCreation(this.isourceList, this.org.isourceList);
-                    this.finalConnectionListCreation(this.articleList, this.org.articleList);
-                    this.finalNameListCreation(this.nameList, this.org.nameList);
+                    this.finalConnectionListCreation(this.locationList, this.org.locationList, true);
+                    this.finalConnectionListCreation(this.orgList, this.org.orgList, false);
+                    this.finalConnectionListCreation(this.personList, this.org.personList, false);
+                    this.finalConnectionListCreation(this.isourceList, this.org.isourceList, false);
+                    this.finalConnectionListCreation(this.articleList, this.org.articleList, true);
+                    this.finalNameListCreation();
 
                     this.org.type = {
                         "id": this.selectedOrgType.id,
@@ -1377,7 +1394,7 @@
                 apiAttachment.previewAttachment('org', this.org.id, file.id);
             },
 
-            finalConnectionListCreation(list, finalList) {
+            finalConnectionListCreation(list, finalList, isEmptyConnectionPossible) {
                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
                 for (let i = 0; i < list.length; i++) {
                     let a = {
@@ -1385,21 +1402,44 @@
                         "connection": list[i].connection,
                         "comment": list[i].comment
                     };
-                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
+                    if (isEmptyConnectionPossible) {
+                        finalList.push(a);
+
+                    } else if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
                         finalList.push(a);
                     }
                 }
             },
 
-            finalNameListCreation(list, finalList) {
-                console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "name": list[i].name,
-                        "abbr": list[i].abbr,
-                        "priority": list[i].priority
-                    };
-                    finalList.push(a);
+            finalNameListCreation() {
+                // console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
+                // for (let i = 0; i < list.length; i++) {
+                //     let a = {
+                //         "name": list[i].name,
+                //         "abbr": list[i].abbr,
+                //         "priority": list[i].priority
+                //     };
+                //     finalList.push(a);
+                // }
+
+                let name = '';
+                this.org.nameList.splice(0);
+                for (let i = 0; i < this.orgNameTFValues.length; i++) {
+                    // console.log("iiiiii", i);
+                    if (this.orgNameTFValues[i] != null) {
+                        //item with index = 0 pushed in createOrg()
+
+                        if (this.orgNameTFValues[i].length > 0) {
+                            name = {
+                                "name": this.orgNameTFValues[i],
+                                "abbr": this.orgAbbrTFValues[i] != null ? this.orgAbbrTFValues[i] : '',
+                                "priority": (i === 0) ? 1 : 0
+                            };
+                            this.org.nameList.push(name);
+                            console.log("ADDED NAME PERSON", name, this.orgNameTFValues);
+                            name = '';
+                        }
+                    }
                 }
             },
 
@@ -1501,10 +1541,10 @@
                     touched = false;
 
                     resultSearchTree.forEach((node, id) => {
-                       // console.log("node.children.length (to remove)", node, node.name);
+                        // console.log("node.children.length (to remove)", node, node.name);
                         const index = node.name.toLowerCase().indexOf(searchEntity.toLowerCase()) >= 0;
                         if ((index === false) && (node.children.length === 0)) {
-                           // console.log("node.children.length (to remove)", node.children.length, node.name);
+                            // console.log("node.children.length (to remove)", node.children.length, node.name);
                             toRemove.push(node.id);
                             touched = true;
                         }
@@ -1710,7 +1750,7 @@
             locationSearch(val) {
                 // console.log("SEARCH ACTIVATED");
                 if (val !== null)
-                    if (val.length > 2) {
+                    if (val.length > 1) {
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedLocation !== 'undefined') {

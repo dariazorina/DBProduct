@@ -120,7 +120,7 @@
                                              :isWithIdContentAdded="true"
                                              @update-item="updateLink"/>
 
-<!--                                костылище редкой величины-->
+                                <!--                                костылище редкой величины-->
                                 <CreatedList :items="links"
                                              :isWithIdContentAdded="true"
                                              hidden="true"
@@ -200,8 +200,8 @@
                                                  :isLinkMode="false"
                                                  :isSelectionMode="false"
                                                  :allTypes="connectionTypes"
-                                                 style="background-color: transparent; padding:0" class="col-12"
-                                                 @update-item="updateItem"/>
+                                                 style="background-color: transparent; padding:0" class="col-12"/>
+                            <!--                                                 @update-item="updateItem"/>-->
                         </div>
                     </div>
                 </form>
@@ -242,8 +242,8 @@
                                                  :isLinkMode="false"
                                                  :isSelectionMode="false"
                                                  :allTypes="connectionTypes"
-                                                 style="background-color: transparent; padding:0" class="col-12"
-                                                 @update-item="updateItem"/>
+                                                 style="background-color: transparent; padding:0" class="col-12"/>
+                            <!--                                                 @update-item="updateItem"/>-->
                         </div>
                     </div>
                 </form>
@@ -283,8 +283,8 @@
                                                  :isLinkMode="false"
                                                  :isSelectionMode="false"
                                                  :allTypes="connectionTypes"
-                                                 style="background-color: transparent; padding:0" class="col-12"
-                                                 @update-item="updateItem"/>
+                                                 style="background-color: transparent; padding:0" class="col-12"/>
+                            <!--                                                 @update-item="updateItem"/>-->
                         </div>
                     </div>
                 </form>
@@ -434,6 +434,7 @@
                         <file-attachment @attachFiles="createAttachment"
                                          @getAttachment="getAttachment"
                                          @downloadAttachment="downloadAttachment"
+                                         @removeAttachment="removeAttachment"
                                          :userName="loggedName"
                                          :already-uploaded-files="uploadedFiles"
                                          :is-details-mode="false"/>
@@ -621,6 +622,21 @@
         }),
 
         methods: {
+            removeAttachment(file) {
+                // console.log("removeAtt ARTICLE", file);
+                apiAttachment.removeAttachment('article', this.article.id, file.id, file.name, r => {
+                    //console.log("result", r.data);
+                    if (r.data === true) {
+                        const index = this.uploadedFiles.indexOf(file);
+                        if (index > -1) {
+                            this.uploadedFiles.splice(index, 1);
+                        }
+                    } else {
+                        alert("file deletion error");
+                    }
+                });
+            },
+
             addAdditionalMovement() {
                 this.addAdditionalMovementFlag = true;
             },
@@ -943,22 +959,22 @@
                     y = this.checkConnection(this.personConnectionList)
                 }
                 if (!y) {
-                    if (this.isObjectValidAndNotEmpty(this.locationConnectionList)) {
-                        t = this.checkConnection(this.locationConnectionList);
-                    }
-                    if (!t) {
-                        if (this.isObjectValidAndNotEmpty(this.orgConnectionList)) {
-                            g = this.checkConnection(this.orgConnectionList);
-                        }
-                        if (!g) {
-                            if (this.isObjectValidAndNotEmpty(this.materialConnectionList)) {
-                                o = this.checkConnection(this.materialConnectionList);
-                            }
-                        }
+                    // if (this.isObjectValidAndNotEmpty(this.locationConnectionList)) {
+                    //     t = this.checkConnection(this.locationConnectionList);
+                    // }
+                    // if (!t) {
+                    // if (this.isObjectValidAndNotEmpty(this.orgConnectionList)) {
+                    //     g = this.checkConnection(this.orgConnectionList);
+                    // }
+                    // if (!g) {
+                    if (this.isObjectValidAndNotEmpty(this.materialConnectionList)) {
+                        o = this.checkConnection(this.materialConnectionList);
                     }
                 }
+                //}
+                // }
 
-                if (y || t || g || o) {
+                if (y || o) {  // if (y || t || g || o) {
                     alert("Укажите связь для сущностей, которые вы добавили");
                     // console.log("ALERT");
                 } else {
@@ -1046,10 +1062,10 @@
                 this.article.orgList.splice(0);
                 this.article.materialList.splice(0);
 
-                this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
-                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
-                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList);
-                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList);
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, false);
+                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList, true);
+                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList, false);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, false);
 
                 if (this.formValidate()) {
                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
@@ -1065,7 +1081,7 @@
                         }
                     });
                 }
-               // console.log("BEFORE SAVING", this.article);
+                // console.log("BEFORE SAVING", this.article);
             },
 
             updateArticle() {
@@ -1114,10 +1130,10 @@
                 this.article.orgList.splice(0);
                 this.article.materialList.splice(0);
 
-                this.finalConnectionListCreation(this.personConnectionList, this.article.personList);
-                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList);
-                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList);
-                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList);
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, false);
+                this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList, true);
+                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList, true);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, false);
 
                 //console.log("SAVE SAVE SAVE SAVE SAVE SAVE SAVE this.article", this.article);
 
@@ -1142,7 +1158,7 @@
                 this.isAdmin = localStorage.getItem('isAdmin');
             },
 
-            finalConnectionListCreation(list, finalList) {
+            finalConnectionListCreation(list, finalList, isEmptyConnectionPossible) {
                 console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
                 for (let i = 0; i < list.length; i++) {
                     let a = {
@@ -1152,8 +1168,10 @@
                     };
                     // console.log("CREATE PERS ON A: ", a);
 
-                    if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                        // console.log("PUSH PERS ON A: ", a);
+                    if (isEmptyConnectionPossible) {
+                        finalList.push(a);
+
+                    } else if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
                         finalList.push(a);
                     }
                     // console.log("CREATE PERS ON A: ", this.article.personList);
@@ -1545,20 +1563,19 @@
                     });
 
 
-
                     api.getMaterialsByIdsAndSymmetrically(this.article.id, this.articleMaterialIds, response => {
                         this.articleMaterialEntities = response.data;  //returns list<NameConnectionDto>
-                         console.log("articleMaterialEntities", this.articleMaterialEntities);
+                        console.log("articleMaterialEntities", this.articleMaterialEntities);
 
                         for (let i = 0; i < this.articleMaterialEntities.length; i++) {
-                             let connection = {
+                            let connection = {
                                 "id": this.articleMaterialEntities[i].itemId,
                                 "name": this.articleMaterialEntities[i].name, //this.materialEditConnectionTitleCreation(currentMaterialEntity),
                                 "connection": this.articleMaterialEntities[i].connection, //connectionType.type,
                                 "comment": this.articleMaterialEntities[i].comment,
                                 "hasClicked": true
                             };
-                        //    console.log("CREATE MATERIALS: ", connection);
+                            //    console.log("CREATE MATERIALS: ", connection);
                             this.materialConnectionList.push(connection);
                         }
                         //console.log("materialConnectionList: ", this.materialConnectionList);
@@ -1594,7 +1611,6 @@
                     //console.log("~@~@~@~@~", this.orgEntries);
                     return this.orgEntries.map(entry => {
                         const org = entry.content;
-                       // console.log("~@~@55555555555555555~@~@~", org);
                         return Object.assign({}, entry)
                     })
                 }
@@ -1846,7 +1862,7 @@
             locationSearch(val) {
                 // console.log("SEARCH ACTIVATED");
                 if (val !== null)
-                    if (val.length > 2) {
+                    if (val.length > 1) {
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedLocation !== 'undefined') {
@@ -1907,7 +1923,7 @@
 
                         api.searchMaterial(val, localStorage.getItem('movement'), r => {
                             this.materialEntries = r;
-                          //  console.log("*№*№*№*", this.materialEntries);
+                            //  console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;
                         });
                     }

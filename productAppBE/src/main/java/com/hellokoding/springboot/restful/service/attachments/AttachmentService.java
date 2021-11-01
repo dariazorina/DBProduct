@@ -100,6 +100,31 @@ public class AttachmentService {
         return false;
     }
 
+    public boolean deleteAttachment(EntityType entityType, Integer entityId, Integer fileId, String fileName) {
+
+        Path entityPath = entityPathProvider.getPath(entityType, entityId);
+        Path attachmentPathAndName = pathProvider.get(entityPath, fileId, fileName);
+        List<Path> pathFilesInFolder = new ArrayList<>();
+
+        try {
+            pathFilesInFolder = Files.walk(entityPath)
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (pathFilesInFolder.size() > 0) {
+            try {
+                Files.delete(attachmentPathAndName);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     /**
      * Get attachment list.
      * This method is thread-safe and can be used by multiple users concurrently without locks.

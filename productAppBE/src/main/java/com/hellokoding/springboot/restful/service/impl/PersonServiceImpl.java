@@ -158,6 +158,9 @@ public class PersonServiceImpl implements PersonService {
                     }
                     NameConnectionDto personDto = new NameConnectionDto(personPersonConnection.getPerson().getId(), dtoName, connection, comment);
                     finalList.add(personDto);
+                    dtoName = "";
+                    connection = "";
+                    comment = "";
                 }
             }
         }
@@ -395,17 +398,26 @@ public class PersonServiceImpl implements PersonService {
         }
 
 
-        List<SurnameNamePatr> snpList = new ArrayList<>();
+        List<SurnameNamePatr> currentPersonSnpList = null;
         if (person.getSnpList() != null) {
+            currentPersonSnpList = new ArrayList<>(person.getSnpList());
+        }
+
+
+        if (currentPersonSnpList != null) {
             person.getSnpList().clear();
             personRepository.flush();
-        }
-//        else {
-//            person.setSnpList(snpList);
-//        }
 
+            for (SurnameNamePatr el : currentPersonSnpList) {
+                snpRepository.deleteById(el.getId());
+            }
+            snpRepository.flush();
+        }
+
+        List<SurnameNamePatr> snpList = new ArrayList<>();
         List<SnpDto> snpDtoList = personDto.getSnpList();
         SurnameNamePatr snp;
+
         for (SnpDto snpDto : snpDtoList) {
             snp = new SurnameNamePatr();
             snp.setSurname(snpDto.getSurname());
@@ -422,8 +434,8 @@ public class PersonServiceImpl implements PersonService {
             person.setSnpList(snpList);
         } else {
             person.getSnpList().addAll(snpList);
-            //personRepository.flush();
         }
+        //personRepository.flush();//??
 
         person.setBirthYear(personDto.getBirthYear());
         person.setDeathYear(personDto.getDeathYear());
@@ -553,35 +565,80 @@ public class PersonServiceImpl implements PersonService {
 //            person.getIsourceConnections().addAll(eventConnectionList);
 //        }
 
+
         ///persons
         if (person.getPersonConnections() != null) {
             person.getPersonConnections().clear();
             personRepository.flush();
         }
 
-        Integer personId;
-        PersonPersonConnection personConnection;
-        List<PersonPersonConnection> personConnectionList = new ArrayList<>();
+        Integer connectedPersonId;
+        boolean isSymmConnection = false;
+        Person connectedPerson = null;
+
+        PersonPersonConnection personPersonConnection;
+        PersonPersonConnection connectedPersonConnection;
+
+        List<PersonPersonConnection> personPersonList = new ArrayList<>();
+        List<PersonPersonConnection> connectedPersonList = new ArrayList<>();
+        List<PersonPersonConnection> symmConnectionList;
+
         for (ItemConnectionDto connectionDto : personDto.getPersonList()) {
+            connectedPersonId = connectionDto.getItemId();
+            if (personRepository.findById(connectedPersonId).isPresent()) {
 
-            personId = connectionDto.getItemId();
-            if (personRepository.findById(personId).isPresent()) {
-                personConnection = new PersonPersonConnection();
-                personConnection.setConnectedPerson(personRepository.findById(personId).get());
-                personConnection.setPerson(person);
-                personConnection.setConnection(connectionDto.getConnection());
-                personConnection.setComment(connectionDto.getComment());
+                symmConnectionList = personPersonRepository.findByIdSimple(connectedPersonId);
+                for (PersonPersonConnection personPersonConn : symmConnectionList) {
+                    if (personPersonConn.getConnectedPerson().getId().equals(person.getId())) {
+                        isSymmConnection = true;
+                        break;
+                    }
+                }
+                if (!isSymmConnection) {
 
-                personConnectionList.add(personConnection);
+                    personPersonConnection = new PersonPersonConnection();
+                    personPersonConnection.setConnectedPerson(personRepository.findById(connectedPersonId).get());
+                    personPersonConnection.setPerson(person);
+                    personPersonConnection.setConnection(connectionDto.getConnection());
+                    personPersonConnection.setComment(connectionDto.getComment());
+
+                    personPersonList.add(personPersonConnection);
+
+                } else {//save connection for material
+                    connectedPerson = personRepository.findById(connectedPersonId).get();
+
+                    connectedPersonConnection = new PersonPersonConnection();
+                    connectedPersonConnection.setPerson(personRepository.findById(connectedPersonId).get());
+                    connectedPersonConnection.setConnectedPerson(person);
+                    connectedPersonConnection.setConnection(connectionDto.getConnection());
+                    connectedPersonConnection.setComment(connectionDto.getComment());
+
+                    connectedPersonList.add(connectedPersonConnection);
+
+                    if (connectedPerson.getPersonConnections() == null) {
+                        connectedPerson.setPersonConnections(connectedPersonList);
+                    } else {
+                        //remove already existed entities
+                        List<PersonPersonConnection> elList = new ArrayList<>();
+                        for (PersonPersonConnection personPersonConn : connectedPerson.getPersonConnections()) {
+                            if (personPersonConn.getConnectedPerson().getId().equals(person.getId())) {
+                                elList.add(personPersonConn);
+                            }
+                        }
+                        connectedPerson.getPersonConnections().removeAll(elList);
+                        personRepository.flush();
+                        connectedPerson.getPersonConnections().addAll(connectedPersonList);
+                    }
+                }
+                isSymmConnection = false;
             }
         }
 
         if (person.getPersonConnections() == null) {
-            person.setPersonConnections(personConnectionList);
+            person.setPersonConnections(personPersonList);
         } else {
-            person.getPersonConnections().addAll(personConnectionList);
+            person.getPersonConnections().addAll(personPersonList);
         }
-
 
         /////////////////////person-hashtag////////////////////////
         PersonHashtag personHashtag, previousPersonHashtag, previousPreviousPersonHashtag;
@@ -727,6 +784,8 @@ public class PersonServiceImpl implements PersonService {
 //            e.printStackTrace();
 //        }
 
+        if (connectedPerson != null)
+            personRepository.save(connectedPerson);
         return personRepository.save(person);
     }
 

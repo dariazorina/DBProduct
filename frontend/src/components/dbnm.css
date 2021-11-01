@@ -16,6 +16,10 @@ input[type=radio], input[type=checkbox].yyy {
     line-height: normal;
 }
 
+.notbold{
+    font-weight:normal;
+}​,
+
 .actions {
     margin-bottom: 20px;
     margin-top: 20px;
@@ -235,7 +239,7 @@ table.redTable {
     border: 1px solid #1C6EA4;
     background-color: #EEEEEE;
     width: 100%;
-    text-align: center;
+    /*text-align: left;*/
     border-collapse: collapse;
 }
 table.redTable td, table.redTable th {
@@ -247,7 +251,9 @@ table.redTable td, table.redTable th {
     /*background-color: #8bc34a;*/
 }
 table.redTable tbody td {
+    text-align: left;
     font-size: 13px;
+    padding-left: 20px;
     max-height: 20px;
     height: 20px;
     overflow: hidden;

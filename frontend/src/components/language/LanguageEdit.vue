@@ -1,11 +1,11 @@
 <template id="language-edit">
     <v-app id="inspire">
         <div>
-            <div class="form-group row">
-                <div class="col-2 col-form-label">
-                    <p class="pageEditTitle">Edit Language</p>
-                </div>
-            </div>
+<!--            <div class="form-group row">-->
+<!--                <div class="col-2 col-form-label">-->
+<!--                    <p class="pageEditTitle">Edit Language</p>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <!--            <div class="unprotected" v-if="errorFlag">-->
             <!--                <h5>Error: {{errors}}</h5>-->

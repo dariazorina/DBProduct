@@ -14,4 +14,10 @@ public interface PersonPersonRepository extends JpaRepository <PersonPersonConne
             "where (pC.id = :id)")
     List<PersonPersonConnection> findByIdSymm(Integer id);
 
+    @Query("select distinct p " +
+            "from PersonPersonConnection p " +
+            "left join p.person pC " +
+            "where (pC.id = :id)")
+    List<PersonPersonConnection> findByIdSimple(Integer id);
+
 }

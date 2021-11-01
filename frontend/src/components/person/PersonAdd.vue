@@ -3,7 +3,7 @@
         <div>
             <iframe id="iframeToDownload" style="display:none;"></iframe>
             <div class="form-group row">
-                  <div class="unprotected" v-if="errorFlag">
+                <div class="unprotected" v-if="errorFlag">
                     <h5>Error: {{errors}}</h5>
                 </div>
             </div>
@@ -72,7 +72,27 @@
                     <b-button size="sm" variant="info" v-b-modal="'modalNames'">
                         Добавить фамилии на других языках
                     </b-button>
+
+                    <div v-if="personAddSurnameTFValues[1]!=null" style="margin-top: 20px">
+                        <label for="add-name">Дополнительные фио:
+                            <span class='notbold'><br>
+                                {{personAddSurnameTFValues[1]}} {{personAddNameTFValues[1]}} {{personAddPatrTFValues[1]}} </span>
+                            <span v-if="personAddSurnameTFValues[2]!=null" class='notbold'><br>
+                                {{personAddSurnameTFValues[2]}} {{personAddNameTFValues[2]}} {{personAddPatrTFValues[2]}} </span>
+                            <span v-if="personAddSurnameTFValues[3]!=null" class='notbold'><br>
+                                {{personAddSurnameTFValues[3]}} {{personAddNameTFValues[3]}} {{personAddPatrTFValues[3]}} </span>
+                            <span v-if="personAddSurnameTFValues[4]!=null" class='notbold'><br>
+                                {{personAddSurnameTFValues[4]}} {{personAddNameTFValues[4]}} {{personAddPatrTFValues[4]}} </span>
+                            <span v-if="personAddSurnameTFValues[5]!=null" class='notbold'><br>
+                                {{personAddSurnameTFValues[5]}} {{personAddNameTFValues[5]}} {{personAddPatrTFValues[5]}} </span>
+
+                        </label>
+                        <!--                            <input class="form-control" v-model="orgNameTFValues[1]" disabled/>-->
+                    </div>
+
                 </div>
+
+
                 <div class="col-md-2" style="margin-top: 10px; background-color: transparent">
                     <div id="preview">
                         <div v-if="avatar.imageBase64">
@@ -383,6 +403,7 @@
                 <file-attachment @attachFiles="createAttachment"
                                  @getAttachment="getAttachment"
                                  @downloadAttachment="downloadAttachment"
+                                 @removeAttachment="removeAttachment"
                                  :userName="loggedName"
                                  :already-uploaded-files="uploadedFiles"
                                  :is-details-mode="false"/>
@@ -392,7 +413,7 @@
 
                     <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Обновить</button>
                     <a class="btn btn-default">
-                        <router-link to="/article">Отмена</router-link>
+                        <router-link to="/person">Отмена</router-link>
                     </a>
                 </div>
             </div>
@@ -424,7 +445,7 @@
                             class="btn btn-info">Upload Files
                     </button>
                     <button type="button" class="btn btn-info">
-                        <router-link to="/article" style="color: white">Cancel</router-link>
+                        <router-link to="/person" style="color: white">Cancel</router-link>
 
                     </button>
                 </div>
@@ -438,81 +459,112 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <label for="add-surname"><b>Фамилия*</b></label>
-                            <input class="form-control" id="idsrnm0" v-model="preSurname[0]"
+                            <input class="form-control" id="surnameTF1" v-model="personAddSurnameTFValues[1]"
                                    placeholder="Обязательное поле"/>
                         </div>
 
                         <div class="col-md-4">
                             <label for="add-name">Имя</label>
-                            <input class="form-control" id="idnm0" v-model="preName[0]"/>
+                            <input class="form-control" id="nameTF1" v-model="personAddNameTFValues[1]"/>
                         </div>
 
+                        <div class="form-row col-md-4">
+                            <div class="col-md-11" style="background-color: transparent; padding: 0px 15px 0px 5px">
+                                <label for="add-patronymic">Отчество</label>
+                                <input class="form-control" id="patrTF1" v-model="personAddPatrTFValues[1]">
+                            </div>
+                            <div class="col-md-1" style="background-color: transparent; padding-top: 35px">
+                                <span class="close"
+                                      @click="clearFields(1)">&times;</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
                         <div class="col-md-4">
-                            <label for="add-patronymic">Отчество</label>
-                            <input class="form-control" id="idptrnmc0" v-model="prePatr[0]">
+                            <input class="form-control" id="surnameTF2" v-model="personAddSurnameTFValues[2]"
+                                   placeholder="Обязательное поле"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="nameTF2" v-model="personAddNameTFValues[2]"/>
+                        </div>
+                        <div class="form-row col-md-4">
+                            <div class="col-md-11" style="background-color: transparent; padding: 0px 15px 0px 5px">
+                                <input class="form-control" id="patrTF2" v-model="personAddPatrTFValues[2]">
+                            </div>
+                            <div class="col-md-1" style="background-color: transparent; padding-top: 5px">
+                                <span class="close"
+                                      @click="clearFields(2)">&times;</span>
+                            </div>
                         </div>
                     </div>
 
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" id="idsrnm1" v-model="preSurname[1]"
+                            <input class="form-control" id="surnameTF3" v-model="personAddSurnameTFValues[3]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="idnm1" v-model="preName[1]"/>
+                            <input class="form-control" id="nameTF3" v-model="personAddNameTFValues[3]"/>
                         </div>
-                        <div class="col-md-4">
-                            <input class="form-control" id="idptrnmc1" v-model="prePatr[1]">
-                        </div>
-                    </div>
-
-
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <input class="form-control" id="idsrnm2" v-model="preSurname[2]"
-                                   placeholder="Обязательное поле"/>
-                        </div>
-                        <div class="col-md-4">
-                            <input class="form-control" id="idnm2" v-model="preName[2]"/>
-                        </div>
-                        <div class="col-md-4">
-                            <input class="form-control" id="idptrnmc2" v-model="prePatr[2]">
+                        <div class="form-row col-md-4">
+                            <div class="col-md-11" style="background-color: transparent; padding: 0px 15px 0px 5px">
+                                <input class="form-control" id="patrTF3" v-model="personAddPatrTFValues[3]">
+                            </div>
+                            <div class="col-md-1" style="background-color: transparent; padding-top: 5px">
+                                <span class="close"
+                                      @click="clearFields(3)">&times;</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" id="idsrnm3" v-model="preSurname[3]"
+                            <input class="form-control" id="surnameTF4" v-model="personAddSurnameTFValues[4]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="idnm3" v-model="preName[3]"/>
+                            <input class="form-control" id="nameTF4" v-model="personAddNameTFValues[4]"/>
                         </div>
-                        <div class="col-md-4">
-                            <input class="form-control" id="idptrnmc3" v-model="prePatr[3]">
+                        <div class="form-row col-md-4">
+                            <div class="col-md-11" style="background-color: transparent; padding: 0px 15px 0px 5px">
+                                <input class="form-control" id="patrTF4" v-model="personAddPatrTFValues[4]">
+                            </div>
+                            <div class="col-md-1" style="background-color: transparent; padding-top: 5px">
+                                <span class="close"
+                                      @click="clearFields(4)">&times;</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col-md-4">
-                            <input class="form-control" id="idsrnm4" v-model="preSurname[4]"
+                            <input class="form-control" id="surnameTF5" v-model="personAddSurnameTFValues[5]"
                                    placeholder="Обязательное поле"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="idnm4" v-model="preName[4]"/>
+                            <input class="form-control" id="nameTF5" v-model="personAddNameTFValues[5]"/>
                         </div>
-                        <div class="col-md-4">
-                            <input class="form-control" id="idptrnmc4" v-model="prePatr[4]">
+                        <div class="form-row col-md-4">
+                            <div class="col-md-11" style="background-color: transparent; padding: 0px 15px 0px 5px">
+                                <input class="form-control" id="patrTF5" v-model="personAddPatrTFValues[5]">
+                            </div>
+                            <div class="col-md-1" style="background-color: transparent; padding-top: 5px">
+                                <span class="close"
+                                      @click="clearFields(5)">&times;</span>
+                            </div>
                         </div>
                     </div>
 
-                    <b-button style="margin-right: 4px" size="sm" variant="success" @click="saveAdditionalNames()">
-                        Сохранить
+                    <b-button style="margin-right: 4px" size="sm" variant="success" @click="hideModalView()">
+                        OK
                     </b-button>
-                    <b-button size="sm" variant="info" @click="cancelModalNamesView()">
-                        Отмена
-                    </b-button>
+                    <!--                    <b-button size="sm" variant="info" @click="cancelModalNamesView()">-->
+                    <!--                        Отмена-->
+                    <!--                    </b-button>-->
 
                     <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">* - Обязательное
                         поле. Если хотя бы одно из обязательных полей не будет заполнено,
@@ -629,13 +681,6 @@
             orgList: [],
 
             statusList: [],
-            nameList: [],
-            personNameIds: [], //before request
-            personNameEntities: [], //after request
-
-            preSurname: [],
-            preName: [],
-            prePatr: [],
             personAddSurnameTFValues: [],
             personAddNameTFValues: [],
             personAddPatrTFValues: [],
@@ -672,12 +717,6 @@
                 movementList: [],
                 snpList: []
             },
-
-            // prioritySurname: '',
-            // priorityName: '',
-            // priorityPatronymic: '',
-            // snpList: [],
-
             years: [],
             photoWasUploaded: false,
             originalPhoto: null,
@@ -701,43 +740,61 @@
         }),
 
         methods: {
-            saveAdditionalNames() {
-                console.log(this.personAddSurnameTFValues);
+
+            clearFields(index) {
+
+                console.log("index", index);
+                console.log("document.getElementById(\"surnameTF\" + index)", document.getElementById("surnameTF" + index));
+                console.log("document.getElementById(\"nameTF\" + index)", document.getElementById("nameTF" + index));
+                console.log("document.getElementById(\"patrTF\" + index)", document.getElementById("abbsurnameTF" + index));
+
+
+                document.getElementById("surnameTF" + index).value = '';
+                document.getElementById("nameTF" + index).value = '';
+                document.getElementById("patrTF" + index).value = '';
+
+                // console.log("this.personAddPatrTFValues", this.personAddPatrTFValues, this.personAddPatrTFValues[index]);
+
+                this.personAddSurnameTFValues.splice(index, 1);// 5-index);
+                // if (this.personAddNameTFValues[index] !== null)
+                this.personAddNameTFValues.splice(index, 1);//5-index);
+                // if (this.personAddPatrTFValues[index] !== null)
+                this.personAddPatrTFValues.splice(index, 1);//5-index);
+
+                // this.personAddSurnameTFValues[index] = '';
+                // this.personAddNameTFValues[index] = '';
+                // this.personAddPatrTFValues[index] = '';
+
+                console.log(this.personAddSurnameTFValues, this.personAddNameTFValues, this.personAddPatrTFValues);
+            },
+
+            hideModalView() {
+                console.log("SAVE ADD NAMES", this.personAddSurnameTFValues);
                 console.log(this.personAddNameTFValues);
                 console.log(this.personAddPatrTFValues);
-
-                for (let i = 1; i < 6; i++) {
-                    this.personAddSurnameTFValues[i] = this.preSurname[i - 1];
-                    this.personAddNameTFValues[i] = this.preName[i - 1];
-                    this.personAddPatrTFValues[i] = this.prePatr[i - 1];
-                }
-
-                //console.log("SAVE ADD NAMES", this.personAddSurnameTFValues);
-
-                this.addAdditionalNameToList();
+                // this.addAdditionalNameToList();
                 this.$refs.modalNames.hide();
             },
 
-
-            cancelModalNamesView() {
-               // console.log("22222222222", this.personAddSurnameTFValues);
-                if (!this.isAdditionalNamesAlreadyExist()) {
-                    // if (this.personAddSurnameTFValues.length > 0){
-                    //
-                    // } else {
-                    for (let i = 0; i < 5; i++) {
-                        document.getElementById("idsrnm" + i).value = '';
-                        document.getElementById("idnm" + i).value = '';
-                        document.getElementById("idptrnmc" + i).value = '';
-                    }
-
-                    this.preSurname.splice(0);
-                    this.preName.splice(0);
-                    this.prePatr.splice(0);
-                }
-
-                this.$refs.modalNames.hide();
-            },
+            // cancelModalNamesView() {
+            //    // console.log("22222222222", this.personAddSurnameTFValues);
+            //     if (!this.isAdditionalNamesAlreadyExist()) {
+            //         // if (this.personAddSurnameTFValues.length > 0){
+            //         //
+            //         // } else {
+            //         for (let i = 0; i < 5; i++) {
+            //             document.getElementById("idsrnm" + i).value = '';
+            //             document.getElementById("idnm" + i).value = '';
+            //             document.getElementById("idptrnmc" + i).value = '';
+            //         }
+            //
+            //         this.preSurname.splice(0);
+            //         this.preName.splice(0);
+            //         this.prePatr.splice(0);
+            //     }
+            //
+            //     this.$refs.modalNames.hide();
+            // },
 
             addAdditionalMovement() {
                 this.addAdditionalMovementFlag = true;
@@ -763,6 +820,24 @@
 
             downloadAttachment(file) {
                 document.getElementById('iframeToDownload').src = '/api/v1/person/downloadAttachment?entityId=' + this.person.id + '&id=' + file.id;
+            },
+
+            removeAttachment(file) {
+                console.log("removeAtt PERSON", file);
+                apiAttachment.removeAttachment('person', this.person.id, file.id, file.name, r => {
+                    console.log("result", r.data);
+                    if (r.data === true) {
+
+                        // this.uploadedFiles.find(x => x.priority === 0);
+
+                        const index = this.uploadedFiles.indexOf(file);
+                        if (index > -1) {
+                            this.uploadedFiles.splice(index, 1);
+                        }
+                    } else {
+                        alert("file deletion error");
+                    }
+                });
             },
 
             getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
@@ -978,69 +1053,69 @@
             //     }
             // },
 
-            addAdditionalNameToList() {
-                let connection = '';
-                this.nameList.splice(0);
+            // addAdditionalNameToList() {
+            //     let connection = '';
+            //     this.nameList.splice(0);
+            //
+            //     for (let i = 1; i < this.personAddSurnameTFValues.length; i++) {
+            //         if (this.personAddSurnameTFValues[i] != null) {
+            //             console.log("personAddSurnameTFValues, add to nameList", i);
+            //
+            //             // if (i > 0) {  //russian priority obligatory value
+            //             //     connection = {
+            //             //         "surname": this.personAddSurnameTFValues[i],
+            //             //         "name": this.personAddNameTFValues[i],
+            //             //         "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
+            //             //         "priority": 1
+            //             //     };
+            //             //
+            //             //     this.nameList.push(connection);
+            //             //     console.log("ADDED NAME PERSON", connection);
+            //             //     connection = '';
+            //             //
+            //             // } else {
+            //             //
+            //             //     if (this.personAddSurnameTFValues[i] != null) {
+            //
+            //             //item with index = 0 pushed in createPerson()
+            //
+            //             if (this.personAddSurnameTFValues[i].length > 0) {  //to exclude empty strings
+            //
+            //                 connection = {
+            //                     "surname": this.personAddSurnameTFValues[i],
+            //                     "name": this.personAddNameTFValues[i] != null ? this.personAddNameTFValues[i] : '',
+            //                     "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
+            //                     "priority": 0
+            //                 };
+            //
+            //                 this.nameList.push(connection);
+            //                 console.log("ADDED NAME PERSON", connection);
+            //                 connection = '';
+            //             }
+            //         }
+            //         //  }
+            //         //        }
+            //     }
+            // },
 
-                for (let i = 1; i < this.personAddSurnameTFValues.length; i++) {
-                    if (this.personAddSurnameTFValues[i] != null) {
-                        console.log("personAddSurnameTFValues, add to nameList", i);
-
-                        // if (i > 0) {  //russian priority obligatory value
-                        //     connection = {
-                        //         "surname": this.personAddSurnameTFValues[i],
-                        //         "name": this.personAddNameTFValues[i],
-                        //         "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
-                        //         "priority": 1
-                        //     };
-                        //
-                        //     this.nameList.push(connection);
-                        //     console.log("ADDED NAME PERSON", connection);
-                        //     connection = '';
-                        //
-                        // } else {
-                        //
-                        //     if (this.personAddSurnameTFValues[i] != null) {
-
-                        //item with index = 0 pushed in createPerson()
-
-                        if (this.personAddSurnameTFValues[i].length > 0) {  //to exclude empty strings
-
-                            connection = {
-                                "surname": this.personAddSurnameTFValues[i],
-                                "name": this.personAddNameTFValues[i] != null ? this.personAddNameTFValues[i] : '',
-                                "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
-                                "priority": 0
-                            };
-
-                            this.nameList.push(connection);
-                            console.log("ADDED NAME PERSON", connection);
-                            connection = '';
-                        }
-                    }
-                    //  }
-                    //        }
-                }
-            },
-
-            isAdditionalNamesAlreadyExist() {
-                //????cannot use nameList before person saving, then needs to add/delete nameList elements every time
-                //preSurname -> personAddSurnameTFValues -> nameList
-
-                let res = this.nameList.find(x => x.priority === 0);
-
-                let count = 0;
-                for (let i = 0; i < this.nameList.length; i++) {
-                    if (this.nameList[i].priority === 0)
-                        count++;
-                }
-                console.log("IS EXIST", res, count, this.nameList);
-
-                if (res)
-                    return true;
-
-                return false;
-            },
+            // isAdditionalNamesAlreadyExist() {
+            //     //????cannot use nameList before person saving, then needs to add/delete nameList elements every time
+            //     //preSurname -> personAddSurnameTFValues -> nameList
+            //
+            //     let res = this.nameList.find(x => x.priority === 0);
+            //
+            //     let count = 0;
+            //     for (let i = 0; i < this.nameList.length; i++) {
+            //         if (this.nameList[i].priority === 0)
+            //             count++;
+            //     }
+            //     console.log("IS EXIST", res, count, this.nameList);
+            //
+            //     if (res)
+            //         return true;
+            //
+            //     return false;
+            // },
 
             // finalPositionListCreation(list, finalList) {
             //     // console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
@@ -1074,16 +1149,38 @@
                 }
             },
 
-            finalNameListCreation(list, finalList) {
-                console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "surname": list[i].surname,
-                        "name": list[i].name,
-                        "patronymic": list[i].patronymic,
-                        "priority": list[i].priority
-                    };
-                    finalList.push(a);
+            finalNameListCreation() {
+                // console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
+                // for (let i = 0; i < list.length; i++) {
+                //     let a = {
+                //         "surname": list[i].surname,
+                //         "name": list[i].name,
+                //         "patronymic": list[i].patronymic,
+                //         "priority": list[i].priority
+                //     };
+                //     finalList.push(a);
+                // }
+
+
+                let connection = '';
+                this.person.snpList.splice(0);
+                for (let i = 0; i < this.personAddSurnameTFValues.length; i++) {
+                    if (this.personAddSurnameTFValues[i] != null) {
+                        console.log("personAddSurnameTFValues, add to person.snpList", i);
+
+                        if (this.personAddSurnameTFValues[i].length > 0) {  //to exclude empty strings
+                            connection = {
+                                "surname": this.personAddSurnameTFValues[i],
+                                "name": this.personAddNameTFValues[i] != null ? this.personAddNameTFValues[i] : '',
+                                "patronymic": this.personAddPatrTFValues[i] != null ? this.personAddPatrTFValues[i] : '',
+                                "priority": (i === 0) ? 1 : 0
+                            };
+
+                            this.person.snpList.push(connection);
+                            console.log("ADDED NAME PERSON", connection);
+                            connection = '';
+                        }
+                    }
                 }
             },
 
@@ -1282,15 +1379,15 @@
                 //     this.person.testList.push(a);
                 // }
 
-                let connection = {
-                    "surname": this.personAddSurnameTFValues[0],
-                    "name": this.personAddNameTFValues[0],
-                    "patronymic": this.personAddPatrTFValues[0] != null ? this.personAddPatrTFValues[0] : '',
-                    "priority": 1
-                };
-
-                this.nameList.push(connection);
-                console.log("ADDED NAME PERSON", connection);
+                // let connection = {
+                //     "surname": this.personAddSurnameTFValues[0],
+                //     "name": this.personAddNameTFValues[0],
+                //     "patronymic": this.personAddPatrTFValues[0] != null ? this.personAddPatrTFValues[0] : '',
+                //     "priority": 1
+                // };
+                //
+                // this.nameList.push(connection);
+                // console.log("ADDED NAME PERSON", connection);
 
                 this.person.locationList.splice(0);
                 this.person.personList.splice(0);
@@ -1303,7 +1400,7 @@
                 this.finalConnectionListCreation(this.personList, this.person.personList);
                 this.finalConnectionListCreation(this.isourceList, this.person.isourceList);
                 // this.finalConnectionListCreation(this.eventList, this.person.eventList);
-                this.finalNameListCreation(this.nameList, this.person.snpList); // this.person.snpList = this.nameList;
+                this.finalNameListCreation();
 
                 // this.person.photo = this.avatar.imageBase64;
 
@@ -1315,7 +1412,8 @@
                         api.update(this.person.id, this.person, r => {
                             console.log(r);
                             if (this.photoWasUploaded) {
-                                apiAttachment.deletePhoto('person', r.data.id, r => {});
+                                apiAttachment.deletePhoto('person', r.data.id, r => {
+                                });
                                 apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
                                     console.log("ph was uplded");
                                 });
@@ -1419,13 +1517,13 @@
             // },
 
             getSNPWithPriority(priority) {
-                let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
-                let currEl;
+                // let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
+                let currEl, j = 1;
 
                 for (let i = 0; i < this.person.snpList.length; i++) {
                     //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
                     currEl = this.person.snpList[i];
-                    if (this.person.snpList[i].priority === priority) {
+                    if (currEl.priority === priority) {
                         console.log("SNP priority", priority, currEl.surname);
 
                         if (priority === 1) {
@@ -1434,18 +1532,20 @@
                             if (this.person.snpList[i].patronymic != null)
                                 this.personAddPatrTFValues[0] = currEl.patronymic;
                         } else {
-                            this.personAddSurnameTFValues[i + 1] = currEl.surname;
-                            this.personAddNameTFValues[i + 1] = currEl.name;
+                            this.personAddSurnameTFValues[j] = currEl.surname;
+                            this.personAddNameTFValues[j] = currEl.name;
                             if (this.person.snpList[i].patronymic != null)
-                                this.personAddPatrTFValues[i + 1] = currEl.patronymic;
+                                this.personAddPatrTFValues[j] = currEl.patronymic;
+                            j++;
                         }
                     }
                 }
-                return sss;
+                // return sss;
             },
         },
 
         mounted() {
+            // console.log("MOUNTED");
             this.getLoggedIn();
 
             // document.addEventListener('keydown', function(event){
@@ -1493,7 +1593,7 @@
             });
 
             if (this.$route.params.person_id != null) {
-                console.log("EDIT MODE");
+                // console.log("-------------------EDIT MODE");
                 this.editMode = true;
                 this.uploadFilesCheckBoxValue = true;
             }
@@ -1503,6 +1603,7 @@
             if (this.editMode) {////////////////////////////////EDIT MODE//////////////////////////////////////
                 api.findById(this.$route.params.person_id, r => {
                     this.person = r.data;
+                    console.log("CURRENT PERSON FOUND BY ID", this.person);
 
                     this.getSNPWithPriority(1);
                     this.getSNPWithPriority(0);
@@ -1538,11 +1639,6 @@
                     // for (let j = 0; j < this.person.isourceList.length; j++) {  //todo
                     //     this.personIsourceIds.push(this.person.isourceList[j].itemId);
                     // }
-
-
-                    for (let j = 0; j < this.person.snpList.length; j++) {
-                        this.personNameIds.push(this.person.snpList[j].nameId);
-                    }
 
                     apiAttachment.getAttachments('person', this.person.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
@@ -1623,29 +1719,6 @@
                     //         this.personList.push(connection);
                     //     }
                     // });
-
-
-                    // api.getNamesByIds(this.personNameIds, response => {
-                    //     this.personNameEntities = response.data;
-                    //     console.log("api -n-a-m-e-", this.personNameEntities);
-                    //
-                    //     for (let i = 0; i < this.person.nameList.length; i++) {
-                    //         let element = this.person.nameList[i];
-                    //         let currentNameEntity = this.personNameEntities.find(name => name.id === element.nameId);
-                    //         console.log("currentNameEntity", currentNameEntity);
-                    //         let connection = {
-                    //              "id": element.id,
-                    //             // "name": this.orgEditConnectionTitleCreation(currentOrgEntity),
-                    //             // "connection": element.position,
-                    //             // "comment": element.comment,
-                    //             // "hasClicked": true
-                    //         };
-                    //         // console.log("CREATE PERS ON A: ", a);
-                    //         this.nameList.push(connection);
-                    //     }
-                    //     //console.log("occupationWithIndexList: ", this.occupationWithIndexList);
-                    // });
-
 
                     apiAttachment.getAttachmentPhoto('person', this.person.id, r => {
                         console.log("R DATA", r);
@@ -1906,7 +1979,7 @@
             locationSearch(val) {
                 // console.log("SEARCH ACTIVATED");
                 if (val !== null)
-                    if (val.length > 2) {
+                    if (val.length > 1) {
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedLocation !== 'undefined') {
@@ -1944,7 +2017,7 @@
 
                         apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
                             this.orgEntries = r;  //returns IdContentDto (id, name(connected from different Org fields in OrgServImpl))
-                         //   console.log("****", this.orgEntries);
+                            //   console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
                         });
                     }
@@ -1963,7 +2036,7 @@
 
                         api.searchPerson(val, localStorage.getItem('movement'), r => {
                             this.personEntries = r;
-                           // console.log("***ПОИСК ******", this.personEntries);
+                            // console.log("***ПОИСК ******", this.personEntries);
                             this.isLoadingPerson = false;
                         });
                     }

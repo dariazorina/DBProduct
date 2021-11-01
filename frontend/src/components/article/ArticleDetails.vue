@@ -24,17 +24,23 @@
                 <!--            <input type="button" onclick="location.href='http://google.com'" value="Go to Google" />-->
 
                 <div class="col-sm-10" style="background-color:lavender;">
-                    <span class="float-left">
-                        <div class="linkButton">
-                            <span class="float-left">
-                                <div v-for="link in article.linkList">
-                                <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">
-                                    {{link.content}}
-                                </button>
-                                </div>
-                            </span>
+                    <!--                    <span class="float-left" style="background-color: #b5d592">-->
+                    <div class="linkButton" style="background-color: transparent">
+                        <!--                            <span class="float-left" style="background-color: darkcyan">-->
+                        <div v-for="link in article.linkList" style="background-color: transparent;">
+                            <a class="btn btn-link"
+                               style="font-size: small; background-color: transparent; text-align: left; padding-top: 2px; padding-bottom: 2px"
+                               :href="link.content" target="_blank">
+                                {{link.content}}
+                            </a>
+
+<!--                            <button class="btn btn-link" style="font-size: small" @click="goURL(link.content)">-->
+<!--                                {{link.content}}-->
+<!--                            </button>-->
                         </div>
-                    </span>
+                        <!--                            </span>-->
+                    </div>
+                    <!--                    </span>-->
                 </div>
             </div>
 
@@ -123,7 +129,7 @@
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
                     <div v-for="material in articleMaterialEntities">
                        <a><router-link
-                               :to="{name: 'article-details', params: {article_id: material.id}}" target="_blank">
+                               :to="{name: 'article-details', params: {article_id: material.itemId}}" target="_blank">
                               {{createComplexMaterialById(material)}} </router-link></a>
 
                         <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
@@ -177,11 +183,21 @@
             </div>
         </div>
 
-        <div class="offset-sm-1 col-sm-3">
-            <button type="button" class="btn btn-info">
-                <router-link to="/article" style="color: white; font-size: medium">Обратно к списку материалов
+        <!--        <div class="offset-sm-1 col-sm-3">-->
+        <!--            <button type="button" class="btn btn-info">-->
+        <!--                <router-link to="/article" style="color: white; font-size: medium">Обратно к списку материалов-->
+        <!--                </router-link>-->
+        <!--            </button>-->
+        <!--        </div>-->
+
+        <div class="col-md-12 col-md-offset-4 column" style="background-color: transparent">
+            <a class="btn btn-outline-info btn-sm mr-2">
+                <router-link to="/article">Обратно к списку материалов</router-link>
+            </a>
+            <a class="btn btn-outline-info btn-sm mr-2">
+                <router-link :to="{name: 'article-add', params: {article_id: article.id}}">Редактировать
                 </router-link>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -273,10 +289,10 @@
                 return moment(date).format('DD/MM/YYYY');
             },
 
-            goURL(url) {
-                location.href = url;
-                // console.log("123");
-            },
+            // goURL(url) {
+            //     location.href = url;
+            //     // console.log("123");
+            // },
 
             isObjectValidAndNotEmpty(obj) {
                 // console.log("VALID", obj);
@@ -324,6 +340,8 @@
 
                 if (currentMaterial != null) {
                     result = currentMaterial.name;
+
+                    console.log("create material ref", currentMaterial);
 
                     if (this.isObjectValidAndNotEmpty(currentMaterial.connection))
                         result += "/ " + currentMaterial.connection;

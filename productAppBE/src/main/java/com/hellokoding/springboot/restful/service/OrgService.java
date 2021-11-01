@@ -16,5 +16,5 @@ public interface OrgService {
     void deleteById(Integer id);
     List<IdContentDto> search(String q, Integer mov);
     List<IdContentDto> findByIds(List<Integer> idList);
-    List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer id);
+    List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
 }

@@ -54,9 +54,9 @@ public class OrgAPI {
     }
 
     @PostMapping("/symmids/{id}")
-    public ResponseEntity<List<NameConnectionDto>> getOrgsByIdsAndSymmetrically(@PathVariable Integer id, @Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<NameConnectionDto>> getOrgsByIdsAndSymmetrically(@PathVariable Integer id){ // @Valid @RequestBody List<Integer> idList) {
         //List<IdContentDto> rrr = orgService.findByIdsAndSymmetrically(idList, id);
-        return ResponseEntity.ok(orgService.findByIdsAndSymmetrically(idList, id));
+        return ResponseEntity.ok(orgService.findByIdsAndSymmetrically(id));
     }
 
     @PostMapping
@@ -98,6 +98,16 @@ public class OrgAPI {
         boolean res = attachmentService.deleteAttachmentPhoto(EntityType.ORG, id);
         return ResponseEntity.ok(res);
     }
+
+    @DeleteMapping("/attachment")
+    public ResponseEntity deleteAttachment(@RequestParam(name = "entityId", required = true) Integer entityId,
+                                           @RequestParam(name = "fileId", required = true) Integer fileId,
+                                           @RequestParam(name = "fileName", required = true) String fileName) {
+
+        boolean res = attachmentService.deleteAttachment(EntityType.ORG, entityId, fileId, fileName);
+        return ResponseEntity.ok(res);
+    }
+
 
     @PostMapping("/attachment/{id}")
     public ResponseEntity<Integer> handleFileUpload(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {

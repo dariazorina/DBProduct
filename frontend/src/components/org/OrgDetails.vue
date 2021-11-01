@@ -59,15 +59,27 @@
                         </div>
                     </div>
 
-                      <div class="row">
+                    <div class="row">
                         <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Связанные организация</span></div>
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
-                            <div>
-                                <a v-for="org in this.orgOrgEntities">{{createComplexOrgById(org)}}<br></a>
-<!--                                <a v-for="org in org.orgList">{{createComplexOrgById(org.itemId)}}<br></a>-->
-                            </div>
+<!--                            <div>-->
+<!--                                <a v-for="org in this.orgOrgEntities">{{createComplexOrgById(org)}}<br></a>-->
+                                <!--                                <a v-for="org in org.orgList">{{createComplexOrgById(org.itemId)}}<br></a>-->
+
+                                <div v-for="org in this.orgOrgEntities">
+                                    <a><router-link
+                                            :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                        {{createComplexOrgById(org)}} </router-link></a>
+
+                                    <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
+                                    <!--                            {{createComplexMaterialById(material.id)}}-->
+                                    <!--                        </a>-->
+                                    <!--                        <a :href="$router.resolve({name: 'article-details', params: {article_id: material.id}}).href">link</a>-->
+                                </div>
+
+<!--                            </div>-->
                         </div>
                     </div>
 
@@ -76,9 +88,16 @@
                             <div class="cellTitle"><span class="float-left">Связанные персоны</span></div>
                         </div>
                         <div class="col-sm-10 back1" style="text-align: left;">
-                            <div>
-                                <a v-for="prsn in orgPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>
+<!--                            <div>-->
+<!--                                <a v-for="prsn in orgPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>-->
+<!--                            </div>-->
+
+                            <div v-for="prsn in orgPersonEntities">
+                                <a><router-link
+                                        :to="{name: 'person-details', params: {person_id: prsn.id}}" target="_blank">
+                                    {{createComplexPersonById(prsn.id)}} </router-link></a>
                             </div>
+
                         </div>
                     </div>
 
@@ -99,7 +118,7 @@
                         </div>
                         <div class="col-sm-10 back1" style="text-align: left;">
                             <div>
-<!--                                <a v-for="prsn in orgPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>-->
+                                <!--                                <a v-for="prsn in orgPersonEntities">{{createComplexPersonById(prsn.id)}}<br></a>-->
                             </div>
                         </div>
                     </div>
@@ -130,15 +149,27 @@
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10">
-                            <span class="float-left">
-                                <div class="linkButton" v-for="link in org.linkList">
-                                    <span class="float-left">
-                                        <button class="btn btn-link" style="font-size: small"
-                                                @click="goURL(link.content)">{{link.content}}</button>
-                                    </span>
+<!--                        <div class="col-sm-10">-->
+<!--                            <span class="float-left">-->
+<!--                                <div class="linkButton" v-for="link in org.linkList">-->
+<!--                                    <span class="float-left">-->
+<!--                                        <button class="btn btn-link" style="font-size: small"-->
+<!--                                                @click="goURL(link.content)">{{link.content}}</button>-->
+<!--                                    </span>-->
+<!--                                </div>-->
+<!--                            </span>-->
+<!--                        </div>-->
+
+                        <div class="col-sm-10" style="background-color:transparent;">
+                            <div class="linkButton" style="background-color: transparent">
+                                <div v-for="link in org.linkList" style="background-color: transparent;">
+                                    <a class="btn btn-link"
+                                       style="font-size: small; background-color: transparent; text-align: left; padding-top: 2px; padding-bottom: 2px"
+                                       :href="link.content" target="_blank">
+                                        {{link.content}}
+                                    </a>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -170,11 +201,22 @@
                 </div>
             </div>
         </div>
-        <div class="my-md-4">
+<!--        <div class="my-md-4">-->
+<!--            <a class="btn btn-outline-info btn-sm mr-2">-->
+<!--                <router-link to="/org">Обратно к списку организаций</router-link>-->
+<!--            </a>-->
+<!--        </div>-->
+
+        <div class="col-md-12 col-md-offset-4 column" style="background-color: transparent">
             <a class="btn btn-outline-info btn-sm mr-2">
                 <router-link to="/org">Обратно к списку организаций</router-link>
             </a>
+            <a class="btn btn-outline-info btn-sm mr-2">
+                <router-link :to="{name: 'org-add', params: {org_id: org.id}}">Редактировать
+                </router-link>
+            </a>
         </div>
+
     </div>
 </template>
 
@@ -318,13 +360,14 @@
                             // console.log("------------------SSS length sss priority", priority);
 
                             if (res.length !== 0) {
-                                res += ", " + this.org.nameList[i].name + ", ";
+                                res += this.org.nameList[i].name + ", ";
                             } else {
                                 res = this.org.nameList[i].name + ", ";
                             }
 
                             if (this.org.nameList[i].abbr != null)
-                                res += this.org.nameList[i].abbr + " ";
+                                if (this.org.nameList[i].abbr.length > 0)
+                                    res += this.org.nameList[i].abbr + "; ";
                             //console.log("******^^^^^^^^^^^^^****", sss);
                         }
                     }
@@ -423,14 +466,14 @@
 
                 });
 
-                for (let j = 0; j < this.org.orgList.length; j++) {
-                    this.orgOrgIds.push(this.org.orgList[j].itemId);
-                    //console.log("+", j);
-                }
+                // for (let j = 0; j < this.org.orgList.length; j++) {
+                //     this.orgOrgIds.push(this.org.orgList[j].itemId);
+                //     //console.log("+", j);
+                // }
 
-                apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, this.orgOrgIds, response => {
+                apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, response => {
                     this.orgOrgEntities = response.data;
-                    //console.log("```````````````````````````````````````````apiOrga", this.orgOrgEntities);
+                    // console.log("```````````````````````````````````````````apiOrga", this.orgOrgIds, this.orgOrgEntities);
                 });
 
                 for (let j = 0; j < this.org.articleList.length; j++) {

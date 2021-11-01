@@ -10,7 +10,7 @@
                 <div class="col-9"
                      style="margin-top: 0px; background-color: transparent; padding:0">
                     <a class="btn btn-default">
-                        <router-link :to="{name: 'article-add'}">Add article</router-link>
+                        <router-link :to="{name: 'article-add'}">Добавить материал</router-link>
                     </a>
                     <v-icon style="color: #0074D9">mdi-shape-rectangle-plus</v-icon>
                 </div>
@@ -124,38 +124,36 @@
             <tr>
                 <!--                <th class='tdTitle headerLink' @contextmenu.prevent="'modalStatus'" style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>-->
                 <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
-                <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
-                    Дата
-                </th>
-                <th class='tdTitle' @contextmenu.prevent="searchByField(0)">
+                <th class='tdTitle' @contextmenu.prevent="searchByField(4)">
                     <div class="row" style="background-color: transparent">
-                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                        <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                            Язык
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Локации
                         </div>
-                        <div class='col-sm-3'
+                        <div class='col-sm-2'
                              style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="languageFilterId">
-                            <v-btn text icon x-small @click="resetFilter(0)">
-                                <!--                            <v-btn text icon x-small @click="resetFilter(5)" id="titleFilterId" hidden>-->
+                             id="locationFilterId">
+                            <v-btn text icon x-small @click="resetFilter(4)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
                     </div>
                 </th>
-
-                <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
+                <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
+                    Дата
+                </th>
+                <th @contextmenu.prevent="searchByField(5)">
                     <div class="row" style="background-color: transparent">
-                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='col-sm-2' style="background-color: transparent; padding: 0"></div>
                         <div class='headerLink col-sm-8'
-                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
-                            Хештеги
+                             style="text-align: center; background-color: transparent">
+                            Заголовок
                         </div>
                         <div class='col-sm-2'
-                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="hashFilterId">
-                            <v-btn text icon x-small @click="resetFilter(1)">
+                             style="background-color: transparent; visibility: hidden; padding-left: 0"
+                             id="titleFilterId">
+                            <v-btn text icon x-small @click="resetFilter(5)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
@@ -193,38 +191,41 @@
                         </div>
                     </div>
                 </th>
-                <th class='tdTitle' @contextmenu.prevent="searchByField(4)">
+                <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
                         <div class='headerLink col-sm-8'
                              style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
-                            Локации
+                            Хештеги
                         </div>
                         <div class='col-sm-2'
                              style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="locationFilterId">
-                            <v-btn text icon x-small @click="resetFilter(4)">
+                             id="hashFilterId">
+                            <v-btn text icon x-small @click="resetFilter(1)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
                     </div>
                 </th>
-                <th @contextmenu.prevent="searchByField(5)">
+                <th class='tdTitle' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
-                        <div class='col-sm-2' style="background-color: transparent; padding: 0"></div>
-                        <div class='headerLink col-sm-8'
-                             style="text-align: center; background-color: transparent">
-                            Заголовок
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Язык
                         </div>
-                        <div class='col-sm-2'
-                             style="background-color: transparent; visibility: hidden; padding-left: 0"
-                             id="titleFilterId">
-                            <v-btn text icon x-small @click="resetFilter(5)">
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="languageFilterId">
+                            <v-btn text icon x-small @click="resetFilter(0)">
+                                <!--                            <v-btn text icon x-small @click="resetFilter(5)" id="titleFilterId" hidden>-->
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
                     </div>
                 </th>
+
+
                 <th @contextmenu.prevent="searchByField(6)"
                     style="width:15%; color:lightgray">
                     <div class="row" style="background-color: transparent">
@@ -282,14 +283,22 @@
                     </div>
                 </td>
                 <td>
+                    <div v-for="location in article.locationList">
+                        <div v-if="article.locationList.length > 0">
+                            {{getLocationCellById(location.itemId)}}
+                        </div>
+                    </div>
+                </td>
+                <td>
                     {{ formatDate(article.date) }}
                 </td>
                 <td>
-                    {{article.language.name}}
-                </td>
-                <td>
-                    <div v-for="hashtag in article.hashtagList">
-                        {{hashtag}}
+                    <div>                        <!--                    <div style="white-space:pre-line">-->
+                        <a>
+                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                                {{ article.titleRus}}
+                            </router-link>
+                        </a>
                     </div>
                 </td>
                 <td>
@@ -308,21 +317,15 @@
                     </div>
                 </td>
                 <td>
-                    <div v-for="location in article.locationList">
-                        <div v-if="article.locationList.length > 0">
-                            {{getLocationCellById(location.itemId)}}
-                        </div>
+                    <div v-for="hashtag in article.hashtagList">
+                        {{hashtag}}
                     </div>
                 </td>
+
                 <td>
-                    <div>                        <!--                    <div style="white-space:pre-line">-->
-                        <a>
-                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{ article.titleRus}}
-                            </router-link>
-                        </a>
-                    </div>
+                    {{article.language.name}}
                 </td>
+
                 <td style="height: 50px">
                     <div style="height:60px; overflow:hidden">
                         {{article.miscellany }}
@@ -486,6 +489,9 @@
 
     export default {
         name: 'article',
+        metaInfo: {  //todo - to change tab name
+            title: 'About Us'
+        },//??
         components: {
             contextMenu,
             VSwatches,

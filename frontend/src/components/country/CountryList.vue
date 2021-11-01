@@ -105,7 +105,7 @@
         mounted() {
             api.getAllCountries(response => {
                 this.countries = response.data;
-                console.log(response.data)
+                console.log("countries", response.data);
             })
                 .catch(error => {
                     this.errors.push(error)

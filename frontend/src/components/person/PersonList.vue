@@ -3,7 +3,7 @@
         <link href="../dbnm.css" rel="stylesheet"/>
         <div class="actions" style="background-color: transparent; margin: 0">
             <a class="btn btn-default">
-                <router-link :to="{name: 'person-add'}"><span class="glyphicon glyphicon-plus"></span>Add person
+                <router-link :to="{name: 'person-add'}"><span class="glyphicon glyphicon-plus"></span>Добавить персону
                 </router-link>
             </a>
         </div>
@@ -24,23 +24,6 @@
             <thead>
             <tr>
                 <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
-                <div class="row" style="background-color: transparent">
-                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                    <div class='headerLink col-sm-6'
-                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                        ФИО
-                    </div>
-                    <div class='col-sm-3'
-                         style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                         id="surnameFilterId">
-                        <v-btn text icon x-small @click="resetFilter(3)">
-                            <v-icon style="color: white">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </div>
-                </div>
-                <th class='tdAlignLeft headerLink' @click="sort('birthYear')">Год рождения</th>
-                <th class='tdAlignLeft'>Год смерти</th>
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(2)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
@@ -57,6 +40,23 @@
                         </div>
                     </div>
                 </th>
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
+                <div class="row" style="background-color: transparent">
+                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                    <div class='headerLink col-sm-6'
+                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                        ФИО
+                    </div>
+                    <div class='col-sm-3'
+                         style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                         id="surnameFilterId">
+                        <v-btn text icon x-small @click="resetFilter(3)">
+                            <v-icon style="color: white">mdi-close-circle</v-icon>
+                        </v-btn>
+                    </div>
+                </div>
+
+
                 <th class='tdAlignLeft'>Должность</th>
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
@@ -73,6 +73,9 @@
                             </v-btn>
                         </div>
                     </div>
+                </th>
+                <th class='tdAlignLeft headerLink' @click="sort('birthYear')">Год рождения</th>
+                <th class='tdAlignLeft'>Год смерти</th>
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
@@ -123,13 +126,6 @@
                     </div>
                 </td>
 
-                <td><a>
-                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">
-                        {{ getPrioritySNP(person) }}
-                    </router-link>
-                </a></td>
-                <td class='tdAlignLeft'>{{person.birthYear}}</td>
-                <td class='tdAlignLeft'>{{person.deathYear}}</td>
                 <td class='tdAlignLeft'>
                     <div v-for="location in person.locationList">
                         <div v-if="person.locationList.length > 0">
@@ -137,14 +133,23 @@
                         </div>
                     </div>
                 </td>
-                <td class='tdAlignLeft'>
+
+                <td><a>
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">
+                        {{ getPrioritySNP(person) }}
+                    </router-link>
+                </a></td>
+
+                <td style="text-align: right; padding-right: 20px">
                                         <div v-for="org in person.orgList">{{org.connection}}</div>
                 </td>
 
                 <td class='tdAlignLeft'>
                                         <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
                 </td>
-                <td class='tdAlignLeft'>
+                <td class='tdAlignLeft'>{{person.birthYear}}</td>
+                <td class='tdAlignLeft'>{{person.deathYear}}</td>
+                <td>
                     <div v-for="ph in person.hashtagList">
                         {{ph}}
                     </div>

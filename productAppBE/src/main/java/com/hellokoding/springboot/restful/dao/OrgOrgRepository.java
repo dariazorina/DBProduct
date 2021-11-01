@@ -14,4 +14,12 @@ public interface OrgOrgRepository extends JpaRepository <OrgOrgConnection, Integ
             "where (oC.id = :id)")
     List<OrgOrgConnection> findByIdSymm(Integer id);
 
+
+    @Query("select distinct org " +
+            "from OrgOrgConnection org " +
+            "left join org.org orgO " +
+            "where (orgO.id = :id)")
+    List<OrgOrgConnection> findByIdSimple(Integer id);
+
+
 }

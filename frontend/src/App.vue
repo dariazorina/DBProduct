@@ -6,13 +6,17 @@
                 <p class="greetingsTitle">Welcome, {{loggedName}}!
                     <button type="button" class="btnXSmall btn-link" v-b-modal.modal1>Logout
                     </button>
+                    <button type="button" class="btnXSmall btn-link" disabled>
+                    <i>1.4/28.10</i></button>
                 </p>
+
                 <!-- Modal Component -->
                 <b-modal id="modal1" title="Are you sure you want to log-off?" @ok="logout"></b-modal>
             </template>
             <template v-else>
                 <template v-if="!loginError">
-                    <p class="pageLoginTitle">Please login to get access</p>
+                    <p class="pageLoginTitle">Please login to get access  <button type="button" class="btnXSmall btn-link" disabled>
+                        <i>1.4/28.10</i></button></p>
                 </template>
                 <template v-else>
                     <p class="pageLoginErrorTitle">Authentication error, try again</p>
@@ -21,25 +25,25 @@
         </div>
 
         <div id="nav" style="margin-top: -50px; background-color: transparent">
-            <!-----------------------------            the header------------------------------------------->
-            <router-link to="/person">Person</router-link>
+            <!-----------------------------   the header------------------------------------------->
+            <router-link to="/person">Персоны</router-link>
             |
-            <router-link to="/article">Article</router-link>
+            <router-link to="/org">Организации</router-link>
             |
             <!--      <router-link to="/event">Event</router-link> |-->
-            <router-link to="/org">Organization</router-link>
+            <router-link to="/article">Материалы</router-link>
             |
-            <router-link to="/country">Location</router-link>
+            <router-link to="/country">Локации</router-link>
             |
-            <router-link to="/language">Language</router-link>
+            <router-link to="/language">Языки</router-link>
             |
-            <router-link to="/movement">Movement</router-link>
+            <router-link to="/movement">Движения</router-link>
             |
-            <router-link to="/hashtag">Hashtag</router-link>
+            <router-link to="/hashtag">Хештеги</router-link>
             |
-            <router-link to="/mtype">Material Type</router-link>
+            <router-link to="/mtype">Типы материалов</router-link>
             |
-            <router-link to="/uadmin">User Administration</router-link>
+            <router-link to="/uadmin">Администрирование</router-link>
 
 
             <!--      <router-link to="/login">Login</router-link>-->

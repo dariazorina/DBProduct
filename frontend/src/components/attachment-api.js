@@ -73,6 +73,19 @@ export default {
             });
     },
 
+    removeAttachment(entity, entityId, fileId, fileName, fn) {
+        AXIOS
+            // .delete('/' + entity + '/attachment/' + id)
+            .delete('/' + entity + '/attachment?entityId=' + entityId + `&fileId=`+ fileId + `&fileName=` + encodeURIComponent(fileName))
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    router.push('/login');
+                }
+            });
+    },
+
     getAttachmentPhoto(entity, id, fn) {
         AXIOS
             .get('/' + entity + '/attachmentPhoto/' + id)

@@ -13,4 +13,10 @@ public interface ArticleMaterialRepository extends JpaRepository <ArticleMateria
             "where (amM.id = :id)")
     List<ArticleMaterialConnection> findByIdSymm(Integer id);
 
+    @Query("select distinct p " +
+            "from ArticleMaterialConnection p " +
+            "left join p.article amM " +
+            "where (amM.id = :id)")
+    List<ArticleMaterialConnection> findByIdSimple(Integer id);
+
 }

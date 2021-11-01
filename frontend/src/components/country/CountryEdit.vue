@@ -1,10 +1,10 @@
 <template id="country-edit">
     <div>
-        <div class="form-group row">
-            <div class="col-2 col-form-label">
-                <p class="pageEditTitle">Edit Country</p>
-            </div>
-        </div>
+<!--        <div class="form-group row">-->
+<!--            <div class="col-2 col-form-label">-->
+<!--                <p class="pageEditTitle">Edit Country</p>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="unprotected" v-if="errorFlag">
 
@@ -16,16 +16,23 @@
         </div>
         <form>
             <div class="form-group row  align-items-center">
-                <label for="edit-code" class="col-1 col-form-label labelInCreation">Код</label>
+                <label for="edit-country" class="col-1 col-form-label labelInCreation">Название страны</label>
                 <div class="col-4">
-                    <input type="number" class="form-control" id="edit-code" v-model="country.code"/>
+                    <input class="form-control" id="edit-country" v-model="country.country"/>
                 </div>
             </div>
 
             <div class="form-group row  align-items-center">
-                <label for="edit-name" class="col-1 col-form-label labelInCreation">Название</label>
+                <label for="edit-city" class="col-1 col-form-label labelInCreation">Название города</label>
                 <div class="col-4">
-                    <input class="form-control" id="edit-name" v-model="country.name" required/>
+                    <input class="form-control" id="edit-city" v-model="country.city" required/>
+                </div>
+            </div>
+
+            <div class="form-group row  align-items-center">
+                <label for="edit-region" class="col-1 col-form-label labelInCreation">Название региона</label>
+                <div class="col-4">
+                    <input class="form-control" id="edit-region" v-model="country.region"/>
                 </div>
             </div>
 
@@ -33,7 +40,7 @@
                 <div class="offset-sm-2 col-sm-3">
                     <button type="button" @click="checkForm" class="btn btn-primary">Save</button>
                     <a class="btn btn-default">
-                        <router-link to="/language">Cancel</router-link>
+                        <router-link to="/country">Cancel</router-link>
                     </a>
                 </div>
             </div>
@@ -62,16 +69,16 @@
                 this.errors = [];
                 this.errorFlag = false;
 
-                if (!this.country.name) {
+                if (!this.country.country) {
                     this.errorFlag = true;
-                    this.errors.push('Укажите имя'); //todo ? оставлять ли (есть проверка на уровне поля)
+                    this.errors.push('Укажите название страны'); //todo ? оставлять ли (есть проверка на уровне поля)
                 }
-                if (!this.country.code) {
+                if (!this.country.city) {
                     this.errorFlag = true;
-                    this.errors.push('Укажите код страны'); //todo //? оставлять ли (есть проверка на уровне поля)
-                } else if (!this.validCode(this.country.code)) {
-                    this.errorFlag = true;
-                    this.errors.push('Укажите код страны из трех цифр');
+                    this.errors.push('Укажите название города'); //todo //? оставлять ли (есть проверка на уровне поля)
+                // } else if (!this.validCode(this.country.code)) {
+                //     this.errorFlag = true;
+                //     this.errors.push('Укажите код страны из трех цифр');
                 }
 
                 if (!this.errors.length) {
@@ -109,7 +116,9 @@
         mounted() {
             console.log('mounted');
             api.findById(this.$route.params.country_id, r => {
-                this.country = r.data
+                this.country = r.data;
+                console.log('mounted', this.country);
+
             });
         },
     }

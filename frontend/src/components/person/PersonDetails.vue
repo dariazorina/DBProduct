@@ -75,9 +75,19 @@
                             <div class="cellTitle"><span class="float-left">Организация / Должность</span></div>
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
-                            <div>
-                                <a v-for="org in person.orgList">{{showOrgAndPosition(org.itemId)}}<br></a>
+                            <!--                            <div>-->
+                            <!--                                <a v-for="org in person.orgList">{{showOrgAndPosition(org.itemId)}}<br></a>-->
+                            <!--                            </div>-->
+
+                            <div v-for="org in person.orgList">
+                                <a>
+                                    <router-link
+                                            :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                        {{showOrgAndPosition(org.itemId)}}
+                                    </router-link>
+                                </a>
                             </div>
+
                         </div>
                     </div>
 
@@ -86,9 +96,20 @@
                             <div class="cellTitle"><span class="float-left">Связанные персоны</span></div>
                         </div>
                         <div class="col-sm-10 back1" style="text-align: left;">
-                            <div>
-                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn)}}<br></a>
+                            <!--                            <div>-->
+                            <!--                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn)}}<br></a>-->
+                            <!--                            </div>-->
+
+                            <div v-for="prsn in personPersonEntities">
+                                <a>
+                                    <router-link
+                                            :to="{name: 'person-details', params: {person_id: prsn.itemId}}"
+                                            target="_blank">
+                                        {{createComplexPersonById(prsn)}}
+                                    </router-link>
+                                </a>
                             </div>
+
                         </div>
                     </div>
 
@@ -128,15 +149,27 @@
                             <div class="cellTitle"><span class="float-left">Links</span></div>
                         </div>
 
-                        <div class="col-sm-10">
-                            <span class="float-left">
-                                <div class="linkButton" v-for="link in person.linkList">
-                                    <span class="float-left">
-                                        <button class="btn btn-link" style="font-size: small"
-                                                @click="goURL(link.content)">{{link.content}}</button>
-                                    </span>
+                        <!--                        <div class="col-sm-10">-->
+                        <!--                            <span class="float-left">-->
+                        <!--                                <div class="linkButton" v-for="link in person.linkList">-->
+                        <!--                                    <span class="float-left">-->
+                        <!--                                        <button class="btn btn-link" style="font-size: small"-->
+                        <!--                                                @click="goURL(link.content)" target="_blank">{{link.content}}</button>-->
+                        <!--                                    </span>-->
+                        <!--                                </div>-->
+                        <!--                            </span>-->
+                        <!--                        </div>-->
+
+                        <div class="col-sm-10" style="background-color:transparent;">
+                            <div class="linkButton" style="background-color: transparent">
+                                <div v-for="link in person.linkList" style="background-color: transparent;">
+                                    <a class="btn btn-link"
+                                       style="font-size: small; background-color: transparent; text-align: left; padding-top: 2px; padding-bottom: 2px"
+                                       :href="link.content" target="_blank">
+                                        {{link.content}}
+                                    </a>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -161,12 +194,26 @@
             </div>
         </div>
 
-        <div class="my-md-4">
+
+        <div class="col-md-12 col-md-offset-4 column" style="background-color: transparent">
             <a class="btn btn-outline-info btn-sm mr-2">
                 <router-link to="/person">Обратно к списку персон</router-link>
             </a>
+            <a class="btn btn-outline-info btn-sm mr-2">
+                <router-link :to="{name: 'person-add', params: {person_id: person.id}}">Редактировать
+                </router-link>
+            </a>
         </div>
     </div>
+
+    <!--        <v-btn text icon x-small>-->
+    <!--            <a>-->
+    <!--                <router-link :to="{name: 'person-add', params: {person_id: person.id}}">-->
+    <!--                    <v-icon style="color: green">mdi-pencil</v-icon>-->
+    <!--                </router-link>-->
+    <!--            </a>-->
+    <!--        </v-btn>-->
+    <!--    </div>-->
 </template>
 
 <style lang="scss">
@@ -377,7 +424,7 @@
 
                 for (let j = 0; j < this.person.personList.length; j++) {
                     this.personPersonIds.push(this.person.personList[j].itemId);
-                   // console.log("PRSN person", this.person.personList, this.personPersonIds);
+                    // console.log("PRSN person", this.person.personList, this.personPersonIds);
                 }
 
                 api.getPersonsByIdsAndSymmetrically(this.person.id, this.personPersonIds, response => {
@@ -388,7 +435,7 @@
 
                 for (let j = 0; j < this.person.orgList.length; j++) {
                     this.personOrgIds.push(this.person.orgList[j].itemId);
-                  //  console.log("+ * % ^ & U OIUOI OI", this.personOrgIds);
+                    //  console.log("+ * % ^ & U OIUOI OI", this.personOrgIds);
                 }
 
                 apiOrg.getOrgsByIds(this.personOrgIds, response => {

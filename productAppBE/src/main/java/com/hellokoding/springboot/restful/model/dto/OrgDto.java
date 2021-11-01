@@ -25,7 +25,7 @@ public class OrgDto implements Comparable<OrgDto> {
     private List<UrlLink> linkList;
     private List<String> hashtagList;
     private List<ItemConnectionDto> articleList;
-    private List<ItemConnectionDto> orgList;
+    private List<NameConnectionDto> orgList;
     private List<ItemConnectionDto> locationList;
     private List<ItemConnectionDto> personList;
     private List<ItemConnectionDto> isourceList;
@@ -35,9 +35,9 @@ public class OrgDto implements Comparable<OrgDto> {
     }
 
     public OrgDto(Integer id, List<Movement> movementList, List<OrgNameDto> nameList, String description,
-                        String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                        List<ItemConnectionDto> orgList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList,
-                        List<ItemConnectionDto> isourceList, List<ItemConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
+                  String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
+                  List<NameConnectionDto> orgList, List<ItemConnectionDto> locationList, List<ItemConnectionDto> personList,
+                  List<ItemConnectionDto> isourceList, List<ItemConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
         this.status = status;
@@ -72,7 +72,7 @@ public class OrgDto implements Comparable<OrgDto> {
         this.type = org.getOrgType();
 
         this.hashtagList = new ArrayList<>();
-        for (OrgHashtag orgHashtag: org.getHashtagList()) {
+        for (OrgHashtag orgHashtag : org.getHashtagList()) {
             if (orgHashtag.getHashtag().equals(orgHashtag.getAssigned_hashtag()))
                 this.hashtagList.add(orgHashtag.getHashtag().getContent());
         }
@@ -85,14 +85,31 @@ public class OrgDto implements Comparable<OrgDto> {
         this.articleList = new ArrayList<>();
 
 
-        ItemConnectionDto orgConnectionDto;
+        NameConnectionDto orgConnectionDto;
+        String dtoName = "";
+
         for (OrgOrgConnection connection : org.getOrgConnections()) {
-            orgConnectionDto = new ItemConnectionDto();
+            orgConnectionDto = new NameConnectionDto();
+
+            if (org.getNameList() != null) {
+                for (OrgName name : org.getNameList()) {
+                    if (name.getPriority() == 1) {
+                        dtoName += name.getName();
+
+                        if (name.getAbbr() != null) {
+                            dtoName += "/ " + name.getAbbr();
+                        }
+                    }
+                }
+            }
+
+            orgConnectionDto.setName(dtoName);
             orgConnectionDto.setItemId(connection.getConnectedOrg().getId());
             orgConnectionDto.setConnection(connection.getConnection());
             orgConnectionDto.setComment(connection.getComment());
 
             this.orgList.add(orgConnectionDto);
+            dtoName = "";
         }
 
         ItemConnectionDto locationConnectionDto;
@@ -240,11 +257,11 @@ public class OrgDto implements Comparable<OrgDto> {
         this.hashtagList = hashtagList;
     }
 
-    public List<ItemConnectionDto> getOrgList() {
+    public List<NameConnectionDto> getOrgList() {
         return orgList;
     }
 
-    public void setOrgList(List<ItemConnectionDto> orgList) {
+    public void setOrgList(List<NameConnectionDto> orgList) {
         this.orgList = orgList;
     }
 
@@ -304,13 +321,13 @@ public class OrgDto implements Comparable<OrgDto> {
         String name = "", name1 = "";
         int i;
 
-        for (i = 0 ; i < nameList.size(); i++)
-            if (nameList.get(i).getPriority() == 1){
+        for (i = 0; i < nameList.size(); i++)
+            if (nameList.get(i).getPriority() == 1) {
                 name = nameList.get(i).getName();
             }
 
-        for (i = 0 ; i < obj.nameList.size(); i++)
-            if (obj.nameList.get(i).getPriority() == 1){
+        for (i = 0; i < obj.nameList.size(); i++)
+            if (obj.nameList.get(i).getPriority() == 1) {
                 name1 = obj.nameList.get(i).getName();
             }
 

@@ -13,6 +13,7 @@
                         </th>
                         <th class='tdTitle' style="width:120px">Автор</th>
                         <th class='tdTitle' style="width:120px">Размер</th>
+                        <th v-if="!isDetailsMode" class='tdTitle' style="width:20px"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,6 +45,16 @@
                         </td>
                         <td>
                             {{formatSize(file.size)}}
+                        </td>
+                        <td v-if="!isDetailsMode">
+                            <v-btn text icon x-small @click="removeAttachment(file)">
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon style="color: red" v-bind="attrs" v-on="on">mdi-delete-forever</v-icon>
+                                    </template>
+                                    <span>delete</span>
+                                </v-tooltip>
+                            </v-btn>
                         </td>
                     </tr>
                     </tbody>
@@ -140,6 +151,12 @@
             downloadAttachment(file) {
                 // console.log("DOWNLD Attachment", file);
                 this.$emit('downloadAttachment', file);
+            },
+
+            removeAttachment(file) {
+                console.log("removeAttachmnt", file);
+                this.$emit('removeAttachment', file);
+
             },
 
             getAttachment(file) {

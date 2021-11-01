@@ -42,6 +42,7 @@ public class OrgServiceImpl implements OrgService {
         OrgDto currentOrgDto;
         for (Org o : allOrg) {
             currentOrgDto = new OrgDto(o);
+            currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId()));
             dtoAllOrgList.add(currentOrgDto);
         }
         return dtoAllOrgList;
@@ -75,7 +76,7 @@ public class OrgServiceImpl implements OrgService {
         return transformOriginToDto(searchRes);
     }
 
-    public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
+    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
 
         Org connectedOrg, org;
         String dtoName = "", connection = "", comment = "";
@@ -88,8 +89,9 @@ public class OrgServiceImpl implements OrgService {
             org = orgOpt.get();             //   searchRes.add(l.get());
 
             searchResSymm = orgOrgRepository.findByIdSymm(itemId); //searching symm connections for this itemId
-            for (Integer id : idList) { //simple connections
-                Optional<Org> connOrgOpt = orgRepository.findById(id);
+
+            for (OrgOrgConnection el : org.getOrgConnections()) { //simple connections
+                Optional<Org> connOrgOpt = orgRepository.findById(el.getConnectedOrg().getId());
 
                 if (connOrgOpt.isPresent()) {
                     connectedOrg = connOrgOpt.get();             //   searchRes.add(l.get());
@@ -145,6 +147,9 @@ public class OrgServiceImpl implements OrgService {
                     }
                     NameConnectionDto orgDto = new NameConnectionDto(orgOrgConnection.getOrg().getId(), dtoName, connection, comment);
                     finalList.add(orgDto);
+                    dtoName = "";
+                    connection = "";
+                    comment = "";
                 }
             }
         }
@@ -227,15 +232,22 @@ public class OrgServiceImpl implements OrgService {
             //personRepository.flush();
         }
 
-
-        List<OrgName> nameList = new ArrayList<>();
+        List<OrgName> nameList = null;
         if (org.getNameList() != null) {
+            nameList = new ArrayList<>(org.getNameList());
+        }
+        if (nameList != null) {
             org.getNameList().clear();
             orgRepository.flush();
+
+            for (OrgName el : nameList) {
+                orgNameRepository.deleteById(el.getId());
+            }
+            orgNameRepository.flush();
+            nameList.clear();
+        } else {
+            nameList = new ArrayList<>();
         }
-//        else {
-//            person.setSnpList(snpList);
-//        }
 
         List<OrgNameDto> nameDtoList = orgDto.getNameList();
         OrgName orgName;
@@ -248,7 +260,6 @@ public class OrgServiceImpl implements OrgService {
             orgNameRepository.save(orgName);
         }
         orgNameRepository.flush();
-
 
         if (org.getNameList() == null) {
             org.setNameList(nameList);
@@ -267,32 +278,77 @@ public class OrgServiceImpl implements OrgService {
             org.setStatus(byName.get());
         }
 
+        /////////////////org
         if (org.getOrgConnections() != null) {
             org.getOrgConnections().clear();
             orgRepository.flush();
         }
 
-        Integer orgId;
+        Integer connectedOrgId;
+        boolean isSymmConnection = false;
+
+        Org connectedOrg = null;
         OrgOrgConnection orgOrgConnection;
-        List<OrgOrgConnection> occList = new ArrayList<>();
-        for (ItemConnectionDto posDto : orgDto.getOrgList()) {
+        OrgOrgConnection connectedOrgConnection;
 
-            orgId = posDto.getItemId();
-            if (orgRepository.findById(orgId).isPresent()) {
-                orgOrgConnection = new OrgOrgConnection();
-                orgOrgConnection.setConnectedOrg(orgRepository.findById(orgId).get());
-                orgOrgConnection.setOrg(org);
-                orgOrgConnection.setConnection(posDto.getConnection());
-                orgOrgConnection.setComment(posDto.getComment());
+        List<OrgOrgConnection> orgOrgList = new ArrayList<>();
+        List<OrgOrgConnection> connectedOrgList = new ArrayList<>();
+        List<OrgOrgConnection> symmConnectionList;
 
-                occList.add(orgOrgConnection);
+
+        for (NameConnectionDto posDto : orgDto.getOrgList()) {
+            connectedOrgId = posDto.getItemId();
+            if (orgRepository.findById(connectedOrgId).isPresent()) {
+
+                symmConnectionList = orgOrgRepository.findByIdSimple(connectedOrgId);
+                for (OrgOrgConnection orgOrgConn : symmConnectionList) {
+                    if (orgOrgConn.getConnectedOrg().getId().equals(org.getId())) {
+                        isSymmConnection = true;
+                        break;
+                    }
+                }
+                if (!isSymmConnection) {
+                    orgOrgConnection = new OrgOrgConnection();
+                    orgOrgConnection.setConnectedOrg(orgRepository.findById(connectedOrgId).get());
+                    orgOrgConnection.setOrg(org);
+                    orgOrgConnection.setConnection(posDto.getConnection());
+                    orgOrgConnection.setComment(posDto.getComment());
+
+                    orgOrgList.add(orgOrgConnection);
+                } else {//save connection for material
+                    connectedOrg = orgRepository.findById(connectedOrgId).get();
+
+                    connectedOrgConnection = new OrgOrgConnection();
+                    connectedOrgConnection.setOrg(orgRepository.findById(connectedOrgId).get());
+                    connectedOrgConnection.setConnectedOrg(org);
+                    connectedOrgConnection.setConnection(posDto.getConnection());
+                    connectedOrgConnection.setComment(posDto.getComment());
+
+                    connectedOrgList.add(connectedOrgConnection);
+
+                    if (connectedOrg.getOrgConnections() == null) {
+                        connectedOrg.setOrgConnections(connectedOrgList);
+                    } else {
+                        //remove already existed entities
+                        List<OrgOrgConnection> elList = new ArrayList<>();
+                        for (OrgOrgConnection orgOrgConn : connectedOrg.getOrgConnections()) {
+                            if (orgOrgConn.getConnectedOrg().getId().equals(org.getId())) {
+                                elList.add(orgOrgConn);
+                            }
+                        }
+                        connectedOrg.getOrgConnections().removeAll(elList);
+                        orgRepository.flush();
+                        connectedOrg.getOrgConnections().addAll(connectedOrgList);
+                    }
+                }
+                isSymmConnection = false;
             }
         }
 
         if (org.getOrgConnections() == null) {
-            org.setOrgConnections(occList);
+            org.setOrgConnections(orgOrgList);
         } else {
-            org.getOrgConnections().addAll(occList);
+            org.getOrgConnections().addAll(orgOrgList);
         }
 
         ///location
@@ -512,6 +568,8 @@ public class OrgServiceImpl implements OrgService {
                 byId.ifPresent(org::setOrgType);
             }
         }
+        if (connectedOrg != null)
+            orgRepository.save(connectedOrg);
         return orgRepository.save(org);
     }
 

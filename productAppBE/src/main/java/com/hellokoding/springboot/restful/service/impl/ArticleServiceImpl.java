@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -265,8 +264,13 @@ public class ArticleServiceImpl implements ArticleService {
             articleRepository.flush();
         }
         Integer materialId;
+        boolean isSymmConnection = false;
+        Article material = null;
+        ArticleMaterialConnection articleConnection;
         ArticleMaterialConnection materialConnection;
+        List<ArticleMaterialConnection> articleConnectionList = new ArrayList<>();
         List<ArticleMaterialConnection> materialConnectionList = new ArrayList<>();
+        List<ArticleMaterialConnection> symmConnectionList;// = new ArrayList<>();
 
 
         for (ItemConnectionDto connectionDto : articleDto.getMaterialList()) {
@@ -274,22 +278,60 @@ public class ArticleServiceImpl implements ArticleService {
             if (articleRepository.findById(materialId).isPresent()) {
                 Optional<ConnectionType> ct = (ctypeRepository.findByType(connectionDto.getConnection()));
                 if (ct.isPresent()) {
-                    materialConnection = new ArticleMaterialConnection();
-                    materialConnection.setMaterial(articleRepository.findById(materialId).get());
-                    materialConnection.setArticle(article);
-                    materialConnection.setConnection(ct.get().getId());
-                    materialConnection.setComment(connectionDto.getComment());
-                    materialConnectionList.add(materialConnection);
+
+                    //article - article.id, material - material.id - simple conn
+                    //article - material.id, material - article.id - symm conn - need to exclude here and save for material (not for current article)
+
+                    symmConnectionList = articleMaterialRepository.findByIdSimple(materialId);
+                    for (ArticleMaterialConnection artMatConn : symmConnectionList) {
+                        if (artMatConn.getMaterial().getId().equals(article.getId())) {
+                            isSymmConnection = true;
+                            break;
+                        }
+                    }
+                    if (!isSymmConnection) {
+                        articleConnection = new ArticleMaterialConnection();
+                        articleConnection.setMaterial(articleRepository.findById(materialId).get());
+                        articleConnection.setArticle(article);
+                        articleConnection.setConnection(ct.get().getId());
+                        articleConnection.setComment(connectionDto.getComment());
+                        articleConnectionList.add(articleConnection);
+
+                    } else {  //save connection for material
+                        material = articleRepository.findById(materialId).get();
+
+                        materialConnection = new ArticleMaterialConnection();
+                        materialConnection.setArticle(articleRepository.findById(materialId).get());
+                        materialConnection.setMaterial(article);
+                        materialConnection.setConnection(ct.get().getId());
+                        materialConnection.setComment(connectionDto.getComment());
+                        materialConnectionList.add(materialConnection);
+
+
+                        if (material.getMaterialConnections() == null) {
+                            material.setMaterialConnections(materialConnectionList);
+                        } else {
+                            //remove already existed entities
+                            List<ArticleMaterialConnection> elList = new ArrayList<>();
+                            for (ArticleMaterialConnection artMatConn : material.getMaterialConnections()) {
+                                if (artMatConn.getMaterial().getId().equals(article.getId())) {
+                                    elList.add(artMatConn);
+                                }
+                            }
+                            material.getMaterialConnections().removeAll(elList);
+                            articleRepository.flush();
+                            material.getMaterialConnections().addAll(materialConnectionList);
+                        }
+                    }
+                    isSymmConnection = false;
                 }
             }
         }
-
         if (article.getMaterialConnections() == null) {
-            article.setMaterialConnections(materialConnectionList);
+            article.setMaterialConnections(articleConnectionList);
         } else {
-            article.getMaterialConnections().addAll(materialConnectionList);
+            article.getMaterialConnections().addAll(articleConnectionList);
         }
-
 
         /////////////////////article-hashtag////////////////////////
         ArticleHashtag articleHashtag, previousArticleHashtag, previousPreviousArticleHashtag;
@@ -370,6 +412,8 @@ public class ArticleServiceImpl implements ArticleService {
         }//for
         //article.setHashtagList(null);
         //article.setHashtagList(hashtagList);
+        if (material != null)
+            articleRepository.save(material);
         return articleRepository.save(article);
 //        return article;
     }
@@ -386,14 +430,14 @@ public class ArticleServiceImpl implements ArticleService {
 //                searchRes.add(l.get());
 //            }
         }
-        return createResultSearchNameAndDate(searchRes, null);
+        return createResultSearchWithNameAndDate(searchRes, null);
     }
 
     public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
 
         Article connectedArticle, article;
         String dtoName = "", connection = "", comment = "";
-       // Set<Article> searchRes = new TreeSet<>();
+        // Set<Article> searchRes = new TreeSet<>();
         List<NameConnectionDto> finalList = new ArrayList<>();
 
         List<ArticleMaterialConnection> searchResSymm;// = new ArrayList<>();
@@ -441,8 +485,8 @@ public class ArticleServiceImpl implements ArticleService {
                         dtoName += "," + connectedArticle.getLinkList().get(0);  //as the first help in fail with date
                     }
 
-                    for (ArticleMaterialConnection articleMaterialConnection : article.getMaterialConnections()) {
-                        if (articleMaterialConnection.getMaterial().getId().equals(connectedArticle.getId())) {
+                    for (ArticleMaterialConnection articleMaterialConnection : article.getMaterialConnections()) { //is it necessary?
+                        if (articleMaterialConnection.getMaterial().getId().equals(connectedArticle.getId())) {    //is it necessary?
                             Optional<ConnectionType> ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
                             if (ct.isPresent()) {
                                 connection = ct.get().getType();
@@ -481,8 +525,11 @@ public class ArticleServiceImpl implements ArticleService {
                             comment = articleMaterialConnection.getComment();
                         }
                     }
-                    NameConnectionDto articleDto = new NameConnectionDto(articleMaterialConnection.getMaterial().getId(), dtoName, connection, comment);
+                    NameConnectionDto articleDto = new NameConnectionDto(articleMaterialConnection.getArticle().getId(), dtoName, connection, comment);
                     finalList.add(articleDto);
+                    dtoName = "";
+                    connection = "";
+                    comment = "";
                 }
             }
         }
@@ -493,7 +540,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<IdContentDto> searchMaterial(String q, Integer mov) {
         List<Article> rrr = articleRepository.findMaterialByTitleAndMovement("%" + q + "%", mov);
-        return createResultSearchNameAndDate(rrr, null);
+        return createResultSearchWithNameAndDate(rrr, null);
     }
 
     @Override
@@ -502,13 +549,13 @@ public class ArticleServiceImpl implements ArticleService {
         if (rrr.isPresent()) {
             List<Article> finalList = new ArrayList<>();
             finalList.add(rrr.get());
-            return createResultSearchNameAndDate(finalList, null);
+            return createResultSearchWithNameAndDate(finalList, null);
         }
         return null;
     }
 
 
-    public List<IdContentDto> createResultSearchNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
+    public List<IdContentDto> createResultSearchWithNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
 
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
@@ -607,8 +654,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
     public List<ArticleDto> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
-     List<String> location, List<String> language, String description, String text, List<String> misc,
-     List<Integer> status, String startDate, String endDate, Integer movement){
+                                   List<String> location, List<String> language, String description, String text, List<String> misc,
+                                   List<Integer> status, String startDate, String endDate, Integer movement) {
 
         boolean isSingleFilter = false;
         int hashCurrentSize = 0;
