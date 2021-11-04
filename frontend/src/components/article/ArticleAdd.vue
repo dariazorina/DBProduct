@@ -10,24 +10,39 @@
             </div>
 
             <div class="col-lg-12" style="background-color: transparent; padding-top: 0">
-                <form class="formCreation">
-                    <div class="form-row align-items-center" style="background-color: transparent">
-                        <div class="col-12" style="background-color: transparent">
-                            <label>Текущее движение: {{currentUserMovement.name}} </label><br>
-                        </div>
-                        <div class="col-12" style="background-color: transparent">
-                            <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
-                                <label>Добавить дополнительное движение:</label>
-                                <div v-for="(movement, index) in allMovements">
-                                    <input v-bind:value="movement.id" name="movement.name" type="checkbox"
-                                           v-model="checkedMovements"/>
-                                    <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>
-                                </div>
-                            </div>
-                            <div v-else>
-                                <b-button size="sm" variant="info" @click="addAdditionalMovement">
-                                    Добавить дополнительное движение
-                                </b-button>
+                <!--                <form class="formCreation">-->
+                <!--                    <div class="form-row align-items-center" style="background-color: transparent">-->
+                <!--                        <div class="col-12" style="background-color: transparent">-->
+                <!--                            <label>Текущее движение: {{currentUserMovement.name}} </label><br>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-12" style="background-color: transparent">-->
+                <!--                            <div v-if="isAdmin==='true'||addAdditionalMovementFlag">-->
+                <!--                                <label>Добавить дополнительное движение:</label>-->
+                <!--                                <div v-for="(movement, index) in allMovements">-->
+                <!--                                    <input v-bind:value="movement.id" name="movement.name" type="checkbox"-->
+                <!--                                           v-model="checkedMovements"/>-->
+                <!--                                    <label :for="movement.id"><span>{{" . " + movement.name}}</span></label>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            <div v-else>-->
+                <!--                                <b-button size="sm" variant="info" @click="addAdditionalMovement">-->
+                <!--                                    Добавить дополнительное движение-->
+                <!--                                </b-button>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+
+                <form class="formCreation"
+                      style="background-color: transparent; margin-left: 30px; margin-bottom: 0; padding-bottom: 0">
+                    <div class="col-md-4" style="margin-left: -15px; background-color: transparent">
+                        <label><b>Тема*</b></label>
+                        <div class="col-md-4" style="background-color: transparent">
+                            <div v-for="(movement, index) in allMovements">
+                                <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
+                                       type="checkbox"
+                                       v-model="checkedMovements"/>
+                                <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"
+                                       :for="movement.id"><span>{{movement.name}}</span></label>
                             </div>
                         </div>
                     </div>
@@ -105,9 +120,9 @@
                             </b-card>
                         </div>
                     </div>
-                </form>
+<!--                </form>-->
 
-                <form class="formCreation">
+<!--                <form class="formCreation" style="background-color: transparent; margin-left: 15px; margin-bottom: 0; padding-bottom: 0">-->
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="add-linkS"><b>URL’s*</b></label>
@@ -143,8 +158,8 @@
                                    v-model="article.date">
                         </div>
                     </div>
-                </form>
-                <form class="formCreation">
+<!--                </form>-->
+<!--                <form class="formCreation">-->
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="add-title-rus"> <b>Заголовок на русском*</b></label>
@@ -509,6 +524,8 @@
     import CreatedList from "../components/multiple-enter-list/CreatedList";
     import CKEditor from 'ckeditor4-vue';
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
+    import apiLogin from "../login-api";
+
     Vue.component('input-tag', InputTag);
 
     export default {
@@ -574,7 +591,7 @@
             allLanguages: [],
             allMovements: [],
             checkedMovements: [],
-            currentUserMovement: '',
+            // currentUserMovement: '',
             addAdditionalMovementFlag: false,
 
             article: {
@@ -871,6 +888,10 @@
                         if (this.hasError) {
                         } else {
                             this.addStatus('add-title-rus', (!(this.article.titleRus)));
+
+                            if (this.checkedMovements.length === 0) {
+                                this.hasError = true;
+                            }
                             // if (this.hasError) {
                             //     this.addStatus('add-title-rus', true);
                             // } else {
@@ -880,6 +901,7 @@
                     }
                 }
                 if (this.hasError)
+                    alert("Пожалуйста, заполните все обязательные поля");
                     console.log('ERROROROR----------------------------');
                 return !this.hasError;
             },
@@ -1015,9 +1037,9 @@
                     };
                 }
 
-                this.article.movementList[i] = {
-                    "id": this.currentUserMovement.id
-                };
+                // this.article.movementList[i] = {
+                //     "id": this.currentUserMovement.id
+                // };
 
 
                 // let textarea = document.getElementById("add-linkS");
@@ -1092,9 +1114,9 @@
                 this.article.status = this.selectedS;
                 this.hasError = false;
 
-                this.article.linkList = [];
-                this.article.hashtagList = [];
-                this.article.movementList = [];
+                this.article.linkList.splice(0);
+                this.article.hashtagList.splice(0);
+                this.article.movementList.splice(0);
 
                 //console.log("#*#*#*#*#*#*#*#*#*#*#*#*#    LINKS", this.links, this.links.length);
                 for (let i = 0; i < this.links.length; i++) {
@@ -1365,17 +1387,35 @@
             //     console.log(response.data);
             // });
 
-            apiMovement.getAllMovements(response => {
-                // this.getLoggedIn();
-                this.allMovements = response.data;
-                console.log("MOVEMENTS", response.data);
-                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            // apiMovement.getAllMovements(response => {
+            //     // this.getLoggedIn();
+            //     this.allMovements = response.data;
+            //     console.log("MOVEMENTS", response.data);
+            //     this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            //
+            //     let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            //     let ddd = this.allMovements.indexOf(currentIndex);
+            //     this.allMovements.splice(ddd, 1);
+            //     //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            // });
 
-                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-                let ddd = this.allMovements.indexOf(currentIndex);
-                this.allMovements.splice(ddd, 1);
-                //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
-            });
+
+            apiLogin.getAccount().then(
+                response => {
+                    console.log("Account retrieved :" + response.data);
+
+                    this.allMovements = response.data.movementList;
+                    console.log("USER MOVEMENTS", this.allMovements);
+
+                    if (this.allMovements.length === 1) {
+                        this.checkedMovements.push(this.allMovements[0].id);
+                    }
+                }
+            ).catch(
+                error => {
+                    console.log("Error: " + error);
+                }
+            );
 
             api.getConnectionTypes(response => {
                 this.connectionTypes = response.data;
@@ -1851,7 +1891,7 @@
                         if (this.isLoading) return;
                         this.isLoading = true;
 
-                        apiPerson.searchPerson(val, localStorage.getItem('movement'), r => {
+                        apiPerson.searchPerson(val, r => {
                             this.personEntries = r;
                             //  console.log("****", this.entries);
                             this.isLoading = false;
@@ -1898,7 +1938,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
+                        apiOrg.searchOrg(val, r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             //console.log("**орг**", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -1921,7 +1961,7 @@
                         if (this.isLoadingMaterial) return;
                         this.isLoadingMaterial = true;
 
-                        api.searchMaterial(val, localStorage.getItem('movement'), r => {
+                        api.searchMaterial(val, r => {
                             this.materialEntries = r;
                             //  console.log("*№*№*№*", this.materialEntries);
                             this.isLoadingMaterial = false;

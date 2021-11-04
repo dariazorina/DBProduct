@@ -32,18 +32,19 @@ public interface OrgRepository extends JpaRepository <Org, Integer> {
     List<Org> findAllWithMovement(Integer movement);
 
 
-    @Query("select distinct o " +
-            "from Org o " +
-            "join o.movementList oML " +
-            "join o.nameList nmL " +
-            "where ((oML.id = :movement) " +
-            "and (lower(nmL.name)) like :name)")
-    List<Org> findByNameAndMovement(String name, Integer movement);
+//    @Query("select distinct o " +
+//            "from Org o " +
+//            "join o.movementList oML " +
+//            "join o.nameList nmL " +
+//            "where ((oML.id = :movement) " +
+//            "and (lower(nmL.name)) like :name)")
+//    List<Org> findByNameAndMovement(String name, Integer movement);
 
   @Query("select distinct o " +
             "from Org o " +
             "join o.nameList nmL " +
-            "where ((lower(nmL.name)) like :name)")
+            "where ((lower(nmL.abbr) like :name) " +
+            "or (lower(nmL.name)) like :name)")
     List<Org> findByName(String name);  //works
 
     @Query("select distinct o " +

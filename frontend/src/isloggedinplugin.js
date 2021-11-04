@@ -19,14 +19,14 @@ export default store => {
                 }
             });
 
-            if (typeof mutation.payload.account.movementList !== 'undefined' && mutation.payload.account.movementList !== null) {
-                if (mutation.payload.account.movementList.length < 2) {
-                    localStorage.setItem('movement', mutation.payload.account.movementList[0].id);
-                    localStorage.setItem('movementSingle', 'true');
-                } else {
-                    localStorage.setItem('movementSingle', 'false');
-                }
-            }
+            // if (typeof mutation.payload.account.movementList !== 'undefined' && mutation.payload.account.movementList !== null) {
+            //     if (mutation.payload.account.movementList.length < 2) {
+            //         localStorage.setItem('movement', mutation.payload.account.movementList[0].id);
+            //         localStorage.setItem('movementSingle', 'true');
+            //     } else {
+            //         localStorage.setItem('movementSingle', 'false');
+            //     }
+            // }
 
             const moment = require('moment');
             let now = moment();
@@ -44,7 +44,7 @@ export default store => {
             localStorage.removeItem('userName');
             localStorage.removeItem('startDate');
             localStorage.removeItem('endDate');
-            localStorage.removeItem('movementSingle');
+            // localStorage.removeItem('movementSingle');
             localStorage.removeItem('movement');
             localStorage.removeItem('isAdmin');
         }

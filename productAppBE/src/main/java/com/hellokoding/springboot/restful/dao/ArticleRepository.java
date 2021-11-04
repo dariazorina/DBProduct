@@ -109,7 +109,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and (aML.id = :movement) " +
             "and (a.date >=:startDate and a.date <= :endDate))")
     Set<Article> findByFiltersAndDateAndMovement(String title, String hashTag, String author, String org, String location,
-                                      String lang, String comment, String text, String description, Date startDate, Date endDate, Integer movement);
+                                                 String lang, String comment, String text, String description, Date startDate, Date endDate, Integer movement);
 
     @Query("select distinct a " +
             "from Article as a " +
@@ -139,21 +139,21 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "and aSt.id in (:status) " +
             "and (a.date >=:startDate and a.date <= :endDate))")
     Set<Article> findByFiltersAndDateAndStatusAndMovement(String title, String hashTag, String author, String org, String location,
-                                               String lang, String comment, String text, String description, List<Integer> status, Date startDate, Date endDate, Integer movement);
+                                                          String lang, String comment, String text, String description, List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
     //////////////MATERIALS///////////
-//    @Query("from Article as a " +
-//            "where (lower(a.title) like lower(:title) " +
-//            "or lower(a.titleRus) like lower(:title))")
-//    List<Article> findMaterialByTitle(String title);
-
     @Query("from Article as a " +
-            "join a.movementList aML " +
             "where (lower(a.title) like lower(:title) " +
-            "or lower(a.titleRus) like lower(:title)) " +
-            "and (aML.id = :movement)")
-    List<Article> findMaterialByTitleAndMovement(String title, Integer movement);
+            "or lower(a.titleRus) like lower(:title))")
+    List<Article> findMaterialByTitle(String title);
+
+//    @Query("from Article as a " +
+//            "join a.movementList aML " +
+//            "where (lower(a.title) like lower(:title) " +
+//            "or lower(a.titleRus) like lower(:title)) " +
+//            "and (aML.id = :movement)")
+//    List<Article> findMaterialByTitleAndMovement(String title, Integer movement);
 
 
     ////////////TITLE///////////////
@@ -373,7 +373,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Set<Article> findByDateAndStatusAndMovement(List<Integer> status, Date startDate, Date endDate, Integer movement);
 
 
-//    //search date range
+    //    //search date range
     Set<Article> findAllByDateBetween(Date startDate, Date endDate);
 
     @Query("select distinct a " +

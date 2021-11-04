@@ -9,29 +9,46 @@
             </div>
         </div>
 
-        <form class="formCreation">
-            <div class="form-row align-items-center" style="background-color: transparent">
-                <div class="col-12" style="background-color: transparent">
-                    <label>Текущее движение: {{currentUserMovement.name}} </label><br>
-                </div>
-                <div class="col-12" style="background-color: transparent">
-                    <div v-if="isAdmin==='true'||addAdditionalMovementFlag">
-                        <label>Добавить дополнительное движение:</label>
-                        <div v-for="(movement, index) in allMovements">
-                            <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
-                                   type="checkbox"
-                                   v-model="checkedMovements"/>
-                            <label :for="movement.id"><span>{{movement.name}}</span></label>
-                        </div>
-                    </div>
-                    <div v-else>
-                        <b-button size="sm" variant="info" @click="addAdditionalMovement">
-                            Добавить дополнительное движение
-                        </b-button>
+        <!--        <form class="formCreation">-->
+        <!--            <div class="form-row align-items-center" style="background-color: transparent">-->
+        <!--                <div class="col-12" style="background-color: transparent">-->
+        <!--                    <label>Текущее движение: {{currentUserMovement.name}} </label><br>-->
+        <!--                </div>-->
+        <!--                <div class="col-12" style="background-color: transparent">-->
+        <!--                    <div v-if="isAdmin==='true'||addAdditionalMovementFlag">-->
+        <!--                        <label>Добавить дополнительное движение:</label>-->
+        <!--                        <div v-for="(movement, index) in allMovements">-->
+        <!--                            <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"-->
+        <!--                                   type="checkbox"-->
+        <!--                                   v-model="checkedMovements"/>-->
+        <!--                            <label :for="movement.id"><span>{{movement.name}}</span></label>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                    <div v-else>-->
+        <!--                        <b-button size="sm" variant="info" @click="addAdditionalMovement">-->
+        <!--                            Добавить дополнительное движение-->
+        <!--                        </b-button>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </form>-->
+
+        <form class="formCreation"
+              style="background-color: transparent; margin-left: 15px; margin-bottom: 0; padding-bottom: 0">
+            <div class="col-md-4">
+                <label for="add-name"><b>Тема*</b></label>
+                <div class="col-md-4" style="background-color: transparent">
+                    <div v-for="(movement, index) in allMovements">
+                        <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
+                               type="checkbox"
+                               v-model="checkedMovements"/>
+                        <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"
+                               :for="movement.id"><span>{{movement.name}}</span></label>
                     </div>
                 </div>
             </div>
         </form>
+
         <form class="authorsFormCreation">
             <div class="row" style="background-color: transparent">
                 <div class="col-md-8">
@@ -601,6 +618,7 @@
     import FileAttachment from "../components/FileAttachment";
     import apiAttachment from "./../attachment-api";
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
+    import apiLogin from "../login-api";
 
     export default {
         components: {
@@ -730,7 +748,7 @@
             addAdditionalMovementFlag: false,
             allMovements: [],
             allLanguages: [],
-            currentUserMovement: '',
+            //currentUserMovement: '',
             checkedMovements: [],
 
             editor: CKEditor, // to use the component locally
@@ -1263,10 +1281,16 @@
                 if (this.hasError) {
                 } else {
                     this.addStatus('add-name', (!this.personAddNameTFValues[0]));
+
+                    if (this.checkedMovements.length === 0) {
+                        this.hasError = true;
+                    }
                 }
 
-                if (this.hasError)
+                if (this.hasError) {
+                    alert("Пожалуйста, заполните все обязательные поля");
                     console.log('ERROROROR----------------------------');
+                }
                 return !this.hasError;
             },
 
@@ -1338,9 +1362,9 @@
                 // if (this.selectedCountry) {  //otherwise without this check Country entity is created with null fields values and Person can't be saved
                 //     this.person.location_id = this.selectedCountry;
                 // }
-                this.person.linkList = [];
-                this.person.hashtagList = [];
-                this.person.movementList = [];
+                this.person.linkList.splice(0);
+                this.person.hashtagList.splice(0);
+                this.person.movementList.splice(0);
 
                 for (let i = 0; i < this.links.length; i++) {
                     this.person.linkList[i] = {
@@ -1353,6 +1377,7 @@
                     this.person.hashtagList[i] = this.tags[i];
                 }
 
+
                 let i = 0;
                 for (; i < this.checkedMovements.length; i++) {
                     this.person.movementList[i] = {
@@ -1360,11 +1385,11 @@
                     };
                 }
 
-                if (!this.editMode) {
-                    this.person.movementList[i] = {
-                        "id": this.currentUserMovement.id
-                    };
-                }
+                // if (!this.editMode) {
+                //     this.person.movementList[i] = {
+                //         "id": this.currentUserMovement.id
+                //     };
+                // }
 
                 this.hasError = false;
                 // this.person.testList = [];
@@ -1575,22 +1600,39 @@
                 console.log("STATUS LIST", this.statusList);
             });
 
-            apiMovement.getAllMovements(response => {
-                // this.getLoggedIn();
-                this.allMovements = response.data;
-                // console.log("MOVEMENTS", response.data);
-                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
+            // apiMovement.getAllMovements(response => {
+            //     // this.getLoggedIn();
+            //     this.allMovements = response.data;
+            //     // console.log("MOVEMENTS", response.data);
+            //     this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
+            //
+            //     let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
+            //     let ddd = this.allMovements.indexOf(currentIndex);
+            //     this.allMovements.splice(ddd, 1);
+            //     // console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            //
+            //     apiLanguage.getAllLanguages(response => {
+            //         this.allLanguages = response.data;
+            //         console.log(response.data)
+            //     });
+            // });
 
-                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));
-                let ddd = this.allMovements.indexOf(currentIndex);
-                this.allMovements.splice(ddd, 1);
-                // console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            apiLogin.getAccount().then(
+                response => {
+                    console.log("Account retrieved :" + response.data);
 
-                apiLanguage.getAllLanguages(response => {
-                    this.allLanguages = response.data;
-                    console.log(response.data)
-                });
-            });
+                    this.allMovements = response.data.movementList;
+                    console.log("USER MOVEMENTS", this.allMovements);
+
+                    if (this.allMovements.length === 1) {
+                        this.checkedMovements.push(this.allMovements[0].id);
+                    }
+                }
+            ).catch(
+                error => {
+                    console.log("Error: " + error);
+                }
+            );
 
             if (this.$route.params.person_id != null) {
                 // console.log("-------------------EDIT MODE");
@@ -2015,7 +2057,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
+                        apiOrg.searchOrg(val, r => {
                             this.orgEntries = r;  //returns IdContentDto (id, name(connected from different Org fields in OrgServImpl))
                             //   console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -2034,7 +2076,7 @@
                         if (this.isLoadingPerson) return;
                         this.isLoadingPerson = true;
 
-                        api.searchPerson(val, localStorage.getItem('movement'), r => {
+                        api.searchPerson(val, r => {
                             this.personEntries = r;
                             // console.log("***ПОИСК ******", this.personEntries);
                             this.isLoadingPerson = false;

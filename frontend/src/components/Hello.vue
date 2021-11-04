@@ -96,12 +96,12 @@
             apiLogin.getAccount().then(
                 response => {
                     console.log("Account retrieved :" + response.data);
-                    console.log(localStorage.getItem('movementSingle'));
+                    // console.log(localStorage.getItem('movementSingle'));
 
-                    if (localStorage.getItem('movementSingle') === 'true') {
-                        console.log("~~~~~~~~~~~~~~~~~~hello mounted go ARTICLE");
-                        router.push('/article');
-                    }
+                    // if (localStorage.getItem('movementSingle') === 'true') {
+                    //     console.log("~~~~~~~~~~~~~~~~~~hello mounted go ARTICLE");
+                    //     router.push('/article');
+                    // }
 
                     if (response.data.movementList.length > 1) {
                         // alert("бздынь!");

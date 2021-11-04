@@ -83,9 +83,9 @@ public class ArticleAPI {
     }
 
     @GetMapping("/searchMaterial")
-    public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q,
-                                                             @RequestParam(name = "mov", required = true) Integer mov) {
-        List<IdContentDto> search = articleService.searchMaterial(q, mov);
+    public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q){
+//                                                             @RequestParam(name = "mov", required = true) Integer mov) {
+        List<IdContentDto> search = articleService.searchMaterial(q);
         return ResponseEntity.ok(search);
     }
 

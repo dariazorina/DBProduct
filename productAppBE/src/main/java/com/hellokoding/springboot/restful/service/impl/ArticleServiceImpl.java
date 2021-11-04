@@ -538,8 +538,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public List<IdContentDto> searchMaterial(String q, Integer mov) {
-        List<Article> rrr = articleRepository.findMaterialByTitleAndMovement("%" + q + "%", mov);
+    public List<IdContentDto> searchMaterial(String q) {
+        List<Article> rrr = articleRepository.findMaterialByTitle("%" + q + "%");
         return createResultSearchWithNameAndDate(rrr, null);
     }
 

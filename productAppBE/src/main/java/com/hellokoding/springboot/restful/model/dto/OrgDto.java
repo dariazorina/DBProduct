@@ -96,7 +96,7 @@ public class OrgDto implements Comparable<OrgDto> {
                     if (name.getPriority() == 1) {
                         dtoName += name.getName();
 
-                        if (name.getAbbr() != null) {
+                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
                             dtoName += "/ " + name.getAbbr();
                         }
                     }

@@ -38,9 +38,9 @@ public class PersonAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping("/searchBySurname")
-    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q,
-                                                     @RequestParam(name = "mov", required = true) Integer mov) {
-        List<IdContentDto> search = personService.searchBySurname(q, mov);   //used for ex in material creation
+    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q){ //},
+//                                                     @RequestParam(name = "mov", required = true) Integer mov) {
+        List<IdContentDto> search = personService.searchBySurname(q);   //used for ex in material creation
         return ResponseEntity.ok(search);
     }
 

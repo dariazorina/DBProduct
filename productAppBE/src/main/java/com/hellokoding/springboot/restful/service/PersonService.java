@@ -20,7 +20,7 @@ public interface PersonService {
     void deleteById(Integer id);
     Person save(NewPersonDto stock);
 
-    List<IdContentDto> searchBySurname(String q, Integer mov);
+    List<IdContentDto> searchBySurname(String q);
     List<NewPersonDto> search(List<String> hash, List<String> author, List<String> org, List<String> location);
     List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer id);
 }

@@ -119,9 +119,9 @@ export default {
     },
 
 
-    searchMaterial(searchKey, mov, fn) {
+    searchMaterial(searchKey, fn) {
         AXIOS.get(
-            `/article/searchMaterial?q=` + encodeURIComponent(searchKey) + `&mov=` + mov)
+            `/article/searchMaterial?q=` + encodeURIComponent(searchKey))
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response;

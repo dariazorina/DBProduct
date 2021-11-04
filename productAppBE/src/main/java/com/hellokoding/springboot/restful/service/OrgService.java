@@ -14,7 +14,7 @@ public interface OrgService {
     Optional<OrgDto> findById(Integer id);
     Org save(OrgDto stock);
     void deleteById(Integer id);
-    List<IdContentDto> search(String q, Integer mov);
+    List<IdContentDto> search(String q);
     List<IdContentDto> findByIds(List<Integer> idList);
     List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
 }

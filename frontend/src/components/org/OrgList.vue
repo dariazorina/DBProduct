@@ -144,7 +144,8 @@
                 </td>
 
                 <td class='tdAlignLeft'>
-                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>
+                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>
+<!--                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>-->
                 </td>
                 <td class='tdAlignLeft'>
                     <div v-for="ph in org.hashtagList">
@@ -308,63 +309,9 @@
         },
 
         methods: {
-            // getNameWithPriority(priority) {
-            //     // console.log("*****getNameWithPriority***********getNameWithPriority*********", this.org, this.org.nameList);
-            //     let res = '';
-            //     if (typeof this.entries[0].nameList === 'undefined' || this.entries[0].nameList === null || this.entries[0].nameList.length === 0) {
-            //         return res;
-            //     } else {
-            //         for (let i = 0; i < this.entries[0].nameList.length; i++) {
-            //
-            //             if (this.entries[0].nameList[i].priority === priority) {
-            //                 // console.log("------------------SSS length sss priority", priority);
-            //
-            //                 if (res.length !== 0) {
-            //                     res += this.entries[0].nameList[i].name + ", ";
-            //                 } else {
-            //                     res = this.entries[0].nameList[i].name + ", ";
-            //                 }
-            //
-            //                 if (this.entries[0].nameList[i].abbr != null)
-            //                     if (this.entries[0].nameList[i].abbr.length > 0)
-            //                         res += this.entries[0].nameList[i].abbr + "; ";
-            //                 //console.log("******^^^^^^^^^^^^^****", sss);
-            //             }
-            //         }
-            //         // console.log("*************************", sss);
-            //         return res;
-            //     }
-            // },
-
             getPriorityName(currentOrgParam) {
                 console.log("*************************", this.entries, currentOrgParam);
                 let sss = '';
-                let currentOrg;// = this.entries[0];//currentOrgParam;
-
-                if (typeof currentOrgParam === "number") {
-                    // currentOrg = this.entries[1];//this.entries.find(x => x.id === currentOrgParam);
-                    currentOrg = this.entries.find(x => x.id === currentOrgParam);
-                    console.log("+++++++++++++++++", currentOrg, currentOrgParam);
-
-                    if (typeof currentOrg !== "undefined") {
-                        for (let i = 0; i < currentOrg.nameList.length; i++) {
-                            if (currentOrg.nameList[0].priority === 1) {
-                                sss = currentOrg.nameList[0].name + ", ";
-
-                                if (currentOrg.nameList[0].abbr != null)
-                                    sss += currentOrg.nameList[0].abbr;
-                                // console.log("******^^^^^^^^^^^^^****", sss);
-                            }
-                        }
-                    }
-
-                } else {
-                    //console.log("-------------", currentOrg);
-
-
-                    // console.log("currentOrg.nameList", currentOrg.nameList);
-                    // console.log("currentOrg.nameList.length", currentOrg.nameList.length);
-
                     for (let i = 0; i < currentOrgParam.nameList.length; i++) {
                         if (currentOrgParam.nameList[0].priority === 1) {
                             sss = currentOrgParam.nameList[0].name + ", ";
@@ -374,19 +321,7 @@
                             // console.log("******^^^^^^^^^^^^^****", sss);
                         }
                     }
-                }
-
-                // for (let i = 0; i < this.entries[0].nameList.length; i++) {
-                //       if (this.entries[0].nameList[0].priority === 1) {
-                //           sss = this.entries[0].nameList[0].name + ", ";
-                //
-                //           if (this.entries[0].nameList[0].abbr != null)
-                //               sss += this.entries[0].nameList[0].abbr;
-                //           // console.log("******^^^^^^^^^^^^^****", sss);
-                //       }
-                //  }
-                // console.log("*************************", sss);
-                return sss;
+               return sss;
             },
 
             filterClearButtonActivity(hide, filterClearButtonId) {

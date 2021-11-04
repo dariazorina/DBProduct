@@ -15,7 +15,7 @@ public interface ArticleService {
 
     List<ArticleDto> search(String descr, String text, List<Integer> status, String startDate, String endDate, Integer movement);
 
-    List<IdContentDto> searchMaterial(String q, Integer mov);
+    List<IdContentDto> searchMaterial(String q);
     List<IdContentDto> searchMaterialById(Integer id);
 
     List<ArticleDto> findAll();

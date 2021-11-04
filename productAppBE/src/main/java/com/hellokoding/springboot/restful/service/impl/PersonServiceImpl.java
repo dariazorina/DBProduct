@@ -313,9 +313,9 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<IdContentDto> searchBySurname(String q, Integer mov) {
+    public List<IdContentDto> searchBySurname(String q) {
 
-        List<Person> surnameSearchList = personRepository.findBySurnameAndMovement(q.toLowerCase() + "%", mov);//findBySurnameStartsWithIgnoreCase(q);
+        List<Person> surnameSearchList = personRepository.findBySurname(q.toLowerCase() + "%");//findBySurnameStartsWithIgnoreCase(q);
         //  List<Person> surnameRusSearchList = personRepository.findBySurnameRusAndMovement(q.toLowerCase() + "%", mov);//findBySurnameRusStartsWithIgnoreCase(q);
         //  List<Person> surnameEngSearchList = personRepository.findBySurnameEngAndMovement(q.toLowerCase() + "%", mov);//findBySurnameEngStartsWithIgnoreCase(q);
 

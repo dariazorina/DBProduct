@@ -49,12 +49,12 @@ public class OrgServiceImpl implements OrgService {
     }
 
     @Override
-    public List<IdContentDto> search(String q, Integer mov) {
+    public List<IdContentDto> search(String q) {
 
         List<Org> orgSearchList = new ArrayList<>();
-        String query = q.toLowerCase() + "%";
+        String query = "%" + q.toLowerCase() + "%";
 
-        orgSearchList = orgRepository.findByNameAndMovement(query, mov);
+        orgSearchList = orgRepository.findByName(query);
 //        System.out.println(orgSearchList);
 
         if (orgSearchList.size() > 0) {
@@ -100,7 +100,7 @@ public class OrgServiceImpl implements OrgService {
                             if (name.getPriority() == 1) {
                                 dtoName += name.getName();
 
-                                if (name.getAbbr() != null) {
+                                if (name.getAbbr() != null && name.getAbbr().length() != 0) {
                                     dtoName += "/ " + name.getAbbr();
                                 }
                             }
@@ -132,7 +132,7 @@ public class OrgServiceImpl implements OrgService {
                         for (OrgName name : orgOrgConnection.getOrg().getNameList()) {
                             if (name.getPriority() == 1) {
                                 dtoName += name.getName();
-                                if (name.getAbbr() != null) {
+                                if (name.getAbbr() != null && name.getAbbr().length() != 0) {
                                     dtoName += "/ " + name.getAbbr();
                                 }
                             }
@@ -166,7 +166,7 @@ public class OrgServiceImpl implements OrgService {
                     if (name.getPriority() == 1) {
                         dtoName += name.getName();
 
-                        if (name.getAbbr() != null) {
+                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
                             dtoName += "/ " + name.getAbbr();
                         }
                     }

@@ -18,13 +18,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     //Person getPersonByName(String name);
 
     //List<Person> findBySurnameStartsWithIgnoreCase(String surname);
-    @Query("select distinct p " +
-            "from Person p " +
-            "join p.movementList pML " +
-            "join p.snpList snpL " +
-            "where (pML.id = :movement) " +
-            "and lower(snpL.surname) like :surname")
-    List<Person> findBySurnameAndMovement(String surname, Integer movement);
+//    @Query("select distinct p " +
+//            "from Person p " +
+//            "join p.movementList pML " +
+//            "join p.snpList snpL " +
+//            "where (pML.id = :movement) " +
+//            "and lower(snpL.surname) like :surname")
+//    List<Person> findBySurnameAndMovement(String surname, Integer movement);
 
     ///////////////FILTER/////////////////
     @Query("select distinct a " +

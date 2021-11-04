@@ -92,8 +92,8 @@ export default {
     },
 
 
-    searchPerson(searchKey, mov, fn) {
-        AXIOS.get(`/person/searchBySurname?q=` + encodeURIComponent(searchKey) + `&mov=` + mov)
+    searchPerson(searchKey, fn) {
+        AXIOS.get(`/person/searchBySurname?q=` + encodeURIComponent(searchKey))
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response;

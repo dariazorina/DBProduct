@@ -10,41 +10,42 @@
 
             </div>
 
-            <form class="formCreation">
-                <div class="row" style="background-color: transparent">
-                    <div class="row" v-if="isAdmin==='true'||addAdditionalMovementFlag">
+            <form class="formCreation"
+                  style="background-color: transparent; margin-left: 15px; margin-bottom: 0; padding-bottom: 0">
+                <div class="col-md-4">
+                    <!--                        v-if="isAdmin==='true'||addAdditionalMovementFlag">-->
 
-                        <div class="col-md-2">
-                            <label><b>Текущее движение:</b> </label>
-                            <div>
-                                <input style="margin-right: 5px;" type="checkbox" checked disabled/>
-                                <label>{{currentUserMovement.name}} </label>
-                            </div>
+                    <!--                        <div class="col-md-2">-->
+                    <!--                            <label><b>Текущее движение:</b> </label>-->
+                    <!--                            <div>-->
+                    <!--                                <input style="margin-right: 5px;" type="checkbox" checked disabled/>-->
+                    <!--                                <label>{{currentUserMovement.name}} </label>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+
+                    <label for="add-name"><b>Тема*</b></label>
+                    <div class="col-md-4" style="background-color: transparent">
+                        <!--                            <label><b>Добавить дополнительное движение:</b></label>-->
+
+                        <div v-for="(movement, index) in allMovements">
+                            <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
+                                   type="checkbox"
+                                   v-model="checkedMovements"/>
+                            <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
+                            <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"
+                                   :for="movement.id"><span>{{movement.name}}</span></label>
                         </div>
-
-                        <div class="col-md-4">
-                            <label><b>Добавить дополнительное движение:</b></label>
-
-                            <div v-for="(movement, index) in allMovements">
-                                <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name"
-                                       type="checkbox"
-                                       v-model="checkedMovements"/>
-                                <!--                                    :hidden="movement.id === checkedMovements[0]"                                            :key="toKey"/>-->
-                                <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"
-                                       :for="movement.id"><span>{{movement.name}}</span></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-else class="col-12">
-                        <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"
-                                class="btn btn-info">Добавить дополнительное движение
-                        </button>
                     </div>
                 </div>
+                <!--                    <div v-else class="col-12">-->
+                <!--                        <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"-->
+                <!--                                class="btn btn-info">Добавить дополнительное движение-->
+                <!--                        </button>-->
+                <!--                    </div>-->
             </form>
 
             <form class="authorsFormCreation"
-                  style="background-color: transparent; padding: 25px 0 5px">
+                  style="background-color: transparent; padding: 5px 0 5px">
                 <div class="row" style="background-color: transparent">
                     <div class="col-md-12">
 
@@ -656,6 +657,7 @@
     import apiOrgType from "./../orgtype-api";
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
 
+    import apiLogin from "../login-api";
 
     export default {
         name: 'org-add',
@@ -693,8 +695,8 @@
 
             allMovements: [],
             isAdmin: null,
-            addAdditionalMovementFlag: false,
-            currentUserMovement: '',
+            // addAdditionalMovementFlag: false,
+           // currentUserMovement: '',
             checkedMovements: [],
 
             orgNameTFValues: [],
@@ -798,16 +800,33 @@
                 this.uploadFilesCheckBoxValue = true;
             }
 
-            apiMovement.getAllMovements(response => {
-                // this.getLoggedIn();
-                this.allMovements = response.data;
-                this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            apiLogin.getAccount().then(
+                response => {
+                    console.log("Account retrieved :" + response.data);
 
-                let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-                let ddd = this.allMovements.indexOf(currentIndex);
-                this.allMovements.splice(ddd, 1);
-                //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
-            });
+                    this.allMovements = response.data.movementList;
+                    console.log("USER MOVEMENTS", this.allMovements);
+
+                    if (this.allMovements.length === 1) {
+                        this.checkedMovements.push(this.allMovements[0].id);
+                    }
+                }
+            ).catch(
+                error => {
+                    console.log("Error: " + error);
+                }
+            );
+
+            // apiMovement.getAllMovements(response => {
+            //     // this.getLoggedIn();
+            //     this.allMovements = response.data;
+            //     this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            //
+            //     let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
+            //     let ddd = this.allMovements.indexOf(currentIndex);
+            //     this.allMovements.splice(ddd, 1);
+            //     //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
+            // });
 
             apiHashtag.getAllHashtags(response => {
                 //   this.allTags = response.data;
@@ -1050,6 +1069,7 @@
             getLoggedIn() {
                 this.loggedName = this.$store.getters.getUserName;  //todo change to author, not current user
                 this.isAdmin = localStorage.getItem('isAdmin');
+               // console.log("this.checkedMovements", this.checkedMovements);
             },
 
             removeSelectedOrgType() {
@@ -1164,15 +1184,15 @@
                 //     t = this.checkConnection(this.locationList);
                 // }
                 // if (!t) {
-                    if (this.isObjectValidAndNotEmpty(this.orgList)) {
-                        g = this.checkConnection(this.orgList);
+                if (this.isObjectValidAndNotEmpty(this.orgList)) {
+                    g = this.checkConnection(this.orgList);
 
-                        if (!g) {
-                            if (this.isObjectValidAndNotEmpty(this.personList)) {
-                                s = this.checkConnection(this.personList);
-                            }
+                    if (!g) {
+                        if (this.isObjectValidAndNotEmpty(this.personList)) {
+                            s = this.checkConnection(this.personList);
                         }
                     }
+                }
                 // }
 
                 if (g || s) {
@@ -1194,9 +1214,9 @@
                 }
             },
 
-            addAdditionalMovement() {
-                this.addAdditionalMovementFlag = true;
-            },
+            // addAdditionalMovement() {
+            //     this.addAdditionalMovementFlag = true;
+            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -1214,11 +1234,16 @@
                 if (this.orgNameTFValues[0] != null) {
                     if (this.orgNameTFValues[0].length !== 0) {
                         this.addStatus('add-name', (!this.orgNameTFValues[0]));
+                        if (this.checkedMovements.length === 0) {
+                            this.hasError = true;
+                        }
                     } else this.hasError = true;
                 } else this.hasError = true;
 
-                if (this.hasError)
+                if (this.hasError) {
+                    alert("Пожалуйста, заполните все обязательные поля");
                     console.log('ERROROROR----------------------------');
+                }
                 return !this.hasError;
             },
 
@@ -1271,21 +1296,24 @@
                     // };
                     // this.nameList.push(name);
 
-                    this.org.linkList = [];
-                    this.org.hashtagList = [];
-                    this.org.movementList = [];
+                    this.org.linkList.splice(0);
+                    this.org.hashtagList.splice(0);
+                    this.org.movementList.splice(0);
 
                     let i = 0;
+                   // console.log("+++++++++++++++++++++++++SAVE", this.checkedMovements, this.checkedMovements.length, this.org.movementList);
                     for (; i < this.checkedMovements.length; i++) {
                         this.org.movementList[i] = {
                             "id": this.checkedMovements[i]
                         };
                     }
-                    if (!this.editMode) {
-                        this.org.movementList[i] = {
-                            "id": this.currentUserMovement.id
-                        };
-                    }
+                   // console.log("+++++++++++++++++++++++++SAVE this.org.movementList", this.org.movementList);
+
+                    // if (!this.editMode) {
+                    //     this.org.movementList[i] = {
+                    //         "id": this.currentUserMovement.id
+                    //     };
+                    // }
 
                     for (let i = 0; i < this.links.length; i++) {
                         this.org.linkList[i] = {
@@ -1737,6 +1765,10 @@
         },
 
         watch: {
+            // checkedMovements() {
+            //     console.log("watch this.checkedMovements.length", this.checkedMovements);
+            // },
+
             searchOrgType() {
                 this.$nextTick(() => {
                     if (this.searchOrgTypeLength === 0) {
@@ -1788,7 +1820,7 @@
                         this.isLoadingPerson = true;
 
 
-                        apiPerson.searchPerson(val, localStorage.getItem('movement'), r => {
+                        apiPerson.searchPerson(val, r => {
                             this.personEntries = r;
                             console.log("-------------*-*-*-*----------------", this.personEntries);
                             this.isLoadingPerson = false;
@@ -1810,7 +1842,7 @@
 
                         //console.log("seracg org", val);
 
-                        apiOrg.searchOrg(val, localStorage.getItem('movement'), r => {
+                        apiOrg.searchOrg(val, r => {
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             console.log("****", this.orgEntries);
                             this.isLoadingOrg = false;
@@ -1833,7 +1865,7 @@
                         if (this.isLoadingArticle) return;
                         this.isLoadingArticle = true;
 
-                        apiArticle.searchMaterial(val, localStorage.getItem('movement'), r => {
+                        apiArticle.searchMaterial(val, r => {
                             this.articleEntries = r;
                             console.log("*№*№*№*", this.articleEntries);
                             this.isLoadingArticle = false;
