@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <link href="../dbnm.css" rel="stylesheet"/>
         <div class="actions" style="background-color: transparent; margin: 0">
             <a class="btn btn-default">
@@ -37,7 +37,7 @@
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
                         <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0" @click="sort('name')">
                             Название
                         </div>
                         <div class='col-sm-3'
@@ -54,22 +54,23 @@
                 <th class='tdAlignLeft'>Год закрытия</th>
 
 
-                <th class='tdAlignLeft'>Персоны</th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
-                    <div class="row" style="background-color: transparent">
-                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                        <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                            Организация
-                        </div>
-                        <div class='col-sm-3'
-                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="orgFilterId">
-                            <v-btn text icon x-small @click="resetFilter(1)">
-                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                            </v-btn>
-                        </div>
-                    </div>
+<!--                <th class='tdAlignLeft'>Персоны</th>-->
+<!--                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">-->
+<!--                    <div class="row" style="background-color: transparent">-->
+<!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
+<!--                        <div class='headerLink col-sm-6'-->
+<!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
+<!--                            Организация-->
+<!--                        </div>-->
+<!--                        <div class='col-sm-3'-->
+<!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
+<!--                             id="orgFilterId">-->
+<!--                            <v-btn text icon x-small @click="resetFilter(1)">-->
+<!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
+<!--                            </v-btn>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
@@ -128,7 +129,8 @@
                 </td>
                 <td><a>
                     <router-link :to="{name: 'org-details', params: {org_id: org.id}}">
-                        {{ getPriorityName(org) }}
+                        {{ org.name }}
+<!--                        {{ getPriorityName(org) }}-->
                         <!--                        {{ getNameWithPriority(1) }}-->
                     </router-link>
                 </a></td>
@@ -139,14 +141,14 @@
                 <td style="text-align: center; padding-left: 0">{{org.closureYear}}</td>
 
 
-                <td class='tdAlignLeft'>
-                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>
-                </td>
+<!--                <td class='tdAlignLeft'>-->
+<!--                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>-->
+<!--                </td>-->
 
-                <td class='tdAlignLeft'>
-                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>
-<!--                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>-->
-                </td>
+<!--                <td class='tdAlignLeft'>-->
+<!--                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>-->
+<!--&lt;!&ndash;                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>&ndash;&gt;-->
+<!--                </td>-->
                 <td class='tdAlignLeft'>
                     <div v-for="ph in org.hashtagList">
                         {{ph}}
@@ -253,7 +255,8 @@
                 selectedOrg: null,
                 previousSelectedOrg: null,
 
-                currentSort: 'foundationYear',
+                currentSort: 'name',
+                // currentSort: 'foundationYear',
                 currentSortDir: 'asc',
 
                 filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
@@ -309,20 +312,36 @@
         },
 
         methods: {
-            getPriorityName(currentOrgParam) {
-                console.log("*************************", this.entries, currentOrgParam);
-                let sss = '';
-                    for (let i = 0; i < currentOrgParam.nameList.length; i++) {
-                        if (currentOrgParam.nameList[0].priority === 1) {
-                            sss = currentOrgParam.nameList[0].name + ", ";
+            complexMovementCreation(movArray) {
 
-                            if (currentOrgParam.nameList[0].abbr != null)
-                                sss += currentOrgParam.nameList[0].abbr;
-                            // console.log("******^^^^^^^^^^^^^****", sss);
-                        }
-                    }
-               return sss;
+                let result = '';
+                let complexMov = '&mov=';
+                let i = 0;
+
+                for (; i < movArray.length - 1; i++) {
+                    result += movArray[i] + complexMov;
+                }
+
+                result += movArray[i];
+
+               // console.log("complexMOVVVCreation", result);
+                return result;
             },
+
+            // getPriorityName(currentOrgParam) {
+            //     //console.log("*************************", this.entries, currentOrgParam);
+            //     let sss = '';
+            //         for (let i = 0; i < currentOrgParam.nameList.length; i++) {
+            //             if (currentOrgParam.nameList[0].priority === 1) {
+            //                 sss = currentOrgParam.nameList[0].name + ", ";
+            //
+            //                 if (currentOrgParam.nameList[0].abbr != null)
+            //                     sss += currentOrgParam.nameList[0].abbr;
+            //                 // console.log("******^^^^^^^^^^^^^****", sss);
+            //             }
+            //         }
+            //    return sss;
+            // },
 
             filterClearButtonActivity(hide, filterClearButtonId) {
                 if (hide)
@@ -435,7 +454,7 @@
 
             setColor(currentOrg, color) {
                 currentOrg.rowColor = color;
-                api.update(currentOrg.id, currentOrg, r => {
+                apiOrg.updateColor(currentOrg.id, currentOrg, r => {
                     console.log("DONEEEEEE SAVE");
                 });
                 this.alternate('mainOrgListTable');
@@ -462,16 +481,16 @@
                 }
             },
 
-            getPersonNameById(id) {
-                let result = '';
-                let currentP = this.orgPersonEntities.find(x => x.id === id);
-
-                //console.log("PERSNNNN", currentP, id, this.orgPersonEntities);
-                if (this.isArrayValidAndNotEmpty(currentP)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentP.content;
-                }
-                return result;
-            },
+            // getPersonNameById(id) {
+            //     let result = '';
+            //     let currentP = this.orgPersonEntities.find(x => x.id === id);
+            //
+            //     //console.log("PERSNNNN", currentP, id, this.orgPersonEntities);
+            //     if (this.isArrayValidAndNotEmpty(currentP)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentP.content;
+            //     }
+            //     return result;
+            // },
 
             getLocationCellById(id) {
                 let result = '';
@@ -519,19 +538,19 @@
 //                console.log("STATUS LIST", this.statusList);
             });
 
-            console.log("MOVEMENTS", localStorage.getItem('movement'));
+            // console.log("MOVEMENTS", localStorage.getItem('movement'));
 
-            apiOrg.getAllOrgs(localStorage.getItem('movement'), response => {
+            apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+
                 // this.persons = response.data;
                 this.entries = response.data;
                 console.log("ORGSSSS", response.data, this.entries.length);
 
                 for (let i = 0; i < this.entries.length; i++) {
 
-                    // this.orgOrgIds.splice(0);
-                    for (let j = 0; j < this.entries[i].personList.length; j++) {
-                        this.orgPersonIds.push(this.entries[i].personList[j].itemId);
-                    }
+                    // for (let j = 0; j < this.entries[i].personList.length; j++) {
+                    //     this.orgPersonIds.push(this.entries[i].personList[j].itemId);
+                    // }
 
                     for (let j = 0; j < this.entries[i].locationList.length; j++) {
                         // console.log("^@@@@@@@@@^^^^^^^^^^^", this.entries[i].locationList);
@@ -539,9 +558,9 @@
                     }
                 }
 
-                apiPerson.getPersonsByIds(this.orgPersonIds, response => {
-                    this.orgPersonEntities = response.data;
-                });
+                // apiPerson.getPersonsByIds(this.orgPersonIds, response => {
+                //     this.orgPersonEntities = response.data;
+                // });
 
                 apiCountry.getLocationsByIds(this.orgLocationIds, response => {
                     this.orgLocationEntities = response.data;

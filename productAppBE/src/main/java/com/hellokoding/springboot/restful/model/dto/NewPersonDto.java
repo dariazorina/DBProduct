@@ -24,7 +24,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
     private List<String> hashtagList;
     private List<ItemConnectionDto> orgList;
     private List<ItemConnectionDto> locationList;
-    private List<ItemConnectionDto> personList;
+    private List<NameConnectionDto> personList;
     private List<ItemConnectionDto> isourceList;
     private List<Movement> movementList;
 //    private String photo;
@@ -35,7 +35,7 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
 
     public NewPersonDto(Integer id, List<Movement> movementList, List<SnpDto> snpList, String description,
                         String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                        List<ItemConnectionDto> orgList, List<ItemConnectionDto> locationList,  List<ItemConnectionDto> personList,
+                        List<ItemConnectionDto> orgList, List<ItemConnectionDto> locationList,  List<NameConnectionDto> personList,
                         List<ItemConnectionDto> isourceList, Integer bYear, Integer dYear, String status) {
         this.id = id;
         this.movementList = movementList;
@@ -109,9 +109,24 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
             this.isourceList.add(isourceConnectionDto);
         }
 
-        ItemConnectionDto personConnectionDto;
+        String dtoName = "";
+        NameConnectionDto personConnectionDto;
         for (PersonPersonConnection connection : p.getPersonConnections()) {
-            personConnectionDto = new ItemConnectionDto();
+            personConnectionDto = new NameConnectionDto();
+
+            if (p.getSnpList() != null) {
+                for (SurnameNamePatr name : p.getSnpList()) {
+                    if (name.getPriority() == 1) {
+                        dtoName = name.getSurname();
+                        dtoName += " " + name.getName();
+                        if (name.getPatronymic() != null) {
+                            dtoName += " " + name.getPatronymic();
+                        }
+                    }
+                }
+            }
+
+            personConnectionDto.setName(dtoName);
             personConnectionDto.setItemId(connection.getConnectedPerson().getId());
             personConnectionDto.setConnection(connection.getConnection());
             personConnectionDto.setComment(connection.getComment());
@@ -249,11 +264,11 @@ public class NewPersonDto implements Comparable<NewPersonDto> {
         this.isourceList = isourceList;
     }
 
-    public List<ItemConnectionDto> getPersonList() {
+    public List<NameConnectionDto> getPersonList() {
         return personList;
     }
 
-    public void setPersonList(List<ItemConnectionDto> personList) {
+    public void setPersonList(List<NameConnectionDto> personList) {
         this.personList = personList;
     }
 //    public byte[] getPhoto() {

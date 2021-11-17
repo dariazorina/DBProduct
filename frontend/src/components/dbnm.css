@@ -9,6 +9,26 @@
 /*    url('webfont.svg#svgFontName') format('svg'); !* Legacy iOS *!*/
 /*}*/
 
+.noselect {
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
+
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*-o-user-select: none;*/
+    /*user-select: none;*/
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
 input[type=radio], input[type=checkbox].yyy {
     margin: 10px 10px 0px 0px;
     /*padding: 0px 0px 0px 10px;*/

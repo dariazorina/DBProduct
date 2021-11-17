@@ -9,11 +9,52 @@ import java.util.Set;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    @Query("select distinct p " +
-            "from Person p " +
+    @Query("select p " +
+            "from Person p  " +
             "join p.movementList pML " +
-            "where (pML.id = :movement) ")
-    List<Person> findAllWithMovement(Integer movement);
+            "left join p.snpList snpL where snpL.priority = 1" +
+            " and (pML.id in :movement)  group by p.id, snpL.surname " +
+            "order by snpL.surname asc")
+    List<Person> findAllWithMovement(List<Integer> movement);
+
+
+///*****************    last working version(with duplication)
+//    @Query("select p " +
+//            "from Person p  " +
+//            "join p.movementList pML " +
+//            "left join p.snpList snpL where snpL.priority = 1" +
+//            " and (pML.id in :movement) " +
+//            "order by snpL.surname asc")
+//    List<Person> findAllWithMovement(List<Integer> movement);
+    ////**************
+
+//    @Query("select p " +
+//            "from Person p  " +
+//            "join p.movementList pML " +
+//            "left join p.snpList snpL " +
+//            "where (pML.id in :movement) and " +
+//            "snpL.priority = 1 " +
+//            "order by snpL.surname asc")
+//    List<Person> findAllWithMovement(List<Integer> movement);
+
+
+
+//    select *
+//    from Person p
+//    join PersonMovements pm on p.person_id=pm.person_id
+//    left join PersonSurnames ps on p.person_id=ps.person_id and ps.priority=1
+//    where pm.id in (...)
+//    order by ps.surname
+
+
+//    @Query(
+//            value = "select * " +
+//                    "from Person p " +
+//                    "join p.movementList pML on p.person_id = pML.person_id" +
+//                    "left join p.snpList sn on p.person_id sn.priority = 1",
+//            nativeQuery = true)
+//    List<Person> findAllWithMovement(List<Integer> movement);
+
 
     //Person getPersonByName(String name);
 

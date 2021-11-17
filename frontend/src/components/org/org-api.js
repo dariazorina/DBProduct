@@ -3,7 +3,7 @@ import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
-    timeout: 1000
+    timeout: 10000
 });
 
 
@@ -23,6 +23,18 @@ export default {
     update(id, org, fn) {
         AXIOS
             .put('/org/' + id, org)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            })
+    },
+
+    updateColor(id, org, fn) {
+        AXIOS
+            .put('/org/color/' + id, org)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

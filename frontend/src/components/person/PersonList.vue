@@ -1,5 +1,5 @@
 <template id="person">
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <link href="../dbnm.css" rel="stylesheet"/>
         <div class="actions" style="background-color: transparent; margin: 0">
             <a class="btn btn-default">
@@ -40,11 +40,11 @@
                         </div>
                     </div>
                 </th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)"   @click="sort('snp')">
                 <div class="row" style="background-color: transparent">
                     <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
                     <div class='headerLink col-sm-6'
-                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0;">
                         ФИО
                     </div>
                     <div class='col-sm-3'
@@ -57,7 +57,7 @@
                 </div>
 
 
-                <th class='tdAlignLeft'>Должность</th>
+<!--                <th class='tdAlignLeft'>Должность</th>-->
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
@@ -91,7 +91,7 @@
                             </v-btn>
                         </div>
                     </div>
-                <th style="width:10%" class="col-sm-2">Действия</th>
+                <th style="width:4%" class="col-sm-2">Действия</th>
             </tr>
             </thead>
             <tbody>
@@ -136,13 +136,19 @@
 
                 <td><a>
                     <router-link :to="{name: 'person-details', params: {person_id: person.id}}">
-                        {{ getPrioritySNP(person) }}
+                        {{ person.snp }}
                     </router-link>
                 </a></td>
 
-                <td style="text-align: right; padding-right: 20px">
-                                        <div v-for="org in person.orgList">{{org.connection}}</div>
-                </td>
+<!--                <td><a>-->
+<!--                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">-->
+<!--                        {{ getPrioritySNP(person) }}-->
+<!--                    </router-link>-->
+<!--                </a></td>-->
+
+<!--                <td style="text-align: right; padding-right: 20px">-->
+<!--                                        <div v-for="org in person.orgList">{{org.connection}}</div>-->
+<!--                </td>-->
 
                 <td class='tdAlignLeft'>
                                         <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
@@ -255,7 +261,8 @@
                 selectedPerson: null,
                 previousSelectedPerson: null,
 
-                currentSort: 'birthYear',
+                currentSort: 'snp',
+                // currentSort: 'snp',
                 currentSortDir: 'asc',
 
                 filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
@@ -322,25 +329,40 @@
         },
 
         methods: {
+            complexMovementCreation(movArray) {
 
-            getPrioritySNP(currentPerson) {
-              //  console.log("*************************", this.entries);
-                let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
+                let result = '';
+                let complexMov = '&mov=';
+                let i = 0;
 
-                    for (let i = 0; i < currentPerson.snpList.length; i++) {
-                        //console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
+                for (; i < movArray.length - 1; i++) {
+                    result += movArray[i] + complexMov;
+                }
 
-                        if (currentPerson.snpList[i].priority === 1) {
-                            sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
+                result += movArray[i];
 
-                            if (currentPerson.snpList[i].patronymic != null)
-                                sss += currentPerson.snpList[i].patronymic;
-                           // console.log("******^^^^^^^^^^^^^****", sss);
-                        }
-                    }
-                // console.log("*************************", sss);
-                return sss;
+               // console.log("complexMOVVVCreation", result);
+                return result;
             },
+
+            // getPrioritySNP(currentPerson) {
+            //   //  console.log("*************************", this.entries);
+            //     let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
+            //
+            //         for (let i = 0; i < currentPerson.snpList.length; i++) {
+            //             //console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
+            //
+            //             if (currentPerson.snpList[i].priority === 1) {
+            //                 sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
+            //
+            //                 if (currentPerson.snpList[i].patronymic != null)
+            //                     sss += currentPerson.snpList[i].patronymic;
+            //                // console.log("******^^^^^^^^^^^^^****", sss);
+            //             }
+            //         }
+            //     // console.log("*************************", sss);
+            //     return sss;
+            // },
 
             filterClearButtonActivity(hide, filterClearButtonId) {
                 if (hide)
@@ -458,7 +480,7 @@
 
             setColor(currentPerson, color) {
                 currentPerson.rowColor = color;
-                api.update(currentPerson.id, currentPerson, r => {
+                api.updateColor(currentPerson.id, currentPerson, r => {
                     console.log("DONEEEEEE SAVE");
                 });
                 this.alternate('mainPersonListTable');
@@ -552,10 +574,10 @@
 //                console.log("STATUS LIST", this.statusList);
             });
 
-            api.getAllPersons(localStorage.getItem('movement'), response => {
+            api.getAllPersons(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
                 // this.persons = response.data;
                 this.entries = response.data;
-               // console.log("PERSONS", response.data, this.entries.length);
+                console.log("PERSONS", response.data, this.entries.length);
 
                 for (let i = 0; i < this.entries.length; i++) {
 

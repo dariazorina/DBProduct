@@ -2,10 +2,7 @@ package com.hellokoding.springboot.restful.service.impl;
 
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
-import com.hellokoding.springboot.restful.model.dto.ArticleDto;
-import com.hellokoding.springboot.restful.model.dto.IdContentDto;
-import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
-import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
+import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+//import javax.naming.Name;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,50 +36,51 @@ public class ArticleServiceImpl implements ArticleService {
     private final UrlLinkService urlLinkService;
 
     @Override
-    public List<ArticleDto> findAll() {
-        List<ArticleDto> dtoAllArticleList = new ArrayList<>();
-        List<Article> all = articleRepository.findAll();
-
-        ArticleDto articleDto;
-        for (Article article : all) {
-            articleDto = new ArticleDto(article);
-            articleDto.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
-
-            dtoAllArticleList.add(articleDto);
-        }
-        return dtoAllArticleList;
-    }
-
-    @Override
     public Optional<ArticleDto> findById(Integer id) {
         Optional<Article> byId = articleRepository.findById(id);
         Optional<ArticleDto> byIdDto;
 
-        byIdDto = Optional.of(new ArticleDto(byId.get()));
-        byIdDto.get().setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(byId.get()));
+        byIdDto = Optional.of(new ArticleDto(byId.get(), ctypeRepository.findAll()));
+//        byIdDto = Optional.of(new ArticleDto(byId.get()));
+//        byIdDto.get().setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(byId.get()));
         return byIdDto;
     }
 
 
-    public ArrayList<ItemConnectionDto> createMaterialConnectionsListForArticleDtoFromArticle(Article article) {
+//    public ArrayList<NameConnectionDto> createMaterialConnectionsListForArticleDtoFromArticle(Article article) {
+//
+//        ArrayList<NameConnectionDto> materialList = new ArrayList<>();
+//        if (article.getMaterialConnections().size() > 0) {
+//            ItemConnectionDto materialConnectionDto;
+//
+//            for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
+//                materialConnectionDto = new NameConnectionDto();
+//
+//                Optional<ConnectionType> ct = (ctypeRepository.findById(connection.getConnection()));
+//                if (ct.isPresent()) {
+//                    materialConnectionDto.setItemId(connection.getMaterial().getId());
+//                    materialConnectionDto.setConnection(ct.get().getType());
+//                    materialConnectionDto.setComment(connection.getComment());
+//                }
+//                materialList.add(materialConnectionDto);
+//            }
+//        }
+//        return materialList;
+//    }
 
-        ArrayList<ItemConnectionDto> materialList = new ArrayList<>();
-        if (article.getMaterialConnections().size() > 0) {
-            ItemConnectionDto materialConnectionDto;
+    @Override
+    @Transactional
+    public Article saveColor(ArticleDtoForMainList articleDto) {
 
-            for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
-                materialConnectionDto = new ItemConnectionDto();
+        Article article;
+        if (articleRepository.findById(articleDto.getId()).isPresent()) {
+            article = articleRepository.findById(articleDto.getId()).get();
 
-                Optional<ConnectionType> ct = (ctypeRepository.findById(connection.getConnection()));
-                if (ct.isPresent()) {
-                    materialConnectionDto.setItemId(connection.getMaterial().getId());
-                    materialConnectionDto.setConnection(ct.get().getType());
-                    materialConnectionDto.setComment(connection.getComment());
-                }
-                materialList.add(materialConnectionDto);
-            }
-        }
-        return materialList;
+            article.setRgbSelection(articleDto.getRowColor());
+            return articleRepository.save(article);
+
+        } else
+            return null;
     }
 
     @Override
@@ -273,7 +273,7 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleMaterialConnection> symmConnectionList;// = new ArrayList<>();
 
 
-        for (ItemConnectionDto connectionDto : articleDto.getMaterialList()) {
+        for (NameConnectionDto connectionDto : articleDto.getMaterialList()) {
             materialId = connectionDto.getItemId();
             if (articleRepository.findById(materialId).isPresent()) {
                 Optional<ConnectionType> ct = (ctypeRepository.findByType(connectionDto.getConnection()));
@@ -327,6 +327,31 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
         }
+
+        if (article.getId() != null) {
+            //delete symm connections
+            List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(article.getId());
+            List<NameConnectionDto> resultListConnectedOrgsForOrg = articleDto.getMaterialList();
+
+            List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
+                    .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
+                    .collect(Collectors.toList());
+
+            for (NameConnectionDto nmdto : differences) {
+                material = articleRepository.findById(nmdto.getItemId()).get();
+
+                //remove already existed entities
+                List<ArticleMaterialConnection> elList = new ArrayList<>();
+                for (ArticleMaterialConnection articleMaterialConnection : material.getMaterialConnections()) {
+                    if (articleMaterialConnection.getMaterial().getId().equals(article.getId())) {
+                        elList.add(articleMaterialConnection);
+                    }
+                }
+                material.getMaterialConnections().removeAll(elList);
+                articleRepository.flush();
+            }
+        }
+
         if (article.getMaterialConnections() == null) {
             article.setMaterialConnections(articleConnectionList);
         } else {
@@ -433,7 +458,7 @@ public class ArticleServiceImpl implements ArticleService {
         return createResultSearchWithNameAndDate(searchRes, null);
     }
 
-    public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
+    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
 
         Article connectedArticle, article;
         String dtoName = "", connection = "", comment = "";
@@ -461,8 +486,8 @@ public class ArticleServiceImpl implements ArticleService {
 //                    searchRes.add(unproxiedPlayer);
 //            }//for
 
-            for (Integer id : idList) { //simple connections
-                Optional<Article> connArticleOpt = articleRepository.findById(id);
+            for (ArticleMaterialConnection el : article.getMaterialConnections()) { //simple connections
+                Optional<Article> connArticleOpt = articleRepository.findById(el.getMaterial().getId());
 
                 if (connArticleOpt.isPresent()) {
                     connectedArticle = connArticleOpt.get();             //   searchRes.add(l.get());
@@ -556,7 +581,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     public List<IdContentDto> createResultSearchWithNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
-
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
 
@@ -608,9 +632,9 @@ public class ArticleServiceImpl implements ArticleService {
         return finalList;
     }
 
-    public List<ArticleDto> search(String description, String text, List<Integer> status, String startDate, String endDate, Integer movement) {
+    public List<ArticleDtoForMainList> search(String description, String text, List<Integer> status, String startDate, String endDate, List<Integer> movement) {
 
-        List<ArticleDto> dtoSearchList = new ArrayList<>();
+        List<ArticleDtoForMainList> dtoSearchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -642,10 +666,10 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
 
-        ArticleDto dtoArticle;
+        ArticleDtoForMainList dtoArticle;
         for (Article article : searchList) {
-            dtoArticle = new ArticleDto(article);
-            dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
+            dtoArticle = new ArticleDtoForMainList(article);
+            /////dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
             dtoSearchList.add(dtoArticle);
         }
         return dtoSearchList;
@@ -653,9 +677,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
-    public List<ArticleDto> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
-                                   List<String> location, List<String> language, String description, String text, List<String> misc,
-                                   List<Integer> status, String startDate, String endDate, Integer movement) {
+    public List<ArticleDtoForMainList> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
+                                              List<String> location, List<String> language, String description, String text, List<String> misc,
+                                              List<Integer> status, String startDate, String endDate, List<Integer> movement) {
 
         boolean isSingleFilter = false;
         int hashCurrentSize = 0;
@@ -681,7 +705,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 //        List<Article> searchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();
-        List<ArticleDto> dtoSearchList = new ArrayList<>();
+        List<ArticleDtoForMainList> dtoSearchList = new ArrayList<>();
 
         List<String> titleList = new ArrayList<>();
         List<String> hashList = new ArrayList<>();
@@ -997,10 +1021,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
 
-        ArticleDto dtoArticle;
+        ArticleDtoForMainList dtoArticle;
         for (Article article : searchList) {
-            dtoArticle = new ArticleDto(article);
-            dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
+            dtoArticle = new ArticleDtoForMainList(article);
+/////            dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
             dtoSearchList.add(dtoArticle);
         }
         return dtoSearchList;

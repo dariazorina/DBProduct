@@ -1,5 +1,5 @@
 <template id="person-details">
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <link href="../dbnm.css" rel="stylesheet"/>
         <iframe id="iframeToDownload" style="display:none;"></iframe>
 
@@ -82,7 +82,8 @@
                             <div v-for="org in person.orgList">
                                 <a>
                                     <router-link
-                                            :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                            :to="{name: 'org-details', params: {org_id: org.itemId}}"
+                                            target="_blank">
                                         {{showOrgAndPosition(org.itemId)}}
                                     </router-link>
                                 </a>
@@ -360,8 +361,7 @@
 
             createComplexPersonById(prsn) {
                 let result = '';
-                let currentPerson = prsn;//this.personPersonEntities.find(x => x.itemId === id);
-                //console.log("IIIIIIIIIIIIIIIIIID", id, this.personPersonEntities, currentPerson);
+                let currentPerson = prsn;
 
                 if (currentPerson != null) {
                     result = currentPerson.name;
@@ -427,7 +427,7 @@
                     // console.log("PRSN person", this.person.personList, this.personPersonIds);
                 }
 
-                api.getPersonsByIdsAndSymmetrically(this.person.id, this.personPersonIds, response => {
+                api.getPersonsByIdsAndSymmetrically(this.person.id, response => {
                     this.personPersonEntities = response.data;
                     //console.log("``````````````````persperspers", this.personPersonEntities);
 

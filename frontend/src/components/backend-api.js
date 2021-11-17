@@ -3,7 +3,7 @@ import router from "../router";
 
 const AXIOS = axios.create({
     baseURL: `/api`,
-    timeout: 1000
+    timeout: 10000
 });
 
 

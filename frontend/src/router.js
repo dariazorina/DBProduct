@@ -78,7 +78,7 @@ const router = new Router({
 
         {path: '/country', component: CountryList},
         {path: '/country/add', component: CountryAdd, name: 'country-add'},
-        {path: '/country/:country_id/edit', component: CountryEdit, name: 'country-edit'},
+        {path: '/country/:country_id/edit', component: CountryAdd, name: 'country-add'},
         {path: '/country/:country_id/delete', component: CountryDelete, name: 'country-delete'},
 
         {path: '/movement', component: MovementList, meta: {isAdminPage: true}},
@@ -166,6 +166,16 @@ router.beforeEach((to, from, next) => {
         console.log("record.meta.isAdminPage else else");
         next(); // make sure to always call next()!
     }
+});
+
+const DEFAULT_TITLE = 'АИС ЦМГИ';
+router.afterEach((to, from) => {
+    // Use next tick to handle router history correctly
+    // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+    Vue.nextTick(() => {
+        document.title = to.meta.title || DEFAULT_TITLE;
+        //console.log("1000000000000000000000000111111", document.title);
+    });
 });
 
 export default router;

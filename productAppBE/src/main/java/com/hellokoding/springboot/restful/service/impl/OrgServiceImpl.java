@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +35,15 @@ public class OrgServiceImpl implements OrgService {
         return all;
     }
 
-    public List<OrgDto> findAll(Integer mov) {
+    public List<OrgDtoForMainList> findAll(List<Integer> mov) {
 
-        List<OrgDto> dtoAllOrgList = new ArrayList<>();
-        List<Org> allOrg = orgRepository.findAllWithMovement(mov);
+        List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
+        List<Org> allOrg = orgRepository.findAllWithMovements(mov);
 
-        OrgDto currentOrgDto;
+        OrgDtoForMainList currentOrgDto;
         for (Org o : allOrg) {
-            currentOrgDto = new OrgDto(o);
-            currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId()));
+            currentOrgDto = new OrgDtoForMainList(o);
+            //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
             dtoAllOrgList.add(currentOrgDto);
         }
         return dtoAllOrgList;
@@ -148,7 +149,6 @@ public class OrgServiceImpl implements OrgService {
                     NameConnectionDto orgDto = new NameConnectionDto(orgOrgConnection.getOrg().getId(), dtoName, connection, comment);
                     finalList.add(orgDto);
                     dtoName = "";
-                    connection = "";
                     comment = "";
                 }
             }
@@ -162,14 +162,50 @@ public class OrgServiceImpl implements OrgService {
 
         for (Org org : orgList) {
             if (org.getNameList() != null) {
-                for (OrgName name : org.getNameList()) {
-                    if (name.getPriority() == 1) {
-                        dtoName += name.getName();
+//// Generic method to check if an object array contains a particular value
+//                public static<T> boolean isPresent(T[] a, T target)
+//                {
+//                    return Arrays.stream(a)
+//                            .anyMatch(x -> target.equals(x));    // or use `target::equals`
+//                }
+//
+//                Or using filters:
+//
+//// Generic method to check if an object array contains a particular value
+//                public static<T> boolean isPresent(T[] a, T target)
+//                {
+//                    return Arrays.stream(a)
+//                            .filter(x -> target.equals(x))        // or use `target::equals`
+//                            .count() > 0;
+//                }
+
+///////////      name with prioirity = 1 set the first /  ////////////////
+                Integer prStatus = 1;
+                List<OrgName> currentOrgList = org.getNameList();
+
+                OrgName orgNamePr1 = currentOrgList.stream()
+                        .filter(orgName -> prStatus.equals(orgName.getPriority()))
+                        .findAny()
+                        .orElse(null);
+
+                if (orgNamePr1 != null) {
+                    dtoName += orgNamePr1.getName();
+
+                    if (orgNamePr1.getAbbr() != null && orgNamePr1.getAbbr().length() != 0) {
+                        dtoName += "/ " + orgNamePr1.getAbbr();
+                    }
+
+                    for (OrgName name : org.getNameList()) {
+                        if (name.getPriority() == 0) {
+                            dtoName += "/ " + name.getName();
+                        }
 
                         if (name.getAbbr() != null && name.getAbbr().length() != 0) {
                             dtoName += "/ " + name.getAbbr();
                         }
-                    }
+                    }//for
+                } else {
+                    dtoName += "error";
                 }
             }
             IdContentDto orgDto = new IdContentDto(org.getId(), dtoName);
@@ -189,6 +225,20 @@ public class OrgServiceImpl implements OrgService {
         orgDto = Optional.of(new OrgDto(org.get()));
 
         return orgDto;
+    }
+
+    @Override
+    public Org saveColor(OrgDtoForMainList orgDto) {
+
+        Org org;
+        if (orgRepository.findById(orgDto.getId()).isPresent()) {
+            org = orgRepository.findById(orgDto.getId()).get();
+
+            org.setRgbSelection(orgDto.getRowColor());
+            return orgRepository.save(org);
+
+        } else
+            return null;
     }
 
     @Override
@@ -343,6 +393,30 @@ public class OrgServiceImpl implements OrgService {
                 }
                 isSymmConnection = false;
             }
+        }//for (NameConnectionDto posDto : orgDto.getOrgList())
+
+        if (org.getId() != null) {
+            //delete symm connections
+            List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(org.getId());
+            List<NameConnectionDto> resultListConnectedOrgsForOrg = orgDto.getOrgList();
+
+            List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
+                    .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
+                    .collect(Collectors.toList());
+
+            for (NameConnectionDto nmdto : differences) {
+                connectedOrg = orgRepository.findById(nmdto.getItemId()).get();
+
+                //remove already existed entities
+                List<OrgOrgConnection> elList = new ArrayList<>();
+                for (OrgOrgConnection orgOrgConn : connectedOrg.getOrgConnections()) {
+                    if (orgOrgConn.getConnectedOrg().getId().equals(org.getId())) {
+                        elList.add(orgOrgConn);
+                    }
+                }
+                connectedOrg.getOrgConnections().removeAll(elList);
+                orgRepository.flush();
+            }
         }
 
         if (org.getOrgConnections() == null) {
@@ -351,6 +425,7 @@ public class OrgServiceImpl implements OrgService {
             org.getOrgConnections().addAll(orgOrgList);
         }
 
+        ///////////
         ///location
         if (org.getLocationConnections() != null) {
             org.getLocationConnections().clear();
@@ -568,8 +643,8 @@ public class OrgServiceImpl implements OrgService {
                 byId.ifPresent(org::setOrgType);
             }
         }
-        if (connectedOrg != null)
-            orgRepository.save(connectedOrg);
+//        if (connectedOrg != null)
+//            orgRepository.save(connectedOrg);
         return orgRepository.save(org);
     }
 

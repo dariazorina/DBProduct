@@ -437,11 +437,25 @@
                             </b-form-select>
                             <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                         </div>
-                        <label class="col-2 col-form-label labelInCreation"
-                               style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
-                            цвет выделения</label>
-                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">
-                            <v-swatches v-model="article.rowColor" popover-x="left"></v-swatches>
+
+                    </div>
+                    <div class="form-row align-items-center" style="background-color: transparent">
+                        <div class="form-row align-items-center col-sm-12"
+                             style="background-color: transparent; padding-left: 10px">
+                            <div class="form-group" style="padding-top: 25px">
+                                <input style="margin-right: 5px" type="checkbox" id="checkbox_сolor"
+                                       v-model="disableColorCheckBoxFlag">
+                                <label for="checkbox">Снять выделение</label>
+                            </div>
+                            <!--                        </div>-->
+
+                            <label class="col-2 col-form-label labelInCreation"
+                                   style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
+                                цвет выделения</label>
+                            <!--                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">-->
+                            <v-swatches style="margin-top: 5px" v-model="article.rowColor"
+                                        :disabled="disableColorCheckBoxFlag"
+                                        popover-x="left"></v-swatches>
                         </div>
                     </div>
 
@@ -456,7 +470,8 @@
                     </div>
                 </form>
 
-                <div v-if="editMode" class="form-group row align-items-center">
+<!--                <div v-if="editMode" class="form-group row align-items-center">-->
+                <div v-if="editMode" class="form-row align-items-center" style="background-color: transparent">
                     <div class="offset-sm-4 col-sm-3">
 
                         <button type="button" @click="preliminaryDataCheck" class="btn btn-primary">Обновить</button>
@@ -614,7 +629,7 @@
             articleLocationEntities: [], //after request
             articleOrgIds: [], //before request
             articleOrgEntities: [], //after request
-            articleMaterialIds: [], //before request
+           // articleMaterialIds: [], //before request
             articleMaterialEntities: [], //after request
 
             statusList: [],
@@ -629,6 +644,7 @@
             attachedFiles: [],
             loggedName: null,
             isAdmin: null,
+            disableColorCheckBoxFlag: false,
             uploadFilesCheckBoxValue: false,
             uploadMode: false,
             uploadedFiles: [],
@@ -900,9 +916,10 @@
                         }
                     }
                 }
-                if (this.hasError)
+                if (this.hasError) {
                     alert("Пожалуйста, заполните все обязательные поля");
                     console.log('ERROROROR----------------------------');
+                }
                 return !this.hasError;
             },
 
@@ -1185,6 +1202,7 @@
                 for (let i = 0; i < list.length; i++) {
                     let a = {
                         "itemId": list[i].id,
+                        "name": list[i].name,
                         "connection": list[i].connection,
                         "comment": list[i].comment
                     };
@@ -1538,9 +1556,9 @@
                         this.articleOrgIds.push(this.article.orgList[j].itemId);
                     }
 
-                    for (let j = 0; j < this.article.materialList.length; j++) {
-                        this.articleMaterialIds.push(this.article.materialList[j].itemId);
-                    }
+                    // for (let j = 0; j < this.article.materialList.length; j++) {
+                    //     this.articleMaterialIds.push(this.article.materialList[j].itemId);
+                    // }
 
                     apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
                         this.articlePersonEntities = response.data;
@@ -1603,7 +1621,7 @@
                     });
 
 
-                    api.getMaterialsByIdsAndSymmetrically(this.article.id, this.articleMaterialIds, response => {
+                    api.getMaterialsByIdsAndSymmetrically(this.article.id, response => {
                         this.articleMaterialEntities = response.data;  //returns list<NameConnectionDto>
                         console.log("articleMaterialEntities", this.articleMaterialEntities);
 
@@ -1845,11 +1863,20 @@
             }
         },
 
+
         ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
             // checkedMovements() {
             //     console.log("CHECKED", this.checkedMovements);
             // },
+
+            disableColorCheckBoxFlag() {
+                //  console.log("enter the watcher dis flag");
+                if (this.disableColorCheckBoxFlag === true) {
+                    //  console.log("enter ENTER the watcher dis flag");
+                    this.article.rowColor = null;
+                }
+            },
 
             searchHashtag() {
                 this.$nextTick(() => {

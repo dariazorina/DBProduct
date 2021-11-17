@@ -6,6 +6,7 @@ import com.hellokoding.springboot.restful.model.dto.IdContentDto;
 import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
 import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
 //import com.hellokoding.springboot.restful.model.dto.PersonDto;
+import com.hellokoding.springboot.restful.model.dto.NewPersonDtoForMainList;
 import com.hellokoding.springboot.restful.service.PersonService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
 import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
@@ -56,7 +57,7 @@ public class PersonAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<NewPersonDto>> findAll(@RequestParam(name = "mov", required = false) Integer mov) {
+    public ResponseEntity<List<NewPersonDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov) {
         return ResponseEntity.ok(personService.findAll(mov));
     }
 
@@ -71,9 +72,8 @@ public class PersonAPI {
     }
 
     @PostMapping("/symmids/{id}")
-    public ResponseEntity<List<NameConnectionDto>> getPersonsByIdsAndSymmetrically(@PathVariable Integer id, @Valid @RequestBody List<Integer> idList) {
-//        List<NameConnectionDto> eee = personService.findByIdsAndSymmetrically(idList, id);
-        return ResponseEntity.ok(personService.findByIdsAndSymmetrically(idList, id));
+    public ResponseEntity<List<NameConnectionDto>> getPersonsByIdsAndSymmetrically(@PathVariable Integer id) {
+        return ResponseEntity.ok(personService.findByIdsAndSymmetrically(id));
     }
 
     @GetMapping("/{id}")
@@ -94,6 +94,16 @@ public class PersonAPI {
             ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(personService.save(person));
+    }
+
+    @PutMapping("/color/{id}")
+    public ResponseEntity updateColor(@PathVariable Integer id, @Valid @RequestBody NewPersonDtoForMainList person) {
+        person.setId(id);
+        if (!personService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(personService.saveColor(person));
     }
 
     @DeleteMapping("/{id}")

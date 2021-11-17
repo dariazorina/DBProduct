@@ -31,9 +31,9 @@ export default {
             });
     },
 
-    getPersonsByIdsAndSymmetrically(id, idList, fn) {
+    getPersonsByIdsAndSymmetrically(id, fn) {
         AXIOS
-            .post(`/person/symmids/` + id, idList)
+            .post(`/person/symmids/` + id)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
@@ -70,6 +70,18 @@ export default {
     update(id, person, fn) {
         AXIOS
             .put('/person/' + id, person)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            })
+    },
+
+    updateColor(id, person, fn) {
+        AXIOS
+            .put('/person/color/' + id, person)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

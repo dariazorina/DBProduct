@@ -1,5 +1,5 @@
 <template id="org-details">
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <link href="../dbnm.css" rel="stylesheet"/>
         <iframe id="iframeToDownload" style="display:none;"></iframe>
 

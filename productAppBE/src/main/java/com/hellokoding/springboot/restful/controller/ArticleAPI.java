@@ -2,10 +2,7 @@ package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Article;
 import com.hellokoding.springboot.restful.model.ConnectionType;
-import com.hellokoding.springboot.restful.model.dto.ArticleDto;
-import com.hellokoding.springboot.restful.model.dto.IdContentDto;
-import com.hellokoding.springboot.restful.model.dto.ItemConnectionDto;
-import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
+import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import com.hellokoding.springboot.restful.service.ConnectionTypeService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
@@ -46,7 +43,7 @@ public class ArticleAPI {
 
     //api/v1/article/search?title=title&hash=hash
     @GetMapping("/filter")
-    public ResponseEntity<List<ArticleDto>> filter(@RequestParam(name = "title", required = false) List<String> title,
+    public ResponseEntity<List<ArticleDtoForMainList>> filter(@RequestParam(name = "title", required = false) List<String> title,
                                                    @RequestParam(name = "hash", required = false) List<String> hash,
                                                    @RequestParam(name = "author", required = false) List<String> author,
                                                    @RequestParam(name = "org", required = false) List<String> org,
@@ -58,29 +55,29 @@ public class ArticleAPI {
                                                    @RequestParam(name = "status", required = false) List<Integer> status,
                                                    @RequestParam(name = "startDate", required = false) String startDate,
                                                    @RequestParam(name = "endDate", required = false) String endDate,
-                                                   @RequestParam(name = "mov", required = false) Integer movement) throws ParseException {
+                                                   @RequestParam(name = "mov", required = false) List<Integer> movement) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.filter(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate, movement);
+        List<ArticleDtoForMainList> searchResult = articleService.filter(title, hash, author, org, location, lang, descr, text, misc, status, startDate, endDate, movement);
         return ResponseEntity.ok(searchResult);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ArticleDto>> search(@RequestParam(name = "description", required = false) String descr,
+    public ResponseEntity<List<ArticleDtoForMainList>> search(@RequestParam(name = "description", required = false) String descr,
                                                    @RequestParam(name = "text", required = false) String text,
                                                    @RequestParam(name = "status", required = false) List<Integer> status,
                                                    @RequestParam(name = "startDate", required = false) String startDate,
                                                    @RequestParam(name = "endDate", required = false) String endDate,
-                                                   @RequestParam(name = "mov", required = false) Integer movement) throws ParseException {
+                                                   @RequestParam(name = "mov", required = false) List<Integer> movement) throws ParseException {
 
-        List<ArticleDto> searchResult = articleService.search(descr, text, status, startDate, endDate, movement);
+        List<ArticleDtoForMainList> searchResult = articleService.search(descr, text, status, startDate, endDate, movement);
         return ResponseEntity.ok(searchResult);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ArticleDto>> findAll() {
-        List<ArticleDto> all = articleService.findAll();
-        return ResponseEntity.ok(all);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<ArticleDto>> findAll() {
+//        List<ArticleDto> all = articleService.findAll();
+//        return ResponseEntity.ok(all);
+//    }
 
     @GetMapping("/searchMaterial")
     public ResponseEntity<List<IdContentDto>> searchMaterial(@RequestParam(name = "q", required = true) String q){
@@ -102,9 +99,8 @@ public class ArticleAPI {
     }
 
     @PostMapping("/symmids/{id}")
-    public ResponseEntity<List<NameConnectionDto>> getMaterialsByIdsAndSymmetrically(@PathVariable Integer id, @Valid @RequestBody List<Integer> idList) {
-        //List<IdContentDto> rrr = orgService.findByIdsAndSymmetrically(idList, id);
-        return ResponseEntity.ok(articleService.findByIdsAndSymmetrically(idList, id));
+    public ResponseEntity<List<NameConnectionDto>> getMaterialsByIdsAndSymmetrically(@PathVariable Integer id) {
+        return ResponseEntity.ok(articleService.findByIdsAndSymmetrically(id));
     }
 
     @PostMapping("/connectionTypes")
@@ -140,6 +136,16 @@ public class ArticleAPI {
             ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(articleService.save(article));
+    }
+
+    @PutMapping("/color/{id}")
+    public ResponseEntity<Article> update(@PathVariable Integer id, @Valid @RequestBody ArticleDtoForMainList article) {
+        article.setId(id);
+        if (!articleService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(articleService.saveColor(article));
     }
 
     @DeleteMapping("/{id}")

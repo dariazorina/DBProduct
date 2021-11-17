@@ -110,11 +110,15 @@
                 </div>
 
 
-                <div class="col-md-2" style="margin-top: 10px; background-color: transparent">
-                    <div id="preview">
+                <div class="col-md-3" style="margin-top: 10px; background-color: transparent">
+                    <div id="preview" class="form-row">
                         <div v-if="avatar.imageBase64">
                             <img :src="avatar.imageBase64" @load="setHeight"
                                  :style="{ height: imageHeight + 'px' }"/>
+                        </div>
+                        <div  v-if="avatar.imageBase64" class="col-md-1" style="background-color: transparent; padding-top: 0px">
+                                <span class="close"
+                                      @click="deletePhoto">&times;</span>
                         </div>
                         <!--                        <div v-else>-->
                         <!--                            <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"-->
@@ -408,11 +412,25 @@
                     </b-form-select>
                     <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                 </div>
-                <label class="col-2 col-form-label labelInCreation"
-                       style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
-                    цвет выделения</label>
-                <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">
-                    <v-swatches v-model="person.rowColor" popover-x="left"></v-swatches>
+            </div>
+
+            <div class="form-row align-items-center" style="background-color: transparent">
+                <div class="form-row align-items-center col-sm-12"
+                     style="background-color: transparent; padding-left: 10px">
+                    <div class="form-group" style="padding-top: 25px">
+                        <input style="margin-right: 5px" type="checkbox" id="checkbox_сolor"
+                               v-model="disableColorCheckBoxFlag">
+                        <label for="checkbox">Снять выделение</label>
+                    </div>
+                    <!--                        </div>-->
+
+                    <label class="col-2 col-form-label labelInCreation"
+                           style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
+                        цвет выделения</label>
+                    <!--                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">-->
+                    <v-swatches style="margin-top: 5px" v-model="person.rowColor"
+                                :disabled="disableColorCheckBoxFlag"
+                                popover-x="left"></v-swatches>
                 </div>
             </div>
 
@@ -425,7 +443,9 @@
                                  :already-uploaded-files="uploadedFiles"
                                  :is-details-mode="false"/>
             </div>
-            <div v-if="editMode" class="form-group row align-items-center">
+
+            <!--            <div v-if="editMode" class="form-group row align-items-center">-->
+            <div v-if="editMode" class="form-row align-items-center" style="background-color: transparent">
                 <div class="offset-sm-4 col-sm-3">
 
                     <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Обновить</button>
@@ -723,7 +743,6 @@
             // personEventIds: [], //before request
             // personEventEntities: [], //after request
 
-            orgList: [],
             person: {
                 hashtagList: [],
                 linkList: [],
@@ -750,6 +769,7 @@
             allLanguages: [],
             //currentUserMovement: '',
             checkedMovements: [],
+            disableColorCheckBoxFlag: false,
 
             editor: CKEditor, // to use the component locally
             editorConfig: {
@@ -876,6 +896,16 @@
                 } else {
                     this.imageHeight = 350;
                 }
+            },
+
+            deletePhoto(){
+                console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+                this.avatar.image = null;
+                this.avatar.imageBase64 = null;
+                this.avatar.imageUrl = null;
+
+                this.photoWasUploaded = true;
+                this.originalPhoto = null;
             },
 
             onChange(e) {
@@ -1158,6 +1188,7 @@
                 for (let i = 0; i < list.length; i++) {
                     let a = {
                         "itemId": list[i].id,
+                        "name": list[i].name,
                         "connection": list[i].connection,
                         "comment": list[i].comment
                     };
@@ -1439,9 +1470,11 @@
                             if (this.photoWasUploaded) {
                                 apiAttachment.deletePhoto('person', r.data.id, r => {
                                 });
-                                apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
-                                    console.log("ph was uplded");
-                                });
+                                if (this.avatar.image !== null) {
+                                    apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
+                                        console.log("ph was uplded");
+                                    });
+                                }
                             }
                             for (let i = 0; i < this.attachedFiles.length; i++) {
                                 apiAttachment.uploadFile('person', this.person.id, this.attachedFiles[i], r => {
@@ -1457,8 +1490,10 @@
                         api.create(this.person, r => {
                             console.log(r);
 
-                            apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
-                            });
+                            if (this.avatar.image !== null) {
+                                apiAttachment.uploadPhoto('person', r.data.id, this.avatar.image, r => {
+                                });
+                            }
 
                             if (!this.uploadFilesCheckBoxValue) {
                                 router.push('/person');
@@ -1474,47 +1509,47 @@
                 }
             },
 
-            //todo
-            orgEditConnectionTitleCreation(org) {
-                let returnedTitle = org.content;
+            // //todo
+            // orgEditConnectionTitleCreation(org) {
+            //     let returnedTitle = org.content;
+            //
+            //     // if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
+            //     //     returnedTitle += ", " + org.abbrRus;
+            //     // }
+            //     // if (this.isArrayValidAndNotEmpty(org.name)) {
+            //     //     returnedTitle += ", " + org.name;
+            //     // }
+            //     // //todo add fields
+            //
+            //     return returnedTitle;
+            // },
 
-                // if (this.isArrayValidAndNotEmpty(org.abbrRus)) {
-                //     returnedTitle += ", " + org.abbrRus;
-                // }
-                // if (this.isArrayValidAndNotEmpty(org.name)) {
-                //     returnedTitle += ", " + org.name;
-                // }
-                // //todo add fields
+            // countryTitleCreation(country) {
+            //     let returnedTitle = country.content;
+            //
+            //     // if (this.isArrayValidAndNotEmpty(country.region)) {
+            //     //     returnedTitle += ", " + country.region;
+            //     // }
+            //     // if (this.isArrayValidAndNotEmpty(country.city)) {
+            //     //     returnedTitle += ", " + country.city;
+            //     // }
+            //     // if (this.isArrayValidAndNotEmpty(country.address)) {
+            //     //     returnedTitle += ", " + country.address;
+            //     // }
+            //     //placement?
+            //
+            //     return returnedTitle;
+            // },
 
-                return returnedTitle;
-            },
-
-            countryTitleCreation(country) {
-                let returnedTitle = country.content;
-
-                // if (this.isArrayValidAndNotEmpty(country.region)) {
-                //     returnedTitle += ", " + country.region;
-                // }
-                // if (this.isArrayValidAndNotEmpty(country.city)) {
-                //     returnedTitle += ", " + country.city;
-                // }
-                // if (this.isArrayValidAndNotEmpty(country.address)) {
-                //     returnedTitle += ", " + country.address;
-                // }
-                //placement?
-
-                return returnedTitle;
-            },
-
-            personNameCreation(person) {
-                let personTitle = person.snpList[0].surname;
-                personTitle += " " + person.snpList[0].name;
-
-                if (this.isArrayValidAndNotEmpty(person.birthYear)) {
-                    personTitle += ", " + person.birthYear;
-                }
-                return personTitle;
-            },
+            // personNameCreation(person) {
+            //     let personTitle = person.snpList[0].surname;
+            //     personTitle += " " + person.snpList[0].name;
+            //
+            //     if (this.isArrayValidAndNotEmpty(person.birthYear)) {
+            //         personTitle += ", " + person.birthYear;
+            //     }
+            //     return personTitle;
+            // },
 
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length === 0) {
@@ -1708,7 +1743,7 @@
                         }
                     });
 
-                    api.getPersonsByIdsAndSymmetrically(this.person.id, this.personPersonIds, response => {
+                    api.getPersonsByIdsAndSymmetrically(this.person.id, response => {
                         this.personPersonEntities = response.data;
 
                         for (let i = 0; i < this.personPersonEntities.length; i++) {
@@ -1772,7 +1807,7 @@
                         //console.log(buffer.toString("base64"));
                         // console.log("avatar.imageBase64", this.avatar.imageBase64, buffer);
 
-                        // this.originalPhoto = this.avatar.imageBase64;
+                         this.originalPhoto = this.avatar.imageBase64;
 
 
                         // console.log("BYTE []", r.data.blobContent.binaryStream);
@@ -2008,6 +2043,13 @@
 
         ///////////////////////////////////////////WATCH////////////////////////////////////////////////////
         watch: {
+
+            disableColorCheckBoxFlag() {
+                if (this.disableColorCheckBoxFlag === true) {
+                    this.person.rowColor = null;
+                }
+            },
+
             searchHashtag() {
                 this.$nextTick(() => {
                     if (this.searchLength === 0) {

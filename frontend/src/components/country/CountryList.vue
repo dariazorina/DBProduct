@@ -11,11 +11,11 @@
             </a>
         </div>
 
-        <div class="filters row">
-            <div class="form-group col-sm-3">
-                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element" requred/>
-            </div>
-        </div>
+<!--        <div class="filters row">-->
+<!--            <div class="form-group col-sm-3">-->
+<!--                <input placeholder="Search by Name" v-model="searchKey" class="form-control" id="search-element" requred/>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
         <table class="redTable">
@@ -27,6 +27,7 @@
                 <th class='tdAlignLeft'>Город</th>
                 <th class='tdAlignLeft'>Адрес</th>
                 <th class='tdAlignLeft'>Местоположение</th>
+                <th class='tdAlignLeft'>Комментарии</th>
 
                 <th style="width:10%" class="col-sm-2"></th>
             </tr>
@@ -41,6 +42,7 @@
                 <td class='tdAlignLeft'> {{ country.city }}
                 <td class='tdAlignLeft'> {{ country.address }}
                 <td class='tdAlignLeft'> {{ country.placement }}
+                <td class='tdAlignLeft'> {{ country.miscellany}}
                     <!--                    <a>-->
                     <!--                        <router-link :to="{name: 'country', params: {country_id: country.id}}">{{ country.name }}-->
                     <!--                        </router-link>-->
@@ -49,7 +51,7 @@
 
                 <td>
                     <a class="btn btn-warning btn-sm mr-2">
-                        <router-link :to="{name: 'country-edit', params: {country_id: country.id}}">Edit</router-link>
+                        <router-link :to="{name: 'country-add', params: {country_id: country.id}}">Edit</router-link>
                     </a>
 <!--                                        <a class="btn btn-danger btn-xs">-->
 <!--                                            <router-link :to="{name: 'country-delete', params: {country_id: country.id}}">Delete</router-link>-->

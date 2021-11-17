@@ -3,7 +3,7 @@ import router from "../../router";
 
 const AXIOS = axios.create({
     baseURL: `/api/v1/`,
-    timeout: 1000
+    timeout: 10000
 });
 
 
@@ -69,9 +69,9 @@ export default {
             });
     },
 
-    getMaterialsByIdsAndSymmetrically(id, idList, fn) {
+    getMaterialsByIdsAndSymmetrically(id,fn) {
         AXIOS
-            .post(`/article/symmids/` + id, idList)
+            .post(`/article/symmids/` + id)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
@@ -97,6 +97,18 @@ export default {
     update(id, article, fn) {
         AXIOS
             .put('/article/' + id, article)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            });
+    },
+
+    updateColor(id, article, fn) {
+        AXIOS
+            .put('/article/color/' + id, article)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

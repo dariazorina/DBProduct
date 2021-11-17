@@ -1,10 +1,7 @@
 package com.hellokoding.springboot.restful.controller;
 
 import com.hellokoding.springboot.restful.model.Org;
-import com.hellokoding.springboot.restful.model.dto.IdContentDto;
-import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
-import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
-import com.hellokoding.springboot.restful.model.dto.OrgDto;
+import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.OrgService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
 import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;
@@ -37,7 +34,7 @@ public class OrgAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping
-    public ResponseEntity<List<OrgDto>> findAll(@RequestParam(name = "mov", required = false) Integer mov) {
+    public ResponseEntity<List<OrgDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov) {
         return ResponseEntity.ok(orgService.findAll(mov));
     }
 
@@ -80,6 +77,15 @@ public class OrgAPI {
             ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(orgService.save(org));
+    }
+
+    @PutMapping("/color/{id}")
+    public ResponseEntity<Org> updateColor(@PathVariable Integer id, @Valid @RequestBody OrgDtoForMainList org) {
+        if (!orgService.findById(id).isPresent()) {
+            log.error("Id " + id + " is not existed");
+            ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(orgService.saveColor(org));
     }
 
     @DeleteMapping("/{id}")

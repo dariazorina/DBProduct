@@ -297,12 +297,18 @@
 
                         <ckeditor :editor="editor" v-model="org.description" :config="editorConfig"></ckeditor>
                     </div>
-                    <div class="col-md-6" style="margin-top: 0px; background-color: transparent">
-                        <div id="preview" style="margin-top: 31px">
+                    <div class="col-md-3" style="margin-top: 0px; background-color: transparent">
+                        <div id="preview" style="margin-top: 31px" class="form-row">
                             <div v-if="avatar.imageBase64">
                                 <img :src="avatar.imageBase64" @load="setHeight"
                                      :style="{ height: imageHeight + 'px' }"/>
                             </div>
+
+                            <div v-if="avatar.imageBase64" class="col-md-1"
+                                 style="background-color: transparent; padding-top: 0px; padding-left: 0px">
+                                <span class="close" @click="deletePhoto">&times;</span>
+                            </div>
+
                             <!--                            <div v-else>-->
                             <!--                                <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"-->
                             <!--                                     :style="{ width: 250+'px' }"/>-->
@@ -486,11 +492,25 @@
                         </b-form-select>
                         <!--                    <div class="mb-3">SELECted: <strong>{{ selectedL }}</strong></div>-->
                     </div>
-                    <label class="col-2 col-form-label labelInCreation"
-                           style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
-                        цвет выделения</label>
-                    <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">
-                        <v-swatches v-model="org.rowColor" popover-x="left"></v-swatches>
+                </div>
+
+                <div class="form-row align-items-center" style="background-color: transparent">
+                    <div class="form-row align-items-center col-sm-12"
+                         style="background-color: transparent; padding-left: 10px">
+                        <div class="form-group" style="padding-top: 25px">
+                            <input style="margin-right: 5px" type="checkbox" id="checkbox_сolor"
+                                   v-model="disableColorCheckBoxFlag">
+                            <label for="checkbox">Снять выделение</label>
+                        </div>
+                        <!--                        </div>-->
+
+                        <label class="col-2 col-form-label labelInCreation"
+                               style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
+                            цвет выделения</label>
+                        <!--                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">-->
+                        <v-swatches style="margin-top: 5px" v-model="org.rowColor"
+                                    :disabled="disableColorCheckBoxFlag"
+                                    popover-x="left"></v-swatches>
                     </div>
                 </div>
 
@@ -503,7 +523,7 @@
                                      :already-uploaded-files="uploadedFiles"
                                      :is-details-mode="false"/>
                 </div>
-                <div v-if="editMode" class="form-group row align-items-center">
+                <div v-if="editMode" class="form-row align-items-center">
                     <div class="offset-sm-4 col-sm-3">
 
                         <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Обновить</button>
@@ -696,7 +716,6 @@
             allMovements: [],
             isAdmin: null,
             // addAdditionalMovementFlag: false,
-           // currentUserMovement: '',
             checkedMovements: [],
 
             orgNameTFValues: [],
@@ -788,7 +807,8 @@
             uploadedFiles: [],
 
             searchOrgType: '',
-            nameList: []
+            nameList: [],
+            disableColorCheckBoxFlag: false
         }),
 
         mounted() {
@@ -1026,7 +1046,16 @@
         },
 
         methods: {
-           removeAttachment(file) {
+            deletePhoto() {
+                this.avatar.image = null;
+                this.avatar.imageBase64 = null;
+                this.avatar.imageUrl = null;
+
+                this.photoWasUploaded = true;
+                this.originalPhoto = null;
+            },
+
+            removeAttachment(file) {
                 // console.log("removeAtt ORG", file);
                 apiAttachment.removeAttachment('org', this.org.id, file.id, file.name, r => {
                     console.log("result", r.data);
@@ -1360,9 +1389,11 @@
                                 if (this.photoWasUploaded) {
                                     apiAttachment.deletePhoto('org', r.data.id, r => {
                                     });
-                                    apiAttachment.uploadPhoto('org', r.data.id, this.avatar.image, r => {
-                                        console.log("ph was uplded");
-                                    });
+                                    if (this.avatar.image !== null) {
+                                        apiAttachment.uploadPhoto('org', r.data.id, this.avatar.image, r => {
+                                            console.log("ph was uplded");
+                                        });
+                                    }
                                 }
                                 for (let i = 0; i < this.attachedFiles.length; i++) {
                                     apiAttachment.uploadFile('org', this.org.id, this.attachedFiles[i], r => {
@@ -1378,8 +1409,10 @@
                             apiOrg.create(this.org, r => {
                                 console.log(r);
 
-                                apiAttachment.uploadPhoto('org', r.data.id, this.avatar.image, r => {
-                                });
+                                if (this.avatar.image !== null) {
+                                    apiAttachment.uploadPhoto('org', r.data.id, this.avatar.image, r => {
+                                    });
+                                }
 
                                 if (!this.uploadFilesCheckBoxValue) {
                                     router.push('/org');
@@ -1427,6 +1460,7 @@
                 for (let i = 0; i < list.length; i++) {
                     let a = {
                         "itemId": list[i].id,
+                        "name": list[i].name,
                         "connection": list[i].connection,
                         "comment": list[i].comment
                     };
@@ -1768,6 +1802,12 @@
             // checkedMovements() {
             //     console.log("watch this.checkedMovements.length", this.checkedMovements);
             // },
+
+            disableColorCheckBoxFlag() {
+                if (this.disableColorCheckBoxFlag === true) {
+                    this.org.rowColor = null;
+                }
+            },
 
             searchOrgType() {
                 this.$nextTick(() => {

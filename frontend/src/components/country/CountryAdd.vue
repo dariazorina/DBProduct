@@ -55,11 +55,20 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div v-if="editMode" class="form-group row">
+                <div class="offset-sm-2 col-sm-3">
+                    <button type="button" @click="checkForm" class="btn btn-primary">Update</button>
+                    <a class="btn btn-default">
+                        <router-link to="/country">Cancel</router-link>
+                    </a>
+                </div>
+            </div>
+
+            <div v-else>
                 <div class="offset-sm-2 col-sm-3">
                     <button type="button" @click="checkForm" class="btn btn-primary">Create</button>
                     <a class="btn btn-default">
-                        <router-link to="/language">Cancel</router-link>
+                        <router-link to="/country">Cancel</router-link>
                     </a>
                 </div>
             </div>
@@ -78,11 +87,27 @@
             return {
                 errorFlag: false,
                 errors: [],
-                name: null, //'name1', //country.name,
-                code: null, //'666', //country.code,
+                editMode: false,
+                //  name: null, //'name1', //country.name,
+                //  code: null, //'666', //country.code,
                 location: {}
             }
         },
+
+        mounted() {
+            // console.log('mount33333333333333333333ed');
+            if (this.$route.params.country_id != null) {
+                console.log("EDIT MODE");
+                this.editMode = true;
+                // this.uploadFilesCheckBoxValue = true;
+
+                api.findById(this.$route.params.country_id, r => {
+                    this.location = r.data;
+                    console.log('findById', this.country);
+                });
+            }
+        },
+
         methods: {
             checkForm: function (e) {
                 console.log('checkForm');

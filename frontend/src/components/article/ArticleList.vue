@@ -1,5 +1,5 @@
 <template id="article">
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <!--        <link href="../dbnm.css" rel="stylesheet"/>-->
         <div class="form-group row" style="margin-bottom: -10px; margin-top: -20px; background-color: transparent">
 
@@ -159,38 +159,38 @@
                         </div>
                     </div>
                 </th>
-                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">
-                    <div class="row" style="background-color: transparent">
-                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                        <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                            Лица
-                        </div>
-                        <div class='col-sm-3'
-                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="authorFilterId">
-                            <v-btn text icon x-small @click="resetFilter(2)">
-                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                            </v-btn>
-                        </div>
-                    </div>
-                </th>
-                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
-                    <div class="row" style="background-color: transparent">
-                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                        <div class='headerLink col-sm-8'
-                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
-                            Организации
-                        </div>
-                        <div class='col-sm-2'
-                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="orgFilterId">
-                            <v-btn text icon x-small @click="resetFilter(3)">
-                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                            </v-btn>
-                        </div>
-                    </div>
-                </th>
+                <!--                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">-->
+                <!--                    <div class="row" style="background-color: transparent">-->
+                <!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
+                <!--                        <div class='headerLink col-sm-6'-->
+                <!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
+                <!--                            Лица-->
+                <!--                        </div>-->
+                <!--                        <div class='col-sm-3'-->
+                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
+                <!--                             id="authorFilterId">-->
+                <!--                            <v-btn text icon x-small @click="resetFilter(2)">-->
+                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
+                <!--                            </v-btn>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </th>-->
+                <!--                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">-->
+                <!--                    <div class="row" style="background-color: transparent">-->
+                <!--                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>-->
+                <!--                        <div class='headerLink col-sm-8'-->
+                <!--                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">-->
+                <!--                            Организации-->
+                <!--                        </div>-->
+                <!--                        <div class='col-sm-2'-->
+                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
+                <!--                             id="orgFilterId">-->
+                <!--                            <v-btn text icon x-small @click="resetFilter(3)">-->
+                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
+                <!--                            </v-btn>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </th>-->
                 <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
@@ -296,26 +296,27 @@
                     <div>                        <!--                    <div style="white-space:pre-line">-->
                         <a>
                             <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
-                                {{ article.titleRus}}
+                                <!--                                {{ article.titleRus}}-->
+                                {{complexArticleTitle(article)}}
                             </router-link>
                         </a>
                     </div>
                 </td>
-                <td>
-                    <div v-for="author in article.personList">
-                        <div v-if="article.personList.length > 0">
-                            {{getPersonCellById(author.itemId)}}
-                            <!--                            {{ createComplexCellValueById(author.itemId)}}-->
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div v-for="org in article.orgList">
-                        <div v-if="article.orgList.length > 0">
-                            {{getOrgCellById(org.itemId)}}
-                        </div>
-                    </div>
-                </td>
+                <!--                <td>-->
+                <!--                    <div v-for="author in article.personList">-->
+                <!--                        <div v-if="article.personList.length > 0">-->
+                <!--                            {{getPersonCellById(author.itemId)}}-->
+                <!--                            &lt;!&ndash;                            {{ createComplexCellValueById(author.itemId)}}&ndash;&gt;-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </td>-->
+                <!--                <td>-->
+                <!--                    <div v-for="org in article.orgList">-->
+                <!--                        <div v-if="article.orgList.length > 0">-->
+                <!--                            {{getOrgCellById(org.itemId)}}-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </td>-->
                 <td>
                     <div v-for="hashtag in article.hashtagList">
                         {{hashtag}}
@@ -504,12 +505,12 @@
                 articles: [],
                 article: {status: '', personList: [], locationList: [], orgList: [], hashtagList: []},
                 authors: [],
-                articlePersonIds: [], //before request
-                articlePersonEntities: [], //after request
+                // articlePersonIds: [], //before request
+                // articlePersonEntities: [], //after request
                 articleLocationIds: [], //before request
                 articleLocationEntities: [], //after request
-                articleOrgIds: [], //before request
-                articleOrgEntities: [], //after request
+                // articleOrgIds: [], //before request
+                // articleOrgEntities: [], //after request
 
                 authorComponentKey: 0,  //todo delete?
 
@@ -682,9 +683,10 @@
                     this.filterClearButtonActivity(true, this.filterTableFieldsForRequest[i].text + 'FilterId');
                 }
                 this.currentFilterItems = [];
-                api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                    this.entries = r.data;
-                });
+                api.searchPeriodAndStatus(-1, this.startDate, this.endDate,
+                    this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                        this.entries = r.data;
+                    });
             },
 
             updateItem(item) {  // (2) calls when search item adds to search list
@@ -795,11 +797,12 @@
                 // console.log("set color", currentArticle, color);
                 currentArticle.rowColor = color;
 
-                api.update(currentArticle.id, currentArticle, r => {
+                api.updateColor(currentArticle.id, currentArticle, r => {
                     console.log("DONEEEEEE SAVE");
                 });
                 this.alternate('mainListTable');
             },
+
             alternate(id) {
                 if (document.getElementsByTagName) {
                     let table = document.getElementById(id);
@@ -831,23 +834,19 @@
                     }
                 }
             },
-            complexArticleTitle() {
+
+            complexArticleTitle(article) {
                 let title = '';
+                if (article != null) {
+                    title = article.titleRus;
 
-                if (this.currentArticle.title != null) {
-                    if (this.currentArticle.title.length > 0) {
-                        title = this.currentArticle.title;
-
-                        if (this.currentArticle.titleRus != null) {
-                            if (this.currentArticle.titleRus.length > 0) {
-                                title += " / " + this.currentArticle.titleRus;
-                            }
+                    if (article.title != null) {
+                        if (article.title.length > 0) {
+                            title += " / " +  article.title;
+                            console.log("complexArticleTitle", article);
                         }
                     }
-                } else {
-                    title = this.currentArticle.titleRus;
                 }
-                // console.log("complexArticleTitle", title);
                 return title;
             },
 
@@ -901,15 +900,15 @@
             //     }
             // },
 
-            getPersonCellById(id) {
-                let result = '';
-                let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-
-                if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentPerson.content;
-                    return result;
-                }
-            },
+            // getPersonCellById(id) {
+            //     let result = '';
+            //     let currentPerson = this.articlePersonEntities.find(x => x.id === id);
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentPerson.content;
+            //         return result;
+            //     }
+            // },
 
             getLocationCellById(id) {
                 let result = '';
@@ -921,15 +920,15 @@
                 }
             },
 
-            getOrgCellById(id) {
-                let result = '';
-                let currentOrg = this.articleOrgEntities.find(x => x.id === id);
-
-                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.content;
-                    return result;
-                }
-            },
+            // getOrgCellById(id) {
+            //     let result = '';
+            //     let currentOrg = this.articleOrgEntities.find(x => x.id === id);
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentOrg.content;
+            //         return result;
+            //     }
+            // },
 
             updateArticleStatus(id, status) {
                 api.findById(id, r => {
@@ -1004,6 +1003,19 @@
                 } else {
                     return "Выберете поле поиска"
                 }
+            },
+
+            complexMovementCreation(movArray) {
+
+                let result = '';
+                let complexMov = '&mov=';
+                let i = 0;
+
+                for (; i < movArray.length - 1; i++) {
+                    result += movArray[i] + complexMov;
+                }
+                result += movArray[i];
+                return result;
             },
 
             complexStatusCreation() {
@@ -1111,15 +1123,17 @@
                 }
 
                 if (!isFilterActive && this.searchKey === "" && !this.isArrayValidAndNotEmpty(this.statusCheckBox)) {//s- ch-
-                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                        this.entries = r.data;
-                    });
+                    api.searchPeriodAndStatus(-1, this.startDate, this.endDate,
+                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                            this.entries = r.data;
+                        });
                 } else {
                     if (!isFilterActive && this.searchKey === "") {    //s-
                         if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) { //ch+
-                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                                this.entries = r.data;
-                            });
+                            api.searchPeriodAndStatus(this.complexStatusCreation(), this.startDate, this.endDate,
+                                this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                                    this.entries = r.data;
+                                });
                         }
                     } else {        //s+
                         if (this.selected === "текст") {
@@ -1146,15 +1160,17 @@
 
                             } else {  //just search
                                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                    api.searchText(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                                        this.entries = r.data;
-                                    });
+                                    api.searchText(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate,
+                                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                                            this.entries = r.data;
+                                        });
                                 } else {
                                     // console.log("TEXT SEARCH");
-                                    api.searchText(this.searchKey, -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                                        this.entries = r.data;
-                                        console.log("filter all ===++=====", this.filterItems, this.entries);
-                                    });
+                                    api.searchText(this.searchKey, -1, this.startDate, this.endDate,
+                                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                                            this.entries = r.data;
+                                           // console.log("filter all ===++=====", this.filterItems, this.entries);
+                                        });
                                 }
                             }
 
@@ -1181,15 +1197,18 @@
 
                             } else {  //just search
                                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                                    api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                                        this.entries = r.data;
-                                    });
+                                    api.searchDescription(this.searchKey, this.complexStatusCreation(), this.startDate, this.endDate,
+                                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                                            this.entries = r.data;
+                                        });
                                 } else {
                                     // console.log("TEXT SEARCH");
-                                    api.searchDescription(this.searchKey, -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                                        this.entries = r.data;
-                                        console.log("filter all ===++=====", this.filterItems, this.entries);
-                                    });
+                                    api.searchDescription(this.searchKey, -1, this.startDate, this.endDate,
+                                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+
+                                            this.entries = r.data;
+                                            console.log("filter all ===++=====", this.filterItems, this.entries);
+                                        });
                                 }
                             }
                         }
@@ -1221,17 +1240,19 @@
                         }
                     }
                 }
-                console.log("FFFFFFFFFFFFFFlag", singleFilter);
+               // console.log("FFFFFFFFFFFFFFlag", singleFilter);
                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
-                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                        this.entries = r.data;
-                    });
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate,
+                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                            this.entries = r.data;
+                        });
                 } else {
-                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                        this.entries = r.data;
-                        console.log("filter all =============", this.filterItems, this.entries);
-                        //console.log("COOOOKIES", this.entries.token);
-                    });
+                    api.filterAll(this.filterAllBodyCreation(singleFilter === 1), -1, this.startDate, this.endDate,
+                        this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+                            this.entries = r.data;
+                            console.log("filter all =============", this.filterItems, this.entries);
+                            //console.log("COOOOKIES", this.entries.token);
+                        });
                 }
             },
         },
@@ -1263,37 +1284,40 @@
             this.endDate = localStorage.getItem('endDate');
             // console.log("startDate", this.startDate);
 
-            api.searchPeriodAndStatus(-1, this.startDate, this.endDate, localStorage.getItem('movement'), r => {
-                this.entries = r.data;
-                console.log(this.entries);
-                for (let i = 0; i < this.entries.length; i++) {
-                    for (let j = 0; j < this.entries[i].personList.length; j++) {
-                        this.articlePersonIds.push(this.entries[i].personList[j].itemId);
+            api.searchPeriodAndStatus(-1, this.startDate, this.endDate,
+                this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+
+                    this.entries = r.data;
+                 //   console.log("**********%%%%%%%%%%**********", this.entries);
+                    for (let i = 0; i < this.entries.length; i++) {
+                        // for (let j = 0; j < this.entries[i].personList.length; j++) {
+                        //     this.articlePersonIds.push(this.entries[i].personList[j].itemId);
+                        // }
+                        // for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                        //     this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
+                        // }
+                        for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                            this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                        }
                     }
-                    for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                        this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
-                    }
-                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                        this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
-                    }
-                }
-                //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
+                    //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
 
-                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
-                    this.articleOrgEntities = response.data;
+                    // apiOrg.getOrgsByIds(this.articleOrgIds, response => {
+                    //     this.articleOrgEntities = response.data;
+                    // });
+
+                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {
+                        this.articleLocationEntities = response.data;
+                        this.alternate('mainListTable');
+                    });
+
+                    // apiPerson.getPersonsByIds(this.articlePersonIds, response => {
+                    //     this.articlePersonEntities = response.data;
+                    //     console.log("apiPerson", this.articlePersonEntities);
+                    //
+                    //     this.alternate('mainListTable');
+                    // });
                 });
-
-                apiCountry.getLocationsByIds(this.articleLocationIds, response => {
-                    this.articleLocationEntities = response.data;
-                });
-
-                apiPerson.getPersonsByIds(this.articlePersonIds, response => {
-                    this.articlePersonEntities = response.data;
-                    console.log("apiPerson", this.articlePersonEntities);
-
-                    this.alternate('mainListTable');
-                });
-            });
         },
 
         watch: {
@@ -1340,7 +1364,7 @@
 
                     console.log("AFTER", this.statusCheckBox);
                 } else {
-                     for (let i = 0; i < this.statusCheckBox.length; i++) {
+                    for (let i = 0; i < this.statusCheckBox.length; i++) {
                         if (this.statusCheckBox[i] === 3) {
                             this.statusCheckBox.splice(i, 1);
                             console.log("SPLICE");

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,26 +35,14 @@ public class PersonServiceImpl implements PersonService {
     private final UrlLinkService urlLinkService;
 
     @Override
-    public List<NewPersonDto> findAll(Integer mov) {
+    public List<NewPersonDtoForMainList> findAll(List<Integer> mov) {
 
-        List<NewPersonDto> dtoAllPersonList = new ArrayList<>();
+        List<NewPersonDtoForMainList> dtoAllPersonList = new ArrayList<>();
         List<Person> allPerson = personRepository.findAllWithMovement(mov);
 
-        // hack for org creation, for relase
-//        Random objGenerator = new Random();
-//        int randomNumber = objGenerator.nextInt(100);
-//        Org newOrg = new Org();
-//        String name = "Org " + randomNumber;
-//        newOrg.setName(name);
-//
-//        Country country = new Country();
-//        newOrg.setCountry(country);
-//        newOrg.getCountry().setId(1);
-//        orgRepository.save(newOrg);
-
-        NewPersonDto currentNewDtoP;
+        NewPersonDtoForMainList currentNewDtoP;
         for (Person p : allPerson) {
-            currentNewDtoP = new NewPersonDto(p);
+            currentNewDtoP = new NewPersonDtoForMainList(p);
 //            currentNewDtoP.newPersonDtoConverter(p);
             dtoAllPersonList.add(currentNewDtoP);
         }
@@ -87,7 +76,7 @@ public class PersonServiceImpl implements PersonService {
         return transformOriginToDto(searchRes);
     }
 
-    public List<NameConnectionDto> findByIdsAndSymmetrically(List<Integer> idList, Integer itemId) {
+    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
 
         Person connectedPerson, person;
         String dtoName = "", connection = "", comment = "";
@@ -100,8 +89,8 @@ public class PersonServiceImpl implements PersonService {
             person = personOpt.get();             //   searchRes.add(l.get());
 
             searchResSymm = personPersonRepository.findByIdSymm(itemId); //searching symm connections for this itemId
-            for (Integer id : idList) { //simple connections
-                Optional<Person> connPersonOpt = personRepository.findById(id);
+            for (PersonPersonConnection el : person.getPersonConnections()) { //simple connections
+                Optional<Person> connPersonOpt = personRepository.findById(el.getConnectedPerson().getId());
 
                 if (connPersonOpt.isPresent()) {
                     connectedPerson = connPersonOpt.get();             //   searchRes.add(l.get());
@@ -173,14 +162,43 @@ public class PersonServiceImpl implements PersonService {
 
         for (Person person : list) {
             if (person.getSnpList() != null) {
-                for (SurnameNamePatr name : person.getSnpList()) {
-                    if (name.getPriority() == 1) {
-                        dtoName += name.getSurname();
+                //set name with prior = 1 at the beginning of person title
+                Integer prStatus = 1;
+                List<SurnameNamePatr> currentPersonList = person.getSnpList();
 
-                        if (name.getName() != null) {
-                            dtoName += " " + name.getName();
-                        }
+                SurnameNamePatr personSNPPr1 = currentPersonList.stream()
+                        .filter(SNP -> prStatus.equals(SNP.getPriority()))
+                        .findAny()
+                        .orElse(null);
+
+                if (personSNPPr1 != null) {
+                    dtoName += personSNPPr1.getSurname();
+
+                    if (personSNPPr1.getName() != null) {
+                        dtoName += " " + personSNPPr1.getName();
                     }
+                    if (personSNPPr1.getPatronymic() != null && personSNPPr1.getPatronymic().length() != 0) {
+                        dtoName += " " + personSNPPr1.getPatronymic();
+                    }
+                    if (person.getBirthYear() != null && person.getBirthYear() != 0) {
+                        dtoName += ", " + person.getBirthYear();
+                    }
+
+                    for (SurnameNamePatr name : person.getSnpList()) {
+                        if (name.getPriority() == 0) {
+                            dtoName += "/ " + name.getSurname();
+
+                            if (name.getName() != null && name.getName().length() != 0) {
+                                dtoName += " " + name.getName();
+                            }
+
+                            if (name.getPatronymic() != null && name.getPatronymic().length() != 0) {
+                                dtoName += " " + name.getPatronymic();
+                            }
+                        }
+                    }//for
+                } else {
+                    dtoName = "error";
                 }
             }
             IdContentDto pDto = new IdContentDto(person.getId(), dtoName);
@@ -339,6 +357,20 @@ public class PersonServiceImpl implements PersonService {
 //
 //        List<PersonDto> finalList = new ArrayList<PersonDto>(fooSet);
         return transformOriginToDto(surnameSearchList);
+    }
+
+    @Override
+    public Person saveColor(NewPersonDtoForMainList personDto) {
+
+        Person person;
+        if (personRepository.findById(personDto.getId()).isPresent()) {
+            person = personRepository.findById(personDto.getId()).get();
+
+            person.setRgbSelection(personDto.getRowColor());
+            return personRepository.save(person);
+
+        } else
+            return null;
     }
 
     @Override
@@ -583,7 +615,7 @@ public class PersonServiceImpl implements PersonService {
         List<PersonPersonConnection> connectedPersonList = new ArrayList<>();
         List<PersonPersonConnection> symmConnectionList;
 
-        for (ItemConnectionDto connectionDto : personDto.getPersonList()) {
+        for (NameConnectionDto connectionDto : personDto.getPersonList()) {
             connectedPersonId = connectionDto.getItemId();
             if (personRepository.findById(connectedPersonId).isPresent()) {
 
@@ -631,6 +663,30 @@ public class PersonServiceImpl implements PersonService {
                     }
                 }
                 isSymmConnection = false;
+            }
+        }
+
+        if (person.getId() != null) {
+            //delete symm connections
+            List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(person.getId());
+            List<NameConnectionDto> resultListConnectedOrgsForOrg = personDto.getPersonList();
+
+            List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
+                    .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
+                    .collect(Collectors.toList());
+
+            for (NameConnectionDto nmdto : differences) {
+                connectedPerson = personRepository.findById(nmdto.getItemId()).get();
+
+                //remove already existed entities
+                List<PersonPersonConnection> elList = new ArrayList<>();
+                for (PersonPersonConnection personPersonConn : connectedPerson.getPersonConnections()) {
+                    if (personPersonConn.getConnectedPerson().getId().equals(person.getId())) {
+                        elList.add(personPersonConn);
+                    }
+                }
+                connectedPerson.getPersonConnections().removeAll(elList);
+                personRepository.flush();
             }
         }
 

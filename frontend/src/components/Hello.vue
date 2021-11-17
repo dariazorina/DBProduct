@@ -12,13 +12,13 @@
                         <div v-for="movement in userMovements">
 
                             <!--                            <input v-bind:value="movement" name="movement" type="radio"-->
-                            <!--                                   v-model="selectedMovement"/>-->
+                            <!--                                   v-model="checkedMovements"/>-->
 
-                            <input v-bind:value="movement.id" name="movement.name" type="radio"
-                                   v-model="selectedMovement"/>
+                            <input style="margin-right: 5px;" v-bind:value="movement.id" name="movement.name" type="checkbox"
+                                   v-model="checkedMovements"/>
 
                             <!--                            <input v-bind:value="movement.name" type="radio"-->
-                            <!--                                   v-model="selectedMovement"/>-->
+                            <!--                                   v-model="checkedMovements"/>-->
 
                             <label :for="movement.id"><span>{{movement.name}}</span></label>
 
@@ -61,13 +61,13 @@
 
     export default {
         name: 'hello',
-        props: {hellomsg: {type: String, required: true}},
+    //    props: {hellomsg: {type: String, required: true}},
         data: () => ({
             loggedInFlag: false,
             loggedName: '',
             userMovements: [],
             allMovements: [],
-            selectedMovement: '',
+            checkedMovements: [],
         }),
         methods: {
 
@@ -78,8 +78,8 @@
             },
 
             saveCurrentMovement() {
-                console.log("CURRENT MOVMNT", this.selectedMovement);
-                this.$store.dispatch("movement_selection", {movement: this.selectedMovement.toString()}).then(result => {
+                console.log("CURRENT MOVMNT", this.checkedMovements);
+                this.$store.dispatch("movement_selection", {movement: JSON.stringify(this.checkedMovements)}).then(result => {
                     router.push('/article');
                 });
             }

@@ -1,5 +1,5 @@
 <template id="article-details">
-    <div>
+    <div class="noselect" style="background-color: transparent">
         <link href="../dbnm.css" rel="stylesheet"/>
         <iframe id="iframeToDownload" style="display:none;"></iframe>
 
@@ -247,7 +247,7 @@
                 articleOrgIds: [], //before request
                 articleOrgEntities: [], //after request
 
-                articleMaterialIds: [], //before request
+               // articleMaterialIds: [], //before request
                 articleMaterialEntities: [], //after request
 
                 uploadedFiles: [],
@@ -418,10 +418,10 @@
                 }
                 console.log("mounted org", this.articleOrgIds);
 
-                for (let j = 0; j < this.article.materialList.length; j++) {
-                    this.articleMaterialIds.push(this.article.materialList[j].itemId);
-                }
-                console.log("mounted material", this.articleMaterialIds);
+                // for (let j = 0; j < this.article.materialList.length; j++) {
+                //     this.articleMaterialIds.push(this.article.materialList[j].itemId);
+                // }
+                // console.log("mounted material", this.articleMaterialIds);
 
                 apiPerson.getPersonsByIds(this.articlePersonIds, response => {
                     this.articlePersonEntities = response.data;
@@ -443,7 +443,7 @@
                 //     console.log("apiMater", this.articleMaterialEntities);
                 // });
 
-                api.getMaterialsByIdsAndSymmetrically(this.article.id, this.articleMaterialIds, response => {
+                api.getMaterialsByIdsAndSymmetrically(this.article.id, response => {
                     this.articleMaterialEntities = response.data;
                     // console.log("```````````````````````````````````````````apiMater", this.articleMaterialEntities);
                 });
