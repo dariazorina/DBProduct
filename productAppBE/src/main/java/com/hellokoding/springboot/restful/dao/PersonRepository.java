@@ -38,7 +38,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 //    List<Person> findAllWithMovement(List<Integer> movement);
 
 
-
 //    select *
 //    from Person p
 //    join PersonMovements pm on p.person_id=pm.person_id
@@ -68,29 +67,33 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 //    List<Person> findBySurnameAndMovement(String surname, Integer movement);
 
     ///////////////FILTER/////////////////
-    @Query("select distinct a " +
-            "from Person as a " +
-            "left join a.hashtagList h " +
+    @Query("select distinct p " +
+            "from Person as p " +
+            "left join p.movementList pML " +
+            "left join p.hashtagList h " +
             "left join h.assigned_hashtag assh " +
-            "left join a.orgConnections aO " +
-            "left join aO.org aOrg " +
-            "left join aOrg.nameList nmL " +
-            "left join a.locationConnections aLo " +
-            "left join aLo.location aLoc " +
-            "left join a.snpList snpL " +
+            "left join p.orgConnections pO " +
+            "left join pO.org pOrg " +
+            "left join pOrg.nameList nmL " +
+            "left join p.locationConnections pLo " +
+            "left join pLo.location pLoc " +
+            "left join p.snpList snpL " +
             "where ((:org is null  or lower(nmL.name) like :org) " +
-            "and (:location is null or lower(aLoc.country) like :location) " +
-            "and (:surname is null or lower(snpL.surname) like :surname) " +
-            "and (:hashTag is null or assh.content like :hashTag)) ")
-    Set<Person> findByFilters(String hashTag, String surname, String org, String location);
+            "and (:location is null or lower(pLoc.country) like :location or lower(pLoc.region) like :location or lower(pLoc.city) like :location or lower(pLoc.address) like :location or lower(pLoc.placement) like :location) " +
+            "and (:surname is null or lower(snpL.surname) like :surname or lower(snpL.name) like :surname) " +
+            "and (:hashTag is null or assh.content like :hashTag)) " +
+            "and (pML.id in :movement) ")
+    Set<Person> findByFilters(String hashTag, String surname, String org, String location, List<Integer> movement);
 
     @Query("select distinct p " +   //to remove duplicate if item has several hashtags start with search word
             "from Person p " +
+            "join p.movementList pML " +
             "join p.hashtagList h " +
             "join h.assigned_hashtag assh " +
             "where h.assigned_hashtag = assh.id " +
-            "and lower(assh.content) like lower(:hashTag)")
-    List<Person> findByHash(String hashTag);
+            "and lower(assh.content) like :hashTag " +
+            "and pML.id in :movement ")
+    List<Person> findByHash(String hashTag, List<Integer> movement);
 
 //    @Query("select distinct p " +
 //            "from Person p " +
@@ -104,22 +107,41 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query("select distinct p " +
             "from Person p " +
             "join p.snpList snpL " +
-            "where (lower(snpL.surname) like lower(:surname)) ")
+            "join p.movementList pML " +
+            "where ((lower(snpL.name) like :surname)" +
+            "or (lower(snpL.surname) like :surname)) " +
+            "and (pML.id in :movement) ")
+    List<Person> findBySurname(String surname, List<Integer> movement);
+
+
+    @Query("select distinct p " +
+            "from Person p " +
+            "join p.snpList snpL " +
+            "where ((lower(snpL.name) like :surname)" +
+            "or (lower(snpL.surname) like :surname)) ")
     List<Person> findBySurname(String surname);
 
     @Query("select distinct p " +
             "from Person p " +
+            "join p.movementList pML " +
             "join p.orgConnections aL " +
             "join aL.org aP " +
             "join aP.nameList nmL " +
-            "where (lower(nmL.name) like lower(:org)) ")
-    List<Person> findByOrg(String org);
+            "where (lower(nmL.name) like :org) " +
+            "and (pML.id in :movement) ")
+    List<Person> findByOrg(String org, List<Integer> movement);
 
     @Query("select distinct p " +
             "from Person p " +
-            "join p.locationConnections aL " +
-            "join aL.location aP " +
-            "where (lower(aP.country) like lower(:location)) ")
-    List<Person> findByLocation(String location);
+            "join p.movementList pML " +
+            "join p.locationConnections aLC " +
+            "join aLC.location aLoc " +
+            "where (lower(aLoc.country) like :location)" +
+            "or (lower(aLoc.city) like :location)" +
+            "or (lower(aLoc.region) like :location)" +
+            "or (lower(aLoc.address) like :location)" +
+            "or (lower(aLoc.placement) like :location) " +
+            "and (pML.id in :movement) ")
+    List<Person> findByLocation(String location, List<Integer> movement);
 
 }

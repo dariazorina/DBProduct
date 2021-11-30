@@ -8,7 +8,8 @@
             </a>
         </div>
 
-        <div class="form-group col-sm-12" align="right" style="margin: 0; padding: 5px; background-color: transparent">
+        <div v-if="isAnyFilterActive() === true" class="form-group col-sm-12" align="right"
+             style="margin: 0; padding: 5px; background-color: transparent">
             <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров</button>
         </div>
 
@@ -17,7 +18,7 @@
             <thead>
             <tr>
                 <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(2)">
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
                         <div class='headerLink col-sm-6'
@@ -27,23 +28,24 @@
                         <div class='col-sm-3'
                              style="padding-left: 0px; background-color: transparent; visibility: hidden"
                              id="locationFilterId">
-                            <v-btn text icon x-small @click="resetFilter(2)">
+                            <v-btn text icon x-small @click="resetFilter(1)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
                     </div>
                 </th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(2)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
                         <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0" @click="sort('name')">
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0"
+                             @click="sort('name')">
                             Название
                         </div>
                         <div class='col-sm-3'
                              style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="surnameFilterId">
-                            <v-btn text icon x-small @click="resetFilter(3)">
+                             id="nameFilterId">
+                            <v-btn text icon x-small @click="resetFilter(2)">
                                 <v-icon style="color: white">mdi-close-circle</v-icon>
                             </v-btn>
                         </div>
@@ -54,22 +56,22 @@
                 <th class='tdAlignLeft'>Год закрытия</th>
 
 
-<!--                <th class='tdAlignLeft'>Персоны</th>-->
-<!--                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">-->
-<!--                    <div class="row" style="background-color: transparent">-->
-<!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
-<!--                        <div class='headerLink col-sm-6'-->
-<!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
-<!--                            Организация-->
-<!--                        </div>-->
-<!--                        <div class='col-sm-3'-->
-<!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
-<!--                             id="orgFilterId">-->
-<!--                            <v-btn text icon x-small @click="resetFilter(1)">-->
-<!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
-<!--                            </v-btn>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <!--                <th class='tdAlignLeft'>Персоны</th>-->
+                <!--                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">-->
+                <!--                    <div class="row" style="background-color: transparent">-->
+                <!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
+                <!--                        <div class='headerLink col-sm-6'-->
+                <!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
+                <!--                            Организация-->
+                <!--                        </div>-->
+                <!--                        <div class='col-sm-3'-->
+                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
+                <!--                             id="orgFilterId">-->
+                <!--                            <v-btn text icon x-small @click="resetFilter(1)">-->
+                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
+                <!--                            </v-btn>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
 
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
@@ -123,14 +125,14 @@
                 <td class='tdAlignLeft'>
                     <div v-for="location in org.locationList">
                         <div v-if="org.locationList.length > 0">
-                            {{getLocationCellById(location.itemId)}}
+                            {{location}}
                         </div>
                     </div>
                 </td>
                 <td><a>
                     <router-link :to="{name: 'org-details', params: {org_id: org.id}}">
                         {{ org.name }}
-<!--                        {{ getPriorityName(org) }}-->
+                        <!--                        {{ getPriorityName(org) }}-->
                         <!--                        {{ getNameWithPriority(1) }}-->
                     </router-link>
                 </a></td>
@@ -141,14 +143,14 @@
                 <td style="text-align: center; padding-left: 0">{{org.closureYear}}</td>
 
 
-<!--                <td class='tdAlignLeft'>-->
-<!--                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>-->
-<!--                </td>-->
+                <!--                <td class='tdAlignLeft'>-->
+                <!--                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>-->
+                <!--                </td>-->
 
-<!--                <td class='tdAlignLeft'>-->
-<!--                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>-->
-<!--&lt;!&ndash;                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>&ndash;&gt;-->
-<!--                </td>-->
+                <!--                <td class='tdAlignLeft'>-->
+                <!--                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>-->
+                <!--&lt;!&ndash;                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>&ndash;&gt;-->
+                <!--                </td>-->
                 <td class='tdAlignLeft'>
                     <div v-for="ph in org.hashtagList">
                         {{ph}}
@@ -194,6 +196,14 @@
                             Применить
                         </b-button>
                     </div>
+
+                </div>
+                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по
+                    текущему полю будет отрабатывать
+                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не
+                    задействованы).
+                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i>
+                    введенное значение фильтра для текущего поля.
                 </div>
             </template>
         </b-modal>
@@ -239,8 +249,8 @@
                     hashtagList: [],
                     nameList: []
                 },
-                orgLocationIds: [], //before request
-                orgLocationEntities: [], //after request
+                // orgLocationIds: [], //before request
+                // orgLocationEntities: [], //after request
                 orgOrgIds: [], //before request
                 orgOrgEntities: [], //after request
                 orgPersonIds: [], //before request
@@ -259,22 +269,19 @@
                 // currentSort: 'foundationYear',
                 currentSortDir: 'asc',
 
-                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
-                    {key: 3, value: []},],
+                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},],
 
                 filterTableFields: [
                     {key: 0, text: 'Хештеги'},
-                    {key: 1, text: 'Организации'},
-                    {key: 2, text: 'Локации'},
-                    {key: 3, text: 'Названия'},
+                    {key: 1, text: 'Локации'},
+                    {key: 2, text: 'Названия'},
                 ],
 
                 // todo - maybe remove key? it dublicates index
                 filterTableFieldsForRequest: [
                     {key: 0, text: 'hash'},
-                    {key: 1, text: 'org'},
-                    {key: 2, text: 'location'},
-                    {key: 3, text: 'name'},
+                    {key: 1, text: 'location'},
+                    {key: 2, text: 'name'},
                 ],
 
                 statusList: [
@@ -324,9 +331,17 @@
 
                 result += movArray[i];
 
-               // console.log("complexMOVVVCreation", result);
+                // console.log("complexMOVVVCreation", result);
                 return result;
             },
+
+            isAnyFilterActive() {
+                for (let j = 0; j < this.filterItems.length; j++) {
+                    if (this.filterItems[j].value.length) return true;
+                }
+                return false;
+            },
+
 
             // getPriorityName(currentOrgParam) {
             //     //console.log("*************************", this.entries, currentOrgParam);
@@ -367,9 +382,10 @@
 
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
-                //this.currentFilterItems.push(item);  //push item(item: {id, content}
+                /////////////// this.currentFilterItems.push(item);  //push item(item: {id, content}
 
                 let key = this.filterTableFields.find(x => x === this.currentFilterField).key;
+                //  console.log("*_*_*_*_*_*_*_*_*_*__*", key);
                 this.filterClearButtonActivity(false, this.filterTableFieldsForRequest[key].text + 'FilterId');
                 // console.log("----------ADDED LINK", key, this.filterTableFieldsForRequest[key].text + 'FilterId');
             },
@@ -492,16 +508,16 @@
             //     return result;
             // },
 
-            getLocationCellById(id) {
-                let result = '';
-                let currentLocation = this.orgLocationEntities.find(x => x.id === id);
-                //console.log("currLoc", currentLocation, id, this.orgLocationEntities);
-
-                if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentLocation.content;
-                }
-                return result;
-            },
+            // getLocationCellById(id) {
+            //     let result = '';
+            //     let currentLocation = this.orgLocationEntities.find(x => x.id === id);
+            //     //console.log("currLoc", currentLocation, id, this.orgLocationEntities);
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentLocation.content;
+            //     }
+            //     return result;
+            // },
 
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length == 0) {
@@ -511,7 +527,7 @@
             },
 
             filterAll() {
-                api.filterAll(this.filterAllBodyCreation(), r => {
+                apiOrg.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
                     this.entries = r.data;
                     console.log("filter all =============", this.entries);
                 });
@@ -530,43 +546,20 @@
                 }
                 return result;
             },
+
+            getAllOrgsWithMov() {
+                apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+                    this.entries = response.data;
+                    console.log("ORGSSSS", response.data, this.entries.length);
+                });
+            }
         },
         mounted() {
-
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-
-            // console.log("MOVEMENTS", localStorage.getItem('movement'));
-
-            apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
-
-                // this.persons = response.data;
-                this.entries = response.data;
-                console.log("ORGSSSS", response.data, this.entries.length);
-
-                for (let i = 0; i < this.entries.length; i++) {
-
-                    // for (let j = 0; j < this.entries[i].personList.length; j++) {
-                    //     this.orgPersonIds.push(this.entries[i].personList[j].itemId);
-                    // }
-
-                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                        // console.log("^@@@@@@@@@^^^^^^^^^^^", this.entries[i].locationList);
-                        this.orgLocationIds.push(this.entries[i].locationList[j].itemId);
-                    }
-                }
-
-                // apiPerson.getPersonsByIds(this.orgPersonIds, response => {
-                //     this.orgPersonEntities = response.data;
-                // });
-
-                apiCountry.getLocationsByIds(this.orgLocationIds, response => {
-                    this.orgLocationEntities = response.data;
-                    console.log("^^^^^^^^^^^^^^^^^", this.orgLocationEntities);
-                });
-            });
+            this.getAllOrgsWithMov();
         },
         watch: {
             color: function () {   //calls when color picking is done

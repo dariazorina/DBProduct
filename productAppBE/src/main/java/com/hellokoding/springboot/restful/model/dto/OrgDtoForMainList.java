@@ -22,7 +22,7 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 
     private List<String> hashtagList;
     //    private List<NameConnectionDto> orgList;
-    private List<ItemConnectionDto> locationList;
+    private List<String> locationList;
     //    private List<ItemConnectionDto> personList;
     private List<Movement> movementList;
 
@@ -31,7 +31,7 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 
     public OrgDtoForMainList(Integer id, List<Movement> movementList, String name,
                              String rowColor, List<String> hashtagList,
-                             List<NameConnectionDto> orgList, List<ItemConnectionDto> locationList, List<ItemConnectionDto> personList,
+                             List<NameConnectionDto> orgList, List<String> locationList, List<ItemConnectionDto> personList,
                              Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
@@ -95,15 +95,21 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 //            dtoName = "";
 //        }
 
-        ItemConnectionDto locationConnectionDto;
-        for (OrgLocationConnection connection : org.getLocationConnections()) {
-            locationConnectionDto = new ItemConnectionDto();
-            locationConnectionDto.setItemId(connection.getLocation().getId());
-            locationConnectionDto.setConnection(connection.getConnection());
-            locationConnectionDto.setComment(connection.getComment());
+//        ItemConnectionDto locationConnectionDto;
+//        for (OrgLocationConnection connection : org.getLocationConnections()) {
+//            locationConnectionDto = new ItemConnectionDto();
+//            locationConnectionDto.setItemId(connection.getLocation().getId());
+//            locationConnectionDto.setConnection(connection.getConnection());
+//            locationConnectionDto.setComment(connection.getComment());
+//
+//            this.locationList.add(locationConnectionDto);
+//        }
 
-            this.locationList.add(locationConnectionDto);
+        List<String> locationStringList = new ArrayList<>();
+        for (OrgLocationConnection plC : org.getLocationConnections()) {
+            locationStringList.add(plC.getLocation().getCountry());
         }
+        this.setLocationList(locationStringList);
 
 //        ItemConnectionDto personConnectionDto;
 //        for (OrgPersonConnection connection : org.getPersonConnections()) {
@@ -195,11 +201,11 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 //        this.orgList = orgList;
 //    }
 
-    public List<ItemConnectionDto> getLocationList() {
+    public List<String> getLocationList() {
         return locationList;
     }
 
-    public void setLocationList(List<ItemConnectionDto> locationList) {
+    public void setLocationList(List<String> locationList) {
         this.locationList = locationList;
     }
 

@@ -1238,7 +1238,8 @@
             },
 
             initYears() {
-                for (let y = 1900; y < 2051; y++) {
+                this.years.push("null");
+                for (let y = 1800; y < 2051; y++) {
                     this.years.push(y);
                 }
             },

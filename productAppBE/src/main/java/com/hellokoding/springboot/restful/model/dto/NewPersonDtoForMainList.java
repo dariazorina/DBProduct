@@ -20,7 +20,7 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
 
     private List<String> hashtagList;
     private List<ItemConnectionDto> orgList;
-    private List<ItemConnectionDto> locationList;
+    private List<String> locationList;
     private List<Movement> movementList;
 //    private String photo;
 //    private byte[] photo;
@@ -30,7 +30,7 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
 
     public NewPersonDtoForMainList(Integer id, List<Movement> movementList, String snp,
                                    String rowColor, List<String> hashtagList,
-                                   List<ItemConnectionDto> orgList, List<ItemConnectionDto> locationList,
+                                   List<ItemConnectionDto> orgList, List<String> locationList,
                                    Integer bYear, Integer dYear, String status) {
         this.id = id;
         this.movementList = movementList;
@@ -73,15 +73,12 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
             this.orgList.add(orgConnectionDto);
         }
 
-        ItemConnectionDto locationConnectionDto;
-        for (PersonLocationConnection connection : p.getLocationConnections()) {
-            locationConnectionDto = new ItemConnectionDto();
-            locationConnectionDto.setItemId(connection.getLocation().getId());
-            locationConnectionDto.setConnection(connection.getConnection());
-            locationConnectionDto.setComment(connection.getComment());
-
-            this.locationList.add(locationConnectionDto);
+        List<String> locationStringList = new ArrayList<>();
+        for (PersonLocationConnection plC : p.getLocationConnections()) {
+            locationStringList.add(plC.getLocation().getCountry());
         }
+        this.setLocationList(locationStringList);
+
 
         for (SurnameNamePatr snp : p.getSnpList()) {
             if (snp.getPriority() == 1) {
@@ -138,11 +135,11 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
         this.orgList = orgList;
     }
 
-    public List<ItemConnectionDto> getLocationList() {
+    public List<String> getLocationList() {
         return locationList;
     }
 
-    public void setLocationList(List<ItemConnectionDto> locationList) {
+    public void setLocationList(List<String> locationList) {
         this.locationList = locationList;
     }
 

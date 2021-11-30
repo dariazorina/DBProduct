@@ -46,13 +46,14 @@ public class PersonAPI {
     }
 
 
-    @GetMapping("/search")
-    public ResponseEntity<List<NewPersonDto>> search(@RequestParam(name = "hash", required = false) List<String> hash,
+    @GetMapping("/filter")
+    public ResponseEntity<List<NewPersonDtoForMainList>> filter(@RequestParam(name = "hash", required = false) List<String> hash,
                                                      @RequestParam(name = "surname", required = false) List<String> surname,
                                                      @RequestParam(name = "org", required = false) List<String> org,
-                                                     @RequestParam(name = "location", required = false) List<String> location) {
+                                                     @RequestParam(name = "location", required = false) List<String> location,
+                                                     @RequestParam(name = "mov", required = false) List<Integer> movement) {
 
-        List<NewPersonDto> searchResult = personService.search(hash, surname, org, location);
+        List<NewPersonDtoForMainList> searchResult = personService.filter(hash, surname, org, location, movement);
         return ResponseEntity.ok(searchResult);
     }
 

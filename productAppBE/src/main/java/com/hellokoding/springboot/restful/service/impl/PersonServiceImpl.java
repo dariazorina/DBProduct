@@ -215,8 +215,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<NewPersonDto> search(List<String> hash, List<String> surname, List<String> org, List<String> location) {
-        List<NewPersonDto> dtoSearchList = new ArrayList<>();
+    public List<NewPersonDtoForMainList> filter(List<String> hash, List<String> surname, List<String> org, List<String> location, List<Integer> mov) {
+        List<NewPersonDtoForMainList> dtoSearchList = new ArrayList<>();
         Set<Person> searchList = new HashSet<>();
 
         boolean isSingleFilter = false;
@@ -286,15 +286,15 @@ public class PersonServiceImpl implements PersonService {
             for (String h : hash) hashList.add(h + "%");
 
             if (isSingleFilter) {
-                for (String s : hashList) searchList.addAll(personRepository.findByHash(s));
+                for (String s : hashList) searchList.addAll(personRepository.findByHash(s.toLowerCase(), mov));
             }
         }
 
         if (surname != null && !surname.isEmpty()) {
-            for (String a : surname) authorList.add(a + "%");
+            for (String a : surname) authorList.add("%" + a + "%");
 
             if (isSingleFilter) {
-                for (String s : authorList) searchList.addAll(personRepository.findBySurname(s));
+                for (String s : authorList) searchList.addAll(personRepository.findBySurname(s.toLowerCase(), mov));
             }
         }
 
@@ -302,15 +302,15 @@ public class PersonServiceImpl implements PersonService {
             for (String o : org) orgList.add("%" + o + "%");
 
             if (isSingleFilter) {
-                for (String s : orgList) searchList.addAll(personRepository.findByOrg(s));
+                for (String s : orgList) searchList.addAll(personRepository.findByOrg(s.toLowerCase(), mov));
             }
         }
 
         if (location != null && !location.isEmpty()) {
-            for (String l : location) locationList.add(l + "%");
+            for (String l : location) locationList.add("%" + l + "%");
 
             if (isSingleFilter) {
-                for (String s : locationList) searchList.addAll(personRepository.findByLocation(s));
+                for (String s : locationList) searchList.addAll(personRepository.findByLocation(s.toLowerCase(), mov));
             }
         }
 
@@ -319,12 +319,12 @@ public class PersonServiceImpl implements PersonService {
                     hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
                     authorList.size() == 0 ? null : authorList.get(0).toLowerCase(),
                     orgList.size() == 0 ? null : orgList.get(0).toLowerCase(),
-                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase());
+                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(), mov);
         }
 
-        NewPersonDto dtoPerson;
+        NewPersonDtoForMainList dtoPerson;
         for (Person p : searchList) {
-            dtoPerson = new NewPersonDto(p);
+            dtoPerson = new NewPersonDtoForMainList(p);
             dtoSearchList.add(dtoPerson);
         }
         return dtoSearchList;
@@ -536,6 +536,36 @@ public class PersonServiceImpl implements PersonService {
             person.setLocationConnections(locationConnectionList);
         } else {
             person.getLocationConnections().addAll(locationConnectionList);
+        }
+
+
+        ///article
+        if (person.getArticleConnections() != null) {
+            person.getArticleConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer articleId;
+        ArticlePersonConnection articleConnection;
+        List<ArticlePersonConnection> articleConnectionList = new ArrayList<>();
+        for (ItemConnectionDto connectionDto : personDto.getArticleList()) {
+
+            articleId = connectionDto.getItemId();
+            if (articleRepository.findById(articleId).isPresent()) {
+                articleConnection = new ArticlePersonConnection();
+                articleConnection.setArticle(articleRepository.findById(articleId).get());
+                articleConnection.setPerson(person);
+                articleConnection.setConnection(connectionDto.getConnection());
+                articleConnection.setComment(connectionDto.getComment());
+
+                articleConnectionList.add(articleConnection);
+            }
+        }
+
+        if (person.getArticleConnections() == null) {
+            person.setArticleConnections(articleConnectionList);
+        } else {
+            person.getArticleConnections().addAll(articleConnectionList);
         }
 
 

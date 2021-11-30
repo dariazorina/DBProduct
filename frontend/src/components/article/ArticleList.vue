@@ -285,7 +285,8 @@
                 <td>
                     <div v-for="location in article.locationList">
                         <div v-if="article.locationList.length > 0">
-                            {{getLocationCellById(location.itemId)}}
+                            {{location}}
+<!--                            {{getLocationCellById(location.itemId)}}-->
                         </div>
                     </div>
                 </td>
@@ -507,8 +508,8 @@
                 authors: [],
                 // articlePersonIds: [], //before request
                 // articlePersonEntities: [], //after request
-                articleLocationIds: [], //before request
-                articleLocationEntities: [], //after request
+                // articleLocationIds: [], //before request
+                // articleLocationEntities: [], //after request
                 // articleOrgIds: [], //before request
                 // articleOrgEntities: [], //after request
 
@@ -910,15 +911,15 @@
             //     }
             // },
 
-            getLocationCellById(id) {
-                let result = '';
-                let currentLocation = this.articleLocationEntities.find(x => x.id === id);
-
-                if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentLocation.content;
-                    return result;
-                }
-            },
+            // getLocationCellById(id) {
+            //     let result = '';
+            //     let currentLocation = this.articleLocationEntities.find(x => x.id === id);
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentLocation.content;
+            //         return result;
+            //     }
+            // },
 
             // getOrgCellById(id) {
             //     let result = '';
@@ -1289,27 +1290,27 @@
 
                     this.entries = r.data;
                  //   console.log("**********%%%%%%%%%%**********", this.entries);
-                    for (let i = 0; i < this.entries.length; i++) {
+                 //    for (let i = 0; i < this.entries.length; i++) {
                         // for (let j = 0; j < this.entries[i].personList.length; j++) {
                         //     this.articlePersonIds.push(this.entries[i].personList[j].itemId);
                         // }
                         // for (let j = 0; j < this.entries[i].orgList.length; j++) {
                         //     this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
                         // }
-                        for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                            this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
-                        }
-                    }
+                        // for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                        //     this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                        // }
+                    // }
                     //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
 
                     // apiOrg.getOrgsByIds(this.articleOrgIds, response => {
                     //     this.articleOrgEntities = response.data;
                     // });
 
-                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {
-                        this.articleLocationEntities = response.data;
-                        this.alternate('mainListTable');
-                    });
+                    // apiCountry.getLocationsByIds(this.articleLocationIds, response => {
+                    //     this.articleLocationEntities = response.data;
+                    //     this.alternate('mainListTable');
+                    // });
 
                     // apiPerson.getPersonsByIds(this.articlePersonIds, response => {
                     //     this.articlePersonEntities = response.data;

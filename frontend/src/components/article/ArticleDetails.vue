@@ -74,13 +74,13 @@
             <div class="row">
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle">
-                        <span class="float-left">Авторы</span>
+                        <span class="float-left">Лица</span>
                     </div>
                 </div>
 
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-                     <div v-for="author in articlePersonEntities">
-                            {{createComplexPersonById(author.id)}}
+                     <div v-for="author in articlePersonEntities"><a><router-link :to="{name: 'person-details', params: {person_id:author.id}}" target="_blank">
+                         {{createComplexPersonById(author.id)}}</router-link></a>
                     </div>
                 </span>
                 </div>
@@ -104,11 +104,13 @@
                         <span class="float-left">Организации</span></div>
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;">
-                                       <span class="float-left">
-                                           <div v-for="org in articleOrgEntities">
-                                                {{ createComplexOrgById(org.id)}}
-                                           </div>
-                                       </span>
+                    <span class="float-left">
+                        <div v-for="org in articleOrgEntities"><a><router-link
+                              :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">
+                                 {{ createComplexOrgById(org.id)}}</router-link>
+                            </a>
+                        </div>
+                    </span>
                 </div>
             </div>
 

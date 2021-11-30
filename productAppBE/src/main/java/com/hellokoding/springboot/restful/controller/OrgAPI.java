@@ -38,6 +38,16 @@ public class OrgAPI {
         return ResponseEntity.ok(orgService.findAll(mov));
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<OrgDtoForMainList>> filter(@RequestParam(name = "hash", required = false) List<String> hash,
+                                                     @RequestParam(name = "name", required = false) List<String> name,
+                                                     @RequestParam(name = "location", required = false) List<String> location,
+                                                     @RequestParam(name = "mov", required = false) List<Integer> movement) {
+
+        List<OrgDtoForMainList> searchResult = orgService.filter(hash, name, location, movement);
+        return ResponseEntity.ok(searchResult);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q) {
         List<IdContentDto> search = orgService.search(q);

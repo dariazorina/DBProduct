@@ -8,14 +8,15 @@
             </a>
         </div>
 
-<!--        <div class="filters row">-->
-<!--            <div class="form-group col-sm-3">-->
-<!--                <input placeholder="Поиск по фамилии" v-model="searchKey" class="form-control" id="search-element"-->
-<!--                       requred/>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="filters row">-->
+        <!--            <div class="form-group col-sm-3">-->
+        <!--                <input placeholder="Поиск по фамилии" v-model="searchKey" class="form-control" id="search-element"-->
+        <!--                       requred/>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-        <div class="form-group col-sm-12" align="right" style="margin: 0; padding: 5px; background-color: transparent">
+        <div v-if="isAnyFilterActive() === true" class="form-group col-sm-12" align="right"
+             style="margin: 0; padding: 5px; background-color: transparent">
             <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров</button>
         </div>
 
@@ -24,7 +25,7 @@
             <thead>
             <tr>
                 <th class='tdTitle headerLink' style="color:lightgray; width: 3%" @click="sort('status')">Статус</th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(2)">
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(2)" @click="sort('location')">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
                         <div class='headerLink col-sm-6'
@@ -40,24 +41,24 @@
                         </div>
                     </div>
                 </th>
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)"   @click="sort('snp')">
-                <div class="row" style="background-color: transparent">
-                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                    <div class='headerLink col-sm-6'
-                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0;">
-                        ФИО
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)" @click="sort('snp')">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0;">
+                            ФИО
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="surnameFilterId">
+                            <v-btn text icon x-small @click="resetFilter(3)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
-                    <div class='col-sm-3'
-                         style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                         id="surnameFilterId">
-                        <v-btn text icon x-small @click="resetFilter(3)">
-                            <v-icon style="color: white">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </div>
-                </div>
 
 
-<!--                <th class='tdAlignLeft'>Должность</th>-->
+                    <!--                <th class='tdAlignLeft'>Должность</th>-->
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
@@ -129,7 +130,8 @@
                 <td class='tdAlignLeft'>
                     <div v-for="location in person.locationList">
                         <div v-if="person.locationList.length > 0">
-                            {{getLocationCellById(location.itemId)}}
+                            {{location}}
+                            <!--                            {{getLocationCellById(location.itemId)}}-->
                         </div>
                     </div>
                 </td>
@@ -140,18 +142,18 @@
                     </router-link>
                 </a></td>
 
-<!--                <td><a>-->
-<!--                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">-->
-<!--                        {{ getPrioritySNP(person) }}-->
-<!--                    </router-link>-->
-<!--                </a></td>-->
+                <!--                <td><a>-->
+                <!--                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">-->
+                <!--                        {{ getPrioritySNP(person) }}-->
+                <!--                    </router-link>-->
+                <!--                </a></td>-->
 
-<!--                <td style="text-align: right; padding-right: 20px">-->
-<!--                                        <div v-for="org in person.orgList">{{org.connection}}</div>-->
-<!--                </td>-->
+                <!--                <td style="text-align: right; padding-right: 20px">-->
+                <!--                                        <div v-for="org in person.orgList">{{org.connection}}</div>-->
+                <!--                </td>-->
 
                 <td class='tdAlignLeft'>
-                                        <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
+                    <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
                 </td>
                 <td class='tdAlignLeft'>{{person.birthYear}}</td>
                 <td class='tdAlignLeft'>{{person.deathYear}}</td>
@@ -204,6 +206,15 @@
                         </b-button>
                     </div>
                 </div>
+
+                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по
+                    текущему полю будет отрабатывать
+                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не
+                    задействованы).
+                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i>
+                    введенное значение фильтра для текущего поля.
+                </div>
+
             </template>
         </b-modal>
     </div>
@@ -247,8 +258,8 @@
                 entries: [],
 
                 person: {status: 0, locationList: [], orgList: [], hashtagList: [], snpList: []},
-                personLocationIds: [], //before request
-                personLocationEntities: [], //after request
+                // personLocationIds: [], //before request
+                // personLocationEntities: [], //after request
                 personOrgIds: [], //before request
                 personOrgEntities: [], //after request
 
@@ -262,7 +273,6 @@
                 previousSelectedPerson: null,
 
                 currentSort: 'snp',
-                // currentSort: 'snp',
                 currentSortDir: 'asc',
 
                 filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},
@@ -284,10 +294,10 @@
                 ],
 
                 statusList: [
-                    {id:1, name:''},  //to prevent access to undefined list
-                    {id:2, name:''},
-                    {id:3, name:''},
-                    {id:4, name:''}
+                    {id: 1, name: ''},  //to prevent access to undefined list
+                    {id: 2, name: ''},
+                    {id: 3, name: ''},
+                    {id: 4, name: ''}
                 ],
 
                 currentFilterField: '',
@@ -341,7 +351,7 @@
 
                 result += movArray[i];
 
-               // console.log("complexMOVVVCreation", result);
+                // console.log("complexMOVVVCreation", result);
                 return result;
             },
 
@@ -384,11 +394,23 @@
                 }
                 this.currentFilterItems = [];
                 this.filterAll();
+            },
 
-                // api.getAllPersons(response => {
-                //     this.entries = response.data;
-                //     // console.log("PERSONS", response.data)
-                // });
+            getAllPersonsWithMov() {
+                api.getAllPersons(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+                    this.entries = response.data;
+                    console.log("PERSONS", response.data, this.entries.length);
+
+                    this.personOrgIds.splice(0);
+                    for (let i = 0; i < this.entries.length; i++) {
+                        for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                            this.personOrgIds.push(this.entries[i].orgList[j].itemId);
+                        }
+                    }
+                    apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                        this.personOrgEntities = response.data;
+                    });
+                });
             },
 
             updateItem(item) {  // (2) calls when search item adds to search list
@@ -517,27 +539,27 @@
                 return result;
             },
 
-            getOrgPositionById(id) {
-                let result = '';
-                let currentOrg = this.personOrgEntities.find(x => x.id === id);
+            // getOrgPositionById(id) {
+            //     let result = '';
+            //     let currentOrg = this.personOrgEntities.find(x => x.id === id);
+            //
+            //     console.log("ORG", currentOrg, id, this.personOrgEntities);
+            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentOrg.content;
+            //     }
+            //     return result;
+            // },
 
-                console.log("ORG", currentOrg, id, this.personOrgEntities);
-                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.content;
-                }
-                return result;
-            },
-
-            getLocationCellById(id) {
-                let result = '';
-                let currentLocation = this.personLocationEntities.find(x => x.id === id);
-                //console.log("currLoc", currentLocation);
-
-                if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentLocation.content;
-                }
-                return result;
-            },
+            // getLocationCellById(id) {
+            //     let result = '';
+            //     let currentLocation = this.personLocationEntities.find(x => x.id === id);
+            //     //console.log("currLoc", currentLocation);
+            //
+            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentLocation.content;
+            //     }
+            //     return result;
+            // },
 
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length == 0) {
@@ -547,7 +569,7 @@
             },
 
             filterAll() {
-                api.filterAll(this.filterAllBodyCreation(), r => {
+                api.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
                     this.entries = r.data;
                     console.log("filter all =============", this.entries);
                 });
@@ -566,40 +588,20 @@
                 }
                 return result;
             },
+
+            isAnyFilterActive() {
+                for (let j = 0; j < this.filterItems.length; j++) {
+                    if (this.filterItems[j].value.length) return true;
+                }
+                return false;
+            },
         },
         mounted() {
-
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-
-            api.getAllPersons(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
-                // this.persons = response.data;
-                this.entries = response.data;
-                console.log("PERSONS", response.data, this.entries.length);
-
-                for (let i = 0; i < this.entries.length; i++) {
-
-                   for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                       this.personOrgIds.push(this.entries[i].orgList[j].itemId);
-                   }
-
-                    for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                        // console.log("^@@@@@@@@@^^^^^^^^^^^", this.entries[i].locationList);
-                        this.personLocationIds.push(this.entries[i].locationList[j].itemId);
-                    }
-                }
-
-                apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                    this.personOrgEntities = response.data;
-                });
-
-                apiCountry.getLocationsByIds(this.personLocationIds, response => {
-                    this.personLocationEntities = response.data;
-                  //  console.log("^^^^^^^^^^^^^^^^^", this.personLocationEntities);
-                });
-            });
+            this.getAllPersonsWithMov();
         },
         watch: {
             color: function () {   //calls when color picking is done

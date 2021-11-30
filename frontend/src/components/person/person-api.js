@@ -135,8 +135,8 @@ export default {
         })
     },
 
-    filterAll(body, fn) {
-        AXIOS.get(`person/search?` + body)
+    filterAll(body, mov, fn) {
+        AXIOS.get(`person/filter?` + body + `&mov=` + mov)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

@@ -458,7 +458,7 @@ public class ArticleServiceImpl implements ArticleService {
         return createResultSearchWithNameAndDate(searchRes, null);
     }
 
-    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
+    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {  // use it for articles
 
         Article connectedArticle, article;
         String dtoName = "", connection = "", comment = "";
@@ -564,7 +564,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<IdContentDto> searchMaterial(String q) {
-        List<Article> rrr = articleRepository.findMaterialByTitle("%" + q + "%");
+        List<Article> rrr = articleRepository.findMaterialByTitle("%" + q.toLowerCase() + "%");
         return createResultSearchWithNameAndDate(rrr, null);
     }
 
@@ -579,7 +579,6 @@ public class ArticleServiceImpl implements ArticleService {
         return null;
     }
 
-
     public List<IdContentDto> createResultSearchWithNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
@@ -589,16 +588,18 @@ public class ArticleServiceImpl implements ArticleService {
                 if (article.getTitleRus().length() > 0) {
                     dtoName += article.getTitleRus();
 
-                    if (article.getTitle() != null) {
-                        if (article.getTitle().length() > 0) {
-                            dtoName += "/ " + article.getTitle();
-                        }
-                    }
+//                    if (article.getTitle() != null) {
+//                        if (article.getTitle().length() > 0) {
+//                            dtoName += "/ " + article.getTitle();
+//                        }
+//                    }
                 }
             } else if (article.getTitle() != null) {
                 if (article.getTitle().length() > 0) {
                     dtoName += article.getTitle();
                 }
+            } else {
+                dtoName = "error name";
             }
 
             LocalDate dateWithZeroTime = article.getDate().toInstant()
@@ -654,15 +655,15 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (description != null) {
             if (status.get(0) == -1) {
-                searchList = articleRepository.findByDescriptionAndDateAndMovement("%" + description + "%", frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findByDescriptionAndDateAndMovement("%" + description.toLowerCase() + "%", frmtStartDate, frmtEndDate, movement);
             } else {
-                searchList = articleRepository.findByDescriptionAndStatusAndDateAndMovement("%" + description + "%", status, frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findByDescriptionAndStatusAndDateAndMovement("%" + description.toLowerCase() + "%", status, frmtStartDate, frmtEndDate, movement);
             }
         } else if (text != null) {
             if (status.get(0) == -1) {
-                searchList = articleRepository.findByTextAndDateAndMovement("%" + text + "%", frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findByTextAndDateAndMovement("%" + text.toLowerCase() + "%", frmtStartDate, frmtEndDate, movement);
             } else {
-                searchList = articleRepository.findByTextAndStatusAndDateAndMovement("%" + text + "%", status, frmtStartDate, frmtEndDate, movement);
+                searchList = articleRepository.findByTextAndStatusAndDateAndMovement("%" + text.toLowerCase() + "%", status, frmtStartDate, frmtEndDate, movement);
             }
         }
 
@@ -849,7 +850,7 @@ public class ArticleServiceImpl implements ArticleService {
                 if (isSingleFilter) {
                     if (status.get(0) == -1) {
                         for (i = 0; i < titleList.size(); i++)
-                            searchList.addAll(articleRepository.findByTitleAndDateAndMovement(titleList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByTitleAndDateAndMovement(titleList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
 //                    } else if (status.get(0) == 3) {
 //                        for (i = 0; i < titleList.size(); i++)
@@ -857,7 +858,7 @@ public class ArticleServiceImpl implements ArticleService {
 
                     } else {
                         for (i = 0; i < titleList.size(); i++)
-                            searchList.addAll(articleRepository.findByTitleAndStatusAndDateAndMovement(titleList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByTitleAndStatusAndDateAndMovement(titleList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
@@ -870,29 +871,29 @@ public class ArticleServiceImpl implements ArticleService {
                 if (isSingleFilter) {
                     if (status.get(0) == -1) {
                         for (i = 0; i < hashList.size(); i++)
-                            searchList.addAll(articleRepository.findByHashAndDateAndMovement(hashList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByHashAndDateAndMovement(hashList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
                     } else {
                         for (i = 0; i < hashList.size(); i++)
-                            searchList.addAll(articleRepository.findByHashAndStatusAndDateAndMovement(hashList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByHashAndStatusAndDateAndMovement(hashList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
             if (author != null && !author.isEmpty()) {
                 int i;
                 for (String a : author) {
-                    authorList.add(a + "%");
+                    authorList.add("%" + a + "%");
                 }
 
                 if (isSingleFilter) {
 
                     if (status.get(0) == -1) {
                         for (i = 0; i < authorList.size(); i++)
-                            searchList.addAll(articleRepository.findByAuthorAndDateAndMovement(authorList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByAuthorAndDateAndMovement(authorList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
                     } else {
                         for (i = 0; i < authorList.size(); i++)
-                            searchList.addAll(articleRepository.findByAuthorAndStatusAndDateAndMovement(authorList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByAuthorAndStatusAndDateAndMovement(authorList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
@@ -905,28 +906,28 @@ public class ArticleServiceImpl implements ArticleService {
                 if (isSingleFilter) {
                     if (status.get(0) == -1) {
                         for (i = 0; i < orgList.size(); i++)
-                            searchList.addAll(articleRepository.findByOrgAndDateAndMovement(orgList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByOrgAndDateAndMovement(orgList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
                     } else {
                         for (i = 0; i < orgList.size(); i++)
-                            searchList.addAll(articleRepository.findByOrgAndStatusAndDateAndMovement(orgList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByOrgAndStatusAndDateAndMovement(orgList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
             if (location != null && !location.isEmpty()) {
                 int i;
                 for (String l : location) {
-                    locationList.add(l + "%");
+                    locationList.add("%" + l + "%");
                 }
 
                 if (isSingleFilter) {
                     if (status.get(0) == -1) {
                         for (i = 0; i < locationList.size(); i++)
-                            searchList.addAll(articleRepository.findByLocationAndDateAndMovement(locationList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByLocationAndDateAndMovement(locationList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
                     } else {
                         for (i = 0; i < locationList.size(); i++)
-                            searchList.addAll(articleRepository.findByLocationAndStatusAndDateandMovement(locationList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByLocationAndStatusAndDateandMovement(locationList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
@@ -939,11 +940,11 @@ public class ArticleServiceImpl implements ArticleService {
                 if (isSingleFilter) {
                     if (status.get(0) == -1) {
                         for (i = 0; i < langList.size(); i++)
-                            searchList.addAll(articleRepository.findByLangAndDateAndMovement(langList.get(i), frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByLangAndDateAndMovement(langList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
                     } else {
                         for (i = 0; i < langList.size(); i++)
-                            searchList.addAll(articleRepository.findByLangAndStatusAndDateAndMovement(langList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                            searchList.addAll(articleRepository.findByLangAndStatusAndDateAndMovement(langList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                     }
                 }
             }
@@ -956,7 +957,7 @@ public class ArticleServiceImpl implements ArticleService {
                     if (isSingleFilter) {
                         if (status.get(0) == -1) {
                             for (i = 0; i < miscList.size(); i++)
-                                searchList.addAll(articleRepository.findByMiscellanyAndDateAndMovement(miscList.get(i), frmtStartDate, frmtEndDate, movement));
+                                searchList.addAll(articleRepository.findByMiscellanyAndDateAndMovement(miscList.get(i).toLowerCase(), frmtStartDate, frmtEndDate, movement));
 
 //                        } else if (status.get(0) == 3) {
 //                            for (i = 0; i < miscList.size(); i++)
@@ -964,7 +965,7 @@ public class ArticleServiceImpl implements ArticleService {
 
                         } else {
                             for (i = 0; i < miscList.size(); i++)
-                                searchList.addAll(articleRepository.findByMiscellanyAndStatusAndDateAndMovement(miscList.get(i), status, frmtStartDate, frmtEndDate, movement));
+                                searchList.addAll(articleRepository.findByMiscellanyAndStatusAndDateAndMovement(miscList.get(i).toLowerCase(), status, frmtStartDate, frmtEndDate, movement));
                         }
                     }
                 }

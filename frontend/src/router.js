@@ -43,7 +43,8 @@ Vue.use(Router);
 
 const router = new Router({
     //
-    mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
+    // mode: 'history', // uris without hashes #, see https://router.vuejs.org/guide/essentials/history-mode.html#html5-history-mode
+    mode: 'hash',
     routes: [
         // { path: '/', component: Hello },
         // { path: '/callservice', component: Service },
@@ -103,7 +104,7 @@ const router = new Router({
         // {path: '/uadmin', component: UserAdmin, name: 'user-admin'},
 
         // otherwise redirect to home
-        {path: '*', redirect: '/'}
+        {path: '/*', redirect: '/'}
     ]
 });
 

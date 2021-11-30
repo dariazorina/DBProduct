@@ -11,12 +11,13 @@ import java.util.Optional;
 
 public interface ArticleService {
     List<ArticleDtoForMainList> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
-                            List<String> location, List<String> lang, String descr, String text, List<String> misc,
-                            List<Integer> status, String startDate, String endDate, List<Integer> movement);
+                                       List<String> location, List<String> lang, String descr, String text, List<String> misc,
+                                       List<Integer> status, String startDate, String endDate, List<Integer> movement);
 
     List<ArticleDtoForMainList> search(String descr, String text, List<Integer> status, String startDate, String endDate, List<Integer> movement);
 
     List<IdContentDto> searchMaterial(String q);
+
     List<IdContentDto> searchMaterialById(Integer id);
 
 //    List<ArticleDto> findAll();
@@ -24,11 +25,12 @@ public interface ArticleService {
     Optional<ArticleDto> findById(Integer id);
 
     Article save(ArticleDto stock);
-    Article saveColor (ArticleDtoForMainList articleDto);
+
+    Article saveColor(ArticleDtoForMainList articleDto);
 
     void deleteById(Integer id);
 
     List<IdContentDto> findByIds(List<Integer> idList);
 
     List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
-    }
+}

@@ -19,5 +19,6 @@ public interface OrgService {
     void deleteById(Integer id);
     List<IdContentDto> search(String q);
     List<IdContentDto> findByIds(List<Integer> idList);
+    List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<Integer> mov);
     List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
 }

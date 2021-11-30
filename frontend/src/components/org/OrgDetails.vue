@@ -106,8 +106,10 @@
                             <div class="cellTitle"><span class="float-left">Связанные материалы</span></div>
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
-                            <div>
-                                <a v-for="art in org.articleList">{{createComplexArticleById(art.itemId)}}<br></a>
+<!--                            <div v-for="art in org.articleList">-->
+                            <div v-for="art in orgArticleEntities">
+                                <a><router-link :to="{name: 'article-details', params: {article_id: art.id}}" target="_blank">
+                                    {{createComplexArticleById(art.id)}}<br></router-link></a>
                             </div>
                         </div>
                     </div>

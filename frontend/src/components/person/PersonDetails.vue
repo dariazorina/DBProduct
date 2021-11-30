@@ -116,6 +116,27 @@
 
                     <div class="row">
                         <div class="col-sm-2">
+                            <div class="cellTitle"><span class="float-left">Связанные материалы</span></div>
+                        </div>
+                        <div class="col-sm-10" style="text-align: left;">
+                            <!--                            <div v-for="art in org.articleList">-->
+                            <div v-for="art in personArticleEntities">
+                                <a><router-link :to="{name: 'article-details', params: {article_id: art.id}}" target="_blank">
+                                    {{createComplexArticleById(art.id)}}<br></router-link></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 back1">
+                            <div class="cellTitle"><span class="float-left">Связанные ресурсы</span></div>
+                        </div>
+                        <div class="col-sm-10 back1" style="text-align: left;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
                             <div class="cellTitle"><span class="float-left">Описание</span></div>
                         </div>
 
@@ -234,6 +255,7 @@
     import api from "./person-api";
     import apiOrg from "./../org/org-api";
     import apiLocation from "./../country/country-api";
+    import apiArticle from "./../article/article-api";
     import apiAttachment from "./../attachment-api";
     import FileAttachment from "../components/FileAttachment";
     // import apiStatus from "./../status-api";
@@ -250,12 +272,15 @@
                 className: null,
                 persons: [],
                 person: {
-                    hashtagList: [], linkList: [], locationList: [], orgList: [], personList: [],
+                    hashtagList: [], linkList: [], locationList: [], articleList: [], orgList: [], personList: [],
                     isourceList: [], movementList: [], snpList: []
                 },
 
                 personLocationIds: [], //before request
                 personLocationEntities: [], //after request
+
+                personArticleIds: [], //before request
+                personArticleEntities: [], //after request
 
                 personPersonIds: [], //before request
                 personPersonEntities: [], //after request
@@ -359,6 +384,24 @@
                 return result;
             },
 
+            createComplexArticleById(id) {
+                let currentArt = this.personArticleEntities.find(x => x.id === id);
+                let connection = this.person.articleList.find(x => x.itemId === id);
+                let result;
+
+                if (currentArt != null) {
+                    result = currentArt.content;
+                }
+
+                if (this.isObjectValidAndNotEmpty(connection.connection))
+                    result += "/ " + connection.connection;
+
+                if (this.isObjectValidAndNotEmpty(connection.comment))
+                    result += "/ " + connection.comment;
+
+                return result;
+            },
+
             createComplexPersonById(prsn) {
                 let result = '';
                 let currentPerson = prsn;
@@ -442,6 +485,17 @@
                     this.personOrgEntities = response.data;
                     //console.log("apiOrga", this.personOrgEntities);
                 });
+
+                for (let j = 0; j < this.person.articleList.length; j++) {
+                    this.personArticleIds.push(this.person.articleList[j].itemId);
+                    //console.log("+", j);
+                }
+
+                apiArticle.getMaterialsByIds(this.personArticleIds, response => {
+                    this.personArticleEntities = response.data;
+                    console.log("apiArt", this.personArticleEntities);
+                });
+
             });
         },
     }

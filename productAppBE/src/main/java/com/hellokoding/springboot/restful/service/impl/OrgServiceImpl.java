@@ -50,6 +50,94 @@ public class OrgServiceImpl implements OrgService {
     }
 
     @Override
+    public List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<Integer> mov) {
+        List<OrgDtoForMainList> dtoSearchList = new ArrayList<>();
+        Set<Org> searchList = new HashSet<>();
+//        List<Org> searchList = new ArrayList<>();
+
+        boolean isSingleFilter = false;
+        int hashCurrentSize = 0;
+        int locationCurrentSize = 0;
+        int nameCurrentSize = 0;
+
+        List<String> hashList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
+        List<String> locationList = new ArrayList<>();
+
+        if (hash != null) {
+            hashCurrentSize = hash.size();
+        }
+        if (name != null) {
+            nameCurrentSize = name.size();
+        }
+        if (location != null) {
+            locationCurrentSize = location.size();
+        }
+
+        if (hashCurrentSize >= 1) {
+            isSingleFilter = true;
+
+            if (nameCurrentSize >= 1) {
+                isSingleFilter = false;
+
+            } else if (locationCurrentSize >= 1) {
+                isSingleFilter = false;
+            }
+        } else {
+            if (nameCurrentSize >= 1) {
+                isSingleFilter = true;
+
+                if (locationCurrentSize >= 1) {
+                    isSingleFilter = false;
+                }
+            } else {
+                if (locationCurrentSize >= 1) {
+                    isSingleFilter = true;
+                }
+            }
+        }
+
+        if (hash != null && !hash.isEmpty()) {
+            for (String h : hash) hashList.add(h + "%");
+
+            if (isSingleFilter) {
+                for (String s : hashList) searchList.addAll(orgRepository.findByHash(s.toLowerCase(), mov));
+            }
+        }
+
+        if (name != null && !name.isEmpty()) {
+            for (String a : name) nameList.add("%" + a + "%");
+//            for (String a : name) nameList.add(a + "%");
+
+            if (isSingleFilter) {
+                for (String s : nameList) searchList.addAll(orgRepository.findByName(s.toLowerCase(), mov));
+            }
+        }
+
+        if (location != null && !location.isEmpty()) {
+            for (String l : location) locationList.add("%" + l + "%");
+
+            if (isSingleFilter) {
+                for (String s : locationList) searchList.addAll(orgRepository.findByLocation(s.toLowerCase(), mov));
+            }
+        }
+
+        if (!isSingleFilter) {
+            searchList = orgRepository.findByFilters(
+                    hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
+                    nameList.size() == 0 ? null : nameList.get(0).toLowerCase(),
+                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(), mov);
+        }
+
+        OrgDtoForMainList orgDto;
+        for (Org org : searchList) {
+            orgDto = new OrgDtoForMainList(org);
+            dtoSearchList.add(orgDto);
+        }
+        return dtoSearchList;
+    }
+
+    @Override
     public List<IdContentDto> search(String q) {
 
         List<Org> orgSearchList = new ArrayList<>();
@@ -198,10 +286,10 @@ public class OrgServiceImpl implements OrgService {
                     for (OrgName name : org.getNameList()) {
                         if (name.getPriority() == 0) {
                             dtoName += "/ " + name.getName();
-                        }
 
-                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
-                            dtoName += "/ " + name.getAbbr();
+                            if (name.getAbbr() != null && name.getAbbr().length() != 0) {
+                                dtoName += "/ " + name.getAbbr();
+                            }
                         }
                     }//for
                 } else {

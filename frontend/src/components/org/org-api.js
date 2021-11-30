@@ -117,6 +117,17 @@ export default {
         })
     },
 
+    filterAll(body, mov, fn) {
+        AXIOS.get(`org/filter?` + body + `&mov=` + mov)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            });
+    },
+
     error401Handling() {
         localStorage.clear();
         router.push('/login');

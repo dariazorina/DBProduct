@@ -29,5 +29,9 @@ public class Location {
     @OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude //    @JsonIgnore
     private List<PersonLocationConnection> personConnections;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude //    @JsonIgnore
+    private List<OrgLocationConnection> orgConnections;
 }
 

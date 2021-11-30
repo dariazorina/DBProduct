@@ -23,6 +23,6 @@ public interface PersonService {
     Person saveColor(NewPersonDtoForMainList personDto);
 
     List<IdContentDto> searchBySurname(String q);
-    List<NewPersonDto> search(List<String> hash, List<String> author, List<String> org, List<String> location);
+    List<NewPersonDtoForMainList> filter(List<String> hash, List<String> author, List<String> org, List<String> location, List<Integer> mov);
     List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
 }
