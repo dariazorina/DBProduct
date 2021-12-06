@@ -137,7 +137,7 @@
                 </td>
 
                 <td><a>
-                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}">
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}"  target="_blank">
                         {{ person.snp }}
                     </router-link>
                 </a></td>

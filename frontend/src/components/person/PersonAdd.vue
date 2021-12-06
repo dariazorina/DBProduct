@@ -57,6 +57,7 @@
                         <div class="col-md-4">
                             <label for="add-surname">Фамилия на русском*</label>
                             <input class="form-control" id="add-surname" v-model="personAddSurnameTFValues[0]"
+                                   v-on:input="onSurnameInput"
                                    placeholder="Поле должно быть заполнено"/>
                         </div>
 
@@ -69,6 +70,15 @@
                             <label for="add-patronymic">Отчество</label>
                             <input class="form-control" id="add-patronymic" v-model="personAddPatrTFValues[0]">
                         </div>
+                    </div>
+
+                    <div> <span class="notbold">
+                            <ul id="alreadyExisted">
+                                <li v-for="item in alreadyExistedPerson" :key="item.content">
+                                    {{ item.content }}
+                                </li>
+                            </ul>
+                            </span>
                     </div>
 
                     <div class="form-row">
@@ -693,6 +703,8 @@
             descriptionLimit: 60,
             entries: [],
 
+            alreadyExistedPerson: [],
+
             isLoadingLocation: false,
             isLoadingOrg: false,
             isLoadingPerson: false,
@@ -822,6 +834,18 @@
         }),
 
         methods: {
+            onSurnameInput() {
+                if (this.personAddSurnameTFValues[0].length > 3) {
+                    // console.log("IN ONPUT");
+
+                    api.searchPerson(this.personAddSurnameTFValues[0], r => {
+                        this.alreadyExistedPerson = r;
+                        //console.log("*№*№*№*", this.alreadyExistedPerson);
+                    });
+                } else {
+                    this.alreadyExistedPerson.splice(0);
+                }
+            },
 
             clearFields(index) {
 
@@ -2233,7 +2257,7 @@
             },
 
             articleSearch(val) {
-                 console.log("-------------------------------------------SEARCH ACTIVATED", this.person.articleList);
+                console.log("-------------------------------------------SEARCH ACTIVATED", this.person.articleList);
                 if (val !== null)
                     if (val.length > 2) {
                         // console.log("SEARCH STARTED");

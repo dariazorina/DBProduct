@@ -143,6 +143,10 @@
                 <th class='tdTitle headerLink' data-field="createdAt" data-formatter="dateFormat" @click="sort('date')">
                     Дата
                 </th>
+<!--                <th class='tdTitle headerLink' @click="sort('mtype')">-->
+                <th class='tdTitle'>
+                    Тип
+                </th>
                 <th @contextmenu.prevent="searchByField(5)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent; padding: 0"></div>
@@ -159,38 +163,38 @@
                         </div>
                     </div>
                 </th>
-                <!--                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">-->
-                <!--                    <div class="row" style="background-color: transparent">-->
-                <!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
-                <!--                        <div class='headerLink col-sm-6'-->
-                <!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
-                <!--                            Лица-->
-                <!--                        </div>-->
-                <!--                        <div class='col-sm-3'-->
-                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
-                <!--                             id="authorFilterId">-->
-                <!--                            <v-btn text icon x-small @click="resetFilter(2)">-->
-                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
-                <!--                            </v-btn>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </th>-->
-                <!--                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">-->
-                <!--                    <div class="row" style="background-color: transparent">-->
-                <!--                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>-->
-                <!--                        <div class='headerLink col-sm-8'-->
-                <!--                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">-->
-                <!--                            Организации-->
-                <!--                        </div>-->
-                <!--                        <div class='col-sm-2'-->
-                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
-                <!--                             id="orgFilterId">-->
-                <!--                            <v-btn text icon x-small @click="resetFilter(3)">-->
-                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
-                <!--                            </v-btn>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </th>-->
+                                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">
+                                    <div class="row" style="background-color: transparent">
+                                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                                        <div class='headerLink col-sm-6'
+                                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                                            Лица
+                                        </div>
+                                        <div class='col-sm-3'
+                                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                                             id="authorFilterId">
+                                            <v-btn text icon x-small @click="resetFilter(2)">
+                                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                                            </v-btn>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
+                                    <div class="row" style="background-color: transparent">
+                                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                                        <div class='headerLink col-sm-8'
+                                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                                            Организации
+                                        </div>
+                                        <div class='col-sm-2'
+                                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                                             id="orgFilterId">
+                                            <v-btn text icon x-small @click="resetFilter(3)">
+                                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                                            </v-btn>
+                                        </div>
+                                    </div>
+                                </th>
                 <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
@@ -286,7 +290,7 @@
                     <div v-for="location in article.locationList">
                         <div v-if="article.locationList.length > 0">
                             {{location}}
-<!--                            {{getLocationCellById(location.itemId)}}-->
+                            <!--                            {{getLocationCellById(location.itemId)}}-->
                         </div>
                     </div>
                 </td>
@@ -294,30 +298,38 @@
                     {{ formatDate(article.date) }}
                 </td>
                 <td>
+                    <div v-if="article.mtype !== null">
+                        {{article.mtype.content}}
+                    </div>
+                </td>
+                <td>
                     <div>                        <!--                    <div style="white-space:pre-line">-->
                         <a>
-                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}">
+                            <router-link :to="{name: 'article-details', params: {article_id: article.id}}"
+                                         target="_blank">
                                 <!--                                {{ article.titleRus}}-->
                                 {{complexArticleTitle(article)}}
                             </router-link>
                         </a>
                     </div>
                 </td>
-                <!--                <td>-->
-                <!--                    <div v-for="author in article.personList">-->
-                <!--                        <div v-if="article.personList.length > 0">-->
-                <!--                            {{getPersonCellById(author.itemId)}}-->
-                <!--                            &lt;!&ndash;                            {{ createComplexCellValueById(author.itemId)}}&ndash;&gt;-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </td>-->
-                <!--                <td>-->
-                <!--                    <div v-for="org in article.orgList">-->
-                <!--                        <div v-if="article.orgList.length > 0">-->
-                <!--                            {{getOrgCellById(org.itemId)}}-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </td>-->
+                <td>
+                    <div v-for="author in article.personList">
+                        <div v-if="article.personList.length > 0">
+                            {{author}}
+<!--                            {{ getPersonCellById(author.itemId)}}-->
+                            <!--                            {{ createComplexCellValueById(author.itemId)}}-->
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div v-for="org in article.orgList">
+                        <div v-if="article.orgList.length > 0">
+                            {{org}}
+<!--                            {{getOrgCellById(org.itemId)}}-->
+                        </div>
+                    </div>
+                </td>
                 <td>
                     <div v-for="hashtag in article.hashtagList">
                         {{hashtag}}
@@ -843,7 +855,7 @@
 
                     if (article.title != null) {
                         if (article.title.length > 0) {
-                            title += " / " +  article.title;
+                            title += " / " + article.title;
                             console.log("complexArticleTitle", article);
                         }
                     }
@@ -1170,7 +1182,7 @@
                                     api.searchText(this.searchKey, -1, this.startDate, this.endDate,
                                         this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
                                             this.entries = r.data;
-                                           // console.log("filter all ===++=====", this.filterItems, this.entries);
+                                            // console.log("filter all ===++=====", this.filterItems, this.entries);
                                         });
                                 }
                             }
@@ -1241,7 +1253,7 @@
                         }
                     }
                 }
-               // console.log("FFFFFFFFFFFFFFlag", singleFilter);
+                // console.log("FFFFFFFFFFFFFFlag", singleFilter);
                 if (this.isArrayValidAndNotEmpty(this.statusCheckBox)) {
                     api.filterAll(this.filterAllBodyCreation(singleFilter === 1), this.complexStatusCreation(), this.startDate, this.endDate,
                         this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
@@ -1289,17 +1301,17 @@
                 this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
 
                     this.entries = r.data;
-                 //   console.log("**********%%%%%%%%%%**********", this.entries);
-                 //    for (let i = 0; i < this.entries.length; i++) {
-                        // for (let j = 0; j < this.entries[i].personList.length; j++) {
-                        //     this.articlePersonIds.push(this.entries[i].personList[j].itemId);
-                        // }
-                        // for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                        //     this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
-                        // }
-                        // for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                        //     this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
-                        // }
+                    console.log("**********%%%%%%%%%%**********", this.entries);
+                    //    for (let i = 0; i < this.entries.length; i++) {
+                    // for (let j = 0; j < this.entries[i].personList.length; j++) {
+                    //     this.articlePersonIds.push(this.entries[i].personList[j].itemId);
+                    // }
+                    // for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                    //     this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
+                    // }
+                    // for (let j = 0; j < this.entries[i].locationList.length; j++) {
+                    //     this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
+                    // }
                     // }
                     //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
 

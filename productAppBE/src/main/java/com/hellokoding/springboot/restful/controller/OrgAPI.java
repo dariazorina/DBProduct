@@ -34,17 +34,26 @@ public class OrgAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping
-    public ResponseEntity<List<OrgDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov) {
-        return ResponseEntity.ok(orgService.findAll(mov));
+    public ResponseEntity<List<OrgDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "3") int size) {
+        return ResponseEntity.ok(orgService.findAll(mov, page, size));
+    }
+
+
+    @GetMapping("/allQuant")
+    public ResponseEntity<Integer> findQuantityAllOrgs(@RequestParam(name = "mov", required = false) List<Integer> mov){
+        return ResponseEntity.ok(orgService.getQuantityAllOrgsWithMovement(mov));
     }
 
     @GetMapping("/filter")
     public ResponseEntity<List<OrgDtoForMainList>> filter(@RequestParam(name = "hash", required = false) List<String> hash,
                                                      @RequestParam(name = "name", required = false) List<String> name,
                                                      @RequestParam(name = "location", required = false) List<String> location,
+                                                     @RequestParam(name = "org", required = false) List<String> org,
                                                      @RequestParam(name = "mov", required = false) List<Integer> movement) {
 
-        List<OrgDtoForMainList> searchResult = orgService.filter(hash, name, location, movement);
+        List<OrgDtoForMainList> searchResult = orgService.filter(hash, name, location, org, movement);
         return ResponseEntity.ok(searchResult);
     }
 

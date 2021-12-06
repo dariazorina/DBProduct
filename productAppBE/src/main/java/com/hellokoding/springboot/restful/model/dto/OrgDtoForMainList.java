@@ -21,9 +21,11 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
     private Integer closureYear;
 
     private List<String> hashtagList;
-    //    private List<NameConnectionDto> orgList;
+//    private List<NameConnectionDto> orgList;
+    private List<String> orgList;
     private List<String> locationList;
-    //    private List<ItemConnectionDto> personList;
+//    private List<ItemConnectionDto> personList;
+    private List<String> personList;
     private List<Movement> movementList;
 
     public OrgDtoForMainList() {
@@ -31,7 +33,7 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 
     public OrgDtoForMainList(Integer id, List<Movement> movementList, String name,
                              String rowColor, List<String> hashtagList,
-                             List<NameConnectionDto> orgList, List<String> locationList, List<ItemConnectionDto> personList,
+                             List<String> orgList, List<String> locationList, List<String> personList,
                              Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
@@ -39,9 +41,9 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
         this.rowColor = rowColor;
         this.name = name;
         this.hashtagList = hashtagList;
-//        this.orgList = orgList;
+        this.orgList = orgList;
         this.locationList = locationList;
-//        this.personList = personList;
+        this.personList = personList;
         this.foundationYear = fYear;
         this.closureYear = cYear;
         this.type = type;
@@ -64,9 +66,9 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
                 this.hashtagList.add(orgHashtag.getHashtag().getContent());
         }
 
-//        this.orgList = new ArrayList<>();
+        this.orgList = new ArrayList<>();
         this.locationList = new ArrayList<>();
-//        this.personList = new ArrayList<>();
+        this.personList = new ArrayList<>();
 
         NameConnectionDto orgConnectionDto;
         String dtoName = "";
@@ -120,6 +122,50 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 //
 //            this.personList.add(personConnectionDto);
 //        }
+
+        List<String> personStringList = new ArrayList<>();
+        for (OrgPersonConnection orgPC : org.getPersonConnections()) {
+            List<SurnameNamePatr> snpList = orgPC.getPerson().getSnpList();
+            String snp = "some error";
+            for (SurnameNamePatr nameEl : snpList) {
+                if (nameEl.getPriority() == 1) {
+                    snp = nameEl.getSurname();
+                    if (nameEl.getName().length() > 0) {
+                        snp += " " + nameEl.getName();
+                    }
+                    break;
+                }
+            }
+            if (orgPC.getConnection().length() > 0) {
+                snp += ", " + orgPC.getConnection();
+            }
+            personStringList.add(snp);
+        }
+        this.setPersonList(personStringList);
+
+
+        List<String> orgStringList = new ArrayList<>();
+        for (OrgOrgConnection orgOC : org.getOrgConnections()) {
+            List<OrgName> nameList = orgOC.getOrg().getNameList();
+            String name = "";
+            for (OrgName nameEl : nameList) {
+                if (nameEl.getPriority() == 1) {
+                    name = nameEl.getName();
+                    if (nameEl.getAbbr().length() > 0) {
+                        name += ", " + nameEl.getAbbr();
+                    }
+                    break;
+                }
+            }
+            if (orgOC.getConnection().length() > 0) {
+                name += ", " + orgOC.getConnection();
+            }
+            orgStringList.add(name);
+        }
+        this.setOrgList(orgStringList);
+
+
+
 
         for (OrgName name : org.getNameList()) {
             if (name.getPriority() == 1) {
@@ -216,6 +262,27 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 //    public void setPersonList(List<ItemConnectionDto> personList) {
 //        this.personList = personList;
 //    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getOrgList() {
+        return orgList;
+    }
+
+    public void setOrgList(List<String> orgList) {
+        this.orgList = orgList;
+    }
+
+    public List<String> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<String> personList) {
+        this.personList = personList;
+    }
 
     public List<Movement> getMovementList() {
         return movementList;

@@ -11,14 +11,14 @@ import java.util.Optional;
 
 public interface OrgService {
     List<Org> findAll();
-   // List<OrgDto> findAll(Integer mov);
-    List<OrgDtoForMainList> findAll(List<Integer> mov);
+    Integer getQuantityAllOrgsWithMovement(List<Integer> mov);
+    List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size);
     Optional<OrgDto> findById(Integer id);
     Org save(OrgDto stock);
     Org saveColor(OrgDtoForMainList stock);
     void deleteById(Integer id);
     List<IdContentDto> search(String q);
     List<IdContentDto> findByIds(List<Integer> idList);
-    List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<Integer> mov);
+    List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov);
     List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
 }

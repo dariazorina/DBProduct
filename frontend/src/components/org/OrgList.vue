@@ -7,6 +7,15 @@
                 </router-link>
             </a>
         </div>
+        <div class="actions" style="background-color: transparent; margin: 0">
+            <button type="button" @click="previousPageGo" class="btn btn-outline-light">
+                <v-icon style="color: #0074D9">mdi-arrow-left-circle</v-icon>
+            </button>
+            {{currentPageNumber+1}}
+            <button type="button" @click="nextPageGo" class="btn btn-outline-light">
+                <v-icon style="color: #0074D9">mdi-arrow-right-circle</v-icon>
+            </button>
+        </div>
 
         <div v-if="isAnyFilterActive() === true" class="form-group col-sm-12" align="right"
              style="margin: 0; padding: 5px; background-color: transparent">
@@ -56,22 +65,23 @@
                 <th class='tdAlignLeft'>Год закрытия</th>
 
 
-                <!--                <th class='tdAlignLeft'>Персоны</th>-->
-                <!--                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(1)">-->
-                <!--                    <div class="row" style="background-color: transparent">-->
-                <!--                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
-                <!--                        <div class='headerLink col-sm-6'-->
-                <!--                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
-                <!--                            Организация-->
-                <!--                        </div>-->
-                <!--                        <div class='col-sm-3'-->
-                <!--                             style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
-                <!--                             id="orgFilterId">-->
-                <!--                            <v-btn text icon x-small @click="resetFilter(1)">-->
-                <!--                                <v-icon style="color: white">mdi-close-circle</v-icon>-->
-                <!--                            </v-btn>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
+                <th class='tdAlignLeft'>Персоны</th>
+
+                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Организация
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="orgFilterId">
+                            <v-btn text icon x-small @click="resetFilter(3)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
 
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
@@ -130,7 +140,7 @@
                     </div>
                 </td>
                 <td><a>
-                    <router-link :to="{name: 'org-details', params: {org_id: org.id}}">
+                    <router-link :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">
                         {{ org.name }}
                         <!--                        {{ getPriorityName(org) }}-->
                         <!--                        {{ getNameWithPriority(1) }}-->
@@ -143,14 +153,16 @@
                 <td style="text-align: center; padding-left: 0">{{org.closureYear}}</td>
 
 
-                <!--                <td class='tdAlignLeft'>-->
-                <!--                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>-->
-                <!--                </td>-->
+                <td class='tdAlignLeft'>
+                    <!--                                    <div v-for="person in org.personList">{{getPersonNameById(person.itemId)}}</div>-->
+                    <div v-for="person in org.personList">{{person}}</div>
+                </td>
 
-                <!--                <td class='tdAlignLeft'>-->
-                <!--                    <div v-for="org in org.orgList">{{org.name}}, {{org.connection}}</div>-->
-                <!--&lt;!&ndash;                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>&ndash;&gt;-->
-                <!--                </td>-->
+                <td class='tdAlignLeft'>
+                    <div v-for="org in org.orgList">{{org}}</div>
+                    <!--                                    <div v-for="org in org.orgList">{{org.name}}, {{ org.connection}}</div>-->
+                    <!--                    <div v-for="org in org.orgList">{{getPriorityName(org.itemId)}}</div>-->
+                </td>
                 <td class='tdAlignLeft'>
                     <div v-for="ph in org.hashtagList">
                         {{ph}}
@@ -269,12 +281,13 @@
                 // currentSort: 'foundationYear',
                 currentSortDir: 'asc',
 
-                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},],
+                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []}, {key: 3, value: []},],
 
                 filterTableFields: [
                     {key: 0, text: 'Хештеги'},
                     {key: 1, text: 'Локации'},
                     {key: 2, text: 'Названия'},
+                    {key: 3, text: 'Организации'},
                 ],
 
                 // todo - maybe remove key? it dublicates index
@@ -282,6 +295,7 @@
                     {key: 0, text: 'hash'},
                     {key: 1, text: 'location'},
                     {key: 2, text: 'name'},
+                    {key: 3, text: 'org'},
                 ],
 
                 statusList: [
@@ -293,6 +307,9 @@
 
                 currentFilterField: '',
                 currentFilterItems: [],
+                currentPageNumber: 0,
+                entriesQuantity: 0,
+                entriesQuantPerPage: 15,
             }
         },
 
@@ -319,6 +336,21 @@
         },
 
         methods: {
+            nextPageGo() {
+                console.log("* number quantPerPage", (this.currentPageNumber + 1) * this.entriesQuantPerPage, this.currentPageNumber, this.entriesQuantPerPage);
+                if (((this.currentPageNumber + 1) * this.entriesQuantPerPage) < this.entriesQuantity) {
+                    this.currentPageNumber++;
+                    this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                }
+            },
+
+            previousPageGo() {
+                if (this.currentPageNumber > 0) {
+                    this.currentPageNumber--;
+                    this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                }
+            },
+
             complexMovementCreation(movArray) {
 
                 let result = '';
@@ -547,8 +579,8 @@
                 return result;
             },
 
-            getAllOrgsWithMov() {
-                apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+            getAllOrgsWithMov(page, size) {
+                apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), page, size, response => {
                     this.entries = response.data;
                     console.log("ORGSSSS", response.data, this.entries.length);
                 });
@@ -559,7 +591,11 @@
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-            this.getAllOrgsWithMov();
+            apiOrg.getQuantAllEntities(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+                this.entriesQuantity = response.data;
+                //console.log("ORGSSSS QUANT", response.data);
+            });
+            this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
         },
         watch: {
             color: function () {   //calls when color picking is done

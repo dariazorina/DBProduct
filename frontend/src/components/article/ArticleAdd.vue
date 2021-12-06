@@ -165,7 +165,7 @@
                             <label for="add-title-rus"> <b>Заголовок на русском*</b></label>
                             <input class="form-control" id="add-title-rus"
                                    placeholder="Поле должно быть заполнено"
-                                   :disabled="uploadMode"
+                                   :disabled="uploadMode" v-on:input="onTitleInput"
                                    v-model="article.titleRus"/>
                         </div>
 
@@ -175,6 +175,13 @@
                                    :disabled="uploadMode"
                                    v-model="article.title"/>
                         </div>
+                    </div>
+                    <div>
+                        <ul id="alreadyExistedArt">
+                            <li v-for="item in alreadyExistedMaterial" :key="item.content">
+                                {{ item.content }}
+                            </li>
+                        </ul>
                     </div>
                 </form>
 
@@ -560,6 +567,8 @@
             addTagOnKeys: [],  //setting it empty is to prevent manual enter in input-tag))
             descriptionLimit: 60,
 
+            alreadyExistedMaterial: [],
+
             personEntries: [],
             locationEntries: [],
             orgEntries: [],
@@ -655,6 +664,19 @@
         }),
 
         methods: {
+            onTitleInput(){
+                if (this.article.titleRus.length > 3) {
+                    // console.log("IN ONPUT");
+
+                    api.searchMaterial(this.article.titleRus, r => {
+                        this.alreadyExistedMaterial = r;
+                       // console.log("*№*№*№*", this.alreadyExistedMaterial);
+                    });
+                } else {
+                    this.alreadyExistedMaterial.splice(0);
+                }
+            },
+
             removeAttachment(file) {
                 // console.log("removeAtt ARTICLE", file);
                 apiAttachment.removeAttachment('article', this.article.id, file.id, file.name, r => {
@@ -1161,7 +1183,7 @@
                     // "parentId": 1
                 };
 
-                // console.log(" BEFORE [] this.article.person: ", this.article.personList);
+                //console.log(" BEFORE [] this.article.MTYPE: ", this.article.mtype);
                 // console.log(" BEFORE [] this.article.person: ", this.article.locationList);
 
                 this.article.personList.splice(0);

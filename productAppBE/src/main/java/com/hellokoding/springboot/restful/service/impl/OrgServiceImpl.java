@@ -6,6 +6,9 @@ import com.hellokoding.springboot.restful.model.dto.*;
 import com.hellokoding.springboot.restful.service.OrgService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,13 +38,22 @@ public class OrgServiceImpl implements OrgService {
         return all;
     }
 
-    public List<OrgDtoForMainList> findAll(List<Integer> mov) {
+    public Integer getQuantityAllOrgsWithMovement(List<Integer> mov) {
+        return orgRepository.findAllWithMovement(mov).size();
+    }
+
+    public List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
+
+        Pageable paging = PageRequest.of(page, size);
+        Page<Org> pageTuts;
 
         List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
-        List<Org> allOrg = orgRepository.findAllWithMovements(mov);
+        pageTuts = orgRepository.findAllWithMovements(paging, mov);
+//        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
 
         OrgDtoForMainList currentOrgDto;
-        for (Org o : allOrg) {
+//        for (Org o : allOrg) {
+        for (Org o : pageTuts) {
             currentOrgDto = new OrgDtoForMainList(o);
             //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
             dtoAllOrgList.add(currentOrgDto);
@@ -50,7 +62,7 @@ public class OrgServiceImpl implements OrgService {
     }
 
     @Override
-    public List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<Integer> mov) {
+    public List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov) {
         List<OrgDtoForMainList> dtoSearchList = new ArrayList<>();
         Set<Org> searchList = new HashSet<>();
 //        List<Org> searchList = new ArrayList<>();
@@ -59,10 +71,12 @@ public class OrgServiceImpl implements OrgService {
         int hashCurrentSize = 0;
         int locationCurrentSize = 0;
         int nameCurrentSize = 0;
+        int orgCurrentSize = 0;
 
         List<String> hashList = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
         List<String> locationList = new ArrayList<>();
+        List<String> orgList = new ArrayList<>();
 
         if (hash != null) {
             hashCurrentSize = hash.size();
@@ -74,6 +88,10 @@ public class OrgServiceImpl implements OrgService {
             locationCurrentSize = location.size();
         }
 
+        if (org != null) {
+            orgCurrentSize = org.size();
+        }
+
         if (hashCurrentSize >= 1) {
             isSingleFilter = true;
 
@@ -82,6 +100,9 @@ public class OrgServiceImpl implements OrgService {
 
             } else if (locationCurrentSize >= 1) {
                 isSingleFilter = false;
+
+            } else if (orgCurrentSize >= 1) {
+                isSingleFilter = false;
             }
         } else {
             if (nameCurrentSize >= 1) {
@@ -89,9 +110,18 @@ public class OrgServiceImpl implements OrgService {
 
                 if (locationCurrentSize >= 1) {
                     isSingleFilter = false;
+
+                } else if (orgCurrentSize >= 1) {
+                    isSingleFilter = false;
                 }
             } else {
                 if (locationCurrentSize >= 1) {
+                    isSingleFilter = true;
+
+                } else if (orgCurrentSize >= 1) {
+                    isSingleFilter = false;
+
+                } else if (orgCurrentSize >= 1) {
                     isSingleFilter = true;
                 }
             }
@@ -122,16 +152,25 @@ public class OrgServiceImpl implements OrgService {
             }
         }
 
+        if (org != null && !org.isEmpty()) {
+            for (String l : org) orgList.add("%" + l + "%");
+
+            if (isSingleFilter) {
+                for (String s : orgList) searchList.addAll(orgRepository.findByOrg(s.toLowerCase(), mov));
+            }
+        }
+
         if (!isSingleFilter) {
             searchList = orgRepository.findByFilters(
                     hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
                     nameList.size() == 0 ? null : nameList.get(0).toLowerCase(),
-                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(), mov);
+                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(),
+                    orgList.size() == 0 ? null : orgList.get(0).toLowerCase(), mov);
         }
 
         OrgDtoForMainList orgDto;
-        for (Org org : searchList) {
-            orgDto = new OrgDtoForMainList(org);
+        for (Org currOrg : searchList) {
+            orgDto = new OrgDtoForMainList(currOrg);
             dtoSearchList.add(orgDto);
         }
         return dtoSearchList;

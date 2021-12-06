@@ -8,9 +8,21 @@ const AXIOS = axios.create({
 
 
 export default {
-    getAllOrgs(mov, fn) {
+    getAllOrgs(mov, page, size, fn) {
         return AXIOS
-            .get(`/org?mov=` + mov)
+            .get(`/org?mov=` + mov + `&page=` + page + `&size=` + size)
+            .then(response => fn(response))
+            .catch(error => {
+                console.log(error);
+                if (error.response.status === 401) {
+                    this.error401Handling();
+                }
+            })
+    },
+
+    getQuantAllEntities(mov, fn) {
+        return AXIOS
+            .get(`/org/allQuant?mov=` + mov)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

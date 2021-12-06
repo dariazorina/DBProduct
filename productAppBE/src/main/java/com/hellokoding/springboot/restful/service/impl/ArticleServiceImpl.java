@@ -152,6 +152,8 @@ public class ArticleServiceImpl implements ArticleService {
             if (mT.getId() != null) {
                 Optional<MaterialType> byId = materialTypeRepository.findById(mT.getId());
                 byId.ifPresent(article::setMtype);
+            } else {
+                article.setMtype(null);
             }
         }
 

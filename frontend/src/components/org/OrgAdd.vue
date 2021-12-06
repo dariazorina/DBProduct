@@ -53,6 +53,7 @@
                             <div class="col-md-6">
                                 <label for="add-name">Название на русском*</label>
                                 <input class="form-control" id="add-name" v-model="orgNameTFValues[0]"
+                                       v-on:input="onTitleInput"
                                        placeholder="Поле должно быть заполнено"/>
                             </div>
 
@@ -66,6 +67,15 @@
                                     Добавить названия на других языках
                                 </b-button>
                             </div>
+                        </div>
+
+                        <div> <span class="notbold">
+                            <ul id="alreadyExistedOrg">
+                                <li v-for="item in alreadyExistedOrg" :key="item.content">
+                                    {{ item.content }}
+                                </li>
+                            </ul>
+                            </span>
                         </div>
 
                         <div v-if="orgNameTFValues[1]!=null">
@@ -713,6 +723,8 @@
                 hashtagList: []
             },
 
+            alreadyExistedOrg: [],
+
             allMovements: [],
             isAdmin: null,
             // addAdditionalMovementFlag: false,
@@ -1046,6 +1058,19 @@
         },
 
         methods: {
+            onTitleInput(){
+                if (this.orgNameTFValues[0].length > 3) {
+                    // console.log("IN ONPUT");
+
+                    apiOrg.searchOrg(this.orgNameTFValues[0], r => {
+                        this.alreadyExistedOrg = r;
+                        console.log("*№*№*№*", this.alreadyExistedOrg);
+                    });
+                } else {
+                    this.alreadyExistedOrg.splice(0);
+                }
+            },
+
             deletePhoto() {
                 this.avatar.image = null;
                 this.avatar.imageBase64 = null;

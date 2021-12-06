@@ -20,19 +20,19 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
     private String titleRus;
 
     private String rowColor;
-//    private List<ItemConnectionDto> personList;
+    private List<String> personList;
     private List<String> locationList;
-//    private List<ItemConnectionDto> orgList;
+    private List<String> orgList;
     private List<String> hashtagList;
     private String miscellany;
 
     private MaterialType mtype;
 
-    public ArticleDtoForMainList(){
+    public ArticleDtoForMainList() {
     }
 
     public ArticleDtoForMainList(Integer id, List<Movement> movementList, Language language, Date date, String title, String status,
-                                 String titleRus, String rowColor, List<String> locationList,
+                                 String titleRus, String rowColor, List<String> locationList, List<String> orgList, List<String> personList,
                                  List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movementList = movementList;
@@ -43,9 +43,9 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
         this.status = status;
         this.titleRus = titleRus;
         this.rowColor = rowColor;
-//        this.personList = personList;
+        this.personList = personList;
         this.locationList = locationList;
-//        this.orgList = orgList;
+        this.orgList = orgList;
         this.hashtagList = hashtagList;
         this.miscellany = miscellany;
     }
@@ -61,9 +61,9 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
         this.titleRus = article.getTitleRus();
         this.rowColor = article.getRgbSelection();
 
-//        this.personList = new ArrayList<>();
+        this.personList = new ArrayList<>();
         this.locationList = new ArrayList<>();
-//        this.orgList = new ArrayList<>();
+        this.orgList = new ArrayList<>();
 
 //        ItemConnectionDto personConnectionDto;
 //        for (ArticlePersonConnection connection : article.getPersonConnections()) {
@@ -90,6 +90,47 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
             locationStringList.add(alC.getLocation().getCountry());
         }
         this.setLocationList(locationStringList);
+
+        List<String> personStringList = new ArrayList<>();
+        for (ArticlePersonConnection aPC : article.getPersonConnections()) {
+            List<SurnameNamePatr> snpList = aPC.getPerson().getSnpList();
+            String snp = "error";
+            for (SurnameNamePatr nameEl : snpList) {
+                if (nameEl.getPriority() == 1) {
+                    snp = nameEl.getSurname();
+                    if (nameEl.getName().length() > 0) {
+                        snp += " " + nameEl.getName();
+                    }
+
+                    break;
+                }
+            }
+            if (aPC.getConnection().length() > 0) {
+                snp += ", " + aPC.getConnection();
+            }
+            personStringList.add(snp);
+        }
+        this.setPersonList(personStringList);
+
+        List<String> orgStringList = new ArrayList<>();
+        for (ArticleOrgConnection aOC : article.getOrgConnections()) {
+            List<OrgName> nameList = aOC.getOrg().getNameList();
+            String name = "error";
+            for (OrgName nameEl : nameList) {
+                if (nameEl.getPriority() == 1) {
+                    name = nameEl.getName();
+                    if (nameEl.getAbbr().length() > 0) {
+                        name += ", " + nameEl.getAbbr();
+                    }
+                    break;
+                }
+            }
+            if (aOC.getConnection().length() > 0) {
+                name += ", " + aOC.getConnection();
+            }
+            orgStringList.add(name);
+        }
+        this.setOrgList(orgStringList);
 
 //        ItemConnectionDto orgConnectionDto;
 //        for (ArticleOrgConnection connection : article.getOrgConnections()) {
@@ -175,13 +216,21 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
         this.rowColor = rowColor;
     }
 
-//    public List<ItemConnectionDto> getPersonList() {
-//        return personList;
-//    }
+    public List<String> getPersonList() {
+        return personList;
+    }
 
-//    public void setPersonList(List<ItemConnectionDto> personList) {
-//        this.personList = personList;
-//    }
+    public void setPersonList(List<String> personList) {
+        this.personList = personList;
+    }
+
+    public List<String> getOrgList() {
+        return orgList;
+    }
+
+    public void setOrgList(List<String> orgList) {
+        this.orgList = orgList;
+    }
 
     public List<String> getLocationList() {
         return locationList;
@@ -190,14 +239,6 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
     public void setLocationList(List<String> locationList) {
         this.locationList = locationList;
     }
-
-//    public List<ItemConnectionDto> getOrgList() {
-//        return orgList;
-//    }
-
-//    public void setOrgList(List<ItemConnectionDto> orgList) {
-//        this.orgList = orgList;
-//    }
 
     public List<String> getHashtagList() {
         return hashtagList;
