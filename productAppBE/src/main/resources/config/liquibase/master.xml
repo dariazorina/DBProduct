@@ -11,9 +11,7 @@
     <include file="config/liquibase/changelog/00000000000004_add_event_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000005_add_event_hashtag_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000007_add_event_org_table.xml" relativeToChangelogFile="false"/>
-<!--    <include file="config/liquibase/changelog/00000000000008_add_annex_and_event_annex_table.xml" relativeToChangelogFile="false"/>-->
     <include file="config/liquibase/changelog/00000000000009_add_event_actor_table.xml" relativeToChangelogFile="false"/>
-<!--    <include file="config/liquibase/changelog/00000000000010_rename_original_tables.xml" relativeToChangelogFile="false"/>-->
     <include file="config/liquibase/changelog/00000000000011_add_scpaper_author_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000012_add_scpaper_link_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000013_add_scpaper_hashtag_table.xml" relativeToChangelogFile="false"/>
@@ -111,5 +109,17 @@
     <include file="config/liquibase/changelog/00000000000153_add_security_columns.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000155_temp_load_data.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000157_new_user_data.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000159_add_project_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000161_add_project_hashtag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000163_add_project_movement_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000165_add_project_link_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000167_add_tag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000169_add_project_tag_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000171_add_connect_project_person_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000173_add_connect_project_org_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000175_add_connect_project_article_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000177_add_connect_project_event_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000179_add_connect_project_location_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000181_add_connect_project_project_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

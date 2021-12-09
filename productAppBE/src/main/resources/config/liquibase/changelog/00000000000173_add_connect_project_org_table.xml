@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="08122021-20">
+        <createTable tableName="t_connect_project_org">
+
+            <column autoIncrement="true" name="connection_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_connect_project_org_pkey"/>
+            </column>
+
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="org_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="connection" type="TEXT"/>
+            <column name="comment" type="TEXT"/>
+
+        </createTable>
+        <addUniqueConstraint columnNames="project_id, org_id, connection" tableName="t_connect_project_org"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="08122021-21">
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="t_connect_project_org"
+                                 constraintName="t_project_connect_project_org_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="project_id"
+                                 referencedTableName="t_project"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="08122021-22">
+        <addForeignKeyConstraint baseColumnNames="org_id"
+                                 baseTableName="t_connect_project_org"
+                                 constraintName="t_org_connect_project_org_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="org_id"
+                                 referencedTableName="t_org"/>
+    </changeSet>
+
+</databaseChangeLog>

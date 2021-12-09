@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="08122021-17">
+        <createTable tableName="t_connect_project_person">
+
+            <column autoIncrement="true" name="connection_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_connect_project_person_pkey"/>
+            </column>
+
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="person_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="connection" type="TEXT"/>
+            <column name="comment" type="TEXT"/>
+
+        </createTable>
+        <addUniqueConstraint columnNames="project_id, person_id, connection" tableName="t_connect_project_person"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="08122021-18">
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="t_connect_project_person"
+                                 constraintName="t_project_connect_project_person_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="project_id"
+                                 referencedTableName="t_project"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="08122021-19">
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="t_connect_project_person"
+                                 constraintName="t_person_connect_project_person_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="person_id"
+                                 referencedTableName="t_person"/>
+    </changeSet>
+
+</databaseChangeLog>

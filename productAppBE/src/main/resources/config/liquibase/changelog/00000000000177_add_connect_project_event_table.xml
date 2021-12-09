@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="08122021-26">
+        <createTable tableName="t_connect_project_event">
+
+            <column autoIncrement="true" name="connection_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_connect_project_event_pkey"/>
+            </column>
+
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="connection" type="TEXT"/>
+            <column name="comment" type="TEXT"/>
+
+        </createTable>
+        <addUniqueConstraint columnNames="project_id, event_id, connection" tableName="t_connect_project_event"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="08122021-27">
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="t_connect_project_event"
+                                 constraintName="t_project_connect_project_event_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="project_id"
+                                 referencedTableName="t_project"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="08122021-28">
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="t_connect_project_event"
+                                 constraintName="t_event_connect_project_event_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="event_id"
+                                 referencedTableName="t_event"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="08122021-01">
+        <createTable remarks="Таблица проектов" tableName="t_project">
+
+            <column autoIncrement="true" name="project_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="t_project_pkey"/>
+            </column>
+
+            <column name="movement_id" remarks="Идентификатор национального движения" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="main_title" type="TEXT"/>
+            <column name="other_title" type="TEXT"/>
+            <column name="founded_year" type="date"/>
+            <column name="closed_year" type="date"/>
+            <column name="rgb_selection" type="TEXT"/>
+            <column name="date" remarks="Дата размещения материала" type="date"/>
+            <column name="description" remarks="Описание" type="TEXT"/>
+            <column name="miscellany" remarks="Комментарии" type="TEXT"/>
+            <column name="status_id" remarks="Комментарии" type="INT"/>
+            <column name="creation_date" type="date"/>
+            <column name="change_date" type="date"/>
+            <column name="user_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+
+    <!--    <changeSet author="Даша" id="08122021-02">-->
+    <!--        <addForeignKeyConstraint baseColumnNames="location_id" baseTableName="t_project"-->
+    <!--                                 constraintName="t_project_location_fkey" deferrable="false"-->
+    <!--                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"-->
+    <!--                                 referencedColumnNames="location_id" referencedTableName="t_location"/>-->
+    <!--    </changeSet>-->
+
+    <!--        <addForeignKeyConstraint baseColumnNames="movement_id" baseTableName="t_project"-->
+    <!--                                 constraintName="t_project_movement_id_fkey" deferrable="false"-->
+    <!--                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"-->
+    <!--                                 referencedColumnNames="movement_id" referencedTableName="t_movement"/>-->
+    <changeSet author="Даша" id="08122021-02">
+        <addForeignKeyConstraint baseColumnNames="status_id"
+                                 baseTableName="t_project"
+                                 constraintName="t_project_status_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="RESTRICT" onUpdate="NO ACTION"
+                                 referencedColumnNames="status_id" referencedTableName="t_status"/>
+    </changeSet>
+</databaseChangeLog>
