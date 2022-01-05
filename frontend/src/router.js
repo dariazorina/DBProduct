@@ -15,12 +15,16 @@ import ArticleDelete from '@/components/article/ArticleDelete'
 import ArticleAdd from '@/components/article/ArticleAdd'
 
 import EventList from '@/components/event/EventList'
+
 import OrgList from '@/components/org/OrgList'
 import OrgAdd from '@/components/org/OrgAdd'
 import OrgDetails from '@/components/org/OrgDetails'
 
+import ProjectList from '@/components/project/ProjectList'
+import ProjectAdd from '@/components/project/ProjectAdd'
+import ProjectDetails from '@/components/project/ProjectDetails'
+
 import CountryList from '@/components/country/CountryList'
-import CountryEdit from '@/components/country/CountryEdit'
 import CountryDelete from '@/components/country/CountryDelete'
 import CountryAdd from '@/components/country/CountryAdd'
 
@@ -99,6 +103,10 @@ const router = new Router({
         {path: '/org', component: OrgList},
         {path: '/org/add', component: OrgAdd, name: 'org-add'},
         {path: '/org/:org_id/details', component: OrgDetails, name: 'org-details'},
+
+        {path: '/project', component: ProjectList},
+        {path: '/project/add', component: ProjectAdd, name: 'project-add'},
+        {path: '/project/:project_id/details', component: ProjectDetails, name: 'project-details'},
 
         {path: '/uadmin', component: UserAdmin, meta: {isAdminPage: true}},
         // {path: '/uadmin', component: UserAdmin, name: 'user-admin'},

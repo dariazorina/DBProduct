@@ -79,8 +79,8 @@
                 </div>
 
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-                     <div v-for="author in articlePersonEntities"><a><router-link :to="{name: 'person-details', params: {person_id:author.id}}" target="_blank">
-                         {{createComplexPersonById(author.id)}}</router-link></a>
+                     <div v-for="author in article.personList"><a><router-link :to="{name: 'person-details', params: {person_id:author.itemId}}" target="_blank">
+                         {{createComplexNameByEntity(author)}}</router-link></a>
                     </div>
                 </span>
                 </div>
@@ -92,8 +92,8 @@
                         <span class="float-left">Локации</span></div>
                 </div>
                 <div class="col-sm-10"><span class="float-left">
-                    <div v-for="location in articleLocationEntities">
-                            {{createComplexLocationById(location.id)}}
+                    <div v-for="location in article.locationList">
+                            {{createComplexNameByEntity(location)}}
                     </div></span>
                 </div>
             </div>
@@ -105,11 +105,42 @@
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;">
                     <span class="float-left">
-                        <div v-for="org in articleOrgEntities"><a><router-link
-                              :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">
-                                 {{ createComplexOrgById(org.id)}}</router-link>
+                        <div v-for="org in article.orgList"><a><router-link
+                              :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                 {{ createComplexNameByEntity(org)}}</router-link>
                             </a>
                         </div>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="cellTitle">
+                        <span class="float-left">Проекты</span></div>
+                </div>
+                <div class="col-sm-10"><span class="float-left">
+                    <div v-for="pro in article.projectList"><a><router-link
+                            :to="{name: 'project-details', params: {project_id: pro.itemId}}" target="_blank">
+                                 {{ createComplexNameByEntity(pro)}}</router-link>
+                            </a>
+                        </div>
+                </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2" style="background-color:lavender;">
+                    <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                        <span class="float-left">События(?)</span></div>
+                </div>
+                <div class="col-sm-10" style="background-color:lavender;">
+                    <span class="float-left">
+<!--                        <div v-for="org in articleOrgEntities"><a><router-link-->
+<!--                                :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">-->
+<!--                                 {{ createComplexOrgById(org.id)}}</router-link>-->
+<!--                            </a>-->
+<!--                        </div>-->
                     </span>
                 </div>
             </div>
@@ -132,12 +163,7 @@
                     <div v-for="material in articleMaterialEntities">
                        <a><router-link
                                :to="{name: 'article-details', params: {article_id: material.itemId}}" target="_blank">
-                              {{createComplexMaterialById(material)}} </router-link></a>
-
-                        <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
-                        <!--                            {{createComplexMaterialById(material.id)}}-->
-                        <!--                        </a>-->
-                        <!--                        <a :href="$router.resolve({name: 'article-details', params: {article_id: material.id}}).href">link</a>-->
+                              {{createComplexNameByEntity (material)}} </router-link></a>
                     </div>
                 </span>
                 </div>
@@ -211,9 +237,6 @@
 
 <script>
     import api from "./article-api";
-    import apiPerson from "./../person/person-api";
-    import apiLocation from "./../country/country-api";
-    import apiOrg from "./../org/org-api";
     import apiAttachment from "./../attachment-api";
     import moment from "moment";
     import apiStatus from "./../status-api";
@@ -232,6 +255,7 @@
             return {
                 article: {
                     personList: [],
+                    projectList: [],
                     language: {},
                     movement: {},
                     hashtagList: [],
@@ -240,16 +264,6 @@
                     orgList: []
                 },
 
-                articlePersonIds: [], //before request
-                articlePersonEntities: [], //after request
-
-                articleLocationIds: [], //before request
-                articleLocationEntities: [], //after request
-
-                articleOrgIds: [], //before request
-                articleOrgEntities: [], //after request
-
-               // articleMaterialIds: [], //before request
                 articleMaterialEntities: [], //after request
 
                 uploadedFiles: [],
@@ -257,12 +271,6 @@
                 loggedName: null,    //should be file's author, not logged user
 
                 statusList: [],
-                // statusOptions: [
-                //     {text: 'В работе', value: 0},
-                //     {text: 'Внесены', value: 1},
-                //     {text: 'На доработке', value: 2},
-                //     {text: 'Отработаны', value: 3},
-                // ],
             }
         },
         methods: {
@@ -301,69 +309,14 @@
                 return !(typeof obj === 'undefined' || obj === null || obj.length === 0);
             },
 
-            createComplexPersonById(id) {
-                let result = '';
-                let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-                // console.log("00000000000000000000", currentPerson);
+            createComplexNameByEntity(currentEntity) {
+                let result = currentEntity.name;
 
-                result = currentPerson.content;
-                let connection = this.article.personList.find(x => x.itemId === id);
-                // console.log("1111111111", connection);
+                if (this.isObjectValidAndNotEmpty(currentEntity.connection))
+                    result += "/ " + currentEntity.connection;
 
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
-
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
-
-                return result;
-            },
-
-
-            createComplexLocationById(id) {
-                let currentLocation = this.articleLocationEntities.find(x => x.id === id);
-                let result = currentLocation.content;
-
-                let connection = this.article.locationList.find(x => x.itemId === id);
-                // console.log("1111111111", connection);
-
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
-
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
-
-                return result;
-            },
-
-            createComplexMaterialById(art) {
-                let currentMaterial = art;
-                let result = '';
-
-                if (currentMaterial != null) {
-                    result = currentMaterial.name;
-
-                    console.log("create material ref", currentMaterial);
-
-                    if (this.isObjectValidAndNotEmpty(currentMaterial.connection))
-                        result += "/ " + currentMaterial.connection;
-
-                    if (this.isObjectValidAndNotEmpty(currentMaterial.comment))
-                        result += "/ " + currentMaterial.comment;
-                }
-                return result;
-            },
-
-            createComplexOrgById(id) {
-                let currentOrg = this.articleOrgEntities.find(x => x.id === id);
-                let connection = this.article.orgList.find(x => x.itemId === id);
-                let result = currentOrg.content;
-
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
-
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
+                if (this.isObjectValidAndNotEmpty(currentEntity.comment))
+                    result += "/ " + currentEntity.comment;
 
                 return result;
             },
@@ -396,54 +349,16 @@
 
         mounted() {
             this.getLoggedIn();
+
             api.findById(this.$route.params.article_id, r => {
                 this.article = r.data;
-                // console.log("-------------------", this.article);
+                console.log("-------------------", this.article);
                 this.article.date = this.formatDate(this.article.date);
 
                 apiStatus.getAllStatuses(response => {
                     this.statusList = response.data;
                     console.log("STATUS LIST", this.statusList);
                 });
-
-                for (let j = 0; j < this.article.personList.length; j++) {
-                    this.articlePersonIds.push(this.article.personList[j].itemId);
-                }
-
-                for (let j = 0; j < this.article.locationList.length; j++) {
-                    this.articleLocationIds.push(this.article.locationList[j].itemId);
-                }
-                console.log("mounted locations", this.articleLocationIds);
-
-                for (let j = 0; j < this.article.orgList.length; j++) {
-                    this.articleOrgIds.push(this.article.orgList[j].itemId);
-                }
-                console.log("mounted org", this.articleOrgIds);
-
-                // for (let j = 0; j < this.article.materialList.length; j++) {
-                //     this.articleMaterialIds.push(this.article.materialList[j].itemId);
-                // }
-                // console.log("mounted material", this.articleMaterialIds);
-
-                apiPerson.getPersonsByIds(this.articlePersonIds, response => {
-                    this.articlePersonEntities = response.data;
-                    console.log("apiPerson", this.articlePersonEntities);
-                });
-
-                apiLocation.getLocationsByIds(this.articleLocationIds, response => {
-                    this.articleLocationEntities = response.data;
-                    console.log("apiLoca", this.articleLocationEntities);
-                });
-
-                apiOrg.getOrgsByIds(this.articleOrgIds, response => {
-                    this.articleOrgEntities = response.data;
-                    console.log("apiOrga", this.articleOrgEntities);
-                });
-
-                // api.getMaterialsByIds(this.articleMaterialIds, response => {
-                //     this.articleMaterialEntities = response.data;
-                //     console.log("apiMater", this.articleMaterialEntities);
-                // });
 
                 api.getMaterialsByIdsAndSymmetrically(this.article.id, response => {
                     this.articleMaterialEntities = response.data;

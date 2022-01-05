@@ -79,6 +79,17 @@ public class OrgAPI {
         return ResponseEntity.ok(orgService.save(org));
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<OrgDto> findById(@PathVariable Integer id) {
+//        OrgDto stock = orgService.findById(id);
+//        if (stock.getId() == null) {
+//            log.error("Id " + id + " is not existed");
+//            ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(stock);
+//    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<OrgDto> findById(@PathVariable Integer id) {
         Optional<OrgDto> stock = orgService.findById(id);

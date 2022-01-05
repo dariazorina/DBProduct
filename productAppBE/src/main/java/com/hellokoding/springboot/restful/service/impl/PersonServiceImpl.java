@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.*;
+import com.hellokoding.springboot.restful.service.PersonConverter;
 import com.hellokoding.springboot.restful.service.PersonService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class PersonServiceImpl implements PersonService {
 
     private final ArticleRepository articleRepository;
     private final PersonRepository personRepository;
+    private final ProjectRepository projectRepository;
     private final PersonPersonRepository personPersonRepository;
 
     private final EventRepository eventRepository;
@@ -42,7 +44,8 @@ public class PersonServiceImpl implements PersonService {
 
         NewPersonDtoForMainList currentNewDtoP;
         for (Person p : allPerson) {
-            currentNewDtoP = new NewPersonDtoForMainList(p);
+            currentNewDtoP = new NewPersonDtoForMainList();
+            PersonConverter.convertToNewPersonDtoForMainList(p, currentNewDtoP);
 //            currentNewDtoP.newPersonDtoConverter(p);
             dtoAllPersonList.add(currentNewDtoP);
         }
@@ -62,6 +65,20 @@ public class PersonServiceImpl implements PersonService {
 
         return newPersonDto;
     }
+
+//    @Override
+//    public NewPersonDto findById(Integer id) {
+//
+//        Optional<Person> p = personRepository.findById(id);
+//        NewPersonDto newPersonDto = new NewPersonDto(p.get().getId(), p.get().getMovementList(), null, "test",
+//                "", "", null, null,
+//                null, null, null, null, null, null,
+//                1910, 1920, "");
+//
+////        PersonConverter.convertToNewPersonDto(p.get(), newPersonDto);
+//
+//        return newPersonDto;
+//    }
 
     public List<IdContentDto> findByIds(List<Integer> idList) {
 
@@ -324,7 +341,8 @@ public class PersonServiceImpl implements PersonService {
 
         NewPersonDtoForMainList dtoPerson;
         for (Person p : searchList) {
-            dtoPerson = new NewPersonDtoForMainList(p);
+            dtoPerson = new NewPersonDtoForMainList();
+            PersonConverter.convertToNewPersonDtoForMainList(p, dtoPerson);
             dtoSearchList.add(dtoPerson);
         }
         return dtoSearchList;
@@ -489,7 +507,7 @@ public class PersonServiceImpl implements PersonService {
         Integer orgId;
         OrgPersonConnection position;
         List<OrgPersonConnection> occList = new ArrayList<>();
-        for (ItemConnectionDto posDto : personDto.getOrgList()) {
+        for (NameConnectionDto posDto : personDto.getOrgList()) {
 
             orgId = posDto.getItemId();
             if (orgRepository.findById(orgId).isPresent()) {
@@ -518,7 +536,7 @@ public class PersonServiceImpl implements PersonService {
         Integer locatonId;
         PersonLocationConnection locationConnection;
         List<PersonLocationConnection> locationConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : personDto.getLocationList()) {
+        for (NameConnectionDto connectionDto : personDto.getLocationList()) {
 
             locatonId = connectionDto.getItemId();
             if (locationRepository.findById(locatonId).isPresent()) {
@@ -548,7 +566,7 @@ public class PersonServiceImpl implements PersonService {
         Integer articleId;
         ArticlePersonConnection articleConnection;
         List<ArticlePersonConnection> articleConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : personDto.getArticleList()) {
+        for (NameConnectionDto connectionDto : personDto.getArticleList()) {
 
             articleId = connectionDto.getItemId();
             if (articleRepository.findById(articleId).isPresent()) {
@@ -568,6 +586,36 @@ public class PersonServiceImpl implements PersonService {
             person.getArticleConnections().addAll(articleConnectionList);
         }
 
+        /////////////////////PROJECT CONNECTIONS///////////////////
+        if (person.getProjectConnections() != null) {
+            person.getProjectConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer projectId;
+        ProjectPersonConnection projectPersonConnection;
+        List<ProjectPersonConnection> projectPersonConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : personDto.getProjectList()) {
+
+            projectId = connectionDto.getItemId();
+            if (locationRepository.findById(projectId).isPresent()) {
+                projectPersonConnection = new ProjectPersonConnection();
+                Project pro = projectRepository.findById(projectId).get();
+
+                projectPersonConnection.setProject(pro);
+                projectPersonConnection.setPerson(person);
+                projectPersonConnection.setConnection(connectionDto.getConnection());
+                projectPersonConnection.setComment(connectionDto.getComment());
+
+                projectPersonConnectionList.add(projectPersonConnection);
+            }
+        }
+
+        if (person.getProjectConnections() == null) {
+            person.setProjectConnections(projectPersonConnectionList);
+        } else {
+            person.getProjectConnections().addAll(projectPersonConnectionList);
+        }
 
 //        //isource
 //        if (person.getIsourceConnections() != null) {

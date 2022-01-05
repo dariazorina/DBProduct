@@ -1,6 +1,6 @@
 package com.hellokoding.springboot.restful.model.dto;
 
-//dto for add/edit page for article-article, person-person, org-org
+//dto for add/edit, details page for article, person, org, pro all connections except one-type connections
 public class NameConnectionDto implements Comparable<NameConnectionDto> {
     private Integer itemId;
     private String name;

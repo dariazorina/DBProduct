@@ -163,38 +163,49 @@
                         </div>
                     </div>
                 </th>
-                                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">
-                                    <div class="row" style="background-color: transparent">
-                                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                                        <div class='headerLink col-sm-6'
-                                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                                            Лица
-                                        </div>
-                                        <div class='col-sm-3'
-                                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                                             id="authorFilterId">
-                                            <v-btn text icon x-small @click="resetFilter(2)">
-                                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                                            </v-btn>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
-                                    <div class="row" style="background-color: transparent">
-                                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
-                                        <div class='headerLink col-sm-8'
-                                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
-                                            Организации
-                                        </div>
-                                        <div class='col-sm-2'
-                                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                                             id="orgFilterId">
-                                            <v-btn text icon x-small @click="resetFilter(3)">
-                                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                                            </v-btn>
-                                        </div>
-                                    </div>
-                                </th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(2)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
+                        <div class='headerLink col-sm-6'
+                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
+                            Лица
+                        </div>
+                        <div class='col-sm-3'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="authorFilterId">
+                            <v-btn text icon x-small @click="resetFilter(2)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+                <th class='tdTitle' @contextmenu.prevent="searchByField(3)">
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='headerLink col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Организации
+                        </div>
+                        <div class='col-sm-2'
+                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
+                             id="orgFilterId">
+                            <v-btn text icon x-small @click="resetFilter(3)">
+                                <v-icon style="color: white">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </th>
+
+                <th class='tdTitle'>
+                    <div class="row" style="background-color: transparent">
+                        <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
+                        <div class='col-sm-8'
+                             style="text-align: center; background-color: transparent; padding-left: 0px; padding-right: 0px">
+                            Проекты
+                        </div>
+                    </div>
+                </th>
+
                 <th class='tdTitle' @contextmenu.prevent="searchByField(1)">
                     <div class="row" style="background-color: transparent">
                         <div class='col-sm-2' style="background-color: transparent;  padding: 0"></div>
@@ -327,6 +338,13 @@
                         <div v-if="article.orgList.length > 0">
                             {{org}}
 <!--                            {{getOrgCellById(org.itemId)}}-->
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div v-for="pro in article.projectList">
+                        <div v-if="article.projectList.length > 0">
+                            {{pro}}
                         </div>
                     </div>
                 </td>
@@ -486,16 +504,16 @@
 <script>
     import Vue from 'vue';
     import api from "./article-api";
-    import apiPerson from "./../person/person-api";
+    // import apiPerson from "./../person/person-api";
     import apiStatus from "./../status-api";
-    import apiCountry from "./../country/country-api";
-    import apiOrg from "./../org/org-api";
+    // import apiCountry from "./../country/country-api";
+    // import apiOrg from "./../org/org-api";
 
     import moment from "moment";
     import router from "./../../router";
     import "vue-scroll-table";
     import Vuetify from 'vuetify';
-    import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
+   // import '@mdi/font/css/materialdesignicons.css' //why does icon appear in other file)) add article?
     import contextMenu from 'vue-context-menu'
     import VSwatches from 'vue-swatches'        // https://saintplay.github.io/vue-swatches/examples/#simple
     import 'vue-swatches/dist/vue-swatches.css'

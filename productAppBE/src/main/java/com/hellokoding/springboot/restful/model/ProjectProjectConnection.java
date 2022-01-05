@@ -17,7 +17,7 @@ public class ProjectProjectConnection {
     private Integer id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "project_id")
     @JsonIgnore
     @ToString.Exclude
     private Project project;

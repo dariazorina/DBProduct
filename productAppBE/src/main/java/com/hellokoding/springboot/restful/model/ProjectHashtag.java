@@ -27,7 +27,7 @@ public class ProjectHashtag {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @ToString.Exclude
-    @JoinColumn(name = "assigned_hashtag_id")
+    @JoinColumn(name = "assigned_hashtag")
     private HashTag assigned_hashtag;
 
 

@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.*;
+import com.hellokoding.springboot.restful.service.OrgConverter;
 import com.hellokoding.springboot.restful.service.OrgService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class OrgServiceImpl implements OrgService {
     private final OrgOrgRepository orgOrgRepository;
     private final OrgNameRepository orgNameRepository;
     private final StatusRepository statusRepository;
+    private final ProjectRepository projectRepository;
     private final HashTagRepository hashTagRepository;
     private final LocationRepository locationRepository;
     private final IsourceRepository isourceRepository;
@@ -48,14 +50,12 @@ public class OrgServiceImpl implements OrgService {
         Page<Org> pageTuts;
 
         List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
-        pageTuts = orgRepository.findAllWithMovements(paging, mov);
-//        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
+        pageTuts = orgRepository.findAllWithMovements(paging, mov);  //        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
 
-        OrgDtoForMainList currentOrgDto;
-//        for (Org o : allOrg) {
+        OrgDtoForMainList currentOrgDto;  //        for (Org o : allOrg) {
         for (Org o : pageTuts) {
-            currentOrgDto = new OrgDtoForMainList(o);
-            //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
+            currentOrgDto = new OrgDtoForMainList();
+            OrgConverter.convertToOrgDtoForMainList(o, currentOrgDto, this);    //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
             dtoAllOrgList.add(currentOrgDto);
         }
         return dtoAllOrgList;
@@ -170,7 +170,8 @@ public class OrgServiceImpl implements OrgService {
 
         OrgDtoForMainList orgDto;
         for (Org currOrg : searchList) {
-            orgDto = new OrgDtoForMainList(currOrg);
+            orgDto = new OrgDtoForMainList();
+            OrgConverter.convertToOrgDtoForMainList(currOrg, orgDto, this);
             dtoSearchList.add(orgDto);
         }
         return dtoSearchList;
@@ -345,6 +346,11 @@ public class OrgServiceImpl implements OrgService {
 
     @Override
     public Optional<OrgDto> findById(Integer id) {
+
+//        Optional<Org> orgOpt = orgRepository.findById(id);    //        orgDto = Optional.of(new OrgDto(org.get()));
+//        OrgDto orgDto = new OrgDto();
+//        OrgConverter.convertToOrgDto(orgOpt.get(), orgDto);
+
 
         Optional<OrgDto> orgDto;
         Optional<Org> org = orgRepository.findById(id);
@@ -562,7 +568,7 @@ public class OrgServiceImpl implements OrgService {
         Integer locatonId;
         OrgLocationConnection locationConnection;
         List<OrgLocationConnection> locationConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : orgDto.getLocationList()) {
+        for (NameConnectionDto connectionDto : orgDto.getLocationList()) {
 
             locatonId = connectionDto.getItemId();
             if (locationRepository.findById(locatonId).isPresent()) {
@@ -583,6 +589,35 @@ public class OrgServiceImpl implements OrgService {
         }
 
 
+        /////////////////////PROJECT CONNECTIONS///////////////////
+        if (org.getProjectConnections() != null) {
+            org.getProjectConnections().clear();
+            orgRepository.flush();
+        }
+
+        Integer projectId;
+        ProjectOrgConnection projectOrgConnection;
+        List<ProjectOrgConnection> projectOrgConnections = new ArrayList<>();
+        for (NameConnectionDto connectionDto : orgDto.getProjectList()) {
+
+            projectId = connectionDto.getItemId();
+            if (projectRepository.findById(projectId).isPresent()) {
+                projectOrgConnection = new ProjectOrgConnection();
+                projectOrgConnection.setProject(projectRepository.findById(projectId).get());
+                projectOrgConnection.setOrg(org);
+                projectOrgConnection.setConnection(connectionDto.getConnection());
+                projectOrgConnection.setComment(connectionDto.getComment());
+
+                projectOrgConnections.add(projectOrgConnection);
+            }
+        }
+
+        if (org.getProjectConnections() == null) {
+            org.setProjectConnections(projectOrgConnections);
+        } else {
+            org.getProjectConnections().addAll(projectOrgConnections);
+        }
+
         ///article
         if (org.getArticleConnections() != null) {
             org.getArticleConnections().clear();
@@ -592,7 +627,7 @@ public class OrgServiceImpl implements OrgService {
         Integer articleId;
         ArticleOrgConnection articleConnection;
         List<ArticleOrgConnection> articleConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : orgDto.getArticleList()) {
+        for (NameConnectionDto connectionDto : orgDto.getArticleList()) {
 
             articleId = connectionDto.getItemId();
             if (articleRepository.findById(articleId).isPresent()) {
@@ -613,34 +648,34 @@ public class OrgServiceImpl implements OrgService {
         }
 
 
-        //isource
-        if (org.getIsourceConnections() != null) {
-            org.getIsourceConnections().clear();
-            orgRepository.flush();
-        }
-
-        Integer isourceId;
-        OrgIsourceConnection isourceConnection;
-        List<OrgIsourceConnection> isourceConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : orgDto.getIsourceList()) {
-
-            isourceId = connectionDto.getItemId();
-            if (isourceRepository.findById(isourceId).isPresent()) {
-                isourceConnection = new OrgIsourceConnection();
-                isourceConnection.setIsource(isourceRepository.findById(isourceId).get());
-                isourceConnection.setOrg(org);
-                isourceConnection.setConnection(connectionDto.getConnection());
-                isourceConnection.setComment(connectionDto.getComment());
-
-                isourceConnectionList.add(isourceConnection);
-            }
-        }
-
-        if (org.getIsourceConnections() == null) {
-            org.setIsourceConnections(isourceConnectionList);
-        } else {
-            org.getIsourceConnections().addAll(isourceConnectionList);
-        }
+//        //isource
+//        if (org.getIsourceConnections() != null) {
+//            org.getIsourceConnections().clear();
+//            orgRepository.flush();
+//        }
+//
+//        Integer isourceId;
+//        OrgIsourceConnection isourceConnection;
+//        List<OrgIsourceConnection> isourceConnectionList = new ArrayList<>();
+//        for (NameConnectionDto connectionDto : orgDto.getIsourceList()) {
+//
+//            isourceId = connectionDto.getItemId();
+//            if (isourceRepository.findById(isourceId).isPresent()) {
+//                isourceConnection = new OrgIsourceConnection();
+//                isourceConnection.setIsource(isourceRepository.findById(isourceId).get());
+//                isourceConnection.setOrg(org);
+//                isourceConnection.setConnection(connectionDto.getConnection());
+//                isourceConnection.setComment(connectionDto.getComment());
+//
+//                isourceConnectionList.add(isourceConnection);
+//            }
+//        }
+//
+//        if (org.getIsourceConnections() == null) {
+//            org.setIsourceConnections(isourceConnectionList);
+//        } else {
+//            org.getIsourceConnections().addAll(isourceConnectionList);
+//        }
 
         ///persons
         if (org.getPersonConnections() != null) {
@@ -651,7 +686,7 @@ public class OrgServiceImpl implements OrgService {
         Integer personId;
         OrgPersonConnection personConnection;
         List<OrgPersonConnection> personConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : orgDto.getPersonList()) {
+        for (NameConnectionDto connectionDto : orgDto.getPersonList()) {
 
             personId = connectionDto.getItemId();
             if (personRepository.findById(personId).isPresent()) {
@@ -779,83 +814,4 @@ public class OrgServiceImpl implements OrgService {
     public void deleteById(Integer id) {
         orgRepository.deleteById(id);
     }
-
-//    public void addOrgFromEventTableToOrgTable() {  //todo Прояснить. Добавила в табл.Оганизаций названия организаций из табл.Событий
-//        List<Event> all = eventRepository.findAll();
-
-       /* for (Event event : all) {
-            String orgs = event.getOrgs();
-            if (orgs != null) {
-                orgs = orgs.substring(1, orgs.length() - 1); //убираем { }
-                String[] split = orgs.split(","); //разделяем по "," на массив строк
-
-                for (String orgWithQuotesOrNot : split) { ////todo звбила на кавычки в назв организ.,т.к.они то есть, то их нет
-                    // String actorName = orgWithQuotesOrNot.substring(1, orgWithQuotesOrNot.length() - 1);//del "
-                    Org orgByName = orgRepository.getOrgByNameRus(orgWithQuotesOrNot); //ищем автора в БД  //"Фонд Черкесы"); //
-                    //  orgRepository.save(orgByName);
-
-                    if (orgByName == null) {
-                        Org s1 = new Org();
-                        s1.setNameRus(orgWithQuotesOrNot);
-                        s1.setCountry_id(1);
-//                        String act="{abc, def}";
-//                        s1.setActors(act);
-////                        s1.setMovement_id("1");
-//                        s1.setClosed(1789);
-//                        s1.setFounded(1589);
-
-                    orgRepository.save(s1);
-                    }
-                }
-            }
-        }*/
-//    }
-
-    //todo перезаписать вместо названий организаций их айдишки (добавленые только что в табл.Организаций)
-/*    public void changeOrgTitleToOrgId() {
-        List<Event> all = eventRepository.findAll();
-
-        for (Event event : all) {
-            String organizations = event.getOrgs();
-            if (organizations != null) {
-                organizations = organizations.substring(1, organizations.length() - 1); //убираем { }
-                String[] split = organizations.split(","); //разделяем по "," на массив строк
-
-                String orgs = "{";
-                for (String orgWithQuotesOrNot : split) { ////todo забила на кавычки в назв организ.,т.к.они то есть, то их нет
-                    Org orgByName = orgRepository.getOrgByNameRus(orgWithQuotesOrNot);
-                    if (orgByName != null) {
-                        orgs += String.valueOf(orgByName.getId());
-                        orgs += ", ";
-                    }
-                    orgs = orgs.substring(0, orgs.length() - 2); //убираем ", "
-                    orgs += "}";
-                    event.setOrgs(orgs);
-                    eventRepository.save(event);
-                }
-            }
-        }
-    }*/
-
-
-/*    public void initializeReferenceBetweenOrgAndEvent() {
-        List<Event> all = eventRepository.findAll();
-
-        for (Event event : all) {
-            String orgs = event.getOrgs();
-            if (orgs != null) {
-                orgs = orgs.substring(1, orgs.length() - 1); //убираем { }
-                String[] split = orgs.split(","); //разделяем по "," на массив строк
-
-                List<Org> orgList = new LinkedList<>();
-                for (String org_id : split) {
-                    Org orgById = orgRepository.getOne(Integer.valueOf(org_id));
-                    orgList.add(orgById);
-                }
-                event.setOrgList(orgList);
-                eventRepository.save(event);
-            }
-        }
-    }*/
-
 }

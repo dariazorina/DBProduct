@@ -236,6 +236,9 @@
     import CreatedList from "../components/multiple-enter-list/CreatedList";
     import apiStatus from "./../status-api";
 
+    import '@mdi/font/css/materialdesignicons.css' //icons have gone
+    import Vuetify from 'vuetify';                  //icons
+
     export default {
         components: {
             // OccupationList,
@@ -243,12 +246,12 @@
             VSwatches,
             CreatedList,
         },
+        vuetify: new Vuetify(),                     //icons
 
         name: "org-list",
         data() {
             return {
                 color: '#1CA085',
-                orgs: [],
                 entries: [],
 
                 org: {
@@ -261,18 +264,7 @@
                     hashtagList: [],
                     nameList: []
                 },
-                // orgLocationIds: [], //before request
-                // orgLocationEntities: [], //after request
-                orgOrgIds: [], //before request
-                orgOrgEntities: [], //after request
-                orgPersonIds: [], //before request
-                orgPersonEntities: [], //after request
-
-                searchKey: '',
                 response: [],
-                errors: [],
-                showResponse: false,
-
                 currentOrg: [],
                 selectedOrg: null,
                 previousSelectedOrg: null,

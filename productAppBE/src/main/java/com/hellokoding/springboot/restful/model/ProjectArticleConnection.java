@@ -22,7 +22,7 @@ public class ProjectArticleConnection {
     @ToString.Exclude
     private Article article;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)  ///EAGER
     @JoinColumn(name = "project_id")
     @JsonIgnore
     @ToString.Exclude

@@ -5,6 +5,7 @@ public enum EntityType {
     ARTICLE("article"),
     EVENT("event"),
     ORG("org"),
+    PROJECT("project"),
     PERSON("person");
 
     private String name;

@@ -16,6 +16,8 @@ public interface PersonService {
     List<NewPersonDtoForMainList> findAll(List<Integer> movement);
 
     Optional<NewPersonDto> findById(Integer id);
+//    NewPersonDto findById(Integer id);
+
     List<IdContentDto> findByIds(List<Integer> idList);
 
     void deleteById(Integer id);

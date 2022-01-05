@@ -16,7 +16,7 @@ public class ProjectPersonConnection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY) ///EAGER
     @JoinColumn(name = "project_id")
     @JsonIgnore
     @ToString.Exclude

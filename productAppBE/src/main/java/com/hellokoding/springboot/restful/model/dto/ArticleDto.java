@@ -27,9 +27,10 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private String rowColor;
 //    private String url;
     private List<UrlLink> linkList;
-    private List<ItemConnectionDto> personList;
-    private List<ItemConnectionDto> locationList;
-    private List<ItemConnectionDto> orgList;
+    private List<NameConnectionDto> personList;
+    private List<NameConnectionDto> projectList;
+    private List<NameConnectionDto> locationList;
+    private List<NameConnectionDto> orgList;
     private List<NameConnectionDto> materialList;
     private List<String> hashtagList;
     private String miscellany;
@@ -60,8 +61,9 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public ArticleDto(Integer id, List<Movement> movementList, Language language, Date date, String title, String status,
                       String titleRus, String description, String text, String rowColor,
-                      List<UrlLink> linkList, List<ItemConnectionDto> personList, List<ItemConnectionDto> locationList,
-                      List<ItemConnectionDto> orgList, List<NameConnectionDto> materialList,
+                      List<UrlLink> linkList, List<NameConnectionDto> personList, List<NameConnectionDto> locationList,
+                      List<NameConnectionDto> projectList,
+                      List<NameConnectionDto> orgList, List<NameConnectionDto> materialList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movementList = movementList;
@@ -77,6 +79,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
 //        this.url = url;
         this.linkList = linkList;
         this.personList = personList;
+        this.projectList = projectList;
         this.locationList = locationList;
         this.orgList = orgList;
         this.materialList = materialList;
@@ -84,64 +87,64 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.miscellany = miscellany;
     }
 
-    public ArticleDto(Article article) {
-        this.id = article.getId();
-        this.movementList = article.getMovementList();
-        this.language = article.getLanguage();
-        this.mtype = article.getMtype();
-        this.date = article.getDate();
-        this.title = article.getTitle();
-        this.status = article.getStatus().getName();
-        this.titleRus = article.getTitleRus();
-        this.description = article.getDescription();
-        this.text = article.getText();
-        this.rowColor = article.getRgbSelection();
-        this.linkList = article.getLinkList();
-
-        this.personList = new ArrayList<>();
-        this.locationList = new ArrayList<>();
-        this.orgList = new ArrayList<>();
-        this.materialList = new ArrayList<>();
-
-        ItemConnectionDto personConnectionDto;
-        for (ArticlePersonConnection connection : article.getPersonConnections()) {
-            personConnectionDto = new ItemConnectionDto();
-            personConnectionDto.setItemId(connection.getPerson().getId());
-            personConnectionDto.setConnection(connection.getConnection());
-            personConnectionDto.setComment(connection.getComment());
-
-            this.personList.add(personConnectionDto);
-        }
-
-        ItemConnectionDto locationConnectionDto;
-        for (ArticleLocationConnection connection : article.getLocationConnections()) {
-            locationConnectionDto = new ItemConnectionDto();
-            locationConnectionDto.setItemId(connection.getLocation().getId());
-            locationConnectionDto.setConnection(connection.getConnection());
-            locationConnectionDto.setComment(connection.getComment());
-
-            this.locationList.add(locationConnectionDto);
-        }
-
-        ItemConnectionDto orgConnectionDto;
-        for (ArticleOrgConnection connection : article.getOrgConnections()) {
-            orgConnectionDto = new ItemConnectionDto();
-            orgConnectionDto.setItemId(connection.getOrg().getId());
-            orgConnectionDto.setConnection(connection.getConnection());
-            orgConnectionDto.setComment(connection.getComment());
-
-            this.orgList.add(orgConnectionDto);
-        }
-
-
-        this.hashtagList = new ArrayList<>();
-        for ( ArticleHashtag articleHashtag : article.getHashtagList()) {
-            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag())) {
-                this.hashtagList.add(articleHashtag.getHashtag().getContent());
-            }
-        }
-        this.miscellany = article.getMiscellany();
-    }
+//    public ArticleDto(Article article) {
+//        this.id = article.getId();
+//        this.movementList = article.getMovementList();
+//        this.language = article.getLanguage();
+//        this.mtype = article.getMtype();
+//        this.date = article.getDate();
+//        this.title = article.getTitle();
+//        this.status = article.getStatus().getName();
+//        this.titleRus = article.getTitleRus();
+//        this.description = article.getDescription();
+//        this.text = article.getText();
+//        this.rowColor = article.getRgbSelection();
+//        this.linkList = article.getLinkList();
+//
+//        this.personList = new ArrayList<>();
+//        this.locationList = new ArrayList<>();
+//        this.orgList = new ArrayList<>();
+//        this.materialList = new ArrayList<>();
+//
+//        ItemConnectionDto personConnectionDto;
+//        for (ArticlePersonConnection connection : article.getPersonConnections()) {
+//            personConnectionDto = new ItemConnectionDto();
+//            personConnectionDto.setItemId(connection.getPerson().getId());
+//            personConnectionDto.setConnection(connection.getConnection());
+//            personConnectionDto.setComment(connection.getComment());
+//
+//            this.personList.add(personConnectionDto);
+//        }
+//
+//        ItemConnectionDto locationConnectionDto;
+//        for (ArticleLocationConnection connection : article.getLocationConnections()) {
+//            locationConnectionDto = new ItemConnectionDto();
+//            locationConnectionDto.setItemId(connection.getLocation().getId());
+//            locationConnectionDto.setConnection(connection.getConnection());
+//            locationConnectionDto.setComment(connection.getComment());
+//
+//            this.locationList.add(locationConnectionDto);
+//        }
+//
+//        ItemConnectionDto orgConnectionDto;
+//        for (ArticleOrgConnection connection : article.getOrgConnections()) {
+//            orgConnectionDto = new ItemConnectionDto();
+//            orgConnectionDto.setItemId(connection.getOrg().getId());
+//            orgConnectionDto.setConnection(connection.getConnection());
+//            orgConnectionDto.setComment(connection.getComment());
+//
+//            this.orgList.add(orgConnectionDto);
+//        }
+//
+//
+//        this.hashtagList = new ArrayList<>();
+//        for ( ArticleHashtag articleHashtag : article.getHashtagList()) {
+//            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag())) {
+//                this.hashtagList.add(articleHashtag.getHashtag().getContent());
+//            }
+//        }
+//        this.miscellany = article.getMiscellany();
+//    }
 
     public ArticleDto(Article article, List<ConnectionType> types) {
         this.id = article.getId();
@@ -161,36 +164,115 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.locationList = new ArrayList<>();
         this.orgList = new ArrayList<>();
         this.materialList = new ArrayList<>();
+        this.projectList = new ArrayList<>();
 
-        ItemConnectionDto personConnectionDto;
+        NameConnectionDto personConnectionDto;
+        String dtoName = "";
         for (ArticlePersonConnection connection : article.getPersonConnections()) {
-            personConnectionDto = new ItemConnectionDto();
-            personConnectionDto.setItemId(connection.getPerson().getId());
+            personConnectionDto = new NameConnectionDto();
+            Person person = connection.getPerson();
+
+            personConnectionDto.setItemId(person.getId());
+
+            if (person.getSnpList() != null) {
+                for (SurnameNamePatr name : person.getSnpList()) {
+                    if (name.getPriority() == 1) {
+                        dtoName = name.getSurname();
+                        dtoName += " " + name.getName();
+                        if (name.getPatronymic() != null) {
+                            dtoName += " " + name.getPatronymic();
+                        }
+                    }
+                }
+            }
+
+            personConnectionDto.setName(dtoName);
             personConnectionDto.setConnection(connection.getConnection());
             personConnectionDto.setComment(connection.getComment());
 
             this.personList.add(personConnectionDto);
         }
 
-        ItemConnectionDto locationConnectionDto;
+        NameConnectionDto locationConnectionDto;
         for (ArticleLocationConnection connection : article.getLocationConnections()) {
-            locationConnectionDto = new ItemConnectionDto();
-            locationConnectionDto.setItemId(connection.getLocation().getId());
+            locationConnectionDto = new NameConnectionDto();
+
+            Location location = connection.getLocation();
+            locationConnectionDto.setItemId(location.getId());
+
+            dtoName = "location error";
+            if (location.getCountry() != null) {
+                if (location.getCountry().length() > 0) {
+                    dtoName = location.getCountry();
+                }
+            }
+
+            if (location.getRegion() != null && location.getRegion().length() > 0) {
+                dtoName += ", " + location.getRegion();
+            }
+
+            if (location.getCity() != null && location.getCity().length() > 0) {
+                dtoName += ", " + location.getCity();
+            }
+
+            if (location.getAddress() != null && location.getAddress().length() > 0) {
+                dtoName += ", " + location.getAddress();
+            }
+
+            if (location.getPlacement() != null && location.getPlacement().length() > 0) {
+                dtoName += ", " + location.getPlacement();
+            }
+
+            System.out.println("location article dto:");
+            System.out.println(dtoName);
+
+            locationConnectionDto.setName(dtoName);
             locationConnectionDto.setConnection(connection.getConnection());
             locationConnectionDto.setComment(connection.getComment());
 
             this.locationList.add(locationConnectionDto);
         }
 
-        ItemConnectionDto orgConnectionDto;
+        NameConnectionDto projectConnectionDto;
+        for (ProjectArticleConnection connection : article.getProjectConnections()) {
+            projectConnectionDto = new NameConnectionDto();
+            Project project = connection.getProject();
+
+            projectConnectionDto.setItemId(project.getId());
+            projectConnectionDto.setName(project.getMainTitle());
+            projectConnectionDto.setConnection(connection.getConnection());
+            projectConnectionDto.setComment(connection.getComment());
+
+            this.projectList.add(projectConnectionDto);
+        }
+
+        NameConnectionDto orgConnectionDto;
         for (ArticleOrgConnection connection : article.getOrgConnections()) {
-            orgConnectionDto = new ItemConnectionDto();
-            orgConnectionDto.setItemId(connection.getOrg().getId());
+            orgConnectionDto = new NameConnectionDto();
+            Org org = connection.getOrg();
+
+            orgConnectionDto.setItemId(org.getId());
+
+            dtoName = "";
+            if (org.getNameList() != null) {
+                for (OrgName name : org.getNameList()) {
+                    if (name.getPriority() == 1) {
+                        dtoName += name.getName();
+
+                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
+                            dtoName += "/ " + name.getAbbr();
+                        }
+                    }
+                }
+            }
+
+            orgConnectionDto.setName(dtoName);
             orgConnectionDto.setConnection(connection.getConnection());
             orgConnectionDto.setComment(connection.getComment());
 
             this.orgList.add(orgConnectionDto);
         }
+
 
         //replaced to article service (connection types there)
 //        ItemConnectionDto materialConnectionDto;
@@ -204,45 +286,45 @@ public class ArticleDto implements Comparable<ArticleDto> {
 //        }
 
 //        ArrayList<NameConnectionDto> materialList = new ArrayList<>();
-        if (article.getMaterialConnections().size() > 0) {
-            NameConnectionDto materialConnectionDto = new NameConnectionDto();
-            String dtoName = "";
-
-            for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
-                materialConnectionDto = new NameConnectionDto();
-
-                Optional<ConnectionType> matchingObject = types.stream().
-                        filter(p -> p.getId().equals(connection.getConnection())).
-                        findFirst();
-
-                if (article.getTitleRus() != null) {
-                    if (article.getTitleRus().length() > 0) {
-                        dtoName += article.getTitleRus();
-                        if (article.getTitle() != null) {
-                            if (article.getTitle().length() > 0) {
-                                dtoName += "/ " + article.getTitle();
-                            }
-                        }
-                    }
-                }
-                LocalDate dateWithZeroTime = article.getDate().toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-
-                if (dateWithZeroTime != null) dtoName += ", " + dateWithZeroTime; //article.getDate().;
-                else {
-                    dtoName += "," + article.getLinkList().get(0);  //as the first help in fail with date
-                }
-
-                materialConnectionDto.setName(dtoName);
-                materialConnectionDto.setItemId(connection.getMaterial().getId());
-                materialConnectionDto.setConnection(matchingObject.get().getType());
-                materialConnectionDto.setComment(connection.getComment());
-                dtoName = "";
-
-                this.materialList.add(materialConnectionDto);
-            }//for
-        }
+//        if (article.getMaterialConnections().size() > 0) {
+//            NameConnectionDto materialConnectionDto = new NameConnectionDto();
+//            String dtoName = "";
+//
+//            for (ArticleMaterialConnection connection : article.getMaterialConnections()) {
+//                materialConnectionDto = new NameConnectionDto();
+//
+//                Optional<ConnectionType> matchingObject = types.stream().
+//                        filter(p -> p.getId().equals(connection.getConnection())).
+//                        findFirst();
+//
+//                if (article.getTitleRus() != null) {
+//                    if (article.getTitleRus().length() > 0) {
+//                        dtoName += article.getTitleRus();
+//                        if (article.getTitle() != null) {
+//                            if (article.getTitle().length() > 0) {
+//                                dtoName += "/ " + article.getTitle();
+//                            }
+//                        }
+//                    }
+//                }
+//                LocalDate dateWithZeroTime = article.getDate().toInstant()
+//                        .atZone(ZoneId.systemDefault())
+//                        .toLocalDate();
+//
+//                if (dateWithZeroTime != null) dtoName += ", " + dateWithZeroTime; //article.getDate().;
+//                else {
+//                    dtoName += "," + article.getLinkList().get(0);  //as the first help in fail with date
+//                }
+//
+//                materialConnectionDto.setName(dtoName);
+//                materialConnectionDto.setItemId(connection.getMaterial().getId());
+//                materialConnectionDto.setConnection(matchingObject.get().getType());
+//                materialConnectionDto.setComment(connection.getComment());
+//                dtoName = "";
+//
+//                this.materialList.add(materialConnectionDto);
+//            }//for
+//        }
 
         this.hashtagList = new ArrayList<>();
         for (ArticleHashtag articleHashtag : article.getHashtagList()) {
@@ -325,6 +407,14 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.text = text;
     }
 
+    public List<NameConnectionDto> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<NameConnectionDto> projectList) {
+        this.projectList = projectList;
+    }
+
     public String getRowColor() {
         return rowColor;
     }
@@ -349,27 +439,27 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.linkList = linkList;
     }
 
-    public List<ItemConnectionDto> getPersonList() {
+    public List<NameConnectionDto> getPersonList() {
         return personList;
     }
 
-    public void setPersonList(List<ItemConnectionDto> personList) {
+    public void setPersonList(List<NameConnectionDto> personList) {
         this.personList = personList;
     }
 
-    public List<ItemConnectionDto> getLocationList() {
+    public List<NameConnectionDto> getLocationList() {
         return locationList;
     }
 
-    public void setLocationList(List<ItemConnectionDto> locationList) {
+    public void setLocationList(List<NameConnectionDto> locationList) {
         this.locationList = locationList;
     }
 
-    public List<ItemConnectionDto> getOrgList() {
+    public List<NameConnectionDto> getOrgList() {
         return orgList;
     }
 
-    public void setOrgList(List<ItemConnectionDto> orgList) {
+    public void setOrgList(List<NameConnectionDto> orgList) {
         this.orgList = orgList;
     }
 

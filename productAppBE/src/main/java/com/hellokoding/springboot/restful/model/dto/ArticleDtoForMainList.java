@@ -21,6 +21,7 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
 
     private String rowColor;
     private List<String> personList;
+    private List<String> projectList;
     private List<String> locationList;
     private List<String> orgList;
     private List<String> hashtagList;
@@ -32,7 +33,7 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
     }
 
     public ArticleDtoForMainList(Integer id, List<Movement> movementList, Language language, Date date, String title, String status,
-                                 String titleRus, String rowColor, List<String> locationList, List<String> orgList, List<String> personList,
+                                 String titleRus, String rowColor, List<String> locationList, List<String> projectList, List<String> orgList, List<String> personList,
                                  List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movementList = movementList;
@@ -44,113 +45,114 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
         this.titleRus = titleRus;
         this.rowColor = rowColor;
         this.personList = personList;
+        this.projectList = projectList;
         this.locationList = locationList;
         this.orgList = orgList;
         this.hashtagList = hashtagList;
         this.miscellany = miscellany;
     }
 
-    public ArticleDtoForMainList(Article article) {
-        this.id = article.getId();
-        this.movementList = article.getMovementList();
-        this.language = article.getLanguage();
-        this.mtype = article.getMtype();
-        this.date = article.getDate();
-        this.title = article.getTitle();
-        this.status = article.getStatus().getName();
-        this.titleRus = article.getTitleRus();
-        this.rowColor = article.getRgbSelection();
-
-        this.personList = new ArrayList<>();
-        this.locationList = new ArrayList<>();
-        this.orgList = new ArrayList<>();
-
-//        ItemConnectionDto personConnectionDto;
-//        for (ArticlePersonConnection connection : article.getPersonConnections()) {
-//            personConnectionDto = new ItemConnectionDto();
-//            personConnectionDto.setItemId(connection.getPerson().getId());
-//            personConnectionDto.setConnection(connection.getConnection());
-//            personConnectionDto.setComment(connection.getComment());
+//    public ArticleDtoForMainList(Article article) {
+//        this.id = article.getId();
+//        this.movementList = article.getMovementList();
+//        this.language = article.getLanguage();
+//        this.mtype = article.getMtype();
+//        this.date = article.getDate();
+//        this.title = article.getTitle();
+//        this.status = article.getStatus().getName();
+//        this.titleRus = article.getTitleRus();
+//        this.rowColor = article.getRgbSelection();
 //
-//            this.personList.add(personConnectionDto);
-//        }
-
-//        ItemConnectionDto locationConnectionDto;
-//        for (ArticleLocationConnection connection : article.getLocationConnections()) {
-//            locationConnectionDto = new ItemConnectionDto();
-//            locationConnectionDto.setItemId(connection.getLocation().getId());
-//            locationConnectionDto.setConnection(connection.getConnection());
-//            locationConnectionDto.setComment(connection.getComment());
+//        this.personList = new ArrayList<>();
+//        this.locationList = new ArrayList<>();
+//        this.orgList = new ArrayList<>();
 //
-//            this.locationList.add(locationConnectionDto);
-//        }
-
-        List<String> locationStringList = new ArrayList<>();
-        for (ArticleLocationConnection alC : article.getLocationConnections()) {
-            locationStringList.add(alC.getLocation().getCountry());
-        }
-        this.setLocationList(locationStringList);
-
-        List<String> personStringList = new ArrayList<>();
-        for (ArticlePersonConnection aPC : article.getPersonConnections()) {
-            List<SurnameNamePatr> snpList = aPC.getPerson().getSnpList();
-            String snp = "error";
-            for (SurnameNamePatr nameEl : snpList) {
-                if (nameEl.getPriority() == 1) {
-                    snp = nameEl.getSurname();
-                    if (nameEl.getName().length() > 0) {
-                        snp += " " + nameEl.getName();
-                    }
-
-                    break;
-                }
-            }
-            if (aPC.getConnection().length() > 0) {
-                snp += ", " + aPC.getConnection();
-            }
-            personStringList.add(snp);
-        }
-        this.setPersonList(personStringList);
-
-        List<String> orgStringList = new ArrayList<>();
-        for (ArticleOrgConnection aOC : article.getOrgConnections()) {
-            List<OrgName> nameList = aOC.getOrg().getNameList();
-            String name = "error";
-            for (OrgName nameEl : nameList) {
-                if (nameEl.getPriority() == 1) {
-                    name = nameEl.getName();
-                    if (nameEl.getAbbr().length() > 0) {
-                        name += ", " + nameEl.getAbbr();
-                    }
-                    break;
-                }
-            }
-            if (aOC.getConnection().length() > 0) {
-                name += ", " + aOC.getConnection();
-            }
-            orgStringList.add(name);
-        }
-        this.setOrgList(orgStringList);
-
-//        ItemConnectionDto orgConnectionDto;
-//        for (ArticleOrgConnection connection : article.getOrgConnections()) {
-//            orgConnectionDto = new ItemConnectionDto();
-//            orgConnectionDto.setItemId(connection.getOrg().getId());
-//            orgConnectionDto.setConnection(connection.getConnection());
-//            orgConnectionDto.setComment(connection.getComment());
+////        ItemConnectionDto personConnectionDto;
+////        for (ArticlePersonConnection connection : article.getPersonConnections()) {
+////            personConnectionDto = new ItemConnectionDto();
+////            personConnectionDto.setItemId(connection.getPerson().getId());
+////            personConnectionDto.setConnection(connection.getConnection());
+////            personConnectionDto.setComment(connection.getComment());
+////
+////            this.personList.add(personConnectionDto);
+////        }
 //
-//            this.orgList.add(orgConnectionDto);
+////        ItemConnectionDto locationConnectionDto;
+////        for (ArticleLocationConnection connection : article.getLocationConnections()) {
+////            locationConnectionDto = new ItemConnectionDto();
+////            locationConnectionDto.setItemId(connection.getLocation().getId());
+////            locationConnectionDto.setConnection(connection.getConnection());
+////            locationConnectionDto.setComment(connection.getComment());
+////
+////            this.locationList.add(locationConnectionDto);
+////        }
+//
+//        List<String> locationStringList = new ArrayList<>();
+//        for (ArticleLocationConnection alC : article.getLocationConnections()) {
+//            locationStringList.add(alC.getLocation().getCountry());
 //        }
-
-
-        this.hashtagList = new ArrayList<>();
-        for (ArticleHashtag articleHashtag : article.getHashtagList()) {
-            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag())) {
-                this.hashtagList.add(articleHashtag.getHashtag().getContent());
-            }
-        }
-        this.miscellany = article.getMiscellany();
-    }
+//        this.setLocationList(locationStringList);
+//
+//        List<String> personStringList = new ArrayList<>();
+//        for (ArticlePersonConnection aPC : article.getPersonConnections()) {
+//            List<SurnameNamePatr> snpList = aPC.getPerson().getSnpList();
+//            String snp = "error";
+//            for (SurnameNamePatr nameEl : snpList) {
+//                if (nameEl.getPriority() == 1) {
+//                    snp = nameEl.getSurname();
+//                    if (nameEl.getName().length() > 0) {
+//                        snp += " " + nameEl.getName();
+//                    }
+//
+//                    break;
+//                }
+//            }
+//            if (aPC.getConnection().length() > 0) {
+//                snp += ", " + aPC.getConnection();
+//            }
+//            personStringList.add(snp);
+//        }
+//        this.setPersonList(personStringList);
+//
+//        List<String> orgStringList = new ArrayList<>();
+//        for (ArticleOrgConnection aOC : article.getOrgConnections()) {
+//            List<OrgName> nameList = aOC.getOrg().getNameList();
+//            String name = "error";
+//            for (OrgName nameEl : nameList) {
+//                if (nameEl.getPriority() == 1) {
+//                    name = nameEl.getName();
+//                    if (nameEl.getAbbr().length() > 0) {
+//                        name += ", " + nameEl.getAbbr();
+//                    }
+//                    break;
+//                }
+//            }
+//            if (aOC.getConnection().length() > 0) {
+//                name += ", " + aOC.getConnection();
+//            }
+//            orgStringList.add(name);
+//        }
+//        this.setOrgList(orgStringList);
+//
+////        ItemConnectionDto orgConnectionDto;
+////        for (ArticleOrgConnection connection : article.getOrgConnections()) {
+////            orgConnectionDto = new ItemConnectionDto();
+////            orgConnectionDto.setItemId(connection.getOrg().getId());
+////            orgConnectionDto.setConnection(connection.getConnection());
+////            orgConnectionDto.setComment(connection.getComment());
+////
+////            this.orgList.add(orgConnectionDto);
+////        }
+//
+//
+//        this.hashtagList = new ArrayList<>();
+//        for (ArticleHashtag articleHashtag : article.getHashtagList()) {
+//            if (articleHashtag.getHashtag().equals(articleHashtag.getAssigned_hashtag())) {
+//                this.hashtagList.add(articleHashtag.getHashtag().getContent());
+//            }
+//        }
+//        this.miscellany = article.getMiscellany();
+//    }
 
     public Integer getId() {
         return id;
@@ -230,6 +232,14 @@ public class ArticleDtoForMainList implements Comparable<ArticleDtoForMainList> 
 
     public void setOrgList(List<String> orgList) {
         this.orgList = orgList;
+    }
+
+    public List<String> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<String> projectList) {
+        this.projectList = projectList;
     }
 
     public List<String> getLocationList() {

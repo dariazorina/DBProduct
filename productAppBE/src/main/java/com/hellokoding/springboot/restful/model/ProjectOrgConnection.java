@@ -7,7 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name="t_connect_project_person")
+@Table(name="t_connect_project_org")
 @Data
 public class ProjectOrgConnection {
 
@@ -23,10 +23,10 @@ public class ProjectOrgConnection {
     private Project project;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "org_id")
     @JsonIgnore
     @ToString.Exclude
-    private Person person;
+    private Org org;
 
     private String connection;
     private String comment;

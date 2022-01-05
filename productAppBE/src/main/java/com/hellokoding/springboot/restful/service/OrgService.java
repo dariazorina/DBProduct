@@ -13,6 +13,7 @@ public interface OrgService {
     List<Org> findAll();
     Integer getQuantityAllOrgsWithMovement(List<Integer> mov);
     List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size);
+//    Optional<OrgDto> findById(Integer id);
     Optional<OrgDto> findById(Integer id);
     Org save(OrgDto stock);
     Org saveColor(OrgDtoForMainList stock);

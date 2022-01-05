@@ -56,8 +56,8 @@
                         <!--                                class="float-left"> {{showCountry(person.country)}} </span>-->
                         <!--                        </div>-->
                         <div class="col-sm-10 back1">
-                            <div v-for="location in personLocationEntities">
-                                {{createComplexLocationById(location.id)}}<br>
+                            <div v-for="location in person.locationList">
+                                {{createComplexNameByEntity(location)}}<br>
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                                     <router-link
                                             :to="{name: 'org-details', params: {org_id: org.itemId}}"
                                             target="_blank">
-                                        {{showOrgAndPosition(org.itemId)}}
+                                        {{createComplexNameByEntity(org)}}
                                     </router-link>
                                 </a>
                             </div>
@@ -106,7 +106,7 @@
                                     <router-link
                                             :to="{name: 'person-details', params: {person_id: prsn.itemId}}"
                                             target="_blank">
-                                        {{createComplexPersonById(prsn)}}
+                                        {{createComplexNameByEntity(prsn)}}
                                     </router-link>
                                 </a>
                             </div>
@@ -120,9 +120,9 @@
                         </div>
                         <div class="col-sm-10" style="text-align: left;">
                             <!--                            <div v-for="art in org.articleList">-->
-                            <div v-for="art in personArticleEntities">
-                                <a><router-link :to="{name: 'article-details', params: {article_id: art.id}}" target="_blank">
-                                    {{createComplexArticleById(art.id)}}<br></router-link></a>
+                            <div v-for="art in person.articleList">
+                                <a><router-link :to="{name: 'article-details', params: {article_id: art.itemId}}" target="_blank">
+                                    {{createComplexNameByEntity(art)}}<br></router-link></a>
                             </div>
                         </div>
                     </div>
@@ -134,6 +134,38 @@
                         <div class="col-sm-10 back1" style="text-align: left;">
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="cellTitle">
+                                <span class="float-left">Проекты</span></div>
+                        </div>
+                        <div class="col-sm-10"><span class="float-left">
+                    <div v-for="pro in person.projectList"><a><router-link
+                            :to="{name: 'project-details', params: {project_id: pro.itemId}}" target="_blank">
+                                 {{ createComplexNameByEntity(pro)}}</router-link>
+                            </a>
+                        </div>
+                </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 back1">
+                            <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
+                                <span class="float-left">События(?)</span></div>
+                        </div>
+                        <div class="col-sm-10 back1">
+                    <span class="float-left">
+<!--                        <div v-for="org in articleOrgEntities"><a><router-link-->
+                        <!--                                :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">-->
+                        <!--                                 {{ createComplexOrgById(org.id)}}</router-link>-->
+                        <!--                            </a>-->
+                        <!--                        </div>-->
+                    </span>
+                        </div>
+                    </div>
+
 
                     <div class="row">
                         <div class="col-sm-2">
@@ -253,9 +285,9 @@
 
 <script>
     import api from "./person-api";
-    import apiOrg from "./../org/org-api";
-    import apiLocation from "./../country/country-api";
-    import apiArticle from "./../article/article-api";
+    // import apiOrg from "./../org/org-api";
+    // import apiLocation from "./../country/country-api";
+    // import apiArticle from "./../article/article-api";
     import apiAttachment from "./../attachment-api";
     import FileAttachment from "../components/FileAttachment";
     // import apiStatus from "./../status-api";
@@ -273,20 +305,10 @@
                 persons: [],
                 person: {
                     hashtagList: [], linkList: [], locationList: [], articleList: [], orgList: [], personList: [],
-                    isourceList: [], movementList: [], snpList: []
+                    isourceList: [], projectList: [], movementList: [], snpList: []
                 },
 
-                personLocationIds: [], //before request
-                personLocationEntities: [], //after request
-
-                personArticleIds: [], //before request
-                personArticleEntities: [], //after request
-
-                personPersonIds: [], //before request
                 personPersonEntities: [], //after request
-
-                personOrgIds: [], //before request
-                personOrgEntities: [], //after request
 
                 uploadedFiles: [],
                 loggedInFlag: false,  //todo to remove
@@ -351,72 +373,37 @@
             getSNPWithPriority(priority) {
                 let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
 
-                for (let i = 0; i < this.person.snpList.length; i++) {
-                    //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
+                if (this.person.snpList!==null) {
+                    for (let i = 0; i < this.person.snpList.length; i++) {
+                        //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
 
-                    if (this.person.snpList[i].priority === priority) {
-                        console.log("SSS length sss priority", sss.length, sss, priority);
-                        if (sss.length !== 0) {
-                            sss += "/ " + this.person.snpList[i].surname + " " + this.person.snpList[i].name + " ";
-                        } else {
-                            sss = this.person.snpList[i].surname + " " + this.person.snpList[i].name + " ";
+                        if (this.person.snpList[i].priority === priority) {
+                            console.log("SSS length sss priority", sss.length, sss, priority);
+                            if (sss.length !== 0) {
+                                sss += "/ " + this.person.snpList[i].surname + " " + this.person.snpList[i].name + " ";
+                            } else {
+                                sss = this.person.snpList[i].surname + " " + this.person.snpList[i].name + " ";
+                            }
+
+                            if (this.person.snpList[i].patronymic != null)
+                                sss += this.person.snpList[i].patronymic + " ";
+                            //console.log("******^^^^^^^^^^^^^****", sss);
                         }
-
-                        if (this.person.snpList[i].patronymic != null)
-                            sss += this.person.snpList[i].patronymic + " ";
-                        //console.log("******^^^^^^^^^^^^^****", sss);
                     }
                 }
                 return sss;
             },
 
-            createComplexLocationById(id) {
-                let currentLocation = this.personLocationEntities.find(x => x.id === id);
-                let result = currentLocation.content;
-                let connection = this.person.locationList.find(x => x.itemId === id);
 
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
+            createComplexNameByEntity(currentEntity) {
+                let result = currentEntity.name;
 
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
+                if (this.isObjectValidAndNotEmpty(currentEntity.connection))
+                    result += "/ " + currentEntity.connection;
 
-                return result;
-            },
+                if (this.isObjectValidAndNotEmpty(currentEntity.comment))
+                    result += "/ " + currentEntity.comment;
 
-            createComplexArticleById(id) {
-                let currentArt = this.personArticleEntities.find(x => x.id === id);
-                let connection = this.person.articleList.find(x => x.itemId === id);
-                let result;
-
-                if (currentArt != null) {
-                    result = currentArt.content;
-                }
-
-                if (this.isObjectValidAndNotEmpty(connection.connection))
-                    result += "/ " + connection.connection;
-
-                if (this.isObjectValidAndNotEmpty(connection.comment))
-                    result += "/ " + connection.comment;
-
-                return result;
-            },
-
-            createComplexPersonById(prsn) {
-                let result = '';
-                let currentPerson = prsn;
-
-                if (currentPerson != null) {
-                    result = currentPerson.name;
-
-                    if (this.isObjectValidAndNotEmpty(currentPerson.connection))
-                        result += "/ " + currentPerson.connection;
-
-                    if (this.isObjectValidAndNotEmpty(currentPerson.comment))
-                        result += "/ " + currentPerson.comment;
-                }
-
-                result += "\n";
                 return result;
             },
 
@@ -432,68 +419,29 @@
             this.className = "col-sm-2";
             this.getLoggedIn();
 
-            // apiStatus.getAllStatuses(response => {
-            //     this.statusList = response.data;
-            //     console.log("STATUS LIST", this.statusList);
-            // });
 
-            apiAttachment.getAttachmentPhoto('person', this.$route.params.person_id, r => {
-                console.log("R DATA", r);
-                this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;
-            });
-
-            apiAttachment.getAttachments('person', this.$route.params.person_id, r => {
-                console.log("person attachments", r.data);
-                for (let i = 0; i < r.data.length; i++) {
-                    this.uploadedFiles.push(r.data[i]);
-                }
-            });
 
 
             api.findById(this.$route.params.person_id, r => {
                 this.person = r.data;
-                //console.log("_____person__________________", r.data);
-
-                for (let j = 0; j < this.person.locationList.length; j++) {
-                    this.personLocationIds.push(this.person.locationList[j].itemId);
-                    //console.log("+", j);
-                }
-                //console.log("PRSN locations", this.personLocationIds);
-
-                apiLocation.getLocationsByIds(this.personLocationIds, response => {
-                    this.personLocationEntities = response.data;
-                    //console.log("getLocationsByIds getLocationsByIds getLocationsByIds", this.personLocationEntities);
-                });
-
-                for (let j = 0; j < this.person.personList.length; j++) {
-                    this.personPersonIds.push(this.person.personList[j].itemId);
-                    // console.log("PRSN person", this.person.personList, this.personPersonIds);
-                }
+                console.log("_____person__________________", r.data);
 
                 api.getPersonsByIdsAndSymmetrically(this.person.id, response => {
                     this.personPersonEntities = response.data;
-                    //console.log("``````````````````persperspers", this.personPersonEntities);
+                    console.log("``````````````````persperspers", this.personPersonEntities);
 
-                });
+                    apiAttachment.getAttachmentPhoto('person', this.$route.params.person_id, r => {
+                        console.log("R DATA", r);
+                        this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;
+                    });
 
-                for (let j = 0; j < this.person.orgList.length; j++) {
-                    this.personOrgIds.push(this.person.orgList[j].itemId);
-                    //  console.log("+ * % ^ & U OIUOI OI", this.personOrgIds);
-                }
+                    apiAttachment.getAttachments('person', this.$route.params.person_id, r => {
+                        console.log("person attachments", r.data);
+                        for (let i = 0; i < r.data.length; i++) {
+                            this.uploadedFiles.push(r.data[i]);
+                        }
+                    });
 
-                apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                    this.personOrgEntities = response.data;
-                    //console.log("apiOrga", this.personOrgEntities);
-                });
-
-                for (let j = 0; j < this.person.articleList.length; j++) {
-                    this.personArticleIds.push(this.person.articleList[j].itemId);
-                    //console.log("+", j);
-                }
-
-                apiArticle.getMaterialsByIds(this.personArticleIds, response => {
-                    this.personArticleEntities = response.data;
-                    console.log("apiArt", this.personArticleEntities);
                 });
 
             });

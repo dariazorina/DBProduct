@@ -19,7 +19,7 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
     private Integer deathYear;
 
     private List<String> hashtagList;
-    private List<ItemConnectionDto> orgList;
+    private List<String> orgList;
     private List<String> locationList;
     private List<Movement> movementList;
 //    private String photo;
@@ -30,7 +30,7 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
 
     public NewPersonDtoForMainList(Integer id, List<Movement> movementList, String snp,
                                    String rowColor, List<String> hashtagList,
-                                   List<ItemConnectionDto> orgList, List<String> locationList,
+                                   List<String> orgList, List<String> locationList,
                                    Integer bYear, Integer dYear, String status) {
         this.id = id;
         this.movementList = movementList;
@@ -45,55 +45,55 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
 //        this.photo = photo;
     }
 
-    public NewPersonDtoForMainList(Person p) {
-        this.id = p.getId();
-        this.status = p.getStatus().getName();
-        this.movementList = p.getMovementList();
-        this.rowColor = p.getRgbSelection();
-        this.birthYear = p.getBirthYear();
-        this.deathYear = p.getDeathYear();
-
-        this.hashtagList = new ArrayList<>();
-        for (PersonHashtag pers: p.getHashtagList()) {
-            if (pers.getHashtag().equals(pers.getAssigned_hashtag()))
-                this.hashtagList.add(pers.getHashtag().getContent());
-        }
-
-        this.orgList = new ArrayList<>();
-        this.locationList = new ArrayList<>();
-      //  this.snpList = new ArrayList<>();
-
-        ItemConnectionDto orgConnectionDto;
-        for (OrgPersonConnection connection : p.getOrgConnections()) {
-            orgConnectionDto = new ItemConnectionDto();
-            orgConnectionDto.setItemId(connection.getOrg().getId());
-            orgConnectionDto.setConnection(connection.getConnection());
-            orgConnectionDto.setComment(connection.getComment());
-
-            this.orgList.add(orgConnectionDto);
-        }
-
-        List<String> locationStringList = new ArrayList<>();
-        for (PersonLocationConnection plC : p.getLocationConnections()) {
-            locationStringList.add(plC.getLocation().getCountry());
-        }
-        this.setLocationList(locationStringList);
-
-
-        for (SurnameNamePatr snp : p.getSnpList()) {
-            if (snp.getPriority() == 1) {
-                this.snp = snp.getSurname() + " " + snp.getName();
-                if (snp.getPatronymic()!=null){
-                    this.snp += " " + snp.getPatronymic();
-                }
-            }
-        }
-
-//        if (p.getPhoto() != null) {
-//            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
-//            this.photo = encodedString;
+//    public NewPersonDtoForMainList(Person p) {
+//        this.id = p.getId();
+//        this.status = p.getStatus().getName();
+//        this.movementList = p.getMovementList();
+//        this.rowColor = p.getRgbSelection();
+//        this.birthYear = p.getBirthYear();
+//        this.deathYear = p.getDeathYear();
+//
+//        this.hashtagList = new ArrayList<>();
+//        for (PersonHashtag pers: p.getHashtagList()) {
+//            if (pers.getHashtag().equals(pers.getAssigned_hashtag()))
+//                this.hashtagList.add(pers.getHashtag().getContent());
 //        }
-    }
+//
+//        this.orgList = new ArrayList<>();
+//        this.locationList = new ArrayList<>();
+//      //  this.snpList = new ArrayList<>();
+//
+//        ItemConnectionDto orgConnectionDto;
+//        for (OrgPersonConnection connection : p.getOrgConnections()) {
+//            orgConnectionDto = new ItemConnectionDto();
+//            orgConnectionDto.setItemId(connection.getOrg().getId());
+//            orgConnectionDto.setConnection(connection.getConnection());
+//            orgConnectionDto.setComment(connection.getComment());
+//
+//            this.orgList.add(orgConnectionDto);
+//        }
+//
+//        List<String> locationStringList = new ArrayList<>();
+//        for (PersonLocationConnection plC : p.getLocationConnections()) {
+//            locationStringList.add(plC.getLocation().getCountry());
+//        }
+//        this.setLocationList(locationStringList);
+//
+//
+//        for (SurnameNamePatr snp : p.getSnpList()) {
+//            if (snp.getPriority() == 1) {
+//                this.snp = snp.getSurname() + " " + snp.getName();
+//                if (snp.getPatronymic()!=null){
+//                    this.snp += " " + snp.getPatronymic();
+//                }
+//            }
+//        }
+//
+////        if (p.getPhoto() != null) {
+////            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
+////            this.photo = encodedString;
+////        }
+//    }
 
     public Integer getId() {
         return id;
@@ -107,7 +107,7 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
         return snp;
     }
 
-    public void setSnpList(String snp) {
+    public void setSnp(String snp) {
         this.snp = snp;
     }
 
@@ -127,11 +127,11 @@ public class NewPersonDtoForMainList implements Comparable<NewPersonDtoForMainLi
         this.hashtagList = hashtagList;
     }
 
-    public List<ItemConnectionDto> getOrgList() {
+    public List<String> getOrgList() {
         return orgList;
     }
 
-    public void setOrgList(List<ItemConnectionDto> orgList) {
+    public void setOrgList(List<String> orgList) {
         this.orgList = orgList;
     }
 

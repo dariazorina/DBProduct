@@ -153,7 +153,7 @@
                 <!--                </td>-->
 
                 <td class='tdAlignLeft'>
-                    <div v-for="org in person.orgList">{{getOrgNameById(org.itemId)}}</div>
+                    <div v-for="org in person.orgList">{{org}}</div>
                 </td>
                 <td class='tdAlignLeft'>{{person.birthYear}}</td>
                 <td class='tdAlignLeft'>{{person.deathYear}}</td>
@@ -241,6 +241,7 @@
     import 'vue-swatches/dist/vue-swatches.css'
     import CreatedList from "../components/multiple-enter-list/CreatedList";
     import apiStatus from "./../status-api";
+    import Vuetify from 'vuetify';
 
 
     export default {
@@ -250,6 +251,8 @@
             VSwatches,
             CreatedList,
         },
+
+        vuetify: new Vuetify(),
         name: 'person',
         data() {
             return {
@@ -260,8 +263,8 @@
                 person: {status: 0, locationList: [], orgList: [], hashtagList: [], snpList: []},
                 // personLocationIds: [], //before request
                 // personLocationEntities: [], //after request
-                personOrgIds: [], //before request
-                personOrgEntities: [], //after request
+                // personOrgIds: [], //before request
+                // personOrgEntities: [], //after request
 
                 searchKey: '',
                 response: [],
@@ -401,15 +404,15 @@
                     this.entries = response.data;
                     console.log("PERSONS", response.data, this.entries.length);
 
-                    this.personOrgIds.splice(0);
-                    for (let i = 0; i < this.entries.length; i++) {
-                        for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                            this.personOrgIds.push(this.entries[i].orgList[j].itemId);
-                        }
-                    }
-                    apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                        this.personOrgEntities = response.data;
-                    });
+                    // this.personOrgIds.splice(0);
+                    // for (let i = 0; i < this.entries.length; i++) {
+                    //     for (let j = 0; j < this.entries[i].orgList.length; j++) {
+                    //         this.personOrgIds.push(this.entries[i].orgList[j].itemId);
+                    //     }
+                    // }
+                    // apiOrg.getOrgsByIds(this.personOrgIds, response => {
+                    //     this.personOrgEntities = response.data;
+                    // });
                 });
             },
 
@@ -528,16 +531,16 @@
                 }
             },
 
-            getOrgNameById(id) {
-                let result = '';
-                let currentOrg = this.personOrgEntities.find(x => x.id === id);
-
-                //console.log("ORG", currentOrg, id, this.personOrgEntities);
-                if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-                    result = currentOrg.content;
-                }
-                return result;
-            },
+            // getOrgNameById(id) {
+            //     let result = '';
+            //     let currentOrg = this.personOrgEntities.find(x => x.id === id);
+            //
+            //     //console.log("ORG", currentOrg, id, this.personOrgEntities);
+            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
+            //         result = currentOrg.content;
+            //     }
+            //     return result;
+            // },
 
             // getOrgPositionById(id) {
             //     let result = '';

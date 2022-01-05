@@ -2,11 +2,8 @@ package com.hellokoding.springboot.restful.controller;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hellokoding.springboot.restful.model.dto.IdContentDto;
-import com.hellokoding.springboot.restful.model.dto.NameConnectionDto;
-import com.hellokoding.springboot.restful.model.dto.NewPersonDto;
+import com.hellokoding.springboot.restful.model.dto.*;
 //import com.hellokoding.springboot.restful.model.dto.PersonDto;
-import com.hellokoding.springboot.restful.model.dto.NewPersonDtoForMainList;
 import com.hellokoding.springboot.restful.service.PersonService;
 import com.hellokoding.springboot.restful.service.attachments.AttachmentService;
 import com.hellokoding.springboot.restful.service.dto.AttachmentDTO;

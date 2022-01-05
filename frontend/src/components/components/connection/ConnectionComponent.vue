@@ -16,7 +16,6 @@
                                     padding-left: 0px; padding-top: 5px; padding-right: 0"
 
                                     :item="item"
-                                    :hasClicked="item.hasClicked"
                                     :allTypes = "allTypes"
                                     :isLinkMode="isLinkMode"
                                     :isSelectionMode="isSelectionMode"
@@ -67,7 +66,6 @@
                 // console.log("------addItem CONN-COMP---------", item);
                 item.connection = item.connection.trim();
                 item.comment = item.comment.trim();
-                item.hasClicked = true;
 
                 this.$emit("update-item", item);
             },
@@ -76,7 +74,6 @@
                 // console.log("------SAVE item CONN-COMP---------", item);
                 item.connection = item.connection.trim();
                 item.comment = item.comment.trim();
-                item.hasClicked = true;
 
                 this.$emit("update-item", item);
             },

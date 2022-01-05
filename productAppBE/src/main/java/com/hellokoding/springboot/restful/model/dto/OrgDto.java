@@ -24,11 +24,12 @@ public class OrgDto implements Comparable<OrgDto> {
 
     private List<UrlLink> linkList;
     private List<String> hashtagList;
-    private List<ItemConnectionDto> articleList;
+    private List<NameConnectionDto> articleList;
     private List<NameConnectionDto> orgList;
-    private List<ItemConnectionDto> locationList;
-    private List<ItemConnectionDto> personList;
-    private List<ItemConnectionDto> isourceList;
+    private List<NameConnectionDto> locationList;
+    private List<NameConnectionDto> personList;
+    private List<NameConnectionDto> projectList;
+    private List<NameConnectionDto> isourceList;
     private List<Movement> movementList;
 
     public OrgDto() {
@@ -36,8 +37,8 @@ public class OrgDto implements Comparable<OrgDto> {
 
     public OrgDto(Integer id, List<Movement> movementList, List<OrgNameDto> nameList, String description,
                   String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                  List<NameConnectionDto> orgList, List<ItemConnectionDto> locationList, List<ItemConnectionDto> personList,
-                  List<ItemConnectionDto> isourceList, List<ItemConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
+                  List<NameConnectionDto> orgList, List<NameConnectionDto> locationList, List<NameConnectionDto> projectList, List<NameConnectionDto> personList,
+                  List<NameConnectionDto> isourceList, List<NameConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
         this.status = status;
@@ -52,6 +53,7 @@ public class OrgDto implements Comparable<OrgDto> {
         this.locationList = locationList;
         this.isourceList = isourceList;
         this.personList = personList;
+        this.projectList = projectList;
         this.foundationYear = fYear;
         this.closureYear = cYear;
         this.type = type;
@@ -59,97 +61,132 @@ public class OrgDto implements Comparable<OrgDto> {
     }
 
     public OrgDto(Org org) {
-        this.id = org.getId();
-        this.status = org.getStatus().getName();
-        this.movementList = org.getMovementList();
-        this.description = org.getDescription();
-        this.miscellany = org.getMiscellany();
-        this.rowColor = org.getRgbSelection();
-        this.linkList = org.getLinkList();
-        this.foundationYear = org.getFoundedYear();
-        this.closureYear = org.getClosedYear();
 
-        this.type = org.getOrgType();
+        this.setId(org.getId());
+        this.setStatus(org.getStatus().getName());
+        this.setMovementList(org.getMovementList());
+        this.setDescription(org.getDescription());
+        this.setMiscellany(org.getMiscellany());
+        this.setRowColor(org.getRgbSelection());
+        this.setLinkList(org.getLinkList());
+        this.setFoundationYear(org.getFoundedYear());
+        this.setClosureYear(org.getClosedYear());
 
-        this.hashtagList = new ArrayList<>();
+        this.setType(org.getOrgType());
+
+        this.setHashtagList(new ArrayList<>());
         for (OrgHashtag orgHashtag : org.getHashtagList()) {
             if (orgHashtag.getHashtag().equals(orgHashtag.getAssigned_hashtag()))
-                this.hashtagList.add(orgHashtag.getHashtag().getContent());
+                this.getHashtagList().add(orgHashtag.getHashtag().getContent());
         }
 
-        this.orgList = new ArrayList<>();
-        this.locationList = new ArrayList<>();
-        this.personList = new ArrayList<>();
-        this.nameList = new ArrayList<>();
-        this.isourceList = new ArrayList<>();
-        this.articleList = new ArrayList<>();
+        this.setOrgList(new ArrayList<>());
+        this.setLocationList(new ArrayList<>());
+        this.setPersonList(new ArrayList<>());
+        this.setProjectList(new ArrayList<>());
+        this.setNameList(new ArrayList<>());
+        this.setIsourceList(new ArrayList<>());
+        this.setArticleList(new ArrayList<>());
 
 
-        NameConnectionDto orgConnectionDto;
         String dtoName = "";
 
-        for (OrgOrgConnection connection : org.getOrgConnections()) {
-            orgConnectionDto = new NameConnectionDto();
+        NameConnectionDto locationConnectionDto;
+        for (OrgLocationConnection connection : org.getLocationConnections()) {
+            locationConnectionDto = new NameConnectionDto();
 
-            if (org.getNameList() != null) {
-                for (OrgName name : org.getNameList()) {
+            Location location = connection.getLocation();
+            locationConnectionDto.setItemId(location.getId());
+
+            dtoName = location.getCountry();
+
+            if (location.getRegion() != null && location.getRegion().length() > 0) {
+                dtoName += ", " + location.getRegion();
+            }
+
+            if (location.getCity() != null && location.getCity().length() > 0) {
+                dtoName += ", " + location.getCity();
+            }
+
+            if (location.getAddress() != null && location.getAddress().length() > 0) {
+                dtoName += ", " + location.getAddress();
+            }
+
+            if (location.getPlacement() != null && location.getPlacement().length() > 0) {
+                dtoName += ", " + location.getPlacement();
+            }
+
+            locationConnectionDto.setName(dtoName);
+            locationConnectionDto.setConnection(connection.getConnection());
+            locationConnectionDto.setComment(connection.getComment());
+
+            this.getLocationList().add(locationConnectionDto);
+        }
+
+//        NameConnectionDto isourceConnectionDto;
+//        for (OrgIsourceConnection connection : org.getIsourceConnections()) {
+//            isourceConnectionDto = new NameConnectionDto();
+//            isourceConnectionDto.setItemId(connection.getIsource().getId());
+//            isourceConnectionDto.setConnection(connection.getConnection());
+//            isourceConnectionDto.setComment(connection.getComment());
+//
+//            this.getIsourceList().add(isourceConnectionDto);
+//        }
+
+        NameConnectionDto articleConnectionDto;
+        for (ArticleOrgConnection connection : org.getArticleConnections()) {
+            articleConnectionDto = new NameConnectionDto();
+            Article article = connection.getArticle();
+            articleConnectionDto.setItemId(article.getId());
+
+            dtoName = article.getTitleRus();
+            if (article.getTitle() != null && article.getTitle().length() > 0) {
+                dtoName += "/ " + article.getTitle();
+            }
+
+            articleConnectionDto.setName(dtoName);
+            articleConnectionDto.setConnection(connection.getConnection());
+            articleConnectionDto.setComment(connection.getComment());
+
+            this.getArticleList().add(articleConnectionDto);
+        }
+
+        NameConnectionDto personConnectionDto;
+        for (OrgPersonConnection connection : org.getPersonConnections()) {
+            personConnectionDto = new NameConnectionDto();
+            Person person = connection.getPerson();
+
+            if (person.getSnpList() != null) {
+                for (SurnameNamePatr name : person.getSnpList()) {
                     if (name.getPriority() == 1) {
-                        dtoName += name.getName();
-
-                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
-                            dtoName += "/ " + name.getAbbr();
+                        dtoName = name.getSurname();
+                        dtoName += " " + name.getName();
+                        if (name.getPatronymic() != null) {
+                            dtoName += " " + name.getPatronymic();
                         }
                     }
                 }
             }
 
-            orgConnectionDto.setName(dtoName);
-            orgConnectionDto.setItemId(connection.getConnectedOrg().getId());
-            orgConnectionDto.setConnection(connection.getConnection());
-            orgConnectionDto.setComment(connection.getComment());
-
-            this.orgList.add(orgConnectionDto);
-            dtoName = "";
-        }
-
-        ItemConnectionDto locationConnectionDto;
-        for (OrgLocationConnection connection : org.getLocationConnections()) {
-            locationConnectionDto = new ItemConnectionDto();
-            locationConnectionDto.setItemId(connection.getLocation().getId());
-            locationConnectionDto.setConnection(connection.getConnection());
-            locationConnectionDto.setComment(connection.getComment());
-
-            this.locationList.add(locationConnectionDto);
-        }
-
-        ItemConnectionDto isourceConnectionDto;
-        for (OrgIsourceConnection connection : org.getIsourceConnections()) {
-            isourceConnectionDto = new ItemConnectionDto();
-            isourceConnectionDto.setItemId(connection.getIsource().getId());
-            isourceConnectionDto.setConnection(connection.getConnection());
-            isourceConnectionDto.setComment(connection.getComment());
-
-            this.isourceList.add(isourceConnectionDto);
-        }
-
-        ItemConnectionDto articleConnectionDto;
-        for (ArticleOrgConnection connection : org.getArticleConnections()) {
-            articleConnectionDto = new ItemConnectionDto();
-            articleConnectionDto.setItemId(connection.getArticle().getId());
-            articleConnectionDto.setConnection(connection.getConnection());
-            articleConnectionDto.setComment(connection.getComment());
-
-            this.articleList.add(articleConnectionDto);
-        }
-
-        ItemConnectionDto personConnectionDto;
-        for (OrgPersonConnection connection : org.getPersonConnections()) {
-            personConnectionDto = new ItemConnectionDto();
-            personConnectionDto.setItemId(connection.getPerson().getId());
+            personConnectionDto.setItemId(person.getId());
+            personConnectionDto.setName(dtoName);
             personConnectionDto.setConnection(connection.getConnection());
             personConnectionDto.setComment(connection.getComment());
 
-            this.personList.add(personConnectionDto);
+            this.getPersonList().add(personConnectionDto);
+        }
+
+        NameConnectionDto projectConnectionDto;
+        for (ProjectOrgConnection connection : org.getProjectConnections()) {
+            projectConnectionDto = new NameConnectionDto();
+            Project project = connection.getProject();
+
+            projectConnectionDto.setItemId(project.getId());
+            projectConnectionDto.setName(project.getMainTitle());
+            projectConnectionDto.setConnection(connection.getConnection());
+            projectConnectionDto.setComment(connection.getComment());
+
+            this.getProjectList().add(projectConnectionDto);
         }
 
         OrgNameDto nameListDto;
@@ -160,14 +197,120 @@ public class OrgDto implements Comparable<OrgDto> {
             nameListDto.setAbbr(name.getAbbr());
             nameListDto.setPriority(name.getPriority());
 
-            this.nameList.add(nameListDto);
+            this.getNameList().add(nameListDto);
         }
-
-//        if (p.getPhoto() != null) {
-//            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
-//            this.photo = encodedString;
-//        }
     }
+
+//    public OrgDto(Org org) {
+//        this.id = org.getId();
+//        this.status = org.getStatus().getName();
+//        this.movementList = org.getMovementList();
+//        this.description = org.getDescription();
+//        this.miscellany = org.getMiscellany();
+//        this.rowColor = org.getRgbSelection();
+//        this.linkList = org.getLinkList();
+//        this.foundationYear = org.getFoundedYear();
+//        this.closureYear = org.getClosedYear();
+//
+//        this.type = org.getOrgType();
+//
+//        this.hashtagList = new ArrayList<>();
+//        for (OrgHashtag orgHashtag : org.getHashtagList()) {
+//            if (orgHashtag.getHashtag().equals(orgHashtag.getAssigned_hashtag()))
+//                this.hashtagList.add(orgHashtag.getHashtag().getContent());
+//        }
+//
+//        this.orgList = new ArrayList<>();
+//        this.locationList = new ArrayList<>();
+//        this.personList = new ArrayList<>();
+//        this.nameList = new ArrayList<>();
+//        this.isourceList = new ArrayList<>();
+//        this.articleList = new ArrayList<>();
+//
+//
+//        NameConnectionDto orgConnectionDto;
+//        String dtoName = "";
+//
+//        for (OrgOrgConnection connection : org.getOrgConnections()) {
+//            orgConnectionDto = new NameConnectionDto();
+//
+//            if (org.getNameList() != null) {
+//                for (OrgName name : org.getNameList()) {
+//                    if (name.getPriority() == 1) {
+//                        dtoName += name.getName();
+//
+//                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
+//                            dtoName += "/ " + name.getAbbr();
+//                        }
+//                    }
+//                }
+//            }
+//
+//            orgConnectionDto.setName(dtoName);
+//            orgConnectionDto.setItemId(connection.getConnectedOrg().getId());
+//            orgConnectionDto.setConnection(connection.getConnection());
+//            orgConnectionDto.setComment(connection.getComment());
+//
+//            this.orgList.add(orgConnectionDto);
+//            dtoName = "";
+//        }
+//
+//        NameConnectionDto locationConnectionDto;
+//        for (OrgLocationConnection connection : org.getLocationConnections()) {
+//            locationConnectionDto = new NameConnectionDto();
+//            locationConnectionDto.setItemId(connection.getLocation().getId());
+//            locationConnectionDto.setConnection(connection.getConnection());
+//            locationConnectionDto.setComment(connection.getComment());
+//
+//            this.locationList.add(locationConnectionDto);
+//        }
+//
+//        NameConnectionDto isourceConnectionDto;
+//        for (OrgIsourceConnection connection : org.getIsourceConnections()) {
+//            isourceConnectionDto = new NameConnectionDto();
+//            isourceConnectionDto.setItemId(connection.getIsource().getId());
+//            isourceConnectionDto.setConnection(connection.getConnection());
+//            isourceConnectionDto.setComment(connection.getComment());
+//
+//            this.isourceList.add(isourceConnectionDto);
+//        }
+//
+//        NameConnectionDto articleConnectionDto;
+//        for (ArticleOrgConnection connection : org.getArticleConnections()) {
+//            articleConnectionDto = new NameConnectionDto();
+//            articleConnectionDto.setItemId(connection.getArticle().getId());
+//            articleConnectionDto.setConnection(connection.getConnection());
+//            articleConnectionDto.setComment(connection.getComment());
+//
+//            this.articleList.add(articleConnectionDto);
+//        }
+//
+//        NameConnectionDto personConnectionDto;
+//        for (OrgPersonConnection connection : org.getPersonConnections()) {
+//            personConnectionDto = new NameConnectionDto();
+//            personConnectionDto.setItemId(connection.getPerson().getId());
+//            personConnectionDto.setConnection(connection.getConnection());
+//            personConnectionDto.setComment(connection.getComment());
+//
+//            this.personList.add(personConnectionDto);
+//        }
+//
+//        OrgNameDto nameListDto;
+//        for (OrgName name : org.getNameList()) {
+//            nameListDto = new OrgNameDto();
+//            nameListDto.setId(name.getId());
+//            nameListDto.setName(name.getName());
+//            nameListDto.setAbbr(name.getAbbr());
+//            nameListDto.setPriority(name.getPriority());
+//
+//            this.nameList.add(nameListDto);
+//        }
+//
+////        if (p.getPhoto() != null) {
+////            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
+////            this.photo = encodedString;
+////        }
+//    }
 
     public Integer getId() {
         return id;
@@ -193,11 +336,11 @@ public class OrgDto implements Comparable<OrgDto> {
         this.nameList = nameList;
     }
 
-    public List<ItemConnectionDto> getArticleList() {
+    public List<NameConnectionDto> getArticleList() {
         return articleList;
     }
 
-    public void setArticleList(List<ItemConnectionDto> articleList) {
+    public void setArticleList(List<NameConnectionDto> articleList) {
         this.articleList = articleList;
     }
 
@@ -241,6 +384,14 @@ public class OrgDto implements Comparable<OrgDto> {
         this.closureYear = closureYear;
     }
 
+    public List<NameConnectionDto> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<NameConnectionDto> projectList) {
+        this.projectList = projectList;
+    }
+
     public List<UrlLink> getLinkList() {
         return linkList;
     }
@@ -265,27 +416,27 @@ public class OrgDto implements Comparable<OrgDto> {
         this.orgList = orgList;
     }
 
-    public List<ItemConnectionDto> getLocationList() {
+    public List<NameConnectionDto> getLocationList() {
         return locationList;
     }
 
-    public void setLocationList(List<ItemConnectionDto> locationList) {
+    public void setLocationList(List<NameConnectionDto> locationList) {
         this.locationList = locationList;
     }
 
-    public List<ItemConnectionDto> getPersonList() {
+    public List<NameConnectionDto> getPersonList() {
         return personList;
     }
 
-    public void setPersonList(List<ItemConnectionDto> personList) {
+    public void setPersonList(List<NameConnectionDto> personList) {
         this.personList = personList;
     }
 
-    public List<ItemConnectionDto> getIsourceList() {
+    public List<NameConnectionDto> getIsourceList() {
         return isourceList;
     }
 
-    public void setIsourceList(List<ItemConnectionDto> isourceList) {
+    public void setIsourceList(List<NameConnectionDto> isourceList) {
         this.isourceList = isourceList;
     }
 

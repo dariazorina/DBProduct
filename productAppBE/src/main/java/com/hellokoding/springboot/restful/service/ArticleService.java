@@ -20,9 +20,8 @@ public interface ArticleService {
 
     List<IdContentDto> searchMaterialById(Integer id);
 
-//    List<ArticleDto> findAll();
-
     Optional<ArticleDto> findById(Integer id);
+//    ArticleDto findById(Integer id);
 
     Article save(ArticleDto stock);
 

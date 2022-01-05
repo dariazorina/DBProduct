@@ -82,7 +82,73 @@ public class Article implements Comparable<Article> {
     @ToString.Exclude
     private List<ArticleLocationConnection> locationConnections;
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ProjectArticleConnection> projectConnections;
+
     private String miscellany;
+
+//    public Article() {
+//    }
+
+//    public Article(List<Movement> movementList, Language language, MaterialType mtype, Date date, String title, Status status, String titleRus, String description, String text, String rgbSelection, List<UrlLink> linkList, List<ArticleHashtag> hashtagList, List<ArticlePersonConnection> personConnections, List<ArticleOrgConnection> orgConnections, List<ArticleMaterialConnection> materialConnections, List<ArticleLocationConnection> locationConnections, List<ProjectArticleConnection> projectConnections, String miscellany) {
+//        this.movementList = movementList;
+//        this.language = language;
+//        this.mtype = mtype;
+//        this.date = date;
+//        this.title = title;
+//        this.status = status;
+//        this.titleRus = titleRus;
+//        this.description = description;
+//        this.text = text;
+//        this.rgbSelection = rgbSelection;
+//        this.linkList = linkList;
+//        this.hashtagList = hashtagList;
+//        this.personConnections = personConnections;
+//        this.orgConnections = orgConnections;
+//        this.materialConnections = materialConnections;
+//        this.locationConnections = locationConnections;
+//        this.projectConnections = projectConnections;
+//        this.miscellany = miscellany;
+//    }
+//
+//    public Article(Article articleOrig) {
+//        this.movementList = new ArrayList<>();
+//        this.movementList.addAll(articleOrig.getMovementList());
+//
+//        this.language = articleOrig.getLanguage();
+//        this.mtype = articleOrig.getMtype();
+//        this.date = articleOrig.getDate();
+//        this.title = articleOrig.getTitle();
+//        this.status = articleOrig.getStatus();
+//        this.titleRus = articleOrig.getTitleRus();
+//        this.description = articleOrig.getDescription();
+//        this.text = articleOrig.getText();
+//        this.rgbSelection = articleOrig.getRgbSelection();
+//
+//        this.linkList = new ArrayList<>();
+//        this.linkList.addAll(articleOrig.getLinkList());
+//
+//        this.hashtagList = new ArrayList<>();
+//        this.hashtagList.addAll(articleOrig.getHashtagList());
+//
+//        this.personConnections = new ArrayList<>();
+//        this.personConnections.addAll(articleOrig.getPersonConnections());
+//
+//        this.orgConnections = new ArrayList<>();
+//        this.orgConnections.addAll(articleOrig.getOrgConnections());
+//
+//        this.materialConnections = new ArrayList<>();
+//        this.materialConnections.addAll(articleOrig.getMaterialConnections());
+//
+//        this.locationConnections = new ArrayList<>();
+//        this.locationConnections.addAll(articleOrig.getLocationConnections());
+//
+//        this.projectConnections = new ArrayList<>();
+//        this.projectConnections.addAll(articleOrig.getProjectConnections());
+//
+//        this.miscellany = miscellany;
+//    }
 
     @Override
     public boolean equals(Object obj) {

@@ -43,9 +43,7 @@
                                                padding: 0 0 0 20px;">
 
                 <InputConnectionText v-model="item.connection"
-                                     :existedConnection="item.connection"
-                                     @has-clicked="hasClickedChanged(item)"/>
-<!--                todo to delete hasClicked-->
+                                     :existedConnection="item.connection"/>
             </div>
 
             <div class="form-row col-6"
@@ -59,11 +57,10 @@
 <script>
     import InputConnectionText from "./InputConnectionText";
     import InputCommentText from "./InputCommentText";
-    import AddButton from "./AddButton";
     import ConnectionTypeSelection from "./ConnectionTypeSelection";
 
     export default {
-        components: {ConnectionTypeSelection, AddButton, InputCommentText, InputConnectionText},
+        components: {ConnectionTypeSelection, InputCommentText, InputConnectionText},
         props: {
             item: {
                 type: Object,
@@ -71,11 +68,6 @@
             },
             allTypes: {
                 type: Array,
-                required: true
-            },
-//todo to delete hasCl
-            hasClicked: {
-                type: Boolean,
                 required: true
             },
             isLinkMode: {
@@ -90,14 +82,9 @@
         },
 
         methods: {
-            hasClickedChanged(item){
-                item.hasClicked = false;
-                // console.log("hasClickedChanged", item);
-            },
 
             updateConnection(selected) {
                 this.item.connection = selected;
-                this.item.hasClicked = false;
                 // console.log("--LIST ITEM---updateOrg--SELECTION-----", this.item);
             },
 

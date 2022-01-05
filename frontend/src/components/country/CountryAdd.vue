@@ -103,7 +103,7 @@
 
                 api.findById(this.$route.params.country_id, r => {
                     this.location = r.data;
-                    console.log('findById', this.country);
+                    console.log('findById', this.location);
                 });
             }
         },
@@ -129,13 +129,24 @@
             createCountry() {
                 console.log(this.location);
 
-                api.create(this.location, r => {
-                    router.push('/country')
-                }, r => {
-                    this.errorFlag = true;
-                    this.errors.push(r);
-                    console.log(r);
-                });
+                if (this.editMode){
+                    api.update(this.location.id, this.location, r => {
+                        router.push('/country');
+                    }, r => {
+                        this.errorFlag = true;
+                        this.errors.push(r);
+                        console.log(r);
+                    });
+                }
+                else {
+                    api.create(this.location, r => {
+                        router.push('/country')
+                    }, r => {
+                        this.errorFlag = true;
+                        this.errors.push(r);
+                        console.log(r);
+                    });
+                }
             },
         },
     }

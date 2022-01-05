@@ -3,7 +3,7 @@
         <!--        <label>Тип связи</label>-->
         <!--        @change.native="tt"-->
 
-        <b-form-select v-model="currentItem" selected="existedCommit" class="mb-3">
+        <b-form-select v-model="currentItem" class="mb-3">
             <option v-for="type in allTypes" v-bind:value="type.type">{{type.type}}</option>
         </b-form-select>
     </div>

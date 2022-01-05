@@ -21,10 +21,8 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
     private Integer closureYear;
 
     private List<String> hashtagList;
-//    private List<NameConnectionDto> orgList;
     private List<String> orgList;
     private List<String> locationList;
-//    private List<ItemConnectionDto> personList;
     private List<String> personList;
     private List<Movement> movementList;
 
@@ -50,138 +48,146 @@ public class OrgDtoForMainList implements Comparable<OrgDtoForMainList> {
 //        this.photo = photo;
     }
 
-    public OrgDtoForMainList(Org org) {
-        this.id = org.getId();
-        this.status = org.getStatus().getName();
-        this.movementList = org.getMovementList();
-        this.rowColor = org.getRgbSelection();
-        this.foundationYear = org.getFoundedYear();
-        this.closureYear = org.getClosedYear();
-
-        this.type = org.getOrgType();
-
-        this.hashtagList = new ArrayList<>();
-        for (OrgHashtag orgHashtag : org.getHashtagList()) {
-            if (orgHashtag.getHashtag().equals(orgHashtag.getAssigned_hashtag()))
-                this.hashtagList.add(orgHashtag.getHashtag().getContent());
-        }
-
-        this.orgList = new ArrayList<>();
-        this.locationList = new ArrayList<>();
-        this.personList = new ArrayList<>();
-
-        NameConnectionDto orgConnectionDto;
-        String dtoName = "";
-
-//        for (OrgOrgConnection connection : org.getOrgConnections()) {
-//            orgConnectionDto = new NameConnectionDto();
+//    public OrgDtoForMainList(Org org) {
+//        this.id = org.getId();
+//        this.status = org.getStatus().getName();
+//        this.movementList = org.getMovementList();
+//        this.rowColor = org.getRgbSelection();
+//        this.foundationYear = org.getFoundedYear();
+//        this.closureYear = org.getClosedYear();
 //
-//            if (org.getNameList() != null) {
-//                for (OrgName name : org.getNameList()) {
-//                    if (name.getPriority() == 1) {
-//                        dtoName += name.getName();
+//        this.type = org.getOrgType();
 //
-//                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
-//                            dtoName += "/ " + name.getAbbr();
-//                        }
+//        this.hashtagList = new ArrayList<>();
+//        for (OrgHashtag orgHashtag : org.getHashtagList()) {
+//            if (orgHashtag.getHashtag().equals(orgHashtag.getAssigned_hashtag()))
+//                this.hashtagList.add(orgHashtag.getHashtag().getContent());
+//        }
+//
+//        this.orgList = new ArrayList<>();
+//        this.locationList = new ArrayList<>();
+//        this.personList = new ArrayList<>();
+//
+////        NameConnectionDto orgConnectionDto;
+////        String dtoName = "";
+//
+////        for (OrgOrgConnection connection : org.getOrgConnections()) {
+////            orgConnectionDto = new NameConnectionDto();
+////
+////            if (org.getNameList() != null) {
+////                for (OrgName name : org.getNameList()) {
+////                    if (name.getPriority() == 1) {
+////                        dtoName += name.getName();
+////
+////                        if (name.getAbbr() != null && name.getAbbr().length() != 0) {
+////                            dtoName += "/ " + name.getAbbr();
+////                        }
+////                    }
+////                }
+////            }
+////
+////            orgConnectionDto.setName(dtoName);
+////            orgConnectionDto.setItemId(connection.getConnectedOrg().getId());
+////            orgConnectionDto.setConnection(connection.getConnection());
+////            orgConnectionDto.setComment(connection.getComment());
+////
+////            this.orgList.add(orgConnectionDto);
+////            dtoName = "";
+////        }
+//
+////        ItemConnectionDto locationConnectionDto;
+////        for (OrgLocationConnection connection : org.getLocationConnections()) {
+////            locationConnectionDto = new ItemConnectionDto();
+////            locationConnectionDto.setItemId(connection.getLocation().getId());
+////            locationConnectionDto.setConnection(connection.getConnection());
+////            locationConnectionDto.setComment(connection.getComment());
+////
+////            this.locationList.add(locationConnectionDto);
+////        }
+//
+//        List<String> locationStringList = new ArrayList<>();
+//        for (OrgLocationConnection plC : org.getLocationConnections()) {
+//            locationStringList.add(plC.getLocation().getCountry());
+//        }
+//        this.setLocationList(locationStringList);
+//
+////        ItemConnectionDto personConnectionDto;
+////        for (OrgPersonConnection connection : org.getPersonConnections()) {
+////            personConnectionDto = new ItemConnectionDto();
+////            personConnectionDto.setItemId(connection.getPerson().getId());
+////            personConnectionDto.setConnection(connection.getConnection());
+////            personConnectionDto.setComment(connection.getComment());
+////
+////            this.personList.add(personConnectionDto);
+////        }
+//
+//        List<String> personStringList = new ArrayList<>();
+//        for (OrgPersonConnection orgPC : org.getPersonConnections()) {
+//            List<SurnameNamePatr> snpList = orgPC.getPerson().getSnpList();
+//            String snp = "some error";
+//            for (SurnameNamePatr nameEl : snpList) {
+//                if (nameEl.getPriority() == 1) {
+//                    snp = nameEl.getSurname();
+//                    if (nameEl.getName().length() > 0) {
+//                        snp += " " + nameEl.getName();
 //                    }
+//                    break;
 //                }
 //            }
-//
-//            orgConnectionDto.setName(dtoName);
-//            orgConnectionDto.setItemId(connection.getConnectedOrg().getId());
-//            orgConnectionDto.setConnection(connection.getConnection());
-//            orgConnectionDto.setComment(connection.getComment());
-//
-//            this.orgList.add(orgConnectionDto);
-//            dtoName = "";
+//            if (orgPC.getConnection().length() > 0) {
+//                snp += ", " + orgPC.getConnection();
+//            }
+//            personStringList.add(snp);
 //        }
-
-//        ItemConnectionDto locationConnectionDto;
-//        for (OrgLocationConnection connection : org.getLocationConnections()) {
-//            locationConnectionDto = new ItemConnectionDto();
-//            locationConnectionDto.setItemId(connection.getLocation().getId());
-//            locationConnectionDto.setConnection(connection.getConnection());
-//            locationConnectionDto.setComment(connection.getComment());
+//        this.setPersonList(personStringList);
 //
-//            this.locationList.add(locationConnectionDto);
-//        }
-
-        List<String> locationStringList = new ArrayList<>();
-        for (OrgLocationConnection plC : org.getLocationConnections()) {
-            locationStringList.add(plC.getLocation().getCountry());
-        }
-        this.setLocationList(locationStringList);
-
-//        ItemConnectionDto personConnectionDto;
-//        for (OrgPersonConnection connection : org.getPersonConnections()) {
-//            personConnectionDto = new ItemConnectionDto();
-//            personConnectionDto.setItemId(connection.getPerson().getId());
-//            personConnectionDto.setConnection(connection.getConnection());
-//            personConnectionDto.setComment(connection.getComment());
 //
-//            this.personList.add(personConnectionDto);
+////        List<String> orgStringList = new ArrayList<>();
+////        String tName = "";
+////        List<OrgName> nameList;
+////
+////        for (OrgOrgConnection orgOC : org.getOrgConnections()) {
+////
+////            if (orgOC.getOrg().getId().intValue() == org.getId().intValue()) { //if true -> symm case
+////                nameList = orgOC.getConnectedOrg().getNameList();
+////            } else {
+////                nameList = orgOC.getOrg().getNameList();
+////            }
+////            for (OrgName nameEl : nameList) {
+////                if (nameEl.getPriority() == 1) {
+////                    tName = nameEl.getName();
+////                    if (nameEl.getAbbr().length() > 0) {
+////                        tName += ", " + nameEl.getAbbr();
+////                    }
+////                    break;
+////                }
+////            }
+////
+////            if (orgOC.getConnection().length() > 0) {
+////                tName += ", " + orgOC.getConnection();
+////            }
+////            orgStringList.add(tName);
+////        }
+//
+//
+//        this.setOrgList(orgStringList);
+//
+//
+//        for (OrgName name : org.getNameList()) {
+//            if (name.getPriority() == 1) {
+//                this.name = name.getName();
+//            }
+//
+//            if (name.getAbbr() != null && name.getAbbr().length() != 0) {
+//                this.name += "/ " + name.getAbbr();
+//            }
 //        }
-
-        List<String> personStringList = new ArrayList<>();
-        for (OrgPersonConnection orgPC : org.getPersonConnections()) {
-            List<SurnameNamePatr> snpList = orgPC.getPerson().getSnpList();
-            String snp = "some error";
-            for (SurnameNamePatr nameEl : snpList) {
-                if (nameEl.getPriority() == 1) {
-                    snp = nameEl.getSurname();
-                    if (nameEl.getName().length() > 0) {
-                        snp += " " + nameEl.getName();
-                    }
-                    break;
-                }
-            }
-            if (orgPC.getConnection().length() > 0) {
-                snp += ", " + orgPC.getConnection();
-            }
-            personStringList.add(snp);
-        }
-        this.setPersonList(personStringList);
-
-
-        List<String> orgStringList = new ArrayList<>();
-        for (OrgOrgConnection orgOC : org.getOrgConnections()) {
-            List<OrgName> nameList = orgOC.getOrg().getNameList();
-            String name = "";
-            for (OrgName nameEl : nameList) {
-                if (nameEl.getPriority() == 1) {
-                    name = nameEl.getName();
-                    if (nameEl.getAbbr().length() > 0) {
-                        name += ", " + nameEl.getAbbr();
-                    }
-                    break;
-                }
-            }
-            if (orgOC.getConnection().length() > 0) {
-                name += ", " + orgOC.getConnection();
-            }
-            orgStringList.add(name);
-        }
-        this.setOrgList(orgStringList);
-
-
-
-
-        for (OrgName name : org.getNameList()) {
-            if (name.getPriority() == 1) {
-                this.name = name.getName();
-            }
-
-            if (name.getAbbr() != null && name.getAbbr().length() != 0) {
-                this.name += "/ " + name.getAbbr();
-            }
-        }
-
-//        if (p.getPhoto() != null) {
-//            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
-//            this.photo = encodedString;
-//        }
-    }
+//
+////        if (p.getPhoto() != null) {
+////            String encodedString = Base64.getEncoder().encodeToString(p.getPhoto());
+////            this.photo = encodedString;
+////        }
+//    }
 
     public Integer getId() {
         return id;

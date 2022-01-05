@@ -310,6 +310,46 @@
                         </div>
                     </div>
                 </form>
+                <form class="authorsFormCreation"
+                      style="background-color: transparent; padding: 25px 0 5px">
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold">Связанные проекты</label>
+                                <v-autocomplete
+                                        id="project-autocomplete"
+                                        :items="itemsProject"
+                                        :loading="isLoadingProject"
+                                        :search-input.sync="projectSearch"
+                                        color="brown"
+                                        hide-no-data
+                                        hide-selected
+
+                                        v-model="selectedProject"
+
+                                        @change="addProject(selectedProject)"
+                                        item-text="content"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти проект"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
+
+                        <div v-if="projectConnectionList.length > 0" class="col-9"
+                             style="background-color: transparent; padding:0">
+                            <ConnectionComponent :itemsList="projectConnectionList"
+                                                 :isLinkMode="false"
+                                                 :isSelectionMode="false"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0" class="col-12"/>
+                            <!--                                                 @update-item="updateItem"/>-->
+                        </div>
+                    </div>
+                </form>
                 <form class="formCreation">
                     <div class="form-row align-items-md-start" style="background-color: transparent">
                         <div class="col-5" style="background-color: transparent">
@@ -528,8 +568,9 @@
     import apiPerson from "./../person/person-api";
     import apiCountry from "./../country/country-api";
     import apiOrg from "./../org/org-api";
+    import apiProject from "./../project/project-api";
     import apiLanguage from "./../language/language-api";
-    import apiMovement from "./../movement/movement-api";
+    // import apiMovement from "./../movement/movement-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
@@ -572,16 +613,19 @@
             personEntries: [],
             locationEntries: [],
             orgEntries: [],
+            projectEntries: [],
             materialEntries: [],
 
             isLoading: false,
             isLoadingLocation: false,
             isLoadingOrg: false,
+            isLoadingProject: false,
             isLoadingMaterial: false,
 
             authorSearch: null,
             locationSearch: null,
             orgSearch: null,
+            projectSearch: null,
             materialSearch: null,
 
             searchHashtag: '',
@@ -598,6 +642,7 @@
             personConnectionList: [],
             locationConnectionList: [],
             orgConnectionList: [],
+            projectConnectionList: [],
             materialConnectionList: [],
 
             links: [],
@@ -623,6 +668,7 @@
                 locationList: [],
                 hashtagList: [],
                 orgList: [],
+                projectList: [],
                 materialList: [],
                 movementList: []
             },
@@ -630,15 +676,9 @@
             selected: [],
             selectedLocation: [],
             selectedOrg: [],
+            selectedProject: [],
             selectedMaterial: [],
 
-            articlePersonIds: [], //before request
-            articlePersonEntities: [], //after request
-            articleLocationIds: [], //before request
-            articleLocationEntities: [], //after request
-            articleOrgIds: [], //before request
-            articleOrgEntities: [], //after request
-           // articleMaterialIds: [], //before request
             articleMaterialEntities: [], //after request
 
             statusList: [],
@@ -807,7 +847,6 @@
                         "name": obj.content,// + " " + obj.name,
                         "connection": '',
                         "comment": '',
-                        "hasClicked": false
                     };
                     this.personConnectionList.push(connection);
                     console.log("ADDED");
@@ -840,7 +879,6 @@
                             "name": obj.content,
                             "comment": '',
                             "connection": '',
-                            "hasClicked": false
                         };
                         this.locationConnectionList.push(connection);
                         //console.log("ADDED");
@@ -863,10 +901,30 @@
                         "name": obj.content,
                         "comment": '',
                         "connection": '',
-                        "hasClicked": false
                     };
                     this.orgConnectionList.push(connection);
                     console.log("ADDED");
+                }
+            },
+
+            addProject(obj) {
+                // console.log("GET CHANGED LOCATION");
+                let i = 0;
+                for (i = 0; i < this.projectConnectionList.length; i++) { //to exclude double values
+                    if (this.projectConnectionList[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === this.projectConnectionList.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.content,
+                        "comment": '',
+                        "connection": '',
+                    };
+                    this.projectConnectionList.push(connection);
+                    // console.log("ADDED");
                 }
             },
 
@@ -885,7 +943,6 @@
                         "name": obj.content,  //title was created in ArticleServiceImpl
                         "comment": '',
                         "connection": '',
-                        "hasClicked": false
                     };
                     this.materialConnectionList.push(connection);
                     // console.log("ADDED");
@@ -1003,49 +1060,49 @@
                 return newLines;
             },
 
-            checkConnection(list) {
-                for (let i = 0; i < list.length; i++) {
-                    if (list[i].connection.length <= 0) {
-                        // console.log("AXTUNG");
-                        return true;
-                    }
-                }
-                return false;
-            },
+            // checkConnection(list) {
+            //     for (let i = 0; i < list.length; i++) {
+            //         if (list[i].connection.length <= 0) {
+            //             // console.log("AXTUNG");
+            //             return true;
+            //         }
+            //     }
+            //     return false;
+            // },
 
             preliminaryDataCheck(currentStatus) {
-                let y = false, t = false, g = false, o = false;
-
-                if (this.isObjectValidAndNotEmpty(this.personConnectionList)) {
-                    y = this.checkConnection(this.personConnectionList)
-                }
-                if (!y) {
-                    // if (this.isObjectValidAndNotEmpty(this.locationConnectionList)) {
-                    //     t = this.checkConnection(this.locationConnectionList);
-                    // }
-                    // if (!t) {
-                    // if (this.isObjectValidAndNotEmpty(this.orgConnectionList)) {
-                    //     g = this.checkConnection(this.orgConnectionList);
-                    // }
-                    // if (!g) {
-                    if (this.isObjectValidAndNotEmpty(this.materialConnectionList)) {
-                        o = this.checkConnection(this.materialConnectionList);
-                    }
-                }
-                //}
+                // let y = false, t = false, g = false, o = false;
+                //
+                // if (this.isObjectValidAndNotEmpty(this.personConnectionList)) {
+                //     y = this.checkConnection(this.personConnectionList)
                 // }
-
-                if (y || o) {  // if (y || t || g || o) {
-                    alert("Укажите связь для сущностей, которые вы добавили");
-                    // console.log("ALERT");
-                } else {
+                // if (!y) {
+                //     // if (this.isObjectValidAndNotEmpty(this.locationConnectionList)) {
+                //     //     t = this.checkConnection(this.locationConnectionList);
+                //     // }
+                //     // if (!t) {
+                //     // if (this.isObjectValidAndNotEmpty(this.orgConnectionList)) {
+                //     //     g = this.checkConnection(this.orgConnectionList);
+                //     // }
+                //     // if (!g) {
+                //     if (this.isObjectValidAndNotEmpty(this.materialConnectionList)) {
+                //         o = this.checkConnection(this.materialConnectionList);
+                //     }
+                // }
+                // //}
+                // // }
+                //
+                // if (y || o) {  // if (y || t || g || o) {
+                //     alert("Укажите связь для сущностей, которые вы добавили");
+                //     // console.log("ALERT");
+                // } else {
                     // alert("else");
                     if (this.editMode) {
                         this.updateArticle();
                     } else {
                         this.createArticle(currentStatus);
                     }
-                }
+                // }
             },
 
             createArticle(currentStatus) {
@@ -1076,35 +1133,6 @@
                     };
                 }
 
-                // this.article.movementList[i] = {
-                //     "id": this.currentUserMovement.id
-                // };
-
-
-                // let textarea = document.getElementById("add-linkS");
-                // let lines = textarea.value.replace(/\r\n/g, "\n").split("\n");
-                // for (let i = 0; i < lines.length; i++) {
-                //     this.article.linkList[i] = {
-                //         "content": lines[i]
-                //     };
-                // }
-
-
-                // this.actOnEachLine(textarea, function (line) {
-                //     console.log(line);
-                //    // return "[START]" + line + "[END]";
-                //    //  this.article.linkList.push({
-                //    //      "content": line});
-                //
-                //     ttt = {
-                //         "content": line,
-                //     };
-                //
-                //     this.article.linkList.push(ttt);
-                //     console.log(this.article.linkList);
-                //
-                // });
-
 
                 //mtype has structure (from t_material_type)
                 // id, content, misc, parentId
@@ -1121,12 +1149,16 @@
                 this.article.personList.splice(0);
                 this.article.locationList.splice(0);
                 this.article.orgList.splice(0);
+                this.article.projectList.splice(0);
                 this.article.materialList.splice(0);
 
-                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, false);
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, true);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList, true);
-                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList, false);
-                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, false);
+                this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList, true);
+                this.finalConnectionListCreation(this.projectConnectionList, this.article.projectList, true);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, true);
+
+                console.log("BEFORE SAVING", this.article);
 
                 if (this.formValidate()) {
                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>to save article with", this.article);
@@ -1142,7 +1174,6 @@
                         }
                     });
                 }
-                // console.log("BEFORE SAVING", this.article);
             },
 
             updateArticle() {
@@ -1189,12 +1220,14 @@
                 this.article.personList.splice(0);
                 this.article.locationList.splice(0);
                 this.article.orgList.splice(0);
+                this.article.projectList.splice(0);
                 this.article.materialList.splice(0);
 
-                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, false);
+                this.finalConnectionListCreation(this.personConnectionList, this.article.personList, true);
                 this.finalConnectionListCreation(this.locationConnectionList, this.article.locationList, true);
                 this.finalConnectionListCreation(this.orgConnectionList, this.article.orgList, true);
-                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, false);
+                this.finalConnectionListCreation(this.projectConnectionList, this.article.projectList, true);
+                this.finalConnectionListCreation(this.materialConnectionList, this.article.materialList, true);
 
                 //console.log("SAVE SAVE SAVE SAVE SAVE SAVE SAVE this.article", this.article);
 
@@ -1252,24 +1285,24 @@
                 return !(typeof obj === 'undefined' || obj === null);
             },
 
-            locationEditConnectionTitleCreation(location) {
-
-                let returnedTitle = location.country;
-
-                if (this.isArrayValidAndNotEmpty(location.region)) {
-                    returnedTitle += ", " + location.region;
-                }
-                if (this.isArrayValidAndNotEmpty(location.city)) {
-                    returnedTitle += ", " + location.city;
-                }
-                if (this.isArrayValidAndNotEmpty(location.address)) {
-                    returnedTitle += ", " + location.address;
-                }
-                if (this.isArrayValidAndNotEmpty(location.placement)) {
-                    returnedTitle += ", " + location.placement;
-                }
-                return returnedTitle;
-            },
+            // locationEditConnectionTitleCreation(location) {
+            //
+            //     let returnedTitle = location.country;
+            //
+            //     if (this.isArrayValidAndNotEmpty(location.region)) {
+            //         returnedTitle += ", " + location.region;
+            //     }
+            //     if (this.isArrayValidAndNotEmpty(location.city)) {
+            //         returnedTitle += ", " + location.city;
+            //     }
+            //     if (this.isArrayValidAndNotEmpty(location.address)) {
+            //         returnedTitle += ", " + location.address;
+            //     }
+            //     if (this.isArrayValidAndNotEmpty(location.placement)) {
+            //         returnedTitle += ", " + location.placement;
+            //     }
+            //     return returnedTitle;
+            // },
 
             // materialEditConnectionTitleCreation(material) {
             //     let returnedTitle = '';
@@ -1502,7 +1535,6 @@
                             "name": this.materialEntries[0].content,
                             "comment": '',
                             "connection": this.$route.params.connectionType.text,
-                            "hasClicked": false
                         };
                         this.materialConnectionList.push(connection);
                     }
@@ -1558,90 +1590,88 @@
 //                    console.log("::::::::::::::::LINK LIST", this.article.linkList);
 //                    console.log("::::::::::::::::LINKS", this.links);
 
-
                     apiAttachment.getAttachments('article', this.article.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
                             this.uploadedFiles.push(r.data[i]);
                         }
                     });
 
-                    for (let j = 0; j < this.article.personList.length; j++) {
-                        this.articlePersonIds.push(this.article.personList[j].itemId);
-                    }
-                    // console.log(this.articlePersonIds);
-
-                    for (let j = 0; j < this.article.locationList.length; j++) {
-                        this.articleLocationIds.push(this.article.locationList[j].itemId);
-                    }
-
-                    for (let j = 0; j < this.article.orgList.length; j++) {
-                        this.articleOrgIds.push(this.article.orgList[j].itemId);
-                    }
-
-                    // for (let j = 0; j < this.article.materialList.length; j++) {
-                    //     this.articleMaterialIds.push(this.article.materialList[j].itemId);
-                    // }
-
-                    apiPerson.getPersonsByIds(this.articlePersonIds, response => {  ///returns List<NewPersonDto>
-                        this.articlePersonEntities = response.data;
-                        console.log("apiPerson", this.articlePersonEntities);
-
+                    if (this.article.personList !== null) {
                         for (let i = 0; i < this.article.personList.length; i++) {
                             let element = this.article.personList[i];
-                            let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
+                            // let currentPersonEntity = this.articlePersonEntities.find(person => person.id === element.itemId);
                             let connection = {
                                 "id": element.itemId,
-                                "name": currentPersonEntity.content, //currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
+                                "name": element.name, //currentPersonEntity.content, //currentPersonEntity.surname + " " + currentPersonEntity.name,//todo?
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.personConnectionList.push(connection);
                         }
-                    });
+                    }
+                    // });
 
-                    apiCountry.getLocationsByIds(this.articleLocationIds, response => {  ///returns List<Location>
-                        this.articleLocationEntities = response.data;
-                        console.log("apiLocation", this.articleLocationEntities);
+                    // apiCountry.getLocationsByIds(this.articleLocationIds, response => {  ///returns List<Location>
+                    //     this.articleLocationEntities = response.data;
+                    //     console.log("apiLocation", this.articleLocationEntities);
 
+                    if (this.article.locationList !== null) {
                         for (let i = 0; i < this.article.locationList.length; i++) {
                             let element = this.article.locationList[i];
-                            let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
+                            // let currentLocationEntity = this.articleLocationEntities.find(location => location.id === element.itemId);
                             let connection = {
                                 "id": element.itemId,
-                                "name": currentLocationEntity.content, //this.locationEditConnectionTitleCreation(currentLocationEntity),
+                                "name": element.name, //currentLocationEntity.content, //this.locationEditConnectionTitleCreation(currentLocationEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.locationConnectionList.push(connection);
                         }
-                        // console.log("locationConnectionList: ", this.locationConnectionList);
-                    });
+                    }
+                    // console.log("locationConnectionList: ", this.locationConnectionList);
+                    // });
 
-                    apiOrg.getOrgsByIds(this.articleOrgIds, response => {  ///returns List<Location>
-                        this.articleOrgEntities = response.data;   //returns List<Org>
-                        console.log("apiOrg", this.articleOrgEntities);
+                    //apiOrg.getOrgsByIds(this.articleOrgIds, response => {  ///returns List<Location>
+                    //  this.articleOrgEntities = response.data;   //returns List<Org>
+                    //console.log("apiOrg", this.articleOrgEntities);
 
+                    if (this.article.orgList !== null) {
                         for (let i = 0; i < this.article.orgList.length; i++) {
                             let element = this.article.orgList[i];
-                            let currentOrgEntity = this.articleOrgEntities.find(org => org.id === element.itemId);
-                            console.log("currentOrgEntity", currentOrgEntity);
+                            // let currentOrgEntity = this.articleOrgEntities.find(org => org.id === element.itemId);
+                            console.log("currentOrgEntity", element);
                             let connection = {
                                 "id": element.itemId,
-                                "name": currentOrgEntity.content, //this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "name": element.name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
                                 "connection": element.connection,
                                 "comment": element.comment,
-                                "hasClicked": true
                             };
                             // console.log("CREATE PERS ON A: ", a);
                             this.orgConnectionList.push(connection);
                         }
-                        //console.log("orgConnectionList: ", this.orgConnectionList);
-                    });
+                    }
 
+                    console.log("orgConnectionList: ", this.orgConnectionList);
+                    // });
+
+
+                    if (this.article.projectList !== null) {
+                        for (let i = 0; i < this.article.projectList.length; i++) {
+                            let element = this.article.projectList[i];
+                            // let currentOrgEntity = this.articleOrgEntities.find(org => org.id === element.itemId);
+                            console.log("currentProEntity", element);
+                            let connection = {
+                                "id": element.itemId,
+                                "name": element.name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
+                                "connection": element.connection,
+                                "comment": element.comment,
+                            };
+                            // console.log("CREATE PERS ON A: ", a);
+                            this.projectConnectionList.push(connection);
+                        }
+                    }
 
                     api.getMaterialsByIdsAndSymmetrically(this.article.id, response => {
                         this.articleMaterialEntities = response.data;  //returns list<NameConnectionDto>
@@ -1653,7 +1683,6 @@
                                 "name": this.articleMaterialEntities[i].name, //this.materialEditConnectionTitleCreation(currentMaterialEntity),
                                 "connection": this.articleMaterialEntities[i].connection, //connectionType.type,
                                 "comment": this.articleMaterialEntities[i].comment,
-                                "hasClicked": true
                             };
                             //    console.log("CREATE MATERIALS: ", connection);
                             this.materialConnectionList.push(connection);
@@ -1691,6 +1720,19 @@
                     //console.log("~@~@~@~@~", this.orgEntries);
                     return this.orgEntries.map(entry => {
                         const org = entry.content;
+                        return Object.assign({}, entry)
+                    })
+                }
+                // return this.orgEntries;
+            },
+
+            itemsProject() {
+                //console.log("itemsOrg", this.orgEntries.map);
+                //console.log("itemsOrg", this.orgEntries);
+
+                if (this.projectEntries) {      ///todo analyze why undefined (after selection in the search list)
+                    //console.log("~@~@~@~@~", this.orgEntries);
+                    return this.projectEntries.map(entry => {
                         return Object.assign({}, entry)
                     })
                 }
@@ -1991,6 +2033,28 @@
                             this.orgEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             //console.log("**орг**", this.orgEntries);
                             this.isLoadingOrg = false;
+                        });
+                    }
+            },
+
+            projectSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedProject !== 'undefined') {
+                            if (this.article.projectList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedProject = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingProject) return;
+                        this.isLoadingProject = true;
+
+                        //console.log("seracg org", val);
+
+                        apiProject.searchProject(val, r => {
+                            this.projectEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
+                            console.log("**ПРОЕКТЫ**", this.projectEntries);
+                            this.isLoadingProject = false;
                         });
                     }
             },

@@ -87,6 +87,10 @@ public class Person implements Comparable<Person> {
     @JsonIgnore
     private List<PersonIsourceConnection> isourceConnections;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ProjectPersonConnection> projectConnections;
+
 //    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, orphanRemoval = true)
 //    @ToString.Exclude
 //    @JsonIgnore

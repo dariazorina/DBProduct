@@ -3,6 +3,7 @@ package com.hellokoding.springboot.restful.service.impl;
 import com.hellokoding.springboot.restful.dao.*;
 import com.hellokoding.springboot.restful.model.*;
 import com.hellokoding.springboot.restful.model.dto.*;
+import com.hellokoding.springboot.restful.service.ArticleConverter;
 import com.hellokoding.springboot.restful.service.ArticleService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final UrlLinkRepository linkRepository;
     private final LocationRepository locationRepository;
     private final PersonRepository personRepository;
+    private final ProjectRepository projectRepository;
     private final OrgRepository orgRepository;
     private final MTypeRepository materialTypeRepository;
     private final ConnectionTypeRepository ctypeRepository;
@@ -37,14 +39,29 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Optional<ArticleDto> findById(Integer id) {
+
         Optional<Article> byId = articleRepository.findById(id);
         Optional<ArticleDto> byIdDto;
 
         byIdDto = Optional.of(new ArticleDto(byId.get(), ctypeRepository.findAll()));
-//        byIdDto = Optional.of(new ArticleDto(byId.get()));
-//        byIdDto.get().setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(byId.get()));
+
         return byIdDto;
     }
+
+//    @Override
+//    public ArticleDto findById(Integer id) {
+//
+//        Optional<Article> byId = articleRepository.findById(id);
+//        if (byId.isPresent()) {
+//            Article art = new Article(byId.get());
+//            ArticleDto articleDto = new ArticleDto();
+////            Article articleParameter = new Article(byId.get().getId(), );
+//            ArticleConverter.convertToArticleDto(art, articleDto, ctypeRepository.findAll());
+//            return articleDto;
+//        }
+//
+//        return null;
+//    }
 
 
 //    public ArrayList<NameConnectionDto> createMaterialConnectionsListForArticleDtoFromArticle(Article article) {
@@ -178,12 +195,15 @@ public class ArticleServiceImpl implements ArticleService {
         Integer personId;
         ArticlePersonConnection personConnection;
         List<ArticlePersonConnection> personConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : articleDto.getPersonList()) {
+        for (NameConnectionDto connectionDto : articleDto.getPersonList()) {
 
             personId = connectionDto.getItemId();
             if (personRepository.findById(personId).isPresent()) {
                 personConnection = new ArticlePersonConnection();
-                personConnection.setPerson(personRepository.findById(personId).get());
+
+                Person person = personRepository.findById(personId).get();
+
+                personConnection.setPerson(person);
                 personConnection.setArticle(article);
                 personConnection.setConnection(connectionDto.getConnection());
                 personConnection.setComment(connectionDto.getComment());
@@ -211,12 +231,15 @@ public class ArticleServiceImpl implements ArticleService {
         Integer orgId;
         ArticleOrgConnection orgConnection;
         List<ArticleOrgConnection> orgConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : articleDto.getOrgList()) {
+        for (NameConnectionDto connectionDto : articleDto.getOrgList()) {
 
             orgId = connectionDto.getItemId();
             if (orgRepository.findById(orgId).isPresent()) {
                 orgConnection = new ArticleOrgConnection();
-                orgConnection.setOrg(orgRepository.findById(orgId).get());
+
+                Org org = orgRepository.findById(orgId).get();
+
+                orgConnection.setOrg(org);
                 orgConnection.setArticle(article);
                 orgConnection.setConnection(connectionDto.getConnection());
                 orgConnection.setComment(connectionDto.getComment());
@@ -240,12 +263,15 @@ public class ArticleServiceImpl implements ArticleService {
         Integer locatonId;
         ArticleLocationConnection locationConnection;
         List<ArticleLocationConnection> locationConnectionList = new ArrayList<>();
-        for (ItemConnectionDto connectionDto : articleDto.getLocationList()) {
+        for (NameConnectionDto connectionDto : articleDto.getLocationList()) {
 
             locatonId = connectionDto.getItemId();
             if (locationRepository.findById(locatonId).isPresent()) {
                 locationConnection = new ArticleLocationConnection();
-                locationConnection.setLocation(locationRepository.findById(locatonId).get());
+
+                Location location = locationRepository.findById(locatonId).get();
+
+                locationConnection.setLocation(location);
                 locationConnection.setArticle(article);
                 locationConnection.setConnection(connectionDto.getConnection());
                 locationConnection.setComment(connectionDto.getComment());
@@ -258,6 +284,39 @@ public class ArticleServiceImpl implements ArticleService {
             article.setLocationConnections(locationConnectionList);
         } else {
             article.getLocationConnections().addAll(locationConnectionList);
+        }
+
+        /////////////////////PROJECT CONNECTIONS///////////////////
+        if (article.getProjectConnections() != null) {
+            article.getProjectConnections().clear();
+            articleRepository.flush();
+        }
+
+        Integer projectId;
+        ProjectArticleConnection projectArticleConnection;
+        List<ProjectArticleConnection> projectArticleConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : articleDto.getProjectList()) {
+
+            projectId = connectionDto.getItemId();
+            if (projectRepository.findById(projectId).isPresent()) {
+
+                Project dromDB = projectRepository.findById(projectId).get();
+                //Project pro = dromDB.clone();
+
+                projectArticleConnection = new ProjectArticleConnection();
+                projectArticleConnection.setProject(dromDB);
+                projectArticleConnection.setArticle(article);
+                projectArticleConnection.setConnection(connectionDto.getConnection());
+                projectArticleConnection.setComment(connectionDto.getComment());
+
+                projectArticleConnectionList.add(projectArticleConnection);
+            }
+        }
+
+        if (article.getProjectConnections() == null) {
+            article.setProjectConnections(projectArticleConnectionList);
+        } else {
+            article.getProjectConnections().addAll(projectArticleConnectionList);
         }
 
         /////////////////////MATERIAL CONNECTIONS///////////////////
@@ -275,85 +334,103 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleMaterialConnection> symmConnectionList;// = new ArrayList<>();
 
 
+        Optional<ConnectionType> ct = Optional.empty();
         for (NameConnectionDto connectionDto : articleDto.getMaterialList()) {
             materialId = connectionDto.getItemId();
             if (articleRepository.findById(materialId).isPresent()) {
-                Optional<ConnectionType> ct = (ctypeRepository.findByType(connectionDto.getConnection()));
-                if (ct.isPresent()) {
+                if (connectionDto.getConnection().length() > 0) {
+                    ct = (ctypeRepository.findByType(connectionDto.getConnection()));
+                }
 
-                    //article - article.id, material - material.id - simple conn
-                    //article - material.id, material - article.id - symm conn - need to exclude here and save for material (not for current article)
+                //article - article.id, material - material.id - simple conn
+                //article - material.id, material - article.id - symm conn - need to exclude here and save for material (not for current article)
 
-                    symmConnectionList = articleMaterialRepository.findByIdSimple(materialId);
-                    for (ArticleMaterialConnection artMatConn : symmConnectionList) {
-                        if (artMatConn.getMaterial().getId().equals(article.getId())) {
-                            isSymmConnection = true;
-                            break;
-                        }
+                symmConnectionList = articleMaterialRepository.findByIdSimple(materialId);
+                for (ArticleMaterialConnection artMatConn : symmConnectionList) {
+                    if (artMatConn.getMaterial().getId().equals(article.getId())) {
+                        isSymmConnection = true;
+                        break;
                     }
-                    if (!isSymmConnection) {
-                        articleConnection = new ArticleMaterialConnection();
-                        articleConnection.setMaterial(articleRepository.findById(materialId).get());
-                        articleConnection.setArticle(article);
-                        articleConnection.setConnection(ct.get().getId());
-                        articleConnection.setComment(connectionDto.getComment());
-                        articleConnectionList.add(articleConnection);
+                }
+                if (!isSymmConnection) {
+                    articleConnection = new ArticleMaterialConnection();
 
-                    } else {  //save connection for material
-                        material = articleRepository.findById(materialId).get();
+                    Article materialFromDB = articleRepository.findById(materialId).get();
 
-                        materialConnection = new ArticleMaterialConnection();
-                        materialConnection.setArticle(articleRepository.findById(materialId).get());
-                        materialConnection.setMaterial(article);
-                        materialConnection.setConnection(ct.get().getId());
-                        materialConnection.setComment(connectionDto.getComment());
-                        materialConnectionList.add(materialConnection);
+                    articleConnection.setMaterial(materialFromDB);
+                    articleConnection.setArticle(article);
+
+                    if (ct.isPresent()) {
+                        ConnectionType connType = ct.get();
+                        articleConnection.setConnection(connType.getId());
+                    }
+
+                    articleConnection.setComment(connectionDto.getComment());
+                    articleConnectionList.add(articleConnection);
+
+                } else {  //save connection for material
+                    material = articleRepository.findById(materialId).get();
+
+                    materialConnection = new ArticleMaterialConnection();
+
+                    Article articleFromDb = articleRepository.findById(materialId).get();
+
+                    materialConnection.setArticle(articleFromDb);
+                    materialConnection.setMaterial(article);
+
+                    if (ct.isPresent()) {
+                        ConnectionType connType = ct.get();
+                        materialConnection.setConnection(connType.getId());
+                    }
+
+                    materialConnection.setComment(connectionDto.getComment());
+                    materialConnectionList.add(materialConnection);
 
 
-                        if (material.getMaterialConnections() == null) {
-                            material.setMaterialConnections(materialConnectionList);
-                        } else {
-                            //remove already existed entities
-                            List<ArticleMaterialConnection> elList = new ArrayList<>();
-                            for (ArticleMaterialConnection artMatConn : material.getMaterialConnections()) {
-                                if (artMatConn.getMaterial().getId().equals(article.getId())) {
-                                    elList.add(artMatConn);
-                                }
+                    if (material.getMaterialConnections() == null) {
+                        material.setMaterialConnections(materialConnectionList);
+                    } else {
+                        //remove already existed entities
+                        List<ArticleMaterialConnection> elList = new ArrayList<>();
+                        for (ArticleMaterialConnection artMatConn : material.getMaterialConnections()) {
+                            if (artMatConn.getMaterial().getId().equals(article.getId())) {
+                                elList.add(artMatConn);
                             }
-                            material.getMaterialConnections().removeAll(elList);
-                            articleRepository.flush();
-                            material.getMaterialConnections().addAll(materialConnectionList);
+                        }
+                        material.getMaterialConnections().removeAll(elList);
+                        articleRepository.flush();
+                        material.getMaterialConnections().addAll(materialConnectionList);
+                    }
+                }
+                isSymmConnection = false;
+
+            }
+
+
+            if (article.getId() != null) {
+                //delete symm connections
+                List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(article.getId());
+                List<NameConnectionDto> resultListConnectedOrgsForOrg = articleDto.getMaterialList();
+
+                List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
+                        .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
+                        .collect(Collectors.toList());
+
+                for (NameConnectionDto nmdto : differences) {
+                    material = articleRepository.findById(nmdto.getItemId()).get();
+
+                    //remove already existed entities
+                    List<ArticleMaterialConnection> elList = new ArrayList<>();
+                    for (ArticleMaterialConnection articleMaterialConnection : material.getMaterialConnections()) {
+                        if (articleMaterialConnection.getMaterial().getId().equals(article.getId())) {
+                            elList.add(articleMaterialConnection);
                         }
                     }
-                    isSymmConnection = false;
+                    material.getMaterialConnections().removeAll(elList);
+                    articleRepository.flush();
                 }
             }
         }
-
-        if (article.getId() != null) {
-            //delete symm connections
-            List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(article.getId());
-            List<NameConnectionDto> resultListConnectedOrgsForOrg = articleDto.getMaterialList();
-
-            List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
-                    .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
-                    .collect(Collectors.toList());
-
-            for (NameConnectionDto nmdto : differences) {
-                material = articleRepository.findById(nmdto.getItemId()).get();
-
-                //remove already existed entities
-                List<ArticleMaterialConnection> elList = new ArrayList<>();
-                for (ArticleMaterialConnection articleMaterialConnection : material.getMaterialConnections()) {
-                    if (articleMaterialConnection.getMaterial().getId().equals(article.getId())) {
-                        elList.add(articleMaterialConnection);
-                    }
-                }
-                material.getMaterialConnections().removeAll(elList);
-                articleRepository.flush();
-            }
-        }
-
         if (article.getMaterialConnections() == null) {
             article.setMaterialConnections(articleConnectionList);
         } else {
@@ -466,6 +543,7 @@ public class ArticleServiceImpl implements ArticleService {
         String dtoName = "", connection = "", comment = "";
         // Set<Article> searchRes = new TreeSet<>();
         List<NameConnectionDto> finalList = new ArrayList<>();
+        Optional<ConnectionType> ct = Optional.empty();
 
         List<ArticleMaterialConnection> searchResSymm;// = new ArrayList<>();
 
@@ -514,7 +592,9 @@ public class ArticleServiceImpl implements ArticleService {
 
                     for (ArticleMaterialConnection articleMaterialConnection : article.getMaterialConnections()) { //is it necessary?
                         if (articleMaterialConnection.getMaterial().getId().equals(connectedArticle.getId())) {    //is it necessary?
-                            Optional<ConnectionType> ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+                            if (articleMaterialConnection.getConnection() != null) {  //if connection is empty no need to find connection type
+                                ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+                            }
                             if (ct.isPresent()) {
                                 connection = ct.get().getType();
                             }
@@ -530,6 +610,7 @@ public class ArticleServiceImpl implements ArticleService {
                     connection = "";
                     comment = "";
                     finalList.add(articleDto);
+                    ct = Optional.empty();
                 }
             }//for
 
@@ -543,7 +624,11 @@ public class ArticleServiceImpl implements ArticleService {
                     if (dateWithZeroTime != null) {
                         dtoName += ", " + dateWithZeroTime;
                     }
-                    Optional<ConnectionType> ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+
+                    if (articleMaterialConnection.getConnection() != null) {
+                        ct = (ctypeRepository.findById(articleMaterialConnection.getConnection()));
+                    }
+
                     if (ct.isPresent()) {
                         connection = ct.get().getType();
                     }
@@ -557,6 +642,7 @@ public class ArticleServiceImpl implements ArticleService {
                     dtoName = "";
                     connection = "";
                     comment = "";
+                    ct = Optional.empty();
                 }
             }
         }
@@ -581,7 +667,8 @@ public class ArticleServiceImpl implements ArticleService {
         return null;
     }
 
-    public List<IdContentDto> createResultSearchWithNameAndDate(List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
+    public List<IdContentDto> createResultSearchWithNameAndDate
+            (List<Article> resultSearch, List<ArticleMaterialConnection> resultSearchConnection) {
         Set<IdContentDto> fooSet = new TreeSet<>();
         String dtoName = "";
 
@@ -635,7 +722,8 @@ public class ArticleServiceImpl implements ArticleService {
         return finalList;
     }
 
-    public List<ArticleDtoForMainList> search(String description, String text, List<Integer> status, String startDate, String endDate, List<Integer> movement) {
+    public List<ArticleDtoForMainList> search(String description, String text, List<Integer> status, String
+            startDate, String endDate, List<Integer> movement) {
 
         List<ArticleDtoForMainList> dtoSearchList = new ArrayList<>();
         Set<Article> searchList = new HashSet<Article>();
@@ -671,8 +759,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleDtoForMainList dtoArticle;
         for (Article article : searchList) {
-            dtoArticle = new ArticleDtoForMainList(article);
-            /////dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
+            dtoArticle = new ArticleDtoForMainList();
+            ArticleConverter.convertToArticleDtoForMainList(article, dtoArticle);
             dtoSearchList.add(dtoArticle);
         }
         return dtoSearchList;
@@ -680,9 +768,11 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     //    public List<ArticleDto> search(List<String> title, String hash, String author, String language, String description, String text, List<Integer> status, String startDate, String endDate) throws ParseException {
-    public List<ArticleDtoForMainList> filter(List<String> title, List<String> hash, List<String> author, List<String> org,
-                                              List<String> location, List<String> language, String description, String text, List<String> misc,
-                                              List<Integer> status, String startDate, String endDate, List<Integer> movement) {
+    public List<ArticleDtoForMainList> filter
+    (List<String> title, List<String> hash, List<String> author, List<String> org,
+     List<String> location, List<String> language, String description, String
+             text, List<String> misc,
+     List<Integer> status, String startDate, String endDate, List<Integer> movement) {
 
         boolean isSingleFilter = false;
         int hashCurrentSize = 0;
@@ -1026,8 +1116,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleDtoForMainList dtoArticle;
         for (Article article : searchList) {
-            dtoArticle = new ArticleDtoForMainList(article);
-/////            dtoArticle.setMaterialList(createMaterialConnectionsListForArticleDtoFromArticle(article));
+            dtoArticle = new ArticleDtoForMainList();
+            ArticleConverter.convertToArticleDtoForMainList(article, dtoArticle);
             dtoSearchList.add(dtoArticle);
         }
         return dtoSearchList;

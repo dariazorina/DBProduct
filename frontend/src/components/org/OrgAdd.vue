@@ -111,7 +111,7 @@
 
                                     v-model="selectedLocation"
 
-                                    @change="addLocation(selectedLocation)"
+                                    @change="addSearchedEntity(selectedLocation, locationList)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти локацию"
@@ -147,7 +147,7 @@
 
                                     v-model="selectedPerson"
 
-                                    @change="addPerson(selectedPerson)"
+                                    @change="addSearchedEntity(selectedPerson, personList)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти персону"
@@ -183,7 +183,7 @@
 
                                     v-model="selectedOrg"
 
-                                    @change="addOrg(selectedOrg)"
+                                    @change="addSearchedEntity(selectedOrg, orgList)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти организацию"
@@ -203,6 +203,46 @@
                     </div>
                 </div>
 
+
+                <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                        <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                            <label style="font-size: medium; font-weight: bold">Связанные проекты</label>
+                            <v-autocomplete
+                                    id="project-autocomplete"
+                                    :items="itemsProject"
+                                    :loading="isLoadingProject"
+                                    :search-input.sync="projectSearch"
+                                    color="brown"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedProject"
+
+                                    @change="addSearchedEntity(selectedProject, projectList)"
+                                    item-text="content"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти проект"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="projectList.length > 0" class="col-9"
+                         style="background-color: transparent; padding:0">
+                        <ConnectionComponent :itemsList="projectList"
+                                             :isLinkMode="false"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0" class="col-12"/>
+                        <!--                                                 @update-item="updateItem"/>-->
+                    </div>
+                </div>
+
+
                 <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
                     <div class="col-3"
                          style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
@@ -219,7 +259,7 @@
 
                                     v-model="selectedArticle"
 
-                                    @change="addArticle(selectedArticle)"
+                                    @change="addSearchedEntity(selectedArticle, articleList)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы материал"
@@ -679,6 +719,8 @@
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiPerson from "./../person/person-api";
     import apiArticle from "./../article/article-api";
+    import apiProject from "./../project/project-api";
+
 
     import ConnectionComponent from "../components/connection/ConnectionComponent";
     import CKEditor from 'ckeditor4-vue';
@@ -716,6 +758,7 @@
                 locationList: [],
                 articleList: [],
                 isourceList: [],
+                projectList: [],
                 orgList: [],
                 personList: [],
                 nameList: [],
@@ -765,12 +808,21 @@
             descriptionLimit: 60,
             // entries: [],
 
+
+            isLoadingProject: false,
+            selectedProject: [],
+            projectEntries: [],
+            projectSearch: null,
+            projectList: [],
+            // orgOrgIds: [], //before request
+            // orgOrgEntities: [], //after request
+
             isLoadingOrg: false,
             selectedOrg: [],
             orgEntries: [],
             orgSearch: null,
             orgList: [],
-            orgOrgIds: [], //before request
+            // orgOrgIds: [], //before request
             orgOrgEntities: [], //after request
 
 
@@ -779,8 +831,8 @@
             personEntries: [],
             personSearch: null,
             personList: [],
-            orgPersonIds: [], //before request
-            orgPersonEntities: [], //after request
+            // orgPersonIds: [], //before request
+            // orgPersonEntities: [], //after request
 
 
             isLoadingIsource: false,
@@ -788,8 +840,8 @@
             isourceEntries: [],
             isourceSearch: null,
             isourceList: [],
-            orgIsourceIds: [], //before request
-            orgIsourceEntities: [], //after request
+            // orgIsourceIds: [], //before request
+            // orgIsourceEntities: [], //after request
 
 
             isLoadingArticle: false,
@@ -797,8 +849,8 @@
             articleEntries: [],
             articleSearch: null,
             articleList: [],
-            orgArticleIds: [], //before request
-            orgArticleEntities: [], //after request
+            // orgArticleIds: [], //before request
+            // orgArticleEntities: [], //after request
 
 
             selectedOrgType: {},
@@ -909,84 +961,44 @@
                         this.checkedMovements.push(this.org.movementList[i].id);
                     }
 
-                    for (let j = 0; j < this.org.locationList.length; j++) {
-                        this.orgLocationIds.push(this.org.locationList[j].itemId);
-                    }
-
-                    for (let j = 0; j < this.org.articleList.length; j++) {
-                        this.orgArticleIds.push(this.org.articleList[j].itemId);
-                    }
-
-                    for (let j = 0; j < this.org.personList.length; j++) {
-                        this.orgPersonIds.push(this.org.personList[j].itemId);
-                    }
-
-                    // for (let j = 0; j < this.org.orgList.length; j++) {
-                    //     this.orgOrgIds.push(this.org.orgList[j].itemId);
-                    // }
-
-                    // for (let j = 0; j < this.person.isourceList.length; j++) {  //todo
-                    //     this.personIsourceIds.push(this.person.isourceList[j].itemId);
-                    // }
-
-
-                    // for (let j = 0; j < this.org.nameList.length; j++) {
-                    //     this.nameList.push(this.org.nameList[j].id);
-                    // }
-
                     apiAttachment.getAttachments('org', this.org.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
                             this.uploadedFiles.push(r.data[i]);
                         }
                     });
 
-                    apiCountry.getLocationsByIds(this.orgLocationIds, response => {  ///returns List<Location>
-                        this.orgLocationEntities = response.data;
-                        console.log("getLocationsBy#Entities locaList", this.orgLocationEntities, this.org.locationList);
+                    for (let i = 0; i < this.org.locationList.length; i++) {
+                        let element = this.org.locationList[i];
+                        // let currentLocationEntity = this.orgLocationEntities.find(l => l.id === element.itemId);
+                        // console.log("--------------------------> currentLocationEntity", currentLocationEntity);
+                        let connection = {
+                            "id": element.itemId,
+                            "name": element.name, //this.countryTitleCreation(currentLocationEntity),
+                            "connection": element.connection,
+                            "comment": element.comment,
+                        };
+                        // console.log("CREATE PERS ON A: ", a);
+                        this.locationList.push(connection);
+                    }
+                    // });
 
-                        for (let i = 0; i < this.org.locationList.length; i++) {
-                            let element = this.org.locationList[i];
-                            let currentLocationEntity = this.orgLocationEntities.find(l => l.id === element.itemId);
-                            console.log("--------------------------> currentLocationEntity", currentLocationEntity);
-                            let connection = {
-                                "id": element.itemId,
-                                "name": currentLocationEntity.content, //this.countryTitleCreation(currentLocationEntity),
-                                "connection": element.connection,
-                                "comment": element.comment,
-                                "hasClicked": true
-                            };
-                            // console.log("CREATE PERS ON A: ", a);
-                            this.locationList.push(connection);
-                        }
-                    });
-
-                    apiPerson.getPersonsByIds(this.orgPersonIds, response => {
-                        this.orgPersonEntities = response.data;
-
-                        for (let i = 0; i < this.org.personList.length; i++) {
-                            let element = this.org.personList[i];
-                            let currentPersonEntity = this.orgPersonEntities.find(l => l.id === element.itemId);
-                            let connection = {
-                                "id": element.itemId,
-                                "name": currentPersonEntity.content, //this.personNameCreation(currentPersonEntity),
-                                "connection": element.connection,
-                                "comment": element.comment,
-                                "hasClicked": true
-                            };
-                            // console.log("CREATE PERS ON A: ", a);
-                            this.personList.push(connection);
-                        }
-                    });
+                     for (let i = 0; i < this.org.personList.length; i++) {
+                        let element = this.org.personList[i];
+                        // let currentPersonEntity = this.orgPersonEntities.find(l => l.id === element.itemId);
+                        let connection = {
+                            "id": element.itemId,
+                            "name": element.name, //this.personNameCreation(currentPersonEntity),
+                            "connection": element.connection,
+                            "comment": element.comment,
+                        };
+                        // console.log("CREATE PERS ON A: ", a);
+                        this.personList.push(connection);
+                    }
+                    // });
 
                     apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, response => {
                         this.orgOrgEntities = response.data;   //returns List<Org>
                         console.log("apiOrg", this.orgOrgEntities);
-
-
-                        // for (let i = 0; i < this.org.orgList.length; i++) {
-                        //     let element = this.org.orgList[i];
-                        //     let currentOrgEntity = this.orgOrgEntities.find(org => org.id === element.itemId);
-                        //     console.log("currentOrgEntity", currentOrgEntity);
 
                         for (let i = 0; i < this.orgOrgEntities.length; i++) {   ///todo is it necessary? to rewrite from one array to another
                             let connection = {
@@ -994,30 +1006,36 @@
                                 "name": this.orgOrgEntities[i].name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
                                 "connection": this.orgOrgEntities[i].connection,
                                 "comment": this.orgOrgEntities[i].comment,
-                                "hasClicked": true
                             };
                             this.orgList.push(connection);
                         }
                     });
 
-                    apiArticle.getMaterialsByIds(this.orgArticleIds, response => {
-                        this.orgArticleEntities = response.data;   //returns List<Org>
-                        console.log("apiArt", this.orgArticleEntities);
+                    for (let i = 0; i < this.org.articleList.length; i++) {
+                        let element = this.org.articleList[i];
+                        // let currentArticleEntity = this.orgArticleEntities.find(org => org.id === element.itemId);
+                        // console.log("currentOrgEntity", currentArticleEntity);
+                        let connection = {
+                            "id": element.itemId,
+                            "name": element.name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
+                            "connection": element.connection,
+                            "comment": element.comment,
+                        };
+                        this.articleList.push(connection);
+                    }
+                    // });
 
-                        for (let i = 0; i < this.org.articleList.length; i++) {
-                            let element = this.org.articleList[i];
-                            let currentArticleEntity = this.orgArticleEntities.find(org => org.id === element.itemId);
-                            console.log("currentOrgEntity", currentArticleEntity);
-                            let connection = {
-                                "id": element.itemId,
-                                "name": currentArticleEntity.content, //this.orgEditConnectionTitleCreation(currentOrgEntity),
-                                "connection": element.connection,
-                                "comment": element.comment,
-                                "hasClicked": true
-                            };
-                            this.articleList.push(connection);
-                        }
-                    });
+
+                    for (let i = 0; i < this.org.projectList.length; i++) {
+                        let element = this.org.projectList[i];
+                        let connection = {
+                            "id": element.itemId,
+                            "name": element.name,
+                            "connection": element.connection,
+                            "comment": element.comment,
+                        };
+                        this.projectList.push(connection);
+                    }
 
                     // api.getIsourceByIds(this.personPersonIds, response => {  //todo
                     //     this.personPersonEntities = response.data;
@@ -1058,7 +1076,28 @@
         },
 
         methods: {
-            onTitleInput(){
+            addSearchedEntity(obj, list) {
+                console.log("GET CHANGED ORG", obj, list);
+                let i = 0;
+                for (i = 0; i < list.length; i++) { //to exclude double values
+                    if (list[i].id === obj.id) {
+                        break;
+                    }
+                }
+
+                if (i === list.length) {
+                    let connection = {
+                        "id": obj.id,
+                        "name": obj.content,
+                        "comment": '',
+                        "connection": '',
+                    };
+                    list.push(connection);
+                    console.log("ADDED");
+                }
+            },
+
+            onTitleInput() {
                 if (this.orgNameTFValues[0].length > 3) {
                     // console.log("IN ONPUT");
 
@@ -1067,7 +1106,9 @@
                         console.log("*№*№*№*", this.alreadyExistedOrg);
                     });
                 } else {
-                    this.alreadyExistedOrg.splice(0);
+                    if (this.alreadyExistedOrg.length > 0) {
+                        this.alreadyExistedOrg.splice(0);
+                    }
                 }
             },
 
@@ -1230,7 +1271,7 @@
             },
 
             preliminaryDataCheck(currentStatus) {
-                let t = false, g = false, s = false;
+                // let t = false, g = false, s = false;
 
                 console.log("preliminaryDataCheck", currentStatus);
 
@@ -1238,28 +1279,28 @@
                 //     t = this.checkConnection(this.locationList);
                 // }
                 // if (!t) {
-                if (this.isObjectValidAndNotEmpty(this.orgList)) {
-                    g = this.checkConnection(this.orgList);
+                // if (this.isObjectValidAndNotEmpty(this.orgList)) {
+                //     g = this.checkConnection(this.orgList);
 
-                    if (!g) {
-                        if (this.isObjectValidAndNotEmpty(this.personList)) {
-                            s = this.checkConnection(this.personList);
-                        }
-                    }
-                }
+                    // if (!g) {
+                    //     if (this.isObjectValidAndNotEmpty(this.personList)) {
+                    //         s = this.checkConnection(this.personList);
+                    //     }
+                    // }
+                // }
                 // }
 
-                if (g || s) {
-                    alert("Укажите связь для сущностей, которые вы добавили");
-                    // console.log("ALERT");
-                } else {
+                // if (g || s) {
+                //     alert("Укажите связь для сущностей, которые вы добавили");
+                //    console.log("ALERT");
+                // } else {
                     //alert("else");
                     // if (this.editMode) {
                     //     this.updateArticle();
                     // } else {
                     this.createOrg(currentStatus);
                     // }
-                }
+                // }
             },
 
             initYears() {
@@ -1383,28 +1424,23 @@
 
                     this.org.locationList.splice(0);
                     this.org.personList.splice(0);
+                    this.org.projectList.splice(0);
                     this.org.orgList.splice(0);
                     this.org.isourceList.splice(0);
                     this.org.articleList.splice(0);
                     this.org.nameList.splice(0);
                     this.finalConnectionListCreation(this.locationList, this.org.locationList, true);
-                    this.finalConnectionListCreation(this.orgList, this.org.orgList, false);
-                    this.finalConnectionListCreation(this.personList, this.org.personList, false);
-                    this.finalConnectionListCreation(this.isourceList, this.org.isourceList, false);
+                    this.finalConnectionListCreation(this.orgList, this.org.orgList, true);
+                    this.finalConnectionListCreation(this.personList, this.org.personList, true);
+                    this.finalConnectionListCreation(this.projectList, this.org.projectList, true);
+                    this.finalConnectionListCreation(this.isourceList, this.org.isourceList, true);
                     this.finalConnectionListCreation(this.articleList, this.org.articleList, true);
                     this.finalNameListCreation();
 
                     this.org.type = {
                         "id": this.selectedOrgType.id,
-                        // "content": this.selectedMType.name,
-                        // "miscellany":"123",
-                        // "parentId": 1
                     };
                     console.log("ORG BEFORE  CREATION", this.org);
-
-                    // this.org.status = {
-                    //     "id": this.selectedS.id,
-                    // };
 
                     if (this.editMode) {
                         this.org.status = this.selectedS;
@@ -1531,90 +1567,90 @@
                 }
             },
 
-            addLocation(obj) {  //todo to unite all "addxxx"
-                console.log("GET CHANGED LOCATION", obj);
-                let i = 0;
-                for (i = 0; i < this.locationList.length; i++) { //to exclude double values
-                    if (this.locationList[i].id === obj.id) {
-                        break;
-                    }
-                }
-
-                if (i === this.locationList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.content,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.locationList.push(connection);
-                    console.log("ADDED", this.locationList);
-                }
-            },
-
-            addPerson(obj) {
-                console.log("GET CHANGED PERSON", obj);
-                let i = 0;
-                for (i = 0; i < this.personList.length; i++) { //to exclude double values
-                    if (this.personList[i].id === obj.id) {
-                        break;
-                    }
-                }
-
-                if (i === this.personList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.content,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.personList.push(connection);
-                    console.log("ADDED", this.personList);
-                }
-            },
-
-            addOrg(obj) {
-                let i = 0;
-                for (i = 0; i < this.orgList.length; i++) { //to exclude double values
-                    if (this.orgList[i].id === obj.id) {
-                        break;
-                    }
-                }
-
-                if (i === this.orgList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.content,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.orgList.push(connection);
-                    console.log("ADDED", this.orgList);
-                }
-            },
-            addArticle(obj) {
-                let i = 0;
-                for (i = 0; i < this.articleList.length; i++) { //to exclude double values
-                    if (this.articleList[i].id === obj.id) {
-                        break;
-                    }
-                }
-
-                if (i === this.articleList.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.content,
-                        "comment": '',
-                        "connection": '',
-                        "hasClicked": false
-                    };
-                    this.articleList.push(connection);
-                    console.log("ADDED ARTICLE", this.articleList);
-                }
-            },
+            // addLocation(obj) {  //todo to unite all "addxxx"
+            //     console.log("GET CHANGED LOCATION", obj);
+            //     let i = 0;
+            //     for (i = 0; i < this.locationList.length; i++) { //to exclude double values
+            //         if (this.locationList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.locationList.length) {
+            //         let connection = {
+            //             "id": obj.id,
+            //             "name": obj.content,
+            //             "comment": '',
+            //             "connection": '',
+            //             "hasClicked": false
+            //         };
+            //         this.locationList.push(connection);
+            //         console.log("ADDED", this.locationList);
+            //     }
+            // },
+            //
+            // addPerson(obj) {
+            //     console.log("GET CHANGED PERSON", obj);
+            //     let i = 0;
+            //     for (i = 0; i < this.personList.length; i++) { //to exclude double values
+            //         if (this.personList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.personList.length) {
+            //         let connection = {
+            //             "id": obj.id,
+            //             "name": obj.content,
+            //             "comment": '',
+            //             "connection": '',
+            //             "hasClicked": false
+            //         };
+            //         this.personList.push(connection);
+            //         console.log("ADDED", this.personList);
+            //     }
+            // },
+            //
+            // addOrg(obj) {
+            //     let i = 0;
+            //     for (i = 0; i < this.orgList.length; i++) { //to exclude double values
+            //         if (this.orgList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.orgList.length) {
+            //         let connection = {
+            //             "id": obj.id,
+            //             "name": obj.content,
+            //             "comment": '',
+            //             "connection": '',
+            //             "hasClicked": false
+            //         };
+            //         this.orgList.push(connection);
+            //         console.log("ADDED", this.orgList);
+            //     }
+            // },
+            // addArticle(obj) {
+            //     let i = 0;
+            //     for (i = 0; i < this.articleList.length; i++) { //to exclude double values
+            //         if (this.articleList[i].id === obj.id) {
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (i === this.articleList.length) {
+            //         let connection = {
+            //             "id": obj.id,
+            //             "name": obj.content,
+            //             "comment": '',
+            //             "connection": '',
+            //             "hasClicked": false
+            //         };
+            //         this.articleList.push(connection);
+            //         console.log("ADDED ARTICLE", this.articleList);
+            //     }
+            // },
 
             //////////////////tree/////////////////////////////////////
             searchTree(flatTree, searchEntity) {
@@ -1745,6 +1781,15 @@
                         return Object.assign({}, entry)
                     })
                 }
+            },
+
+            itemsProject() {
+                if (this.projectEntries.length > 0) {   //?
+                    return this.projectEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                } else
+                    return;
             },
 
             personItems() {
@@ -1935,6 +1980,29 @@
                             this.articleEntries = r;
                             console.log("*№*№*№*", this.articleEntries);
                             this.isLoadingArticle = false;
+                        });
+                    }
+            },
+
+            projectSearch(val) {
+                // console.log("SEARCH ACTIVATED");
+                if (val !== null)
+                    if (val.length > 2) {
+                        // console.log("SEARCH STARTED");
+
+                        if (typeof this.selectedProject !== 'undefined') {
+                            if (this.org.projectList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedProject = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingProject) return;
+                        this.isLoadingProject = true;
+
+                        apiProject.searchProject(val, r => {
+                            this.projectEntries = r;
+                            console.log("*№*№*№*", this.projectEntries);
+                            this.isLoadingProject = false;
                         });
                     }
             },
