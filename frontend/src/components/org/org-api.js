@@ -20,18 +20,6 @@ export default {
             })
     },
 
-    getQuantAllEntities(mov, fn) {
-        return AXIOS
-            .get(`/org/allQuant?mov=` + mov)
-            .then(response => fn(response))
-            .catch(error => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    this.error401Handling();
-                }
-            })
-    },
-
     update(id, org, fn) {
         AXIOS
             .put('/org/' + id, org)
@@ -129,8 +117,8 @@ export default {
         })
     },
 
-    filterAll(body, mov, fn) {
-        AXIOS.get(`org/filter?` + body + `&mov=` + mov)
+    filterAll(body, mov, page, size, fn) {
+        AXIOS.get(`org/filter?` + body + `&mov=` + mov + `&page=` + page + `&size=` + size)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

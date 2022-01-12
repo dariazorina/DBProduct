@@ -8,11 +8,11 @@
             </a>
         </div>
         <div class="actions" style="background-color: transparent; margin: 0">
-            <button type="button" @click="previousPageGo" class="btn btn-outline-light">
+            <button type="button" @click="previousPageGo" class="btn btn-outline-light" :disabled="currentPageNumber===0">
                 <v-icon style="color: #0074D9">mdi-arrow-left-circle</v-icon>
             </button>
             {{currentPageNumber+1}}
-            <button type="button" @click="nextPageGo" class="btn btn-outline-light">
+            <button type="button" @click="nextPageGo" class="btn btn-outline-light" :disabled="((currentPageNumber+1)*entriesQuantPerPage)>=entriesQuantity">
                 <v-icon style="color: #0074D9">mdi-arrow-right-circle</v-icon>
             </button>
         </div>
@@ -310,7 +310,7 @@
                 currentFilterItems: [],
                 currentPageNumber: 0,
                 entriesQuantity: 0,
-                entriesQuantPerPage: 15,
+                entriesQuantPerPage: 12,
             }
         },
 

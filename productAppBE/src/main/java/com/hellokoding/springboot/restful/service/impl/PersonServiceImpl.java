@@ -7,10 +7,14 @@ import com.hellokoding.springboot.restful.service.PersonConverter;
 import com.hellokoding.springboot.restful.service.PersonService;
 import com.hellokoding.springboot.restful.service.UrlLinkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,21 +40,65 @@ public class PersonServiceImpl implements PersonService {
 
     private final UrlLinkService urlLinkService;
 
-    @Override
-    public List<NewPersonDtoForMainList> findAll(List<Integer> mov) {
+//    @Override
+//    public List<NewPersonDtoForMainList> findAll(List<Integer> mov) {
+//
+//        List<NewPersonDtoForMainList> dtoAllPersonList = new ArrayList<>();
+//        List<Person> allPerson = personRepository.findAllWithMovement(mov);
+//
+//        NewPersonDtoForMainList currentNewDtoP;
+//        for (Person p : allPerson) {
+//            currentNewDtoP = new NewPersonDtoForMainList();
+//            PersonConverter.convertToNewPersonDtoForMainList(p, currentNewDtoP);
+////            currentNewDtoP.newPersonDtoConverter(p);
+//            dtoAllPersonList.add(currentNewDtoP);
+//        }
+//        return dtoAllPersonList;
+//    }
 
-        List<NewPersonDtoForMainList> dtoAllPersonList = new ArrayList<>();
-        List<Person> allPerson = personRepository.findAllWithMovement(mov);
+//    public Integer getQuantityAllPersonsWithMovement(List<Integer> mov) {
+//        return personRepository.findAllWithMovement(mov).size();
+//    }
 
-        NewPersonDtoForMainList currentNewDtoP;
-        for (Person p : allPerson) {
-            currentNewDtoP = new NewPersonDtoForMainList();
-            PersonConverter.convertToNewPersonDtoForMainList(p, currentNewDtoP);
-//            currentNewDtoP.newPersonDtoConverter(p);
-            dtoAllPersonList.add(currentNewDtoP);
-        }
-        return dtoAllPersonList;
-    }
+    //    public List<NewPersonDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
+//    public PagedDataDto findAll(List<Integer> mov, Integer page, Integer size) {
+//
+//        Pageable paging = PageRequest.of(page, size);
+//        Page<Person> pageTuts;
+//
+//        List<NewPersonDtoForMainList> dtoAllPersonList = new ArrayList<>();
+//        pageTuts = personRepository.findAllWithMovements(paging, mov);
+//
+//        NewPersonDtoForMainList currentNewDtoP;  //        for (Org o : allOrg) {
+//        for (Person p : pageTuts) {
+//            currentNewDtoP = new NewPersonDtoForMainList();
+//            PersonConverter.convertToNewPersonDtoForMainList(p, currentNewDtoP);  //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
+//            dtoAllPersonList.add(currentNewDtoP);
+//        }
+//
+////        PagedDataDto pdd = new PagedDataDto(pageTuts.getTotalElements(), Collections.singletonList(dtoAllPersonList));
+//        PagedDataDto pdd = new PagedDataDto(pageTuts.getTotalElements(), dtoAllPersonList);
+//        return pdd;
+//    }
+
+
+//    public List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
+//
+//        Pageable paging = PageRequest.of(page, size);
+//        Page<Org> pageTuts;
+//
+//        List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
+//        pageTuts = orgRepository.findAllWithMovements(paging, mov);  //        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
+//
+//        OrgDtoForMainList currentOrgDto;  //        for (Org o : allOrg) {
+//        for (Org o : pageTuts) {
+//            currentOrgDto = new OrgDtoForMainList();
+//            OrgConverter.convertToOrgDtoForMainList(o, currentOrgDto, this);    //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
+//            dtoAllOrgList.add(currentOrgDto);
+//        }
+//        return dtoAllOrgList;
+//    }
+
 
     @Override
     public Optional<NewPersonDto> findById(Integer id) {
@@ -232,9 +280,9 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<NewPersonDtoForMainList> filter(List<String> hash, List<String> surname, List<String> org, List<String> location, List<Integer> mov) {
+    public PagedDataDto filter(List<String> hash, List<String> surname, List<String> org, List<String> location, List<Integer> mov, Integer page, Integer size) {
         List<NewPersonDtoForMainList> dtoSearchList = new ArrayList<>();
-        Set<Person> searchList = new HashSet<>();
+//        Set<Person> searchList = new HashSet<>();
 
         boolean isSingleFilter = false;
         int hashCurrentSize = 0;
@@ -242,11 +290,13 @@ public class PersonServiceImpl implements PersonService {
         int locationCurrentSize = 0;
         int surnameCurrentSize = 0;
 
+        Pageable paging = PageRequest.of(page, size);
+        Page<Person> pageTuts = null;
 
         List<String> hashList = new ArrayList<>();
-        List<String> authorList = new ArrayList<>();
-        List<String> orgList = new ArrayList<>();
-        List<String> locationList = new ArrayList<>();
+//        List<String> authorList = new ArrayList<>();
+//        List<String> orgList = new ArrayList<>();
+//        List<String> locationList = new ArrayList<>();
 
 
         if (hash != null) {
@@ -300,52 +350,48 @@ public class PersonServiceImpl implements PersonService {
         }
 
         if (hash != null && !hash.isEmpty()) {
-            for (String h : hash) hashList.add(h + "%");
+            for (String h : hash) hashList.add(h.toLowerCase());
 
             if (isSingleFilter) {
-                for (String s : hashList) searchList.addAll(personRepository.findByHash(s.toLowerCase(), mov));
+                pageTuts = personRepository.findByHash(paging, hashList, mov);
             }
         }
 
         if (surname != null && !surname.isEmpty()) {
-            for (String a : surname) authorList.add("%" + a + "%");
-
             if (isSingleFilter) {
-                for (String s : authorList) searchList.addAll(personRepository.findBySurname(s.toLowerCase(), mov));
+                    pageTuts = personRepository.findBySurname(paging, "%" + surname.get(0).toLowerCase() + "%", mov);
             }
         }
 
         if (org != null && !org.isEmpty()) {
-            for (String o : org) orgList.add("%" + o + "%");
-
             if (isSingleFilter) {
-                for (String s : orgList) searchList.addAll(personRepository.findByOrg(s.toLowerCase(), mov));
+                pageTuts = personRepository.findByOrg(paging, "%" + org.get(0).toLowerCase() + "%", mov);
             }
         }
 
         if (location != null && !location.isEmpty()) {
-            for (String l : location) locationList.add("%" + l + "%");
-
             if (isSingleFilter) {
-                for (String s : locationList) searchList.addAll(personRepository.findByLocation(s.toLowerCase(), mov));
+                pageTuts = personRepository.findByLocation(paging, "%" + location.get(0).toLowerCase() + "%", mov);
             }
         }
 
         if (!isSingleFilter) {
-            searchList = personRepository.findByFilters(
-                    hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
-                    authorList.size() == 0 ? null : authorList.get(0).toLowerCase(),
-                    orgList.size() == 0 ? null : orgList.get(0).toLowerCase(),
-                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(), mov);
+            pageTuts = personRepository.findByFilters(paging,
+                    hashList.size() == 0 ? null : ("%" + hashList.get(0).toLowerCase() + "%"),
+                    (surname == null || surname.size() == 0) ? null : ("%" + surname.get(0).toLowerCase() + "%"),
+                    (org == null || org.size() == 0) ? null : ("%" + org.get(0).toLowerCase() + "%"),
+                    (location == null || location.size() == 0) ? null : ("%" + location.get(0).toLowerCase() + "%"), mov);
         }
 
         NewPersonDtoForMainList dtoPerson;
-        for (Person p : searchList) {
+        for (Person p : pageTuts) {
             dtoPerson = new NewPersonDtoForMainList();
             PersonConverter.convertToNewPersonDtoForMainList(p, dtoPerson);
             dtoSearchList.add(dtoPerson);
         }
-        return dtoSearchList;
+
+        PagedDataDto pdd = new PagedDataDto(pageTuts.getTotalElements(), dtoSearchList);
+        return pdd;
     }
 
     @Override

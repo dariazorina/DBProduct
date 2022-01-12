@@ -34,37 +34,38 @@ public class OrgServiceImpl implements OrgService {
 
     private final UrlLinkService urlLinkService;
 
+//    @Override
+//    public List<Org> findAll() {
+//        List<Org> all = orgRepository.findAll();
+//        return all;
+//    }
+
+//    public Integer getQuantityAllOrgsWithMovement(List<Integer> mov) {
+//        return orgRepository.findAllWithMovement(mov).size();
+//    }
+
+//    public List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
+//
+//        Pageable paging = PageRequest.of(page, size);
+//        Page<Org> pageTuts;
+//
+//        List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
+//        pageTuts = orgRepository.findAllWithMovements(paging, mov);  //        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
+//
+//        OrgDtoForMainList currentOrgDto;  //        for (Org o : allOrg) {
+//        for (Org o : pageTuts) {
+//            currentOrgDto = new OrgDtoForMainList();
+//            OrgConverter.convertToOrgDtoForMainList(o, currentOrgDto, this);    //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
+//            dtoAllOrgList.add(currentOrgDto);
+//        }
+//        return dtoAllOrgList;
+//    }
+
     @Override
-    public List<Org> findAll() {
-        List<Org> all = orgRepository.findAll();
-        return all;
-    }
+    public PagedDataDto filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov, Integer page, Integer size) {
 
-    public Integer getQuantityAllOrgsWithMovement(List<Integer> mov) {
-        return orgRepository.findAllWithMovement(mov).size();
-    }
-
-    public List<OrgDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
-
-        Pageable paging = PageRequest.of(page, size);
-        Page<Org> pageTuts;
-
-        List<OrgDtoForMainList> dtoAllOrgList = new ArrayList<>();
-        pageTuts = orgRepository.findAllWithMovements(paging, mov);  //        List<Org> allOrgs = orgRepository.findAllWithMovements(paging, mov);
-
-        OrgDtoForMainList currentOrgDto;  //        for (Org o : allOrg) {
-        for (Org o : pageTuts) {
-            currentOrgDto = new OrgDtoForMainList();
-            OrgConverter.convertToOrgDtoForMainList(o, currentOrgDto, this);    //currentOrgDto.setOrgList(findByIdsAndSymmetrically(o.getId())); //now hide orgs in orgs list
-            dtoAllOrgList.add(currentOrgDto);
-        }
-        return dtoAllOrgList;
-    }
-
-    @Override
-    public List<OrgDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov) {
         List<OrgDtoForMainList> dtoSearchList = new ArrayList<>();
-        Set<Org> searchList = new HashSet<>();
+//        Set<Org> searchList = new HashSet<>();
 //        List<Org> searchList = new ArrayList<>();
 
         boolean isSingleFilter = false;
@@ -73,10 +74,13 @@ public class OrgServiceImpl implements OrgService {
         int nameCurrentSize = 0;
         int orgCurrentSize = 0;
 
+        Pageable paging = PageRequest.of(page, size);
+        Page<Org> pageTuts = null;
+
         List<String> hashList = new ArrayList<>();
-        List<String> nameList = new ArrayList<>();
-        List<String> locationList = new ArrayList<>();
-        List<String> orgList = new ArrayList<>();
+//        List<String> nameList = new ArrayList<>();
+//        List<String> locationList = new ArrayList<>();
+//        List<String> orgList = new ArrayList<>();
 
         if (hash != null) {
             hashCurrentSize = hash.size();
@@ -118,63 +122,75 @@ public class OrgServiceImpl implements OrgService {
                 if (locationCurrentSize >= 1) {
                     isSingleFilter = true;
 
-                } else if (orgCurrentSize >= 1) {
+                }
+                if (orgCurrentSize >= 1) {
                     isSingleFilter = false;
 
                 } else if (orgCurrentSize >= 1) {
+                    isSingleFilter = false;
+                }
+
+                if (orgCurrentSize >= 1) {
                     isSingleFilter = true;
                 }
             }
         }
 
         if (hash != null && !hash.isEmpty()) {
-            for (String h : hash) hashList.add(h + "%");
+            for (String h : hash) hashList.add(h.toLowerCase());
 
             if (isSingleFilter) {
-                for (String s : hashList) searchList.addAll(orgRepository.findByHash(s.toLowerCase(), mov));
+//                for (String s : hashList) searchList.addAll(
+                pageTuts = orgRepository.findByHash(paging, hashList, mov);
             }
         }
 
         if (name != null && !name.isEmpty()) {
-            for (String a : name) nameList.add("%" + a + "%");
+//            for (String a : name) nameList.add("%" + a + "%");
 //            for (String a : name) nameList.add(a + "%");
 
             if (isSingleFilter) {
-                for (String s : nameList) searchList.addAll(orgRepository.findByName(s.toLowerCase(), mov));
+//                for (String s : nameList) searchList.addAll(
+                pageTuts = orgRepository.findByName(paging, "%" + name.get(0).toLowerCase() + "%", mov);
             }
         }
 
         if (location != null && !location.isEmpty()) {
-            for (String l : location) locationList.add("%" + l + "%");
+//            for (String l : location) locationList.add("%" + l + "%");
 
             if (isSingleFilter) {
-                for (String s : locationList) searchList.addAll(orgRepository.findByLocation(s.toLowerCase(), mov));
+//                for (String s : locationList) searchList.addAll(
+                pageTuts = orgRepository.findByLocation(paging, "%" + location.get(0).toLowerCase() + "%", mov);
             }
         }
 
-        if (org != null && !org.isEmpty()) {
-            for (String l : org) orgList.add("%" + l + "%");
-
-            if (isSingleFilter) {
-                for (String s : orgList) searchList.addAll(orgRepository.findByOrg(s.toLowerCase(), mov));
-            }
-        }
+//        if (org != null && !org.isEmpty()) {
+////            for (String l : org) orgList.add("%" + l + "%");
+//
+//            if (isSingleFilter) {
+////                for (String s : orgList) searchList.addAll(
+//                pageTuts = orgRepository.findByOrg(paging, "%" + org.get(0).toLowerCase() + "%", mov);
+//            }
+//        }
 
         if (!isSingleFilter) {
-            searchList = orgRepository.findByFilters(
-                    hashList.size() == 0 ? null : hashList.get(0).toLowerCase(),
-                    nameList.size() == 0 ? null : nameList.get(0).toLowerCase(),
-                    locationList.size() == 0 ? null : locationList.get(0).toLowerCase(),
-                    orgList.size() == 0 ? null : orgList.get(0).toLowerCase(), mov);
+            pageTuts = orgRepository.findByFilters(paging,
+                    hashList.size() == 0 ? null : ("%" + hashList.get(0).toLowerCase() + "%"),
+                    (name == null || name.size() == 0) ? null : ("%" + name.get(0).toLowerCase() + "%"),
+                    (location == null || location.size() == 0) ? null : ("%" + location.get(0).toLowerCase() + "%"),
+//                    (org == null || org.size() == 0) ? null : ("%" + org.get(0).toLowerCase() + "%"),
+                    mov);
         }
 
         OrgDtoForMainList orgDto;
-        for (Org currOrg : searchList) {
+        for (Org currOrg : pageTuts) {
             orgDto = new OrgDtoForMainList();
             OrgConverter.convertToOrgDtoForMainList(currOrg, orgDto, this);
             dtoSearchList.add(orgDto);
         }
-        return dtoSearchList;
+
+        PagedDataDto pdd = new PagedDataDto(pageTuts.getTotalElements(), dtoSearchList);
+        return pdd;
     }
 
     @Override

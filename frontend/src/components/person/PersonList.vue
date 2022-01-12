@@ -15,6 +15,18 @@
         <!--            </div>-->
         <!--        </div>-->
 
+        <div class="actions" style="background-color: transparent; margin: 0">
+            <button type="button" @click="previousPageGo" class="btn btn-outline-light"
+                    :disabled="(currentPageNumber)===0">
+                <v-icon style="color: #0074D9">mdi-arrow-left-circle</v-icon>
+            </button>
+            {{currentPageNumber+1}}
+            <button type="button" @click="nextPageGo" class="btn btn-outline-light"
+                    :disabled="((currentPageNumber+1)*entriesQuantPerPage)>=entriesQuantity">
+                <v-icon style="color: #0074D9">mdi-arrow-right-circle</v-icon>
+            </button>
+        </div>
+
         <div v-if="isAnyFilterActive() === true" class="form-group col-sm-12" align="right"
              style="margin: 0; padding: 5px; background-color: transparent">
             <button type="button" @click="resetAllFilters" class="btn btn-outline-dark">Сброс фильтров</button>
@@ -137,7 +149,7 @@
                 </td>
 
                 <td><a>
-                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}"  target="_blank">
+                    <router-link :to="{name: 'person-details', params: {person_id: person.id}}" target="_blank">
                         {{ person.snp }}
                     </router-link>
                 </a></td>
@@ -207,12 +219,11 @@
                     </div>
                 </div>
 
-                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Множественный фильтр по
-                    текущему полю будет отрабатывать
-                    только в том случае, если он является <i>единственным</i> фильтром (фильтры других полей не
-                    задействованы).
-                    Для отработки множественных фильтров многих полей будет использоваться только <i>первое</i>
-                    введенное значение фильтра для текущего поля.
+                <div style="color: gray; font-size: 12px; font-weight: normal; margin-top: 20px">Несколько значений фильтра по одному полю возможно только для поля "Хештеги",
+                    значение хештегов нужно вводить целиком.
+                    Для других полей возможен фильтр только по одному значению. Его можно вводить не полностью. <br>
+                    При <i>одновременном</i> использовании фильтров для нескольких полей использовать
+                    только одно значение для одного поля, допустимо частичное указание значение фильтра.
                 </div>
 
             </template>
@@ -260,7 +271,7 @@
                 persons: [],
                 entries: [],
 
-                person: {status: 0, locationList: [], orgList: [], hashtagList: [], snpList: []},
+                //person: {status: 0, locationList: [], orgList: [], hashtagList: [], snpList: []},
                 // personLocationIds: [], //before request
                 // personLocationEntities: [], //after request
                 // personOrgIds: [], //before request
@@ -305,6 +316,10 @@
 
                 currentFilterField: '',
                 currentFilterItems: [],
+
+                currentPageNumber: 0,
+                entriesQuantity: 0,
+                entriesQuantPerPage: 20,
             }
         },
         computed: {
@@ -358,25 +373,6 @@
                 return result;
             },
 
-            // getPrioritySNP(currentPerson) {
-            //   //  console.log("*************************", this.entries);
-            //     let sss = 0;// = this.person.snpList.find(x => x.priority === 1).surname;
-            //
-            //         for (let i = 0; i < currentPerson.snpList.length; i++) {
-            //             //console.log("SNPLIST i", currentPerson.snpList[i], i, currentPerson.snpList[i].priority);
-            //
-            //             if (currentPerson.snpList[i].priority === 1) {
-            //                 sss = currentPerson.snpList[i].surname + " " + currentPerson.snpList[i].name + " ";
-            //
-            //                 if (currentPerson.snpList[i].patronymic != null)
-            //                     sss += currentPerson.snpList[i].patronymic;
-            //                // console.log("******^^^^^^^^^^^^^****", sss);
-            //             }
-            //         }
-            //     // console.log("*************************", sss);
-            //     return sss;
-            // },
-
             filterClearButtonActivity(hide, filterClearButtonId) {
                 if (hide)
                     document.getElementById(filterClearButtonId).style.visibility = "hidden";
@@ -399,22 +395,6 @@
                 this.filterAll();
             },
 
-            getAllPersonsWithMov() {
-                api.getAllPersons(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
-                    this.entries = response.data;
-                    console.log("PERSONS", response.data, this.entries.length);
-
-                    // this.personOrgIds.splice(0);
-                    // for (let i = 0; i < this.entries.length; i++) {
-                    //     for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                    //         this.personOrgIds.push(this.entries[i].orgList[j].itemId);
-                    //     }
-                    // }
-                    // apiOrg.getOrgsByIds(this.personOrgIds, response => {
-                    //     this.personOrgEntities = response.data;
-                    // });
-                });
-            },
 
             updateItem(item) {  // (2) calls when search item adds to search list
                 console.log("ADDED LINK", item, this.currentFilterItems);
@@ -438,6 +418,8 @@
                 this.currentFilterItems.splice(0);
                 console.log(">>>>>>>>>>>>>>>search by modal filterItems currentSI", this.filterItems, this.currentFilterItems);
 
+                // this.goFirstPage();
+                this.currentPageNumber = 0;
                 this.filterAll();  //filter(title)
                 this.$refs.modalSearch.hide();
             },
@@ -531,39 +513,6 @@
                 }
             },
 
-            // getOrgNameById(id) {
-            //     let result = '';
-            //     let currentOrg = this.personOrgEntities.find(x => x.id === id);
-            //
-            //     //console.log("ORG", currentOrg, id, this.personOrgEntities);
-            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentOrg.content;
-            //     }
-            //     return result;
-            // },
-
-            // getOrgPositionById(id) {
-            //     let result = '';
-            //     let currentOrg = this.personOrgEntities.find(x => x.id === id);
-            //
-            //     console.log("ORG", currentOrg, id, this.personOrgEntities);
-            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentOrg.content;
-            //     }
-            //     return result;
-            // },
-
-            // getLocationCellById(id) {
-            //     let result = '';
-            //     let currentLocation = this.personLocationEntities.find(x => x.id === id);
-            //     //console.log("currLoc", currentLocation);
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentLocation.content;
-            //     }
-            //     return result;
-            // },
-
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length == 0) {
                     return false;
@@ -572,9 +521,10 @@
             },
 
             filterAll() {
-                api.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
-                    this.entries = r.data;
-                    console.log("filter all =============", this.entries);
+                api.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), this.currentPageNumber, this.entriesQuantPerPage, r => {
+                    this.entries = r.data.data;
+                    this.entriesQuantity = r.data.entitiesQuantity;
+                    console.log("filter all =============", this.entries, r.data);
                 });
             },
 
@@ -598,13 +548,35 @@
                 }
                 return false;
             },
+
+            goFirstPage() {
+                // console.log("* number quantPerPage", (this.currentPageNumber + 1) * this.entriesQuantPerPage, this.currentPageNumber, this.entriesQuantPerPage);
+                this.currentPageNumber = 0;
+                this.filterAll();
+            },
+
+            nextPageGo() {
+                console.log("* number quantPerPage", (this.currentPageNumber + 1) * this.entriesQuantPerPage, this.currentPageNumber, this.entriesQuantPerPage);
+                if (((this.currentPageNumber + 1) * this.entriesQuantPerPage) < this.entriesQuantity) {
+                    this.currentPageNumber++;
+                    this.filterAll();
+                }
+            },
+
+            previousPageGo() {
+                if (this.currentPageNumber > 0) {
+                    this.currentPageNumber--;
+                    this.filterAll();
+                }
+            },
         },
         mounted() {
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-            this.getAllPersonsWithMov();
+
+            this.filterAll();
         },
         watch: {
             color: function () {   //calls when color picking is done

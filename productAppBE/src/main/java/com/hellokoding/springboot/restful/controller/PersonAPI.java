@@ -36,7 +36,7 @@ public class PersonAPI {
     private final AttachmentService attachmentService;
 
     @GetMapping("/searchBySurname")
-    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q){ //},
+    public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q) { //},
 //                                                     @RequestParam(name = "mov", required = true) Integer mov) {
         List<IdContentDto> search = personService.searchBySurname(q);   //used for ex in material creation
         return ResponseEntity.ok(search);
@@ -44,20 +44,35 @@ public class PersonAPI {
 
 
     @GetMapping("/filter")
-    public ResponseEntity<List<NewPersonDtoForMainList>> filter(@RequestParam(name = "hash", required = false) List<String> hash,
-                                                     @RequestParam(name = "surname", required = false) List<String> surname,
-                                                     @RequestParam(name = "org", required = false) List<String> org,
-                                                     @RequestParam(name = "location", required = false) List<String> location,
-                                                     @RequestParam(name = "mov", required = false) List<Integer> movement) {
+    public ResponseEntity<PagedDataDto> filter(@RequestParam(name = "hash", required = false) List<String> hash,
+                                                                @RequestParam(name = "surname", required = false) List<String> surname,
+                                                                @RequestParam(name = "org", required = false) List<String> org,
+                                                                @RequestParam(name = "location", required = false) List<String> location,
+                                                                @RequestParam(name = "mov", required = false) List<Integer> movement,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "3") int size) {
 
-        List<NewPersonDtoForMainList> searchResult = personService.filter(hash, surname, org, location, movement);
-        return ResponseEntity.ok(searchResult);
+        return ResponseEntity.ok(personService.filter(hash, surname, org, location, movement, page, size));
     }
 
-    @GetMapping
-    public ResponseEntity<List<NewPersonDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov) {
-        return ResponseEntity.ok(personService.findAll(mov));
-    }
+
+//    @GetMapping
+//    public ResponseEntity<PagedDataDto> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov,
+//                                                @RequestParam(defaultValue = "0") int page,
+//                                                @RequestParam(defaultValue = "3") int size) {
+//        return ResponseEntity.ok(personService.findAll(mov, page, size));
+//    }
+
+
+//    @GetMapping("/allQuant")
+//    public ResponseEntity<Integer> findQuantityAllPersons(@RequestParam(name = "mov", required = false) List<Integer> mov) {
+//        return ResponseEntity.ok(personService.getQuantityAllPersonsWithMovement(mov));
+//    }
+
+//    @GetMapping
+//    public ResponseEntity<List<NewPersonDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov) {
+//        return ResponseEntity.ok(personService.findAll(mov));
+//    }
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody NewPersonDto person) {

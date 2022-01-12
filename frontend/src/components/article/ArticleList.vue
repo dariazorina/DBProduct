@@ -897,70 +897,6 @@
                 // this.$router.push({path: '/add/$id/$connectionType'});
             },
 
-            // createComplexCellValueById(id) {
-            //     let result = '';
-            //     let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-            //     let valueOrig = '', valueRus = '';
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
-            //         // if (this.isArrayValidAndNotEmpty(currentPerson.surname)) { //mandatory field in Person
-            //         valueOrig = currentPerson.surname;
-            //         // }
-            //
-            //         if (this.isArrayValidAndNotEmpty(currentPerson.surname)) {
-            //             valueRus = currentPerson.surnameRus;
-            //         }
-            //
-            //         // if (this.isArrayValidAndNotEmpty(currentPerson.name)) { //mandatory field in Person
-            //         valueOrig += " " + currentPerson.name;
-            //         // }
-            //
-            //         if (this.isArrayValidAndNotEmpty(currentPerson.nameRus)) {
-            //             valueRus += " " + currentPerson.nameRus;
-            //         }
-            //
-            //         if (this.isArrayValidAndNotEmpty(valueRus)) {
-            //             result = valueRus;
-            //             if (this.isArrayValidAndNotEmpty(valueOrig)) {
-            //                 if (valueRus.localeCompare(valueOrig) !== 0)
-            //                     result += " / " + valueOrig;
-            //             }
-            //         } else if (this.isArrayValidAndNotEmpty(valueOrig))
-            //             result += valueOrig;
-            //         return result;
-            //     }
-            // },
-
-            // getPersonCellById(id) {
-            //     let result = '';
-            //     let currentPerson = this.articlePersonEntities.find(x => x.id === id);
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentPerson)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentPerson.content;
-            //         return result;
-            //     }
-            // },
-
-            // getLocationCellById(id) {
-            //     let result = '';
-            //     let currentLocation = this.articleLocationEntities.find(x => x.id === id);
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentLocation.content;
-            //         return result;
-            //     }
-            // },
-
-            // getOrgCellById(id) {
-            //     let result = '';
-            //     let currentOrg = this.articleOrgEntities.find(x => x.id === id);
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentOrg)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentOrg.content;
-            //         return result;
-            //     }
-            // },
-
             updateArticleStatus(id, status) {
                 api.findById(id, r => {
                     this.article = r.data;
@@ -1317,37 +1253,8 @@
 
             api.searchPeriodAndStatus(-1, this.startDate, this.endDate,
                 this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
-
                     this.entries = r.data;
                     console.log("**********%%%%%%%%%%**********", this.entries);
-                    //    for (let i = 0; i < this.entries.length; i++) {
-                    // for (let j = 0; j < this.entries[i].personList.length; j++) {
-                    //     this.articlePersonIds.push(this.entries[i].personList[j].itemId);
-                    // }
-                    // for (let j = 0; j < this.entries[i].orgList.length; j++) {
-                    //     this.articleOrgIds.push(this.entries[i].orgList[j].itemId);
-                    // }
-                    // for (let j = 0; j < this.entries[i].locationList.length; j++) {
-                    //     this.articleLocationIds.push(this.entries[i].locationList[j].itemId);
-                    // }
-                    // }
-                    //console.log("IDS", this.articlePersonIds, this.articleOrgIds, this.articleLocationIds);
-
-                    // apiOrg.getOrgsByIds(this.articleOrgIds, response => {
-                    //     this.articleOrgEntities = response.data;
-                    // });
-
-                    // apiCountry.getLocationsByIds(this.articleLocationIds, response => {
-                    //     this.articleLocationEntities = response.data;
-                    //     this.alternate('mainListTable');
-                    // });
-
-                    // apiPerson.getPersonsByIds(this.articlePersonIds, response => {
-                    //     this.articlePersonEntities = response.data;
-                    //     console.log("apiPerson", this.articlePersonEntities);
-                    //
-                    //     this.alternate('mainListTable');
-                    // });
                 });
         },
 

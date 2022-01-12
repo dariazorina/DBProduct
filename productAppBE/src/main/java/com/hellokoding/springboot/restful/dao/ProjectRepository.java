@@ -20,6 +20,22 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     Page<Project> findAllWithMovements(Pageable pageable, List<Integer> movement);
 
 
+    @Query("select pro from " +
+            "Project pro " +
+            "join pro.movementList orgML " +
+            "where (orgML.id in :movement) group by pro.id " +
+            "order by pro.mainTitle asc")
+    List<Project> findAllWithMovement(List<Integer> movement);
+
+
+
+//    @Query("select distinct pro " +
+//            "from Project pro " +
+//            "join pro.movementList pML " +
+//            "where (pML.id in :movement) ")
+//    List<Project> findAllWithMovement(List<Integer> movement);
+
+
 
 
 //    @Query("select org from " +
@@ -33,11 +49,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
 
 
-    @Query("select distinct pro " +
-            "from Project pro " +
-            "join pro.movementList pML " +
-            "where (pML.id in :movement) ")
-    List<Project> findAllWithMovement(List<Integer> movement);
 
 
 

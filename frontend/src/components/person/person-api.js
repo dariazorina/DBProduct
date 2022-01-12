@@ -7,9 +7,9 @@ const AXIOS = axios.create({
 });
 
 export default {
-    getAllPersons(mov, fn) {
+    getAllPersons(mov, page, size, fn) {
         return AXIOS
-            .get(`/person?mov=` + mov)
+            .get(`/person?mov=` + mov + `&page=` + page + `&size=` + size)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);
@@ -135,8 +135,8 @@ export default {
         })
     },
 
-    filterAll(body, mov, fn) {
-        AXIOS.get(`person/filter?` + body + `&mov=` + mov)
+    filterAll(body, mov, page, size, fn) {
+        AXIOS.get(`person/filter?` + body + `&mov=` + mov  + `&page=` + page + `&size=` + size)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

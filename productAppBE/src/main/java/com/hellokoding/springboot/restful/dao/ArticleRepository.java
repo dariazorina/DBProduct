@@ -373,9 +373,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Set<Article> findByDateAndStatusAndMovement(List<Integer> status, Date startDate, Date endDate, List<Integer> movement);
 
 
-    //    //search date range
-    Set<Article> findAllByDateBetween(Date startDate, Date endDate);
-
     @Query("select distinct a " +
             "from Article a " +
             "join a.movementList aMM " +

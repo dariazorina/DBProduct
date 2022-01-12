@@ -8,11 +8,13 @@
             </a>
         </div>
         <div class="actions" style="background-color: transparent; margin: 0">
-            <button type="button" @click="previousPageGo" class="btn btn-outline-light">
+            <button type="button" @click="previousPageGo" class="btn btn-outline-light"
+                    :disabled="currentPageNumber===0">
                 <v-icon style="color: #0074D9">mdi-arrow-left-circle</v-icon>
             </button>
             {{currentPageNumber+1}}
-            <button type="button" @click="nextPageGo" class="btn btn-outline-light">
+            <button type="button" @click="nextPageGo" class="btn btn-outline-light"
+                    :disabled="((currentPageNumber+1)*entriesQuantPerPage)>=entriesQuantity">
                 <v-icon style="color: #0074D9">mdi-arrow-right-circle</v-icon>
             </button>
         </div>
@@ -67,21 +69,26 @@
 
                 <th class='tdAlignLeft'>Персоны</th>
 
-                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">
-                    <div class="row" style="background-color: transparent">
-                        <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>
-                        <div class='headerLink col-sm-6'
-                             style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">
-                            Организация
-                        </div>
-                        <div class='col-sm-3'
-                             style="padding-left: 0px; background-color: transparent; visibility: hidden"
-                             id="orgFilterId">
-                            <v-btn text icon x-small @click="resetFilter(3)">
-                                <v-icon style="color: white">mdi-close-circle</v-icon>
-                            </v-btn>
-                        </div>
-                    </div>
+
+                <!--                <th class='tdAlignLeft' @contextmenu.prevent="searchByField(3)">-->
+                <!--                <div class="row" style="background-color: transparent">-->
+                <!--                    <div class='col-sm-3' style="background-color: transparent; padding: 0"></div>-->
+                <!--                    <div class='headerLink col-sm-6'-->
+                <!--                         style="text-align: center; background-color: transparent; padding-right: 0; padding-left: 0">-->
+                <!--                        Организация-->
+                <!--                    </div>-->
+                <!--                    <div class='col-sm-3'-->
+                <!--                         style="padding-left: 0px; background-color: transparent; visibility: hidden"-->
+                <!--                         id="orgFilterId">-->
+                <!--                        <v-btn text icon x-small @click="resetFilter(3)">-->
+                <!--                            <v-icon style="color: white">mdi-close-circle</v-icon>-->
+                <!--                        </v-btn>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+
+                <th class='tdAlignLeft'>
+                    Организация
+                </th>
 
                 <th class='tdAlignLeft' @contextmenu.prevent="searchByField(0)">
                     <div class="row" style="background-color: transparent">
@@ -273,13 +280,13 @@
                 // currentSort: 'foundationYear',
                 currentSortDir: 'asc',
 
-                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []}, {key: 3, value: []},],
+                filterItems: [{key: 0, value: []}, {key: 1, value: []}, {key: 2, value: []},], // {key: 3, value: []},],
 
                 filterTableFields: [
                     {key: 0, text: 'Хештеги'},
                     {key: 1, text: 'Локации'},
                     {key: 2, text: 'Названия'},
-                    {key: 3, text: 'Организации'},
+                    // {key: 3, text: 'Организации'},
                 ],
 
                 // todo - maybe remove key? it dublicates index
@@ -287,7 +294,7 @@
                     {key: 0, text: 'hash'},
                     {key: 1, text: 'location'},
                     {key: 2, text: 'name'},
-                    {key: 3, text: 'org'},
+                    // {key: 3, text: 'org'},
                 ],
 
                 statusList: [
@@ -301,7 +308,7 @@
                 currentFilterItems: [],
                 currentPageNumber: 0,
                 entriesQuantity: 0,
-                entriesQuantPerPage: 15,
+                entriesQuantPerPage: 14,
             }
         },
 
@@ -332,14 +339,16 @@
                 console.log("* number quantPerPage", (this.currentPageNumber + 1) * this.entriesQuantPerPage, this.currentPageNumber, this.entriesQuantPerPage);
                 if (((this.currentPageNumber + 1) * this.entriesQuantPerPage) < this.entriesQuantity) {
                     this.currentPageNumber++;
-                    this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                    this.filterAll();
+                    // this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
                 }
             },
 
             previousPageGo() {
                 if (this.currentPageNumber > 0) {
                     this.currentPageNumber--;
-                    this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                    this.filterAll();
+                    // this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
                 }
             },
 
@@ -427,6 +436,7 @@
                 this.currentFilterItems.splice(0);
                 console.log(">>>>>>>>>>>>>>>search by modal filterItems currentSI", this.filterItems, this.currentFilterItems);
 
+                this.currentPageNumber = 0;
                 this.filterAll();  //filter(title)
                 this.$refs.modalSearch.hide();
             },
@@ -521,28 +531,6 @@
                 }
             },
 
-            // getPersonNameById(id) {
-            //     let result = '';
-            //     let currentP = this.orgPersonEntities.find(x => x.id === id);
-            //
-            //     //console.log("PERSNNNN", currentP, id, this.orgPersonEntities);
-            //     if (this.isArrayValidAndNotEmpty(currentP)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentP.content;
-            //     }
-            //     return result;
-            // },
-
-            // getLocationCellById(id) {
-            //     let result = '';
-            //     let currentLocation = this.orgLocationEntities.find(x => x.id === id);
-            //     //console.log("currLoc", currentLocation, id, this.orgLocationEntities);
-            //
-            //     if (this.isArrayValidAndNotEmpty(currentLocation)) {//to prevent errors in console when search result isn't ready yet
-            //         result = currentLocation.content;
-            //     }
-            //     return result;
-            // },
-
             isArrayValidAndNotEmpty(array) {
                 if (typeof array === 'undefined' || array === null || array.length == 0) {
                     return false;
@@ -550,9 +538,18 @@
                 return true;
             },
 
+
+            // api.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), this.currentPageNumber, this.entriesQuantPerPage, r => {
+            //     this.entries = r.data.data;
+            //     this.entriesQuantity = r.data.entitiesQuantity;
+            //     console.log("filter all =============", this.entries, r.data);
+            // });
+            //
+
             filterAll() {
-                apiOrg.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
-                    this.entries = r.data;
+                apiOrg.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), this.currentPageNumber, this.entriesQuantPerPage, r => {
+                    this.entries = r.data.data;
+                    this.entriesQuantity = r.data.entitiesQuantity;
                     console.log("filter all =============", this.entries);
                 });
             },
@@ -571,23 +568,25 @@
                 return result;
             },
 
-            getAllOrgsWithMov(page, size) {
-                apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), page, size, response => {
-                    this.entries = response.data;
-                    console.log("ORGSSSS", response.data, this.entries.length);
-                });
-            }
+            // getAllOrgsWithMov(page, size) {
+            //     apiOrg.getAllOrgs(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), page, size, response => {
+            //         this.entries = response.data;
+            //         console.log("ORGSSSS", response.data, this.entries.length);
+            //     });
+            // }
         },
         mounted() {
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-            apiOrg.getQuantAllEntities(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
-                this.entriesQuantity = response.data;
-                //console.log("ORGSSSS QUANT", response.data);
-            });
-            this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+
+            this.filterAll();
+            // apiOrg.getQuantAllEntities(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+            //     this.entriesQuantity = response.data;
+            //     //console.log("ORGSSSS QUANT", response.data);
+            // });
+            // this.getAllOrgsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
         },
         watch: {
             color: function () {   //calls when color picking is done
