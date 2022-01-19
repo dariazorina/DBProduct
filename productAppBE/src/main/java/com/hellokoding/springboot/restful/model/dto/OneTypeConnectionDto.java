@@ -7,16 +7,26 @@ public class OneTypeConnectionDto implements Comparable<OneTypeConnectionDto> {
     private String connection;
     private String comment;
     private Boolean isParent;
+    private Boolean isInternal;
 
     public OneTypeConnectionDto() {
     }
 
-    public OneTypeConnectionDto(Integer itemId, String name, String connection, String comment, Boolean isParent) {
+    public OneTypeConnectionDto(Integer itemId, String name, String connection, String comment, Boolean isParent, Boolean isInternal) {
         this.itemId = itemId;
         this.name = name;
         this.connection = connection;
         this.comment = comment;
         this.isParent = isParent;
+        this.isInternal = isInternal;
+    }
+
+    public Boolean getIsInternal() {
+        return isInternal;
+    }
+
+    public void setIsInternal(Boolean internal) {
+        isInternal = internal;
     }
 
     public Integer getItemId() {

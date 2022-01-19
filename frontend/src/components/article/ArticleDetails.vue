@@ -160,7 +160,7 @@
                     <div class="cellTitle"><span class="float-left">Материалы</span></div>
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-                    <div v-for="material in articleMaterialEntities">
+                    <div v-for="material in article.materialList">
                        <a><router-link
                                :to="{name: 'article-details', params: {article_id: material.itemId}}" target="_blank">
                               {{createComplexNameByEntity (material)}} </router-link></a>
@@ -264,7 +264,7 @@
                     orgList: []
                 },
 
-                articleMaterialEntities: [], //after request
+                // articleMaterialEntities: [], //after request
 
                 uploadedFiles: [],
                 loggedInFlag: false,  //todo to remove
@@ -361,7 +361,7 @@
                 });
 
                 api.getMaterialsByIdsAndSymmetrically(this.article.id, response => {
-                    this.articleMaterialEntities = response.data;
+                    this.article.materialList = response.data;
                     // console.log("```````````````````````````````````````````apiMater", this.articleMaterialEntities);
                 });
 

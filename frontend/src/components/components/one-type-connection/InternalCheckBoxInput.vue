@@ -1,12 +1,19 @@
 <template>
     <div class="col-6" style="background-color: transparent; margin-top: -12px; margin-bottom: -12px">
-        <div v-for="item in items">
-            <input style="margin-right: 5px;" v-bind:value="item.id"
-                   type="radio"
-                   v-model="selectedItem"/>
-            <label style="margin: 5px; padding-top: 0; padding-bottom: 3px; background-color: transparent"
-                   :for="item.id"><span>{{item.name}}</span></label>
-        </div>
+
+        <input style="margin-right: 5px; margin-top: 15px;"
+               type="checkbox"
+               v-model="checkedItem"/>
+        <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"><span>{{"внутренний"}}</span></label>
+
+
+<!--        <div v-for="item in items">-->
+<!--            <input style="margin-right: 5px;" v-bind:value="item.id"-->
+<!--                   type="radio"-->
+<!--                   v-model="selectedItem"/>-->
+<!--            <label style="margin: 5px; padding-top: 0px; padding-bottom: 3px; background-color: transparent"-->
+<!--                   :for="item.id"><span>{{item.name}}</span></label>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -20,7 +27,7 @@
             },
         },
         data: () => ({
-            item: 0,
+            item: false,
             items: [
                 {
                     id: 1,
@@ -38,14 +45,14 @@
         mounted() {
             console.log("mounted START VALUE", this.startValue);
             if (this.startValue === true) {
-                this.selectedItem = 1;
+                this.checkedItem = true;
             } else {
-                this.selectedItem = 0;
+                this.checkedItem = false;
             }
         },
 
         computed: {
-            selectedItem: {
+            checkedItem: {
                 get() {
                     return this.item;
                 },
@@ -53,7 +60,7 @@
                 set(newValue) {
                     console.log("-------------------+++++++-----computed: ", this.item, newValue);
                     this.item = newValue;
-                    this.$emit("update-selectedType", newValue);
+                    this.$emit("update-checkedItem", newValue);
                 }
             }
         },

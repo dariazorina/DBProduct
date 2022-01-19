@@ -56,11 +56,11 @@ public class OrgConverter {
         }
         orgDFML.setPersonList(personStringList);
 
-        List<NameConnectionDto> orgList = orgService.findByIdsAndSymmetrically(org.getId());
+        List<OneTypeConnectionDto> orgList = orgService.findByIdsAndSymmetrically(org.getId());
 
         //from NameConnDto to String: NameConnectionDto -> String
         List<String> orgStringList = new ArrayList<>();
-        for (NameConnectionDto ncdORG: orgList){
+        for (OneTypeConnectionDto ncdORG: orgList){
             orgStringList.add(ncdORG.getName());
         }
         orgDFML.setOrgList(orgStringList);

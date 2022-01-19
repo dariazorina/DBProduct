@@ -214,7 +214,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectProjectConnection> searchResSymm = new ArrayList<>();
         Optional<Project> proOpt = projectRepository.findById(itemId);
 
-
         if (proOpt.isPresent()) {
             pro = proOpt.get();
             searchResSymm = projectProjectRepository.findByIdSymm(itemId); //searching symm connections for this itemId
@@ -229,8 +228,8 @@ public class ProjectServiceImpl implements ProjectService {
                         dtoName += "/ " + connectedPro.getOtherTitle();
                     }
                 }
-                for (ProjectProjectConnection proProConnection : pro.getProjectConnections()) {
-                    if (proProConnection.getConnectedProject().getId().equals(connectedPro.getId())) {
+                for (ProjectProjectConnection proProConnection : pro.getProjectConnections()) {   ///??
+                    if (proProConnection.getConnectedProject().getId().equals(connectedPro.getId())) {   ////?? what for
                         connection = proProConnection.getConnection();
 
                         if (proProConnection.getComment() != null) {
@@ -240,7 +239,7 @@ public class ProjectServiceImpl implements ProjectService {
                         }
                     }
                 }
-                OneTypeConnectionDto proDto = new OneTypeConnectionDto(connectedPro.getId(), dtoName, connection, comment, false);
+                OneTypeConnectionDto proDto = new OneTypeConnectionDto(connectedPro.getId(), dtoName, connection, comment, false, false);
                 finalList.add(proDto);
             }
         }//for
@@ -254,13 +253,13 @@ public class ProjectServiceImpl implements ProjectService {
                 }
             }
 
-            connection = proProConnection.getConnection();
+            connection = proProConnection.getConnection();  //todo to test if connection is empty
             if (proProConnection.getComment() != null) {
                 if (proProConnection.getComment().length() != 0) {
                     comment = proProConnection.getComment();
                 }
             }
-            OneTypeConnectionDto proDto = new OneTypeConnectionDto(proProConnection.getProject().getId(), dtoName, connection, comment, true);
+            OneTypeConnectionDto proDto = new OneTypeConnectionDto(proProConnection.getProject().getId(), dtoName, connection, comment, true, false);
             finalList.add(proDto);
         }
 

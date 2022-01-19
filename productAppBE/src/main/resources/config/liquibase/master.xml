@@ -121,5 +121,6 @@
     <include file="config/liquibase/changelog/00000000000177_add_connect_project_event_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000179_add_connect_project_location_table.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000181_add_connect_project_project_table.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/00000000000183_add_internal_field_org_org_connection.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

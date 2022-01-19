@@ -71,7 +71,7 @@ public class OrgAPI {
     }
 
     @PostMapping("/symmids/{id}")
-    public ResponseEntity<List<NameConnectionDto>> getOrgsByIdsAndSymmetrically(@PathVariable Integer id){ // @Valid @RequestBody List<Integer> idList) {
+    public ResponseEntity<List<OneTypeConnectionDto>> getOrgsByIdsAndSymmetrically(@PathVariable Integer id){ // @Valid @RequestBody List<Integer> idList) {
         //List<IdContentDto> rrr = orgService.findByIdsAndSymmetrically(idList, id);
         return ResponseEntity.ok(orgService.findByIdsAndSymmetrically(id));
     }

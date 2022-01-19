@@ -221,11 +221,11 @@ public class OrgServiceImpl implements OrgService {
         return transformOriginToDto(searchRes);
     }
 
-    public List<NameConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
+    public List<OneTypeConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
 
         Org connectedOrg, org;
         String dtoName = "", connection = "", comment = "";
-        List<NameConnectionDto> finalList = new ArrayList<>();
+        List<OneTypeConnectionDto> finalList = new ArrayList<>();
 
         List<OrgOrgConnection> searchResSymm;// = new ArrayList<>();
 
@@ -262,7 +262,8 @@ public class OrgServiceImpl implements OrgService {
                             }
                         }
                     }
-                    NameConnectionDto orgDto = new NameConnectionDto(connectedOrg.getId(), dtoName, connection, comment);
+                    OneTypeConnectionDto orgDto = new OneTypeConnectionDto(connectedOrg.getId(), dtoName,
+                            connection, comment, false, el.getInternal());
                     dtoName = "";
                     connection = "";
                     comment = "";
@@ -290,7 +291,8 @@ public class OrgServiceImpl implements OrgService {
                             comment = orgOrgConnection.getComment();
                         }
                     }
-                    NameConnectionDto orgDto = new NameConnectionDto(orgOrgConnection.getOrg().getId(), dtoName, connection, comment);
+                    OneTypeConnectionDto orgDto = new OneTypeConnectionDto(orgOrgConnection.getOrg().getId(), dtoName,
+                            connection, comment, true, orgOrgConnection.getInternal());
                     finalList.add(orgDto);
                     dtoName = "";
                     comment = "";
@@ -495,7 +497,7 @@ public class OrgServiceImpl implements OrgService {
         List<OrgOrgConnection> symmConnectionList;
 
 
-        for (NameConnectionDto posDto : orgDto.getOrgList()) {
+        for (OneTypeConnectionDto posDto : orgDto.getOrgList()) {
             connectedOrgId = posDto.getItemId();
             if (orgRepository.findById(connectedOrgId).isPresent()) {
 
@@ -506,22 +508,39 @@ public class OrgServiceImpl implements OrgService {
                         break;
                     }
                 }
+
+                connectedOrg = orgRepository.findById(connectedOrgId).get();
                 if (!isSymmConnection) {
+
                     orgOrgConnection = new OrgOrgConnection();
-                    orgOrgConnection.setConnectedOrg(orgRepository.findById(connectedOrgId).get());
-                    orgOrgConnection.setOrg(org);
                     orgOrgConnection.setConnection(posDto.getConnection());
                     orgOrgConnection.setComment(posDto.getComment());
+                    orgOrgConnection.setInternal(posDto.getIsInternal());
 
+                    if (posDto.getIsParent()) {
+                        orgOrgConnection.setOrg(connectedOrg);
+                        orgOrgConnection.setConnectedOrg(org);
+                    } else {
+                        orgOrgConnection.setOrg(org);
+                        orgOrgConnection.setConnectedOrg(connectedOrg);
+                    }
                     orgOrgList.add(orgOrgConnection);
-                } else {//save connection for material
-                    connectedOrg = orgRepository.findById(connectedOrgId).get();
+
+                } else {
 
                     connectedOrgConnection = new OrgOrgConnection();
-                    connectedOrgConnection.setOrg(orgRepository.findById(connectedOrgId).get());
-                    connectedOrgConnection.setConnectedOrg(org);
+
+                    if (posDto.getIsParent()) {
+                        connectedOrgConnection.setOrg(connectedOrg);
+                        connectedOrgConnection.setConnectedOrg(org);
+                    } else {
+                        connectedOrgConnection.setOrg(org);
+                        connectedOrgConnection.setConnectedOrg(connectedOrg);
+                    }
+
                     connectedOrgConnection.setConnection(posDto.getConnection());
                     connectedOrgConnection.setComment(posDto.getComment());
+                    connectedOrgConnection.setInternal(posDto.getIsInternal());
 
                     connectedOrgList.add(connectedOrgConnection);
 
@@ -546,14 +565,14 @@ public class OrgServiceImpl implements OrgService {
 
         if (org.getId() != null) {
             //delete symm connections
-            List<NameConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(org.getId());
-            List<NameConnectionDto> resultListConnectedOrgsForOrg = orgDto.getOrgList();
+            List<OneTypeConnectionDto> startListConnectedOrgsForOrg = findByIdsAndSymmetrically(org.getId());
+            List<OneTypeConnectionDto> resultListConnectedOrgsForOrg = orgDto.getOrgList();
 
-            List<NameConnectionDto> differences = startListConnectedOrgsForOrg.stream()
+            List<OneTypeConnectionDto> differences = startListConnectedOrgsForOrg.stream()
                     .filter(element -> !resultListConnectedOrgsForOrg.contains(element))
                     .collect(Collectors.toList());
 
-            for (NameConnectionDto nmdto : differences) {
+            for (OneTypeConnectionDto nmdto : differences) {
                 connectedOrg = orgRepository.findById(nmdto.getItemId()).get();
 
                 //remove already existed entities

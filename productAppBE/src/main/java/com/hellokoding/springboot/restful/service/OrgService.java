@@ -19,5 +19,5 @@ public interface OrgService {
     List<IdContentDto> search(String q);
     List<IdContentDto> findByIds(List<Integer> idList);
     PagedDataDto filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov, Integer page, Integer size);
-    List<NameConnectionDto> findByIdsAndSymmetrically(Integer id);
+    List<OneTypeConnectionDto> findByIdsAndSymmetrically(Integer id);
 }

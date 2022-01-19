@@ -38,23 +38,25 @@
                                          :existedComment="item.connection"
                                          @update-selectedConnection="updateConnection"/>
             </div>
-            <div v-else class="form-row col-6" style="background-color: transparent;
+            <div v-else class="form-group col-6" style="background-color: transparent;
                                                margin-right: 0; margin-bottom: 0;
                                                padding: 0 0 0 20px;">
 
-                <div class="notbold" style="margin-left: 5px; margin-bottom: 5px">
-                    Выберите роль связанного проекта по отношению к исходному проекту:
+                <div v-if="isInternalMode" style="background-color: transparent">
+                    <InternalCheckBoxInput :startValue="item.isInternal"
+                                           @update-checkedItem="updateInternalType"/>
                 </div>
 
-               <RadioInput :startValue = "item.isParent"
-                           :current-item="item"
-                           @update-selectedType="updateType"/>
+                <div class="notbold" style="margin-left: 5px; margin-bottom: 5px; margin-top: 10px">
+                    Выберите роль текущей связанной сущности по отношению к исходной создаваемой/редактируемой:
+                </div>
 
-
+                <RadioInput :startValue="item.isParent"
+                            @update-selectedType="updateParentChildType"/>
 
             </div>
 
-            <div class="form-row col-6"
+            <div class="form-group col-6"
                  style="background-color: transparent; padding: 0 0 0 20px;">
                 <InputConnectionText v-model="item.connection"
                                      :existedConnection="item.connection"/>
@@ -69,19 +71,11 @@
     import InputCommentText from "../connection/InputCommentText";
     import ConnectionTypeSelection from "../connection/ConnectionTypeSelection";
     import RadioInput from "./RadioInput";
+    import InternalCheckBoxInput from "./InternalCheckBoxInput";
 
     export default {
-        components: {RadioInput, ConnectionTypeSelection, InputCommentText, InputConnectionText},
+        components: {InternalCheckBoxInput, RadioInput, ConnectionTypeSelection, InputCommentText, InputConnectionText},
         props: {
-            startValue:{
-                type: Boolean,
-                required: true
-            },
-
-            // selectedItem: {
-            //     type: Object,
-            //     required: true
-            // },
             item: {
                 type: Object,
                 required: true
@@ -94,59 +88,45 @@
                 type: Boolean,
                 required: true
             },
+            isInternalMode: {
+                type: Boolean,
+                required: true
+            },
             isSelectionMode: {
                 type: Boolean,
                 required: true
             },
-
-
-
         },
         data: () => ({
             selectedItem: false,
-
-            // items: [{
-            //     id: 1,
-            //     name: "р12одите1ль"
-            // },
-            //     {  id: 0,
-            //         name: "ребенок"
-            //     }],
-
+            checkedItem: false,
         }),
 
         methods: {
             updateConnection(selected) {
                 this.item.connection = selected;
-                 console.log("--LIST ITEM---updateOrg--SELECTION-----", this.item);
+                console.log("--LIST ITEM---updateOrg--SELECTION-----", this.item);
             },
 
-            updateType(selected) {
-                // this.item.connection = selected;
-                console.log("LIST ITEM --UPD TYPE---update---", selected);
-                //this.startValue = (selected === 1) ? true: false;
-                this.selectedItem = (selected === 1) ? true: false;
-                // console.log("------------------UPD TYPE---update---", this.selectedItem);
+            updateParentChildType(selected) {
+                console.log("updateParentChildType---update---", selected);
+                this.item.isParent = (selected === 1);
+//                this.$emit("is-parent", selected);
+            },
 
-                this.item.isParent = this.selectedItem;
-                this.$emit("is-parent", selected);
-
-
+            updateInternalType(checked) {
+                this.item.isInternal = checked;
+                console.log("updateInternalType---update---", checked, this.item);
             },
 
             addItem(item) {
-                // console.log("--------addItem--CONN-LIST--ITEM-----", item);
+                console.log("--------addItem--CONN-LIST--ITEM-----", item);
                 this.$emit("get-input-text", item); //newText
             },
             saveItem(item) {
-                // console.log("--------addItem--CONN-LISTITEM-----", item);
+                console.log("--------saveItem--CONN-LISTITEM-----", item);
                 this.$emit("save-input-text", item); //newText
             }
         },
-        // computed: {
-        //     startValue() {
-        //         return this.selectedItem;
-        //     }
-        // },
     }
 </script>

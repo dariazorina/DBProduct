@@ -68,10 +68,18 @@
 <!--                                <a v-for="org in this.orgOrgEntities">{{createComplexOrgById(org)}}<br></a>-->
                                 <!--                                <a v-for="org in org.orgList">{{createComplexOrgById(org.itemId)}}<br></a>-->
 
-                                <div v-for="org in this.orgOrgEntities">
+                                <div v-for="org in this.org.orgList">
+                                    <div v-if="org.isInternal===true">
                                     <a><router-link
                                             :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
-                                        {{createComplexNameByEntity(org)}} </router-link></a>
+                                        {{createComplexNameByEntity(org)}} </router-link></a> {{"(внутренняя)"}}
+                                    </div>
+
+                                    <div v-else>
+                                        <a><router-link
+                                                :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                            {{createComplexNameByEntity(org)}} </router-link></a>
+                                    </div>
 
                                     <!--                        <a v-on:click.prevent="updateNav(material.id)">-->
                                     <!--                            {{createComplexMaterialById(material.id)}}-->
@@ -292,7 +300,7 @@
                     articleList: [], isourceList: [], movementList: [], snpList: []
                 },
 
-                orgOrgEntities: [], //after request
+                // orgOrgEntities: [], //after request
 
                 uploadedFiles: [],
                 loggedInFlag: false,  //todo to remove
@@ -312,7 +320,6 @@
         },
 
         methods: {
-
             createComplexNameByEntity(currentEntity) {
                 let result = currentEntity.name;
 
@@ -321,6 +328,11 @@
 
                 if (this.isObjectValidAndNotEmpty(currentEntity.comment))
                     result += "/ " + currentEntity.comment;
+
+                if (typeof currentEntity.isParent !== 'undefined') {
+                    result += " - ";
+                    result += (currentEntity.isParent) ? "родитель" : "потомок";
+                }
 
                 return result;
             },
@@ -388,8 +400,8 @@
                 console.log("_____org_________________", r.data);
 
                 apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, response => {
-                    this.orgOrgEntities = response.data;
-                    console.log("```````````````````````````````````````````apiOrga", this.orgOrgEntities);
+                    this.org.orgList = response.data;
+                    console.log("```````````````````````````````````````````apiOrga", this.org.orgList);
 
                     apiAttachment.getAttachmentPhoto('org', this.$route.params.org_id, r => {
                         console.log("R DATA", r);

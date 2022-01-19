@@ -25,7 +25,7 @@ public class OrgDto implements Comparable<OrgDto> {
     private List<UrlLink> linkList;
     private List<String> hashtagList;
     private List<NameConnectionDto> articleList;
-    private List<NameConnectionDto> orgList;
+    private List<OneTypeConnectionDto> orgList;
     private List<NameConnectionDto> locationList;
     private List<NameConnectionDto> personList;
     private List<NameConnectionDto> projectList;
@@ -37,7 +37,7 @@ public class OrgDto implements Comparable<OrgDto> {
 
     public OrgDto(Integer id, List<Movement> movementList, List<OrgNameDto> nameList, String description,
                   String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
-                  List<NameConnectionDto> orgList, List<NameConnectionDto> locationList, List<NameConnectionDto> projectList, List<NameConnectionDto> personList,
+                  List<OneTypeConnectionDto> orgList, List<NameConnectionDto> locationList, List<NameConnectionDto> projectList, List<NameConnectionDto> personList,
                   List<NameConnectionDto> isourceList, List<NameConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
@@ -408,11 +408,11 @@ public class OrgDto implements Comparable<OrgDto> {
         this.hashtagList = hashtagList;
     }
 
-    public List<NameConnectionDto> getOrgList() {
+    public List<OneTypeConnectionDto> getOrgList() {
         return orgList;
     }
 
-    public void setOrgList(List<NameConnectionDto> orgList) {
+    public void setOrgList(List<OneTypeConnectionDto> orgList) {
         this.orgList = orgList;
     }
 

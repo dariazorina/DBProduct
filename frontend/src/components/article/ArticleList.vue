@@ -392,7 +392,7 @@
         <!--        </div>-->
         <b-modal id="modal-scoped" :hide-footer="true" :hide-header="true">
             <template>
-                <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle()}}" как</p><br></b>
+                <b><p class="myHeader">Добавить материал к статье "{{complexArticleTitle(currentArticle)}}" как</p><br></b>
                 <div align="center">
                     <b-button size="sm" variant="success"
                               @click="createArticleWithMaterial(currentArticle.id, connectionType[2])">

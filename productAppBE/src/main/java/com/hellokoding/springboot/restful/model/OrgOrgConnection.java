@@ -30,6 +30,7 @@ public class OrgOrgConnection {
 
     private String connection;
     private String comment;
+    private Boolean internal;
 
 
     @Override

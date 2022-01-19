@@ -13,16 +13,6 @@
             <form class="formCreation"
                   style="background-color: transparent; margin-left: 15px; margin-bottom: 0; padding-bottom: 0">
                 <div class="col-md-4">
-                    <!--                        v-if="isAdmin==='true'||addAdditionalMovementFlag">-->
-
-                    <!--                        <div class="col-md-2">-->
-                    <!--                            <label><b>Текущее движение:</b> </label>-->
-                    <!--                            <div>-->
-                    <!--                                <input style="margin-right: 5px;" type="checkbox" checked disabled/>-->
-                    <!--                                <label>{{currentUserMovement.name}} </label>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-
                     <label for="add-name"><b>Тема*</b></label>
                     <div class="col-md-4" style="background-color: transparent">
                         <!--                            <label><b>Добавить дополнительное движение:</b></label>-->
@@ -37,11 +27,6 @@
                         </div>
                     </div>
                 </div>
-                <!--                    <div v-else class="col-12">-->
-                <!--                        <button type="button" style="margin-right: 20px" @click="addAdditionalMovement"-->
-                <!--                                class="btn btn-info">Добавить дополнительное движение-->
-                <!--                        </button>-->
-                <!--                    </div>-->
             </form>
 
             <form class="authorsFormCreation"
@@ -111,7 +96,7 @@
 
                                     v-model="selectedLocation"
 
-                                    @change="addSearchedEntity(selectedLocation, locationList)"
+                                    @change="addSearchedEntity(selectedLocation, org.locationList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти локацию"
@@ -121,9 +106,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="locationList.length>0" class="col-9"
+                    <div v-if="org.locationList.length>0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="locationList"
+                        <ConnectionComponent :itemsList="org.locationList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -147,7 +132,7 @@
 
                                     v-model="selectedPerson"
 
-                                    @change="addSearchedEntity(selectedPerson, personList)"
+                                    @change="addSearchedEntity(selectedPerson, org.personList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти персону"
@@ -157,9 +142,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="personList.length>0" class="col-9"
+                    <div v-if="org.personList.length>0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="personList"
+                        <ConnectionComponent :itemsList="org.personList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -183,7 +168,7 @@
 
                                     v-model="selectedOrg"
 
-                                    @change="addSearchedEntity(selectedOrg, orgList)"
+                                    @change="addSearchedEntity(selectedOrg, org.orgList, true)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти организацию"
@@ -193,13 +178,14 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="orgList.length>0" class="col-9"
+                    <div v-if="org.orgList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
-                        <ConnectionComponent :itemsList="orgList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"/>
+                        <OneTypeConnComp :itemsList="org.orgList"
+                                         :isLinkMode="false"
+                                         :isInternalMode="true"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
                     </div>
                 </div>
 
@@ -220,7 +206,7 @@
 
                                     v-model="selectedProject"
 
-                                    @change="addSearchedEntity(selectedProject, projectList)"
+                                    @change="addSearchedEntity(selectedProject, org.projectList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти проект"
@@ -231,9 +217,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="projectList.length > 0" class="col-9"
+                    <div v-if="org.projectList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="projectList"
+                        <ConnectionComponent :itemsList="org.projectList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -259,7 +245,7 @@
 
                                     v-model="selectedArticle"
 
-                                    @change="addSearchedEntity(selectedArticle, articleList)"
+                                    @change="addSearchedEntity(selectedArticle, org.articleList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы материал"
@@ -270,9 +256,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="articleList.length>0" class="col-9"
+                    <div v-if="org.articleList.length>0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="articleList"
+                        <ConnectionComponent :itemsList="org.articleList"
                                              :isLinkMode="true"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -309,14 +295,14 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="isourceList.length>0" class="col-9"
-                         style="background-color: transparent; padding:0; margin: 0px">
-                        <ConnectionComponent :itemsList="isourceList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"/>
-                    </div>
+                    <!--                    <div v-if="org.isourceList.length>0" class="col-9"-->
+                    <!--                         style="background-color: transparent; padding:0; margin: 0px">-->
+                    <!--                        <ConnectionComponent :itemsList="org.isourceList"-->
+                    <!--                                             :isLinkMode="false"-->
+                    <!--                                             :isSelectionMode="false"-->
+                    <!--                                             :allTypes="connectionTypes"-->
+                    <!--                                             style="background-color: transparent; padding:0px" class="col-12"/>-->
+                    <!--                    </div>-->
                 </div>
 
                 <div class="row">
@@ -713,7 +699,6 @@
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
-    // import LanguageAdd from "../language/LanguageAdd";
     import apiCountry from "./../country/country-api";
     import apiStatus from "./../status-api";
     import apiHashtag from "./../hashtag/hashtag-api";
@@ -721,7 +706,7 @@
     import apiArticle from "./../article/article-api";
     import apiProject from "./../project/project-api";
 
-
+    import OneTypeConnComp from "../components/one-type-connection/OneTypeConnComp";
     import ConnectionComponent from "../components/connection/ConnectionComponent";
     import CKEditor from 'ckeditor4-vue';
     import FileAttachment from "../components/FileAttachment";
@@ -734,11 +719,10 @@
     export default {
         name: 'org-add',
         components: {
+            OneTypeConnComp,
             ConnectionComponent,
             ckeditor: CKEditor.component,
             FileAttachment,
-            // LanguageAdd
-            // OccupationList,
             VSwatches,
         },
         vuetify: new Vuetify(),
@@ -775,8 +759,6 @@
 
             orgNameTFValues: [],
             orgAbbrTFValues: [],
-            // keyOrgNameTFValues: [],
-            // keyOrgAbbrTFValues: [],
 
             years: [],
             selectedFYear: null,
@@ -798,60 +780,35 @@
             selectedLocation: [],
             locationEntries: [],
             locationSearch: null,
-            locationList: [],
-            orgLocationIds: [], //before request
-            orgLocationEntities: [], //after request
-
 
             linkAddTagOnKeys: [13, 9],
             hashAddTagOnKeys: [],
             descriptionLimit: 60,
-            // entries: [],
-
 
             isLoadingProject: false,
             selectedProject: [],
             projectEntries: [],
             projectSearch: null,
-            projectList: [],
-            // orgOrgIds: [], //before request
-            // orgOrgEntities: [], //after request
 
             isLoadingOrg: false,
             selectedOrg: [],
             orgEntries: [],
             orgSearch: null,
-            orgList: [],
-            // orgOrgIds: [], //before request
-            orgOrgEntities: [], //after request
-
 
             isLoadingPerson: false,
             selectedPerson: [],
             personEntries: [],
             personSearch: null,
-            personList: [],
-            // orgPersonIds: [], //before request
-            // orgPersonEntities: [], //after request
-
 
             isLoadingIsource: false,
             selectedIsource: [],
             isourceEntries: [],
             isourceSearch: null,
-            isourceList: [],
-            // orgIsourceIds: [], //before request
-            // orgIsourceEntities: [], //after request
-
 
             isLoadingArticle: false,
             selectedArticle: [],
             articleEntries: [],
             articleSearch: null,
-            articleList: [],
-            // orgArticleIds: [], //before request
-            // orgArticleEntities: [], //after request
-
 
             selectedOrgType: {},
             searchHashtag: '',
@@ -901,17 +858,6 @@
                 }
             );
 
-            // apiMovement.getAllMovements(response => {
-            //     // this.getLoggedIn();
-            //     this.allMovements = response.data;
-            //     this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-            //
-            //     let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-            //     let ddd = this.allMovements.indexOf(currentIndex);
-            //     this.allMovements.splice(ddd, 1);
-            //     //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
-            // });
-
             apiHashtag.getAllHashtags(response => {
                 //   this.allTags = response.data;
                 this.hashtagFlatTree = this.createFlatTree(response.data);
@@ -921,8 +867,7 @@
             apiOrgType.getAll(response => {
                 //   this.allTags = response.data;
                 this.orgTypeFlatTree = this.createFlatTree(response.data);
-                // console.log("**********************", response.data);
-                // console.log("**********************", this.orgTypeFlatTree);
+                // console.log("**********************", response.data);                // console.log("**********************", this.orgTypeFlatTree);
             });
 
             apiStatus.getAllStatuses(response => {
@@ -967,101 +912,17 @@
                         }
                     });
 
-                    for (let i = 0; i < this.org.locationList.length; i++) {
-                        let element = this.org.locationList[i];
-                        // let currentLocationEntity = this.orgLocationEntities.find(l => l.id === element.itemId);
-                        // console.log("--------------------------> currentLocationEntity", currentLocationEntity);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //this.countryTitleCreation(currentLocationEntity),
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        // console.log("CREATE PERS ON A: ", a);
-                        this.locationList.push(connection);
-                    }
-                    // });
-
-                     for (let i = 0; i < this.org.personList.length; i++) {
-                        let element = this.org.personList[i];
-                        // let currentPersonEntity = this.orgPersonEntities.find(l => l.id === element.itemId);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //this.personNameCreation(currentPersonEntity),
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        // console.log("CREATE PERS ON A: ", a);
-                        this.personList.push(connection);
-                    }
-                    // });
 
                     apiOrg.getOrgsByIdsAndSymmetrically(this.org.id, response => {
-                        this.orgOrgEntities = response.data;   //returns List<Org>
-                        console.log("apiOrg", this.orgOrgEntities);
-
-                        for (let i = 0; i < this.orgOrgEntities.length; i++) {   ///todo is it necessary? to rewrite from one array to another
-                            let connection = {
-                                "id": this.orgOrgEntities[i].itemId, //element.itemId,
-                                "name": this.orgOrgEntities[i].name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
-                                "connection": this.orgOrgEntities[i].connection,
-                                "comment": this.orgOrgEntities[i].comment,
-                            };
-                            this.orgList.push(connection);
-                        }
+                        this.org.orgList = response.data;   //returns List<Org>
+                        console.log("apiOrg", this.org.orgList);
                     });
 
-                    for (let i = 0; i < this.org.articleList.length; i++) {
-                        let element = this.org.articleList[i];
-                        // let currentArticleEntity = this.orgArticleEntities.find(org => org.id === element.itemId);
-                        // console.log("currentOrgEntity", currentArticleEntity);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        this.articleList.push(connection);
-                    }
-                    // });
-
-
-                    for (let i = 0; i < this.org.projectList.length; i++) {
-                        let element = this.org.projectList[i];
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name,
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        this.projectList.push(connection);
-                    }
-
-                    // api.getIsourceByIds(this.personPersonIds, response => {  //todo
-                    //     this.personPersonEntities = response.data;
-                    //
-                    //     for (let i = 0; i < this.person.personList.length; i++) {
-                    //         let element = this.person.personList[i];
-                    //         let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
-                    //         let connection = {
-                    //             "id": element.itemId,
-                    //             "name": this.personNameCreation(currentPersonEntity),
-                    //             "connection": element.connection,
-                    //             "comment": element.comment,
-                    //             "hasClicked": true
-                    //         };
-                    //         // console.log("CREATE PERS ON A: ", a);
-                    //         this.personList.push(connection);
-                    //     }
-                    // });
-
-                    // console.log("---ORG---TYPE", this.org.type);
                     if (this.isObjectValidAndNotEmpty(this.org.type)) {
                         this.selectedOrgType = {
                             "id": this.org.type.id,
                             "name": this.org.type.content,
                         };
-                        // console.log("selected---ORG---TYPE", this.selectedOrgType, this.org.type);
                     }
 
                     apiAttachment.getAttachmentPhoto('org', this.org.id, r => {
@@ -1076,7 +937,7 @@
         },
 
         methods: {
-            addSearchedEntity(obj, list) {
+            addSearchedEntity(obj, list, isOneType) {
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
@@ -1085,15 +946,27 @@
                     }
                 }
 
+                let connection;
                 if (i === list.length) {
-                    let connection = {
-                        "id": obj.id,
-                        "name": obj.content,
-                        "comment": '',
-                        "connection": '',
-                    };
+                    if (isOneType === true) {
+                        connection = {
+                            "itemId": obj.id,
+                            "name": obj.content,
+                            "comment": '',
+                            "connection": '',
+                            "isParent": false,
+                            "isInternal": false,
+                        };
+                    } else {
+                        connection = {
+                            "itemId": obj.id,
+                            "name": obj.content,
+                            "comment": '',
+                            "connection": '',
+                        };
+                    }
                     list.push(connection);
-                    console.log("ADDED");
+                    console.log("ADDED", connection);
                 }
             },
 
@@ -1164,7 +1037,7 @@
             getLoggedIn() {
                 this.loggedName = this.$store.getters.getUserName;  //todo change to author, not current user
                 this.isAdmin = localStorage.getItem('isAdmin');
-               // console.log("this.checkedMovements", this.checkedMovements);
+                // console.log("this.checkedMovements", this.checkedMovements);
             },
 
             removeSelectedOrgType() {
@@ -1185,28 +1058,6 @@
                 //this.addAdditionalNameToList();
                 this.$refs.modalOrgNames.hide();
             },
-
-            // addAdditionalNameToList() {
-            //     let name = '';
-            //     this.nameList.splice(0);
-            //     for (let i = 1; i < this.orgNameTFValues.length; i++) {
-            //         console.log("iiiiii", i);
-            //         if (this.orgNameTFValues[i] != null) {
-            //             //item with index = 0 pushed in createOrg()
-            //
-            //             if (this.orgNameTFValues[i].length > 0) {
-            //                 name = {
-            //                     "name": this.orgNameTFValues[i],
-            //                     "abbr": this.orgAbbrTFValues[i] != null ? this.orgAbbrTFValues[i] : '',
-            //                     "priority": 0
-            //                 };
-            //                 this.nameList.push(name);
-            //                 console.log("ADDED NAME PERSON", name, this.orgNameTFValues);
-            //                 name = '';
-            //             }
-            //         }
-            //     }
-            // },
 
             onHashtagSelect(item) {
                 const index = this.tags.indexOf(item.name);
@@ -1282,11 +1133,11 @@
                 // if (this.isObjectValidAndNotEmpty(this.orgList)) {
                 //     g = this.checkConnection(this.orgList);
 
-                    // if (!g) {
-                    //     if (this.isObjectValidAndNotEmpty(this.personList)) {
-                    //         s = this.checkConnection(this.personList);
-                    //     }
-                    // }
+                // if (!g) {
+                //     if (this.isObjectValidAndNotEmpty(this.personList)) {
+                //         s = this.checkConnection(this.personList);
+                //     }
+                // }
                 // }
                 // }
 
@@ -1294,12 +1145,12 @@
                 //     alert("Укажите связь для сущностей, которые вы добавили");
                 //    console.log("ALERT");
                 // } else {
-                    //alert("else");
-                    // if (this.editMode) {
-                    //     this.updateArticle();
-                    // } else {
-                    this.createOrg(currentStatus);
-                    // }
+                //alert("else");
+                // if (this.editMode) {
+                //     this.updateArticle();
+                // } else {
+                this.createOrg(currentStatus);
+                // }
                 // }
             },
 
@@ -1309,10 +1160,6 @@
                     this.years.push(y);
                 }
             },
-
-            // addAdditionalMovement() {
-            //     this.addAdditionalMovementFlag = true;
-            // },
 
             addStatus(id, hasError) {
                 document.getElementById(id).classList.remove('is-valid');
@@ -1385,31 +1232,18 @@
                         this.org.closureYear = this.selectedCYear;
                     }
 
-                    // let name = {
-                    //     "name": this.orgNameTFValues[0],
-                    //     "abbr": this.orgAbbrTFValues[0] != null ? this.orgAbbrTFValues[0] : '',
-                    //     "priority": 1
-                    // };
-                    // this.nameList.push(name);
-
                     this.org.linkList.splice(0);
                     this.org.hashtagList.splice(0);
                     this.org.movementList.splice(0);
 
                     let i = 0;
-                   // console.log("+++++++++++++++++++++++++SAVE", this.checkedMovements, this.checkedMovements.length, this.org.movementList);
+                    // console.log("+++++++++++++++++++++++++SAVE", this.checkedMovements, this.checkedMovements.length, this.org.movementList);
                     for (; i < this.checkedMovements.length; i++) {
                         this.org.movementList[i] = {
                             "id": this.checkedMovements[i]
                         };
                     }
-                   // console.log("+++++++++++++++++++++++++SAVE this.org.movementList", this.org.movementList);
-
-                    // if (!this.editMode) {
-                    //     this.org.movementList[i] = {
-                    //         "id": this.currentUserMovement.id
-                    //     };
-                    // }
+                    // console.log("+++++++++++++++++++++++++SAVE this.org.movementList", this.org.movementList);
 
                     for (let i = 0; i < this.links.length; i++) {
                         this.org.linkList[i] = {
@@ -1422,19 +1256,7 @@
                         this.org.hashtagList[i] = this.tags[i];
                     }
 
-                    this.org.locationList.splice(0);
-                    this.org.personList.splice(0);
-                    this.org.projectList.splice(0);
-                    this.org.orgList.splice(0);
-                    this.org.isourceList.splice(0);
-                    this.org.articleList.splice(0);
                     this.org.nameList.splice(0);
-                    this.finalConnectionListCreation(this.locationList, this.org.locationList, true);
-                    this.finalConnectionListCreation(this.orgList, this.org.orgList, true);
-                    this.finalConnectionListCreation(this.personList, this.org.personList, true);
-                    this.finalConnectionListCreation(this.projectList, this.org.projectList, true);
-                    this.finalConnectionListCreation(this.isourceList, this.org.isourceList, true);
-                    this.finalConnectionListCreation(this.articleList, this.org.articleList, true);
                     this.finalNameListCreation();
 
                     this.org.type = {
@@ -1517,35 +1339,7 @@
                 apiAttachment.previewAttachment('org', this.org.id, file.id);
             },
 
-            finalConnectionListCreation(list, finalList, isEmptyConnectionPossible) {
-                console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "itemId": list[i].id,
-                        "name": list[i].name,
-                        "connection": list[i].connection,
-                        "comment": list[i].comment
-                    };
-                    if (isEmptyConnectionPossible) {
-                        finalList.push(a);
-
-                    } else if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                        finalList.push(a);
-                    }
-                }
-            },
-
             finalNameListCreation() {
-                // console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
-                // for (let i = 0; i < list.length; i++) {
-                //     let a = {
-                //         "name": list[i].name,
-                //         "abbr": list[i].abbr,
-                //         "priority": list[i].priority
-                //     };
-                //     finalList.push(a);
-                // }
-
                 let name = '';
                 this.org.nameList.splice(0);
                 for (let i = 0; i < this.orgNameTFValues.length; i++) {
@@ -1566,91 +1360,6 @@
                     }
                 }
             },
-
-            // addLocation(obj) {  //todo to unite all "addxxx"
-            //     console.log("GET CHANGED LOCATION", obj);
-            //     let i = 0;
-            //     for (i = 0; i < this.locationList.length; i++) { //to exclude double values
-            //         if (this.locationList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.locationList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //             "hasClicked": false
-            //         };
-            //         this.locationList.push(connection);
-            //         console.log("ADDED", this.locationList);
-            //     }
-            // },
-            //
-            // addPerson(obj) {
-            //     console.log("GET CHANGED PERSON", obj);
-            //     let i = 0;
-            //     for (i = 0; i < this.personList.length; i++) { //to exclude double values
-            //         if (this.personList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.personList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //             "hasClicked": false
-            //         };
-            //         this.personList.push(connection);
-            //         console.log("ADDED", this.personList);
-            //     }
-            // },
-            //
-            // addOrg(obj) {
-            //     let i = 0;
-            //     for (i = 0; i < this.orgList.length; i++) { //to exclude double values
-            //         if (this.orgList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.orgList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //             "hasClicked": false
-            //         };
-            //         this.orgList.push(connection);
-            //         console.log("ADDED", this.orgList);
-            //     }
-            // },
-            // addArticle(obj) {
-            //     let i = 0;
-            //     for (i = 0; i < this.articleList.length; i++) { //to exclude double values
-            //         if (this.articleList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.articleList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //             "hasClicked": false
-            //         };
-            //         this.articleList.push(connection);
-            //         console.log("ADDED ARTICLE", this.articleList);
-            //     }
-            // },
 
             //////////////////tree/////////////////////////////////////
             searchTree(flatTree, searchEntity) {
@@ -1870,10 +1579,6 @@
         },
 
         watch: {
-            // checkedMovements() {
-            //     console.log("watch this.checkedMovements.length", this.checkedMovements);
-            // },
-
             disableColorCheckBoxFlag() {
                 if (this.disableColorCheckBoxFlag === true) {
                     this.org.rowColor = null;
@@ -1922,7 +1627,7 @@
                         console.log("SEARCH STARTED");
 
                         if (typeof this.selectedPerson !== 'undefined') {
-                            if (this.org.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.org.personList.length > 1)
                                 this.selectedPerson = "";
                         }
 
@@ -1943,7 +1648,7 @@
                 if (val !== null)
                     if (val.length > 2) {
                         if (typeof this.selectedOrg !== 'undefined') {
-                            if (this.org.orgList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.org.orgList.length > 1)
                                 this.selectedOrg = "";
                         }
 
@@ -1968,7 +1673,7 @@
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedArticle !== 'undefined') {
-                            if (this.org.articleList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.org.articleList.length > 1)
                                 this.selectedArticle = "";
                         }
 
@@ -1991,7 +1696,7 @@
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedProject !== 'undefined') {
-                            if (this.org.projectList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.org.projectList.length > 1)
                                 this.selectedProject = "";
                         }
 

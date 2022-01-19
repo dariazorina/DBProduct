@@ -101,7 +101,7 @@
                             <!--                                <a v-for="prsn in personPersonEntities">{{createComplexPersonById(prsn)}}<br></a>-->
                             <!--                            </div>-->
 
-                            <div v-for="prsn in personPersonEntities">
+                            <div v-for="prsn in person.personList">
                                 <a>
                                     <router-link
                                             :to="{name: 'person-details', params: {person_id: prsn.itemId}}"
@@ -285,12 +285,8 @@
 
 <script>
     import api from "./person-api";
-    // import apiOrg from "./../org/org-api";
-    // import apiLocation from "./../country/country-api";
-    // import apiArticle from "./../article/article-api";
     import apiAttachment from "./../attachment-api";
     import FileAttachment from "../components/FileAttachment";
-    // import apiStatus from "./../status-api";
 
     import "vue-scroll-table";
 
@@ -307,8 +303,6 @@
                     hashtagList: [], linkList: [], locationList: [], articleList: [], orgList: [], personList: [],
                     isourceList: [], projectList: [], movementList: [], snpList: []
                 },
-
-                personPersonEntities: [], //after request
 
                 uploadedFiles: [],
                 loggedInFlag: false,  //todo to remove
@@ -427,8 +421,8 @@
                 console.log("_____person__________________", r.data);
 
                 api.getPersonsByIdsAndSymmetrically(this.person.id, response => {
-                    this.personPersonEntities = response.data;
-                    console.log("``````````````````persperspers", this.personPersonEntities);
+                    this.person.personList = response.data;
+                    console.log("``````````````````persperspers", this.person.personList);
 
                     apiAttachment.getAttachmentPhoto('person', this.$route.params.person_id, r => {
                         console.log("R DATA", r);

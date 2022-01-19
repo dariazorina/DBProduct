@@ -94,7 +94,7 @@
 
                                     v-model="selectedLocation"
 
-                                    @change="addSearchedEntity(selectedLocation, locationList, false)"
+                                    @change="addSearchedEntity(selectedLocation, project.locationList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти локацию"
@@ -104,9 +104,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="locationList.length>0" class="col-9"
+                    <div v-if="project.locationList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="locationList"
+                        <ConnectionComponent :itemsList="project.locationList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -130,7 +130,7 @@
 
                                     v-model="selectedPerson"
 
-                                    @change="addSearchedEntity(selectedPerson, personList, false)"
+                                    @change="addSearchedEntity(selectedPerson, project.personList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти персону"
@@ -140,9 +140,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="personList.length>0" class="col-9"
+                    <div v-if="project.personList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="personList"
+                        <ConnectionComponent :itemsList="project.personList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -166,7 +166,7 @@
 
                                     v-model="selectedOrg"
 
-                                    @change="addSearchedEntity(selectedOrg, orgList, false)"
+                                    @change="addSearchedEntity(selectedOrg, project.orgList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти организацию"
@@ -176,9 +176,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="orgList.length>0" class="col-9"
+                    <div v-if="project.orgList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
-                        <ConnectionComponent :itemsList="orgList"
+                        <ConnectionComponent :itemsList="project.orgList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -190,8 +190,7 @@
                     <div class="col-3"
                          style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                         <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
-                            <label style="font-size: medium; font-weight: bold">Связанные проекты (указание связи
-                                обязательно)</label>
+                            <label style="font-size: medium; font-weight: bold">Связанные проекты</label>
                             <v-autocomplete
                                     id="project-autocomplete"
                                     :items="projectItems"
@@ -203,7 +202,7 @@
 
                                     v-model="selectedProject"
 
-                                    @change="addSearchedEntity(selectedProject, projectList, true)"
+                                    @change="addSearchedEntity(selectedProject, project.projectList, true)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти проект"
@@ -213,14 +212,13 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="projectList.length > 0" class="col-9"
+                    <div v-if="project.projectList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
-                        <OneTypeConnComp :itemsList="projectList"
+                        <OneTypeConnComp :itemsList="project.projectList"
                                          :isLinkMode="false"
-                                         :startValue="startValueOneTypeConnection"
+                                         :isInternalMode="false"
                                          :isSelectionMode="false"
                                          :allTypes="connectionTypes"
-                                         @get-is-parent="typeConnectionFunction"
                                          style="background-color: transparent; padding:0px" class="col-12"/>
                     </div>
                 </div>
@@ -241,7 +239,7 @@
 
                                     v-model="selectedArticle"
 
-                                    @change="addSearchedEntity(selectedArticle, articleList, false)"
+                                    @change="addSearchedEntity(selectedArticle, project.articleList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы материал"
@@ -252,9 +250,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="articleList.length>0" class="col-9"
+                    <div v-if="project.articleList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="articleList"
+                        <ConnectionComponent :itemsList="project.articleList"
                                              :isLinkMode="true"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -572,9 +570,6 @@
             validationErrors: {},
             hasError: false,
 
-
-            startValueOneTypeConnection: false,
-
             tagsValue: [],
             allTags: [],
             project: {
@@ -616,61 +611,36 @@
             selectedLocation: [],
             locationEntries: [],
             locationSearch: null,
-            locationList: [],
-            projectLocationIds: [], //before request
-            projectLocationEntities: [], //after request
-
 
             linkAddTagOnKeys: [13, 9],
             hashAddTagOnKeys: [],
             descriptionLimit: 60,
-            // entries: [],
 
             isLoadingProject: false,
             selectedProject: [],
             projectEntries: [],
             projectSearch: null,
-            projectList: [],
-            // projectProjectIds: [], //before request
-            projectProjectEntities: [], //after request
 
             isLoadingOrg: false,
             selectedOrg: [],
             orgEntries: [],
             orgSearch: null,
-            orgList: [],
-            // projectOrgIds: [], //before request
-            // projectOrgEntities: [], //after request
-
 
             isLoadingPerson: false,
             selectedPerson: [],
             personEntries: [],
             personSearch: null,
-            personList: [],
-            // projectPersonIds: [], //before request
-            // projectPersonEntities: [], //after request
-
 
             isLoadingEvent: false,
             selectedEvent: [],
             eventEntries: [],
             eventSearch: null,
-            eventList: [],
-            // projectEventIds: [], //before request
-            // projectEventEntities: [], //after request
-
 
             isLoadingArticle: false,
             selectedArticle: [],
             articleEntries: [],
             articleSearch: null,
-            articleList: [],
-            // projectArticleIds: [], //before request
-            // projectArticleEntities: [], //after request
 
-
-            // selectedProjectType: {},
             searchHashtag: '',
             selectedS: null,
             selectedHashtag: [],
@@ -718,17 +688,6 @@
                 }
             );
 
-            // apiMovement.getAllMovements(response => {
-            //     // this.getLoggedIn();
-            //     this.allMovements = response.data;
-            //     this.currentUserMovement = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-            //
-            //     let currentIndex = this.allMovements.find(x => x.id === Number.parseInt(localStorage.getItem('movement')));//this.checkedMovements[0]);
-            //     let ddd = this.allMovements.indexOf(currentIndex);
-            //     this.allMovements.splice(ddd, 1);
-            //     //console.log("MOVEMENTS index", response.data, currentIndex, ddd);
-            // });
-
             api.getAllTags(response => {
                 this.allTags = response.data;
             });
@@ -737,13 +696,6 @@
                 this.hashtagFlatTree = this.createFlatTree(response.data);
                 // console.log(response.data)
             });
-
-            // apiType.getAll(response => {
-            //     //   this.allTags = response.data;
-            //     this.orgTypeFlatTree = this.createFlatTree(response.data);
-            //     // console.log("**********************", response.data);
-            //     // console.log("**********************", this.orgTypeFlatTree);
-            // });
 
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
@@ -778,138 +730,16 @@
                         this.checkedMovements.push(this.project.movementList[i].id);
                     }
 
-                    // for (let j = 0; j < this.project.locationList.length; j++) {
-                    //     this.projectLocationIds.push(this.project.locationList[j].itemId);
-                    // }
-                    //
-                    // for (let j = 0; j < this.project.articleList.length; j++) {
-                    //     this.projectArticleIds.push(this.project.articleList[j].itemId);
-                    // }
-                    //
-                    // for (let j = 0; j < this.project.personList.length; j++) {
-                    //     this.projectPersonIds.push(this.project.personList[j].itemId);
-                    // }
-                    //
-                    // for (let j = 0; j < this.project.orgList.length; j++) {
-                    //     this.projectOrgIds.push(this.project.orgList[j].itemId);
-                    // }
-
-                    // for (let j = 0; j < this.project.eventList.length; j++) {  //todo
-                    //     this.projectEventIds.push(this.project.eventList[j].itemId);
-                    // }
-
-
-                    apiAttachment.getAttachments('project', this.project.id, r => {
+                     apiAttachment.getAttachments('project', this.project.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
                             this.uploadedFiles.push(r.data[i]);
                         }
                     });
 
-                    // apiCountry.getLocationsByIds(this.projectLocationIds, response => {  ///returns List<Location>
-                    //    this.projectLocationEntities = response.data;
-                    //   console.log("getLocationsBy#Entities locaList", this.projectLocationEntities, this.project.locationList);
-
-                    for (let i = 0; i < this.project.locationList.length; i++) {
-                        let element = this.project.locationList[i];
-                        //     let currentLocationEntity = this.projectLocationEntities.find(l => l.id === element.itemId);
-                        //    console.log("--------------------------> currentLocationEntity", currentLocationEntity);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //()currentLocationEntity.content, //this.countryTitleCreation(currentLocationEntity),
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        // console.log("CREATE PERS ON A: ", a);
-                        this.locationList.push(connection);
-                    }
-                    // });
-
-                    // apiPerson.getPersonsByIds(this.projectPersonIds, response => {
-                    //     this.projectPersonEntities = response.data;
-
-                    for (let i = 0; i < this.project.personList.length; i++) {
-                        let element = this.project.personList[i];
-                        // let currentPersonEntity = this.projectPersonEntities.find(l => l.id === element.itemId);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //currentPersonEntity.content, //this.personNameCreation(currentPersonEntity),
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        // console.log("CREATE PERS ON A: ", a);
-                        this.personList.push(connection);
-                    }
-                    // });
-
-
-                    // apiOrg.getOrgsByIds(this.projectOrgIds, response => {
-                    //     this.projectOrgEntities = response.data;
-
-                    for (let i = 0; i < this.project.orgList.length; i++) {
-                        let element = this.project.orgList[i];
-                        // let currentOrgEntity = this.projectOrgEntities.find(l => l.id === element.itemId);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //()currentOrgEntity.content,
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        // console.log("CREATE PERS ON A: ", a);
-                        this.orgList.push(connection);
-                    }
-                    // });
-
                     api.getProjectsByIdsAndSymmetrically(this.project.id, response => {
-                        this.projectProjectEntities = response.data;
-                        console.log("api", this.projectProjectEntities);
-
-                        for (let i = 0; i < this.projectProjectEntities.length; i++) {   ///todo is it necessary? to rewrite from one array to another
-                            let connection = {
-                                "id": this.projectProjectEntities[i].itemId, //element.itemId,
-                                "name": this.projectProjectEntities[i].name, //this.orgEditConnectionTitleCreation(currentOrgEntity),
-                                "connection": this.projectProjectEntities[i].connection,
-                                "comment": this.projectProjectEntities[i].comment,
-                                "isParent": this.projectProjectEntities[i].isParent,
-                            };
-                            this.projectList.push(connection);
-                        }
+                        this.project.projectList = response.data;
+                        console.log("api", this.project.projectList);
                     });
-
-                    // apiArticle.getMaterialsByIds(this.projectArticleIds, response => {
-                    //     this.projectArticleEntities = response.data;   //returns List<project>
-                    //     console.log("apiArt", this.projectArticleEntities);
-
-                    for (let i = 0; i < this.project.articleList.length; i++) {
-                        let element = this.project.articleList[i];
-                        // let currentArticleEntity = this.projectArticleEntities.find(project => project.id === element.itemId);
-                        // console.log("currentprojectEntity", currentArticleEntity);
-                        let connection = {
-                            "id": element.itemId,
-                            "name": element.name, //currentArticleEntity.content,
-                            "connection": element.connection,
-                            "comment": element.comment,
-                        };
-                        this.articleList.push(connection);
-                    }
-                    // });
-
-                    // api.getIsourceByIds(this.personPersonIds, response => {  //todo
-                    //     this.personPersonEntities = response.data;
-                    //
-                    //     for (let i = 0; i < this.person.personList.length; i++) {
-                    //         let element = this.person.personList[i];
-                    //         let currentPersonEntity = this.personPersonEntities.find(l => l.id === element.itemId);
-                    //         let connection = {
-                    //             "id": element.itemId,
-                    //             "name": this.personNameCreation(currentPersonEntity),
-                    //             "connection": element.connection,
-                    //             "comment": element.comment,
-                    //             "hasClicked": true
-                    //         };
-                    //         // console.log("CREATE PERS ON A: ", a);
-                    //         this.personList.push(connection);
-                    //     }
-                    // });
 
                     apiAttachment.getAttachmentPhoto('project', this.project.id, r => {
                         console.log("R DATA", r);
@@ -980,12 +810,6 @@
                     this.hashtags.push(item.name);
                 }
             },
-
-            // onOrgTypeSelect(item) {
-            //     console.log("<onOrgTypeSelect>", this.selectedOrgType);
-            //     this.selectedOrgType = item;//.name;
-            //     console.log("<onOrgTypeSelect>", this.selectedOrgType, item);
-            // },
 
             createFlatTree(treeData) {
                 let flatTree = [];
@@ -1166,21 +990,7 @@
                         this.project.hashtagList[i] = this.hashtags[i];
                     }
 
-                    this.project.locationList.splice(0);
-                    this.project.personList.splice(0);
-                    this.project.orgList.splice(0);
-                    // this.project.eventList.splice(0);
-                    this.project.projectList.splice(0);
-                    this.project.articleList.splice(0);
-                    this.finalConnectionListCreation(this.locationList, this.project.locationList, true);
-                    this.finalConnectionListCreation(this.orgList, this.project.orgList, true);
-                    this.finalConnectionListCreation(this.personList, this.project.personList, true);
-                    this.finalOneTypeConnectionListCreation(this.projectList, this.project.projectList);
-                    // this.finalConnectionListCreation(this.eventList, this.project.eventList, true);
-                    this.finalConnectionListCreation(this.articleList, this.project.articleList, true);
-
-                    console.log("ORG BEFORE  CREATION", this.project, this.projectList);
-
+                    console.log("-------------ORG BEFORE  CREATION", this.project, this.projectList);
 
                     if (this.editMode) {
                         this.project.status = this.selectedS;
@@ -1257,40 +1067,6 @@
                 apiAttachment.previewAttachment('project', this.project.id, file.id);
             },
 
-            finalConnectionListCreation(list, finalList, isEmptyConnectionPossible) {
-                console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "itemId": list[i].id,
-                        "name": list[i].name,
-                        "connection": list[i].connection,
-                        "comment": list[i].comment
-                    };
-                    if (isEmptyConnectionPossible) {
-                        finalList.push(a);
-
-                    } else if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                        finalList.push(a);
-                    }
-                }
-            },
-
-            finalOneTypeConnectionListCreation(list, finalList) {
-                console.log("^^^^^^^^^^^^^^^finalONETYPEConnectionListCreation^^^^^^^^^ ", list, finalList);
-                for (let i = 0; i < list.length; i++) {
-                    let a = {
-                        "itemId": list[i].id,
-                        "name": list[i].name,
-                        "connection": list[i].connection,
-                        "comment": list[i].comment,
-                        "isParent": list[i].isParent,
-                    };
-                    // if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-                    finalList.push(a);
-                    //   }
-                }
-            },
-
             addSearchedEntity(obj, list, isOneType) {
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
@@ -1304,7 +1080,7 @@
                 if (i === list.length) {
                     if (isOneType === true) {
                         connection = {
-                            "id": obj.id,
+                            "itemId": obj.id,
                             "name": obj.content,
                             "comment": '',
                             "connection": '',
@@ -1312,7 +1088,7 @@
                         };
                     } else {
                         connection = {
-                            "id": obj.id,
+                            "itemId": obj.id,
                             "name": obj.content,
                             "comment": '',
                             "connection": '',
@@ -1322,108 +1098,6 @@
                     console.log("ADDED");
                 }
             },
-
-
-            // addLocation(obj) {  //todo to unite all "addxxx"
-            //     console.log("GET CHANGED LOCATION", obj);
-            //     let i = 0;
-            //     for (i = 0; i < this.locationList.length; i++) { //to exclude double values
-            //         if (this.locationList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.locationList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //         };
-            //         this.locationList.push(connection);
-            //         console.log("ADDED", this.locationList);
-            //     }
-            // },
-            //
-            // addPerson(obj) {
-            //     console.log("GET CHANGED PERSON", obj);
-            //     let i = 0;
-            //     for (i = 0; i < this.personList.length; i++) { //to exclude double values
-            //         if (this.personList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.personList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //         };
-            //         this.personList.push(connection);
-            //         console.log("ADDED", this.personList);
-            //     }
-            // },
-            //
-            // addOrg(obj) {
-            //     let i = 0;
-            //     for (i = 0; i < this.orgList.length; i++) { //to exclude double values
-            //         if (this.orgList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.orgList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //         };
-            //         this.orgList.push(connection);
-            //         console.log("ADDED", this.orgList);
-            //     }
-            // },
-            //
-            // addProject(obj) {
-            //     let i = 0;
-            //     for (i = 0; i < this.projectList.length; i++) { //to exclude double values
-            //         if (this.projectList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.projectList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //         };
-            //         this.projectList.push(connection);
-            //         console.log("ADDED", this.projectList);
-            //     }
-            // },
-            // addArticle(obj) {
-            //     let i = 0;
-            //     for (i = 0; i < this.articleList.length; i++) { //to exclude double values
-            //         if (this.articleList[i].id === obj.id) {
-            //             break;
-            //         }
-            //     }
-            //
-            //     if (i === this.articleList.length) {
-            //         let connection = {
-            //             "id": obj.id,
-            //             "name": obj.content,
-            //             "comment": '',
-            //             "connection": '',
-            //         };
-            //         this.articleList.push(connection);
-            //         console.log("ADDED ARTICLE", this.articleList);
-            //     }
-            // },
 
             //////////////////tree/////////////////////////////////////
             searchTree(flatTree, searchEntity) {

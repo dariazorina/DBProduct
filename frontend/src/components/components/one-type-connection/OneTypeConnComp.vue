@@ -18,17 +18,14 @@
                                     :item="item"
                                     :selected-item="item.isParent"
                                     :allTypes = "allTypes"
-                                    :startValue="startValue"
                                     :isLinkMode="isLinkMode"
+                                    :isInternalMode="isInternalMode"
                                     :isSelectionMode="isSelectionMode"
                                     @remove="removeItem"
                                     @get-input-text="addItem"
                                     @save-input-text="saveItem"
                                     @update-selection="updateSelection"
-                                    @is-parent="isParent"
-                                  />
-
-
+                />
             </li>
         </ul>
     </div>
@@ -42,21 +39,15 @@
             ListItem,
         },
         props: {
-            // selectedItem: {
-            //     type: String,
-            //     required: true
-            // },
-
-            startValue:{
-                type: Boolean,
-                required: true
-            },
-
             itemsList: {
                 type: Array,
                 required: true
             },
             isLinkMode: {
+                type: Boolean,
+                required: true
+            },
+            isInternalMode: {
                 type: Boolean,
                 required: true
             },
@@ -100,11 +91,6 @@
                     }
                 }
             },
-
-            isParent(newValue){
-                this.$emit("get-is-parent", newValue);
-            }
-
         },
 
         computed: {
