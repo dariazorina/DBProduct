@@ -14,8 +14,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     @Query("select pro from " +
             "Project pro " +
-            "join pro.movementList orgML " +
-            "where (orgML.id in :movement) group by pro.id " +
+            "join pro.movementList proML " +
+            "where (proML.id in :movement) group by pro.id " +
             "order by pro.mainTitle asc")
     Page<Project> findAllWithMovements(Pageable pageable, List<Integer> movement);
 

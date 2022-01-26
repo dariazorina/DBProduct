@@ -105,17 +105,17 @@ export default {
                 }
             })
     },
-    getProjectsByIds(idList, fn) {
-        AXIOS
-            .post(`/project/ids`, idList)
-            .then(response => fn(response))
-            .catch(error => {
-                console.log(error);
-                if (error.response.status === 401) {
-                    this.error401Handling();
-                }
-            });
-    },
+    // getProjectsByIds(idList, fn) {
+    //     AXIOS
+    //         .post(`/project/ids`, idList)
+    //         .then(response => fn(response))
+    //         .catch(error => {
+    //             console.log(error);
+    //             if (error.response.status === 401) {
+    //                 this.error401Handling();
+    //             }
+    //         });
+    // },
 
     getProjectsByIdsAndSymmetrically(id, fn) {
         AXIOS
@@ -154,8 +154,19 @@ export default {
         })
     },
 
-    filterAll(body, mov, fn) {
-        AXIOS.get(`project/filter?` + body + `&mov=` + mov)
+    // filterAll(body, mov, fn) {
+    //     AXIOS.get(`project/filter?` + body + `&mov=` + mov)
+    //         .then(response => fn(response))
+    //         .catch(error => {
+    //             console.log(error);
+    //             if (error.response.status === 401) {
+    //                 this.error401Handling();
+    //             }
+    //         });
+    // },
+
+    filterAll(body, mov, page, size, fn) {
+        AXIOS.get(`project/filter?` + body + `&mov=` + mov + `&page=` + page + `&size=` + size)
             .then(response => fn(response))
             .catch(error => {
                 console.log(error);

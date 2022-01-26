@@ -1,6 +1,8 @@
 package com.hellokoding.springboot.restful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,11 +17,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "movement_id", nullable = false)
-//    private Movement movement;
-
-
     @ManyToMany
     @JoinTable(
             name = "event_movement",
@@ -27,37 +24,51 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "movement_id", referencedColumnName = "movement_id"))
     private List<Movement> movementList;
 
+    @Column(name="start_date")
+    private Date startDate;
 
-    private Date date;
+    @Column(name="end_date")
+    private Date endDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "location_id", nullable = false)
-//    private Location location;
-
-    private String settlement;
-//    private String location;
     private String type;
-
-
-    @ManyToMany
-    @JoinTable(
-            name = "event_org",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "org_id"))
-    private List<Org> orgList;
-
-
-    @ManyToMany
-    @JoinTable(
-            name = "event_actor",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "person_id"))
-    private List<Person> actorList;
-
     private String title;
     private String description;
+    private String miscellany;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", nullable = false)
+    private Status status;
+
+    @Column(name = "rgb_selection")
+    private String rgbSelection;
 
 
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ArticleEventConnection> articleConnections;
+
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<PersonEventConnection> personConnections;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<LocationEventConnection> locationConnections;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgEventConnection> orgConnections;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<EventEventConnection> eventConnections;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ProjectEventConnection> projectConnections;
+    
     @ManyToMany
     @JoinTable(
             name = "event_link",
@@ -65,20 +76,23 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "link_id"))
     private List<UrlLink> linkList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<EventHashtag> hashtagList;
 
     @ManyToMany
     @JoinTable(
-            name = "event_hashtag",
+            name = "event_tag",
             joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "hashtag_id"))
-    private List<HashTag> hashtagList;
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
+    private List<Tag> tagList;
 
+    @Column(name = "creation_date")
+    private Date creationDate;
+    @Column(name = "change_date")
+    private Date changeDate;
 
-//    private String annex;  // TODO: исходные данные по авторам - массив строк)) Нужно удалить потом
-//    @ManyToMany
-//    @JoinTable(
-//            name = "event_annex",
-//            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "event_id"),
-//            inverseJoinColumns = @JoinColumn(name = "annex_id", referencedColumnName = "annex_id"))
-//    private List<Annex> annexList;
+    @Column(name = "user_id")
+    private Date userId;
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ProjectService {
     List<Project> findAll();
 
-    Integer getQuantityAllProjectsWithMovement(List<Integer> mov);
+//    Integer getQuantityAllProjectsWithMovement(List<Integer> mov);
 
     List<ProjectDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size);
 
@@ -24,7 +24,9 @@ public interface ProjectService {
 
     List<IdContentDto> search(String q);
 
-    List<IdContentDto> findByIds(List<Integer> idList);
+//    List<IdContentDto> findByIds(List<Integer> idList);
+
+    PagedDataDto filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov, Integer page, Integer size);
 
     List<ProjectDtoForMainList> filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov);
 

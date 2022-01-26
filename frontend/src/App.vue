@@ -7,7 +7,7 @@
                     <button type="button" class="btnXSmall btn-link" v-b-modal.modal1>Logout
                     </button>
                     <button type="button" class="btnXSmall btn-link" disabled>
-                    <i>1.24/19.01</i></button>
+                        <i>1.25/26.01</i></button>
                 </p>
 
                 <!-- Modal Component -->
@@ -15,8 +15,10 @@
             </template>
             <template v-else>
                 <template v-if="!loginError">
-                    <p class="pageLoginTitle">Please login to get access  <button type="button" class="btnXSmall btn-link" disabled>
-                        <i>1.24/19.01</i></button></p>
+                    <p class="pageLoginTitle">Please login to get access
+                        <button type="button" class="btnXSmall btn-link" disabled>
+                            <i>1.25/26.01</i></button>
+                    </p>
                 </template>
                 <template v-else>
                     <p class="pageLoginErrorTitle">Authentication error, try again</p>
@@ -30,7 +32,8 @@
             |
             <router-link to="/org">Организации</router-link>
             |
-            <!--      <router-link to="/event">Event</router-link> |-->
+            <router-link to="/event">События</router-link>
+            |
             <router-link to="/article">Материалы</router-link>
             |
             <router-link to="/project">Проекты</router-link>
@@ -51,16 +54,16 @@
             <!--      <router-link to="/login">Login</router-link>-->
         </div>
 
-<!--        //#getHash-->
-<!--        <div class="form-group row">-->
-<!--            <div class="offset-sm-1 col-sm-3">-->
-<!--                <input type="text" placeholder="" class="form-control"-->
-<!--                       v-model="getPsswd"/>-->
-<!--                <button type="button" @click="getHash(getPsswd)" class="btn btn-outline-dark">get hash</button>-->
-<!--                &lt;!&ndash;                        <b-btn size="sm" variant="btn btn-outline-info" @click="getHash(getPsswd)">get hash</b-btn>&ndash;&gt;-->
-<!--                &lt;!&ndash;                    <p v-if="error" class="error">Bad login information</p>&ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        //#getHash-->
+        <!--        <div class="form-group row">-->
+        <!--            <div class="offset-sm-1 col-sm-3">-->
+        <!--                <input type="text" placeholder="" class="form-control"-->
+        <!--                       v-model="getPsswd"/>-->
+        <!--                <button type="button" @click="getHash(getPsswd)" class="btn btn-outline-dark">get hash</button>-->
+        <!--                &lt;!&ndash;                        <b-btn size="sm" variant="btn btn-outline-info" @click="getHash(getPsswd)">get hash</b-btn>&ndash;&gt;-->
+        <!--                &lt;!&ndash;                    <p v-if="error" class="error">Bad login information</p>&ndash;&gt;-->
+        <!--            </div>-->
+        <!--        </div>-->
 
         <router-view/>
         <!--        <router-view :hellomsg="msg"></router-view>-->
@@ -71,7 +74,7 @@
 
     import router from "./router";
     import EventBus from "./components/event-bus";
-   // import apiLogin from "./components/login-api";
+    // import apiLogin from "./components/login-api";
 
     export default {
         name: 'app',
@@ -86,8 +89,8 @@
 
                     //todo to output login error (doesn't enter here in this case and refresh status accordingly)
                     //if (this.loggedName === null&&typeof from==='undefined'){
-                       // this.loginError = this.$store.getters.loginError;
-                   // }
+                    // this.loginError = this.$store.getters.loginError;
+                    // }
 
                     // this.loginError = this.$store.getters.loginError;
 
@@ -102,7 +105,7 @@
                 isAdmin: '',
                 loggedName: '',
                 loginError: false,
-              //  getPsswd: '', //#getHash
+                //  getPsswd: '', //#getHash
             }
         },
 
@@ -145,26 +148,26 @@
         //     this.loginError = false;
         // },
 
-        created (){
-           // console.log("+++++++++++++++created", EventBus);
-             EventBus.$on('EVENT_NAME', function (payLoad) {
+        created() {
+            // console.log("+++++++++++++++created", EventBus);
+            EventBus.$on('EVENT_NAME', function (payLoad) {
 
-                 this.loginError = !payLoad; //this.$store.getters.loginError;
-                 this.loggedName = localStorage.getItem('userName');
-                 //console.log("event bus!!!!!!!!!!! err user key", this.loginError, this.loggedName);
-            //  doesn't refresh loginError in view... loggedName refreshes due to watching
+                this.loginError = !payLoad; //this.$store.getters.loginError;
+                this.loggedName = localStorage.getItem('userName');
+                //console.log("event bus!!!!!!!!!!! err user key", this.loginError, this.loggedName);
+                //  doesn't refresh loginError in view... loggedName refreshes due to watching
 
 
-            //     //Vue.nextTick(callback);
-            //         this.$nextTick(() => {
-            //             console.log("next tick");
-            //             this.loggedName = localStorage.getItem('userName');
-            //         });
-             });
+                //     //Vue.nextTick(callback);
+                //         this.$nextTick(() => {
+                //             console.log("next tick");
+                //             this.loggedName = localStorage.getItem('userName');
+                //         });
+            });
         },
 
         mounted() {
-          //  console.log("+++++++++++++++mounted");
+            //  console.log("+++++++++++++++mounted");
             this.loggedName = localStorage.getItem('userName');
             this.loginError = this.$store.getters.loginError;
             console.log("loginError mounted app", this.loginError);

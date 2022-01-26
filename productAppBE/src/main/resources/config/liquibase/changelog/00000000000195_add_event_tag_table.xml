@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Даша" id="20012022-17">
+        <createTable remarks="Таблица связка" tableName="event_tag">
+            <column name="tag_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="tag_id, event_id" tableName="event_tag"/>
+    </changeSet>
+
+
+    <changeSet author="Даша" id="20012022-18">
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="event_tag"
+                                 constraintName="t_tag_event_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="tag_id"
+                                 referencedTableName="t_tag"/>
+    </changeSet>
+
+    <changeSet author="Даша" id="20012022-19">
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="event_tag"
+                                 constraintName="t_event_tag_ref_id_fkey"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="event_id"
+                                 referencedTableName="t_event"/>
+    </changeSet>
+</databaseChangeLog>

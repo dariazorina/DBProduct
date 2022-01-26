@@ -1,4 +1,4 @@
-<template id="project-add">
+<template id="event-add">
     <v-app id="inspire">
         <div>
             <div class="unprotected" v-if="errorFlag">
@@ -29,38 +29,61 @@
 
             <form class="authorsFormCreation"
                   style="background-color: transparent; padding: 5px 0 5px">
-                <div class="row" style="background-color: transparent">
-                    <div class="col-md-12">
 
+                <div class="form-row col-12" style="background-color: transparent">
+                    <div class="col-md-6" style="background-color: transparent">
                         <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="add-name">Основное название*</label>
-                                <input class="form-control" id="add-name" v-model="project.mainTitle"
-                                       v-on:input="onTitleInput"
-                                       placeholder="Поле должно быть заполнено"/>
-                            </div>
-
-                            <div class="col-md-2" style="background-color: transparent">
-                                <label for="add-abbr">Другие названия</label>
-                                <input class="form-control" id="add-abbr" v-model="project.otherTitle"/>
-                            </div>
+                            <label for="add-name">Заголовок*</label>
+                            <input class="form-control" id="add-name" v-model="event.title"
+                                   v-on:input="onTitleInput"
+                                   placeholder="Поле должно быть заполнено"/>
                         </div>
 
-                        <div> <span class="notbold">
+                        <div style="background-color: transparent"> <span class="notbold">
                             <ul id="alreadyExistedProhect">
-                                <li v-for="item in alreadyExistedProject" :key="item.content">
+                                <li v-for="item in alreadyExistedEvent" :key="item.content">
                                     {{ item.content }}
                                 </li>
                             </ul>
                             </span>
                         </div>
                     </div>
+
+                    <div class="col-md-4" style="background-color: transparent; margin: 0px 10px 0px 10px">
+                        <div class="form-row">
+                            <label for="add-name">Тип события*</label>
+                            <input class="form-control" id="add-type" v-model="event.type"
+                                   placeholder="Поле должно быть заполнено"/>
+                        </div>
+                    </div>
                 </div>
 
+                <!--                <div class="row">-->
+                <div class="form-row col-12">
+                    <div class="col-md-3" style="background-color: transparent; margin: 0px 10px 0px 0px">
+                        <div class="form-row">
+                            <!--                            <div class="col-md-6" style="background-color: transparent">-->
+                            <label for="date-input">Дата начала*</label>
+                            <input class="form-control" type="date" id="date-input" :disabled="uploadMode"
+                                   v-model="event.startDate">
+                            <!--                            </div>-->
+                        </div>
+                    </div>
 
-                <div style="background-color: transparent">
-                    <label>Теги проекта:</label>
-                    <multiselect v-model="project.tagList" :options="allTags" label="content" track-by="content"
+                    <div class="col-md-3" style="background-color: transparent; margin: 0px 10px 0px 10px">
+                        <div class="form-row">
+                            <!--                            <div class="col-md-6" style="background-color: transparent">-->
+                            <label for="date-input">Дата завершения</label>
+                            <input class="form-control" type="date" :disabled="uploadMode"
+                                   v-model="event.endDate">
+                            <!--                            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row col-12" style="background-color: transparent">
+                    <label>Теги события :</label>
+                    <multiselect v-model="event.tagList" :options="allTags" label="content" track-by="content"
                                  :multiple="true" :searchable="false" :close-on-select="false"
                                  :show-labels="true" placeholder="Pick a value"></multiselect>
                 </div>
@@ -94,7 +117,7 @@
 
                                     v-model="selectedLocation"
 
-                                    @change="addSearchedEntity(selectedLocation, project.locationList, false)"
+                                    @change="addSearchedEntity(selectedLocation, event.locationList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти локацию"
@@ -104,13 +127,13 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="project.locationList.length > 0" class="col-9"
+                    <div v-if="event.locationList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="project.locationList"
-                                             :isLinkMode="false"
-                                             :isSelectionMode="false"
-                                             :allTypes="connectionTypes"
-                                             style="background-color: transparent; padding:0px" class="col-12"/>
+                        <connection-component :itemsList="event.locationList"
+                                              :isLinkMode="false"
+                                              :isSelectionMode="false"
+                                              :allTypes="connectionTypes"
+                                              style="background-color: transparent; padding:0px" class="col-12"/>
                     </div>
                 </div>
 
@@ -130,7 +153,7 @@
 
                                     v-model="selectedPerson"
 
-                                    @change="addSearchedEntity(selectedPerson, project.personList, false)"
+                                    @change="addSearchedEntity(selectedPerson, event.personList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти персону"
@@ -140,9 +163,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="project.personList.length > 0" class="col-9"
+                    <div v-if="event.personList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="project.personList"
+                        <ConnectionComponent :itemsList="event.personList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -166,7 +189,7 @@
 
                                     v-model="selectedOrg"
 
-                                    @change="addSearchedEntity(selectedOrg, project.orgList, false)"
+                                    @change="addSearchedEntity(selectedOrg, event.orgList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти организацию"
@@ -176,9 +199,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="project.orgList.length > 0" class="col-9"
+                    <div v-if="event.orgList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
-                        <ConnectionComponent :itemsList="project.orgList"
+                        <ConnectionComponent :itemsList="event.orgList"
                                              :isLinkMode="false"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -202,7 +225,7 @@
 
                                     v-model="selectedProject"
 
-                                    @change="addSearchedEntity(selectedProject, project.projectList, true)"
+                                    @change="addSearchedEntity(selectedProject, event.projectList, true)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы найти проект"
@@ -212,14 +235,15 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="project.projectList.length > 0" class="col-9"
+                    <div v-if="event.projectList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0; margin: 0px">
-                        <OneTypeConnComp :itemsList="project.projectList"
-                                         :isLinkMode="false"
-                                         :isInternalMode="false"
-                                         :isSelectionMode="false"
-                                         :allTypes="connectionTypes"
-                                         style="background-color: transparent; padding:0px" class="col-12"/>
+
+                        <ConnectionComponent :itemsList="event.projectList"
+                                             :isLinkMode="false"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"/>
+
                     </div>
                 </div>
 
@@ -239,7 +263,7 @@
 
                                     v-model="selectedArticle"
 
-                                    @change="addSearchedEntity(selectedArticle, project.articleList, false)"
+                                    @change="addSearchedEntity(selectedArticle, event.articleList, false)"
                                     item-text="content"
                                     item-value="id"
                                     placeholder="Начните печатать, чтобы материал"
@@ -250,9 +274,9 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="project.articleList.length > 0" class="col-9"
+                    <div v-if="event.articleList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
-                        <ConnectionComponent :itemsList="project.articleList"
+                        <ConnectionComponent :itemsList="event.articleList"
                                              :isLinkMode="true"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
@@ -264,93 +288,69 @@
                     <div class="col-3"
                          style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                         <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
-                            <label style="font-size: medium; font-weight: bold">Связанные события - <i>в
-                                процессе</i></label>
-                            <!--                        <v-autocomplete-->
-                            <!--                                style="background-color: transparent"-->
-                            <!--                                id="author-autocomplete"-->
-                            <!--                                :items="isourceItems"-->
-                            <!--                                :loading="isLoadingIsource"-->
-                            <!--                                :search-input.sync="isourceSearch"-->
-                            <!--                                color="black"-->
-                            <!--                                hide-no-data-->
-                            <!--                                hide-selected-->
+                            <label style="font-size: medium; font-weight: bold">Связанные события</label>
+                            <v-autocomplete
+                                    style="background-color: transparent"
+                                    id="event-autocomplete"
+                                    :items="eventItems"
+                                    :loading="isLoadingEvent"
+                                    :search-input.sync="eventSearch"
+                                    color="blue"
+                                    hide-no-data
+                                    hide-selected
 
-                            <!--                                v-model="selectedIsource"-->
+                                    v-model="selectedEvent"
 
-                            <!--                                @change="addIsource(selectedIsource)"-->
-                            <!--                                item-text="title"-->
-                            <!--                                item-value="id"-->
-                            <!--                                placeholder="Начните печатать, чтобы найти ресурс"-->
-                            <!--                                prepend-icon="mdi-database-search"-->
-                            <!--                                return-object-->
-                            <!--                                :disabled="uploadMode"-->
-                            <!--                        ></v-autocomplete>-->
+                                    @change="addSearchedEntity(selectedEvent, event.eventList, true)"
+                                    item-text="content"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти событие"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
                         </v-card-text>
                     </div>
 
-                    <!--                    <div v-if="eventList.length>0" class="col-9"-->
-                    <!--                         style="background-color: transparent; padding:0; margin: 0px">-->
-                    <!--                        <ConnectionComponent :itemsList="eventList"-->
-                    <!--                                             :isLinkMode="false"-->
-                    <!--                                             :isSelectionMode="false"-->
-                    <!--                                             :allTypes="connectionTypes"-->
-                    <!--                                             style="background-color: transparent; padding:0px" class="col-12"/>-->
-                    <!--                    </div>-->
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6" style="background-color: transparent">
-                        <div class="form-row">
-                            <div class="col-md-6" style="background-color: transparent">
-                                <label>Год создания</label>
-                                <b-form-select v-model="selectedFYear" class="mb-3" id="birth-year-selection">
-                                    <option v-for="year in years">{{year}}</option>
-                                </b-form-select>
-                            </div>
-
-                            <div class="col-md-6" style="background-color: transparent">
-                                <label>Год закрытия</label>
-                                <b-form-select v-model="selectedCYear" class="mb-3" id="death-year-selection">
-                                    <option v-for="year in years">{{year}}</option>
-                                </b-form-select>
-                            </div>
-                        </div>
+                    <div v-if="event.eventList.length > 0" class="col-9" style="background-color: transparent; padding:0">
+                        <OneTypeConnComp :itemsList="event.eventList"
+                                         :isLinkMode="false"
+                                         :isInternalMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-6" style="background-color: transparent">
-
                         <label>Описание</label>
-                        <!--                    <label for="add-description">Описание</label>-->
-                        <!--                    <textarea class="form-control" id="add-description" rows="7" v-model="person.description"/>-->
-
-                        <ckeditor :editor="editor" v-model="project.description" :config="editorConfig"></ckeditor>
+                        <ckeditor :editor="editor" v-model="event.description" :config="editorConfig"></ckeditor>
                     </div>
-                    <div class="col-md-3" style="margin-top: 0px; background-color: transparent">
-                        <div id="preview" style="margin-top: 31px" class="form-row">
-                            <div v-if="avatar.imageBase64">
-                                <img :src="avatar.imageBase64" @load="setHeight"
-                                     :style="{ height: imageHeight + 'px' }"/>
-                            </div>
+                    <!--                    <div class="col-md-3" style="margin-top: 0px; background-color: transparent">-->
+                    <!--                        <div id="preview" style="margin-top: 31px" class="form-row">-->
+                    <!--                            <div v-if="avatar.imageBase64">-->
+                    <!--                                <img :src="avatar.imageBase64" @load="setHeight"-->
+                    <!--                                     :style="{ height: imageHeight + 'px' }"/>-->
+                    <!--                            </div>-->
 
-                            <div v-if="avatar.imageBase64" class="col-md-1"
-                                 style="background-color: transparent; padding-top: 0px; padding-left: 0px">
-                                <span class="close" @click="deletePhoto">&times;</span>
-                            </div>
+                    <!--                            <div v-if="avatar.imageBase64" class="col-md-1"-->
+                    <!--                                 style="background-color: transparent; padding-top: 0px; padding-left: 0px">-->
+                    <!--                                <span class="close" @click="deletePhoto">&times;</span>-->
+                    <!--                            </div>-->
 
-                            <!--                            <div v-else>-->
-                            <!--                                <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"-->
-                            <!--                                     :style="{ width: 250+'px' }"/>-->
-                            <!--                            </div>-->
-                        </div>
-                        <!--                        <div v-if="avatar.imageBase64" style="margin-top: 5px">-->
-                        <!--                            <input type="file" accept="image/*" @change="onChange"/>-->
-                        <!--                        </div>-->
-                        <div style="margin-top: 30px">
-                            <input type="file" accept="image/*" @change="onChange"/>
-                        </div>
-                    </div>
+                    <!--                            &lt;!&ndash;                            <div v-else>&ndash;&gt;-->
+                    <!--                            &lt;!&ndash;                                <img v-if="person.photo" v-bind:src="'data:image/jpeg;base64,'+person.photo"&ndash;&gt;-->
+                    <!--                            &lt;!&ndash;                                     :style="{ width: 250+'px' }"/>&ndash;&gt;-->
+                    <!--                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+                    <!--                        </div>-->
+                    <!--                        &lt;!&ndash;                        <div v-if="avatar.imageBase64" style="margin-top: 5px">&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            <input type="file" accept="image/*" @change="onChange"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+                    <!--                        <div style="margin-top: 30px">-->
+                    <!--                            <input type="file" accept="image/*" @change="onChange"/>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
             </form>
             <form class="formCreation">
@@ -428,7 +428,7 @@
                         <label for="add-misc">Комментарии</label>
                         <div class="green-border-focus">
 
-                                    <textarea class="form-control" id="add-misc" rows="5" v-model="project.miscellany"
+                                    <textarea class="form-control" id="add-misc" rows="5" v-model="event.miscellany"
                                               background-color="palegreen" required></textarea>
                         </div>
                     </div>
@@ -462,7 +462,7 @@
                                style="vertical-align: center; background-color: transparent; margin-left: 40px; margin-right: -50px">Текущий
                             цвет выделения</label>
                         <!--                        <div class="col-1" style="background-color: transparent; padding: 0; vertical-align: center;">-->
-                        <v-swatches style="margin-top: 5px" v-model="project.rowColor"
+                        <v-swatches style="margin-top: 5px" v-model="event.rowColor"
                                     :disabled="disableColorCheckBoxFlag"
                                     popover-x="left"></v-swatches>
                     </div>
@@ -482,7 +482,7 @@
 
                         <button type="button" @click="preliminaryDataCheck(0)" class="btn btn-primary">Обновить</button>
                         <a class="btn btn-default">
-                            <router-link to="/project">Отмена</router-link>
+                            <router-link to="/event">Отмена</router-link>
                         </a>
                     </div>
                 </div>
@@ -505,7 +505,7 @@
                         </button>
 
                         <button type="button" class="btn btn-info">
-                            <router-link to="/project" style="color: white">Отмена</router-link>
+                            <router-link to="/event" style="color: white">Отмена</router-link>
                         </button>
                     </div>
 
@@ -514,7 +514,7 @@
                                 class="btn btn-info">Upload Files
                         </button>
                         <button type="button" class="btn btn-info">
-                            <router-link to="/project" style="color: white">Cancel</router-link>
+                            <router-link to="/event" style="color: white">Cancel</router-link>
 
                         </button>
                     </div>
@@ -526,13 +526,14 @@
 
 <script>
 
-    import api from "./project-api";
+    import api from "./event-api";
     import apiMovement from "./../movement/movement-api";
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
     import apiCountry from "./../country/country-api";
     import apiOrg from "./../org/org-api";
+    import apiProject from "./../project/project-api";
     import apiStatus from "./../status-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiPerson from "./../person/person-api";
@@ -547,9 +548,10 @@
 
     import apiLogin from "../login-api";
     import OneTypeConnComp from "../components/one-type-connection/OneTypeConnComp";
+    import moment from "moment";
 
     export default {
-        name: 'project-add',
+        name: 'event-add',
         components: {
             OneTypeConnComp,
             ConnectionComponent,
@@ -572,7 +574,7 @@
 
             tagsValue: [],
             allTags: [],
-            project: {
+            event: {
                 movementList: [],
                 locationList: [],
                 articleList: [],
@@ -585,27 +587,17 @@
                 tagList: []
             },
 
-            alreadyExistedProject: [],
+            alreadyExistedEvent: [],
 
             allMovements: [],
             isAdmin: null,
             checkedMovements: [],
 
-            years: [],
-            selectedFYear: null,
-            selectedCYear: null,
+            // startDate: null,
+            // endDate: null,
             statusList: [],
 
             connectionTypes: [],
-
-            previewImage: null,
-            avatar: {
-                image: null,
-                imageUrl: null,
-                imageBase64: null
-            },
-            photoWasUploaded: false,
-            originalPhoto: null,
 
             isLoadingLocation: false,
             selectedLocation: [],
@@ -665,7 +657,7 @@
         mounted() {
             this.getLoggedIn();
 
-            if (this.$route.params.project_id != null) {
+            if (this.$route.params.event_id != null) {
                 console.log("EDIT MODE");
                 this.editMode = true;
                 this.uploadFilesCheckBoxValue = true;
@@ -702,71 +694,78 @@
                 // console.log("STATUS LIST", this.statusList);
             });
 
-            apiArticle.getConnectionTypes(response => {
-                this.connectionTypes = response.data;
-                console.log("connectionTypes---------------", response.data)
-            });
+            // apiArticle.getConnectionTypes(response => {
+            //     this.connectionTypes = response.data;
+            //     console.log("connectionTypes---------------", response.data)
+            // });
 
-            this.initYears();
+            // this.initYears();
 
             if (this.editMode) {////////////////////////////////EDIT MODE//////////////////////////////////////
-                api.findById(this.$route.params.project_id, r => {
-                    this.project = r.data;
-                    console.log("current project finded by id", this.project);
+                api.findById(this.$route.params.event_id, r => {
+                    this.event = r.data;
+                    console.log("current event finded by id", this.event);
 
-                    this.selectedFYear = this.project.foundationYear;
-                    this.selectedCYear = this.project.closureYear;
-                    this.selectedS = this.project.status;
+                    this.event.startDate = this.formatDate(this.event.startDate);
+                    this.event.endDate = this.formatDate(this.event.endDate);
 
-                    for (let i = 0; i < this.project.hashtagList.length; i++) {
-                        this.hashtags.push(this.project.hashtagList[i]);
+                    this.selectedS = this.event.status;
+
+                    for (let i = 0; i < this.event.hashtagList.length; i++) {
+                        this.hashtags.push(this.event.hashtagList[i]);
                     }
 
-                    for (let i = 0; i < this.project.linkList.length; i++) {
-                        this.links.push(this.project.linkList[i].content);
+                    for (let i = 0; i < this.event.linkList.length; i++) {
+                        this.links.push(this.event.linkList[i].content);
                     }
 
-                    for (let i = 0; i < this.project.movementList.length; i++) {
-                        this.checkedMovements.push(this.project.movementList[i].id);
+                    for (let i = 0; i < this.event.movementList.length; i++) {
+                        this.checkedMovements.push(this.event.movementList[i].id);
                     }
 
-                     apiAttachment.getAttachments('project', this.project.id, r => {
+                    apiAttachment.getAttachments('event', this.event.id, r => {
                         for (let i = 0; i < r.data.length; i++) {
                             this.uploadedFiles.push(r.data[i]);
                         }
                     });
 
-                    api.getProjectsByIdsAndSymmetrically(this.project.id, response => {
-                        this.project.projectList = response.data;
-                        console.log("api", this.project.projectList);
+                    api.getEventsByIdsAndSymmetrically(this.event.id, response => {
+                        this.event.eventList = response.data;
+                        console.log("api", this.event.eventList);
                     });
 
-                    apiAttachment.getAttachmentPhoto('project', this.project.id, r => {
-                        console.log("R DATA", r);
-                        this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;//.content;
-
-                        let blob = new Blob([r.data], {type: 'image/jpeg'});
-                        console.log("BLOB", blob);
-                    });
+                    // apiAttachment.getAttachmentPhoto('event', this.event.id, r => {
+                    //     console.log("R DATA", r);
+                    //     this.avatar.imageBase64 = "data:image/jpeg;base64," + r.data;//.content;
+                    //
+                    //     let blob = new Blob([r.data], {type: 'image/jpeg'});
+                    //     console.log("BLOB", blob);
+                    // });
                 });
             }
         },
 
         methods: {
+            formatDate(date) {
+                if (date !== null)
+                    return moment(date).format('YYYY-MM-DD');
+            },
+
             typeConnectionFunction(isParent) {
                 console.log("typeConnectionFunction", isParent);
             },
 
             onTitleInput() {
-                if (this.project.mainTitle.length > 3) {
+                if (this.event.title.length > 3) {
                     console.log("IN ONPUT");
 
-                    api.searchProject(this.project.mainTitle, r => {
-                        this.alreadyExistedProject = r;
-                        console.log("*№*№*№*", this.alreadyExistedProject);
+                    api.searchEvent(this.event.title, r => {
+                        this.alreadyExistedEvent = r;
+                        console.log("*№*№*№*", this.alreadyExistedEvent);
                     });
                 } else {
-                    this.alreadyExistedProject.splice(0);
+                    if (this.alreadyExistedEvent.length > 0)
+                        this.alreadyExistedEvent.splice(0);
                 }
             },
 
@@ -780,8 +779,7 @@
             },
 
             removeAttachment(file) {
-                // console.log("removeAtt project", file);
-                apiAttachment.removeAttachment('project', this.project.id, file.id, file.name, r => {
+                apiAttachment.removeAttachment('event', this.event.id, file.id, file.name, r => {
                     console.log("result", r.data);
                     if (r.data === true) {
                         const index = this.uploadedFiles.indexOf(file);
@@ -836,15 +834,15 @@
             },
 
 
-            setHeight(event) {
-                let image = event.target;
-                if (image.clientWidth > image.clientHeight) {
-                    let pr = image.clientWidth / image.clientHeight;
-                    this.imageHeight = 350 / pr;
-                } else {
-                    this.imageHeight = 350;
-                }
-            },
+            // setHeight(event) {
+            //     let image = event.target;
+            //     if (image.clientWidth > image.clientHeight) {
+            //         let pr = image.clientWidth / image.clientHeight;
+            //         this.imageHeight = 350 / pr;
+            //     } else {
+            //         this.imageHeight = 350;
+            //     }
+            // },
 
             isObjectValidAndNotEmpty(obj) {
                 return !(typeof obj === 'undefined' || obj === null);
@@ -861,26 +859,15 @@
             },
 
             preliminaryDataCheck(currentStatus) {
-                // let projectConnectionExistance = false;
-                //
-                // console.log("preliminaryDataCheck", currentStatus);
-                // if (this.isObjectValidAndNotEmpty(this.projectList)) {
-                //     projectConnectionExistance = this.checkConnection(this.projectList);
-                // }
-                //
-                // if (projectConnectionExistance) {
-                //     alert("Укажите связь для сущностей, которые вы добавили");
-                // } else {
-                this.createProject(currentStatus);
-                // }
+                this.createEvent(currentStatus);
             },
 
-            initYears() {
-                this.years.push("null");
-                for (let y = 1800; y < 2051; y++) {
-                    this.years.push(y);
-                }
-            },
+            // initYears() {
+            //     this.years.push("null");
+            //     for (let y = 1800; y < 2051; y++) {
+            //         this.years.push(y);
+            //     }
+            // },
 
             // addAdditionalMovement() {
             //     this.addAdditionalMovementFlag = true;
@@ -898,16 +885,38 @@
                 this.hasError = this.hasError || hasError;
             },
 
+            validDate: function (code) {
+                let re = /([12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$/; ///digit format "inside", see it while debugging
+                // var re = /((0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[0-2])[.][12][0-9]{3})$/;
+                return re.test(code);
+            },
+
             formValidate() {
+                console.log("chM", this.checkedMovements, this.event.title);
 
-                console.log("chM", this.checkedMovements, this.project.mainTitle);
-                this.addStatus('add-name', (!this.project.mainTitle));
+                this.addStatus('add-name', (!this.event.title));
 
-                if (this.project.mainTitle != null) {
-                    if (this.project.mainTitle.length !== 0) {
-                        this.addStatus('add-name', (!this.project.mainTitle));
+                if (this.event.title !== null) {
+                    if (this.event.title.length !== 0) {
+                        this.addStatus('add-name', (!this.event.title));
+
                         if (this.checkedMovements.length === 0) {
                             this.hasError = true;
+
+                        } else {
+                            this.addStatus('add-type', (!this.event.type));
+
+                            if (this.event.type !== null) {
+                                if (this.event.type.length !== 0) {
+                                    this.addStatus('add-type', (!this.event.type));
+
+                                    this.addStatus('date-input', (!(this.validDate(this.event.startDate))));
+
+                                } else {
+                                    this.hasError = true;
+                                }
+                            } else
+                                this.hasError = true;
                         }
                     } else this.hasError = true;
                 } else this.hasError = true;
@@ -919,122 +928,114 @@
                 return !this.hasError;
             },
 
-            onChange(e) {
-                //todo need to set size limit
+            // onChange(e) {
+            //     //todo need to set size limit
+            //
+            //     const file = e.target.files[0];
+            //     this.avatar.image = file;
+            //     this.avatar.imageUrl = URL.createObjectURL(file);
+            //
+            //     const reader = new FileReader();
+            //     reader.readAsDataURL(file);  // reader.readAsBinaryString(file);
+            //     reader.onload = e => {
+            //         this.avatar.imageBase64 = e.target.result;
+            //         console.log(this.avatar);
+            //
+            //         console.log("photoWasUploaded", this.photoWasUploaded);
+            //         console.log("originalPhoto", this.originalPhoto);
+            //         console.log("this.avatar.imageBase64", this.avatar.imageBase64);
+            //
+            //         if (this.originalPhoto !== this.avatar.imageBase64) {
+            //             this.photoWasUploaded = true;
+            //             console.log("-photoWasUploaded", this.photoWasUploaded);
+            //         }
+            //     };
+            // },
 
-                const file = e.target.files[0];
-                this.avatar.image = file;
-                this.avatar.imageUrl = URL.createObjectURL(file);
-
-                const reader = new FileReader();
-                reader.readAsDataURL(file);  // reader.readAsBinaryString(file);
-                reader.onload = e => {
-                    this.avatar.imageBase64 = e.target.result;
-                    console.log(this.avatar);
-
-                    console.log("photoWasUploaded", this.photoWasUploaded);
-                    console.log("originalPhoto", this.originalPhoto);
-                    console.log("this.avatar.imageBase64", this.avatar.imageBase64);
-
-                    if (this.originalPhoto !== this.avatar.imageBase64) {
-                        this.photoWasUploaded = true;
-                        console.log("-photoWasUploaded", this.photoWasUploaded);
-                    }
-                };
-            },
-
-            createProject(currentStatus) {
+            createEvent(currentStatus) {
                 this.hasError = false;
 
                 if (this.formValidate()) {
 
                     if (currentStatus.name === this.statusList[0].name) {
-                        this.project.status = this.statusList[0].name;
+                        this.event.status = this.statusList[0].name;
                     } else {
-                        this.project.status = this.statusList[1].name;
+                        this.event.status = this.statusList[1].name;
                     }
 
                     if (this.selectedFYear) {
-                        this.project.foundationYear = this.selectedFYear;
+                        this.event.foundationYear = this.selectedFYear;
                     }
                     if (this.selectedCYear) {
-                        this.project.closureYear = this.selectedCYear;
+                        this.event.closureYear = this.selectedCYear;
                     }
 
-                    this.project.linkList.splice(0);
-                    this.project.hashtagList.splice(0);
-                    this.project.movementList.splice(0);
+                    this.event.linkList.splice(0);
+                    this.event.hashtagList.splice(0);
+                    this.event.movementList.splice(0);
 
                     let i = 0;
-                    // console.log("+++++++++++++++++++++++++SAVE", this.checkedMovements, this.checkedMovements.length, this.project.movementList);
                     for (; i < this.checkedMovements.length; i++) {
-                        this.project.movementList[i] = {
+                        this.event.movementList[i] = {
                             "id": this.checkedMovements[i]
                         };
                     }
-                    // console.log("+++++++++++++++++++++++++SAVE this.project.movementList", this.project.movementList);
-
-                    // if (!this.editMode) {
-                    //     this.project.movementList[i] = {
-                    //         "id": this.currentUserMovement.id
-                    //     };
-                    // }
 
                     for (let i = 0; i < this.links.length; i++) {
-                        this.project.linkList[i] = {
+                        this.event.linkList[i] = {
                             "content": this.links[i]
                         };
-                        // console.log("CREATE project link: ", this.links[i]);
+                        // console.log("CREATE event link: ", this.links[i]);
                     }
 
                     for (let i = 0; i < this.hashtags.length; i++) {
-                        this.project.hashtagList[i] = this.hashtags[i];
+                        this.event.hashtagList[i] = this.hashtags[i];
                     }
 
-                    console.log("-------------ORG BEFORE  CREATION", this.project, this.projectList);
+                    // console.log("-------------ORG BEFORE  CREATION", this.event, this.projectList);
 
                     if (this.editMode) {
-                        this.project.status = this.selectedS;
-                        console.log("project BEFORE UPDATING edit mode", this.project);
+                        this.event.status = this.selectedS;
+                        console.log("event BEFORE UPDATING edit mode", this.event);
                         if (this.formValidate()) {
-                            api.update(this.project.id, this.project, r => {
+                            api.update(this.event.id, this.event, r => {
                                 console.log(r);
-                                if (this.photoWasUploaded) {
-                                    apiAttachment.deletePhoto('project', r.data.id, r => {
-                                    });
-                                    if (this.avatar.image !== null) {
-                                        apiAttachment.uploadPhoto('project', r.data.id, this.avatar.image, r => {
-                                            console.log("ph was uplded");
-                                        });
-                                    }
-                                }
+                                // if (this.photoWasUploaded) {
+                                //     apiAttachment.deletePhoto('event', r.data.id, r => {
+                                //     });
+                                //     if (this.avatar.image !== null) {
+                                //         apiAttachment.uploadPhoto('project', r.data.id, this.avatar.image, r => {
+                                //             console.log("ph was uplded");
+                                //         });
+                                //     }
+                                // }
                                 for (let i = 0; i < this.attachedFiles.length; i++) {
-                                    apiAttachment.uploadFile('project', this.project.id, this.attachedFiles[i], r => {
+                                    apiAttachment.uploadFile('event', this.event.id, this.attachedFiles[i], r => {
                                     });
                                     //todo progress bar?
                                 }
-                                router.push('/project');
+                                router.push('/event');
                             });
                         }
                     } else {
-                        console.log("project BEFORE SAVING", this.project);
+                        console.log("event BEFORE SAVING", this.event);
                         if (this.formValidate()) {
-                            api.create(this.project, r => {
+                            api.create(this.event, r => {
                                 console.log(r);
 
-                                if (this.avatar.image !== null) {
-                                    apiAttachment.uploadPhoto('project', r.data.id, this.avatar.image, r => {
-                                    });
-                                }
+                                // if (this.avatar.image !== null) {
+                                //     apiAttachment.uploadPhoto('project', r.data.id, this.avatar.image, r => {
+                                //     });
+                                // }
 
                                 if (!this.uploadFilesCheckBoxValue) {
-                                    router.push('/project');
+                                    router.push('/event');
                                 } else {
                                     this.uploadMode = true;
                                     this.uploadFilesCheckBoxValue = false;
                                     let ID = r.data.id;
-                                    this.project.id = ID;
-                                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here, project ID", r.data, ID);
+                                    this.event.id = ID;
+                                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>stay here, event ID", r.data, ID);
                                 }
                             });
                         }
@@ -1044,12 +1045,12 @@
 
             uploadFiles() {             //on button press
                 for (let i = 0; i < this.attachedFiles.length; i++) {
-                    apiAttachment.uploadFile('project', this.project.id, this.attachedFiles[i], r => {
+                    apiAttachment.uploadFile('event', this.event.id, this.attachedFiles[i], r => {
                     });
                     // this.submitFile(this.attachedFiles[i]);
                     //todo progress bar?
                 }
-                router.push('/project');
+                router.push('/event');
             },
 
             createAttachment(files) {     //emit from FilesAttachment Component 'attachFiles'
@@ -1061,15 +1062,15 @@
             },
 
             downloadAttachment(file) {
-                document.getElementById('iframeToDownload').src = '/api/v1/project/downloadAttachment?entityId=' + this.project.id + '&id=' + file.id;
+                document.getElementById('iframeToDownload').src = '/api/v1/event/downloadAttachment?entityId=' + this.event.id + '&id=' + file.id;
             },
 
             getAttachment(file) {     //emit from FilesAttachment Component 'getAttachment'
-                apiAttachment.previewAttachment('project', this.project.id, file.id);
+                apiAttachment.previewAttachment('event', this.event.id, file.id);
             },
 
             addSearchedEntity(obj, list, isOneType) {
-                console.log("GET CHANGED ORG", obj, list);
+                console.log("GET CHANGED EVENT", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
                     if (list[i].id === obj.id) {
@@ -1243,7 +1244,7 @@
 
             projectItems() {
                 if (this.projectEntries) {      ///todo analyze why undefined (after selection in the search list)
-                    console.log("project items in", this.projectEntries);
+                    console.log("pro items in", this.projectEntries);
 
                     return this.projectEntries.map(entry => {
                         return Object.assign({}, entry)
@@ -1260,6 +1261,15 @@
                 }
             },
 
+            eventItems() {
+                if (this.eventEntries) {
+                    console.log("event items in", this.eventEntries);
+                    return this.eventEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
             articleItems() {
                 if (this.articleEntries) {
                     console.log("article items in", this.articleEntries);
@@ -1267,7 +1277,6 @@
                         return Object.assign({}, entry)
                     })
                 }
-
             },
 
             filteredHashtags() {
@@ -1281,16 +1290,6 @@
                 return this.searchHashtag.length
             },
 
-            // searchOrgTypeLength() {
-            //     return this.searchOrgType.length
-            // },
-
-            // filteredOrgTypes() {
-            //     let resultSearchTree = this.searchTree(this.orgTypeFlatTree, this.searchOrgType);
-            //     return this.flatTreeToTree(resultSearchTree);
-            //     // console.log("COMPUTED", resultSearchTree);
-            // },
-
             filteredKeys() {
                 if (this.searchHashtag != null)   //for start view without search
                     if (this.searchLength === 0) {
@@ -1301,19 +1300,6 @@
                         return this.filteredHashtags;
                     }
             },
-
-            // filteredOpenOrgTypes() {
-            //     // console.log("filteredOpenMTypes", this.filteredMTypes);
-            //
-            //     if (this.searchOrgType != null)   //for start view without search
-            //         if (this.searchOrgTypeLength === 0) {
-            //             return this.filteredOrgTypes.map((top) => {
-            //                 return top.name
-            //             })
-            //         } else {
-            //             return this.filteredOrgTypes;
-            //         }
-            // },
         },
 
         watch: {
@@ -1323,19 +1309,9 @@
 
             disableColorCheckBoxFlag() {
                 if (this.disableColorCheckBoxFlag === true) {
-                    this.project.rowColor = null;
+                    this.event.rowColor = null;
                 }
             },
-
-            // searchOrgType() {
-            //     this.$nextTick(() => {
-            //         if (this.searchOrgTypeLength === 0) {
-            //             this.$refs.orgtypetreeviewref.updateAll(false);
-            //         } else {
-            //             this.$refs.orgtypetreeviewref.updateAll(true);
-            //         }
-            //     });
-            // },
 
             locationSearch(val) {
                 // console.log("SEARCH ACTIVATED");
@@ -1346,7 +1322,7 @@
                         if (typeof this.selectedLocation !== 'undefined') {
                             // console.log("SELECTED IN WATCH");
                             // console.log(this.selectedLocation);
-                            if (this.project.locationList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.event.locationList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedLocation = "";
                         }
 
@@ -1369,7 +1345,7 @@
                         console.log("SEARCH STARTED");
 
                         if (typeof this.selectedPerson !== 'undefined') {
-                            if (this.project.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.event.personList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedPerson = "";
                         }
 
@@ -1390,7 +1366,7 @@
                 if (val !== null)
                     if (val.length > 2) {
                         if (typeof this.selectedOrg !== 'undefined') {
-                            if (this.project.orgList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.event.orgList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedOrg = "";
                         }
 
@@ -1408,11 +1384,33 @@
                     }
             },
 
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.event.eventList.length > 1)
+                                this.selectedEvent = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingEvent) return;
+                        this.isLoadingEvent = true;
+
+                        //console.log("seracg org", val);
+
+                        api.searchEvent(val, r => {
+                            this.eventEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
+                            console.log("*#*#*#*", this.eventEntries);
+                            this.isLoadingEvent = false;
+                        });
+                    }
+            },
+
             projectSearch(val) {
                 if (val !== null)
                     if (val.length > 2) {
                         if (typeof this.selectedProject !== 'undefined') {
-                            if (this.project.projectList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.event.projectList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedProject = "";
                         }
 
@@ -1422,7 +1420,7 @@
 
                         console.log("search pro", val);
 
-                        api.searchProject(val, r => {
+                        apiProject.searchProject(val, r => {
                             this.projectEntries = r;  //returns projectDto (id, name(connected from different Project fields in projectServImpl))
                             console.log("****", this.projectEntries);
                             this.isLoadingProject = false;
@@ -1437,7 +1435,7 @@
                         // console.log("SEARCH STARTED");
 
                         if (typeof this.selectedArticle !== 'undefined') {
-                            if (this.project.articleList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                            if (this.event.articleList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
                                 this.selectedArticle = "";
                         }
 

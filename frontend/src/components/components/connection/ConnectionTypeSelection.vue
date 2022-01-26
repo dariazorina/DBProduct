@@ -18,7 +18,8 @@
             },
 
             allTypes: {
-                required: true
+                type: Array,
+                required: false
             },
         },
         data: () => ({

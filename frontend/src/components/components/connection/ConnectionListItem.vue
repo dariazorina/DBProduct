@@ -68,7 +68,7 @@
             },
             allTypes: {
                 type: Array,
-                required: true
+                required: false
             },
             isLinkMode: {
                 type: Boolean,

@@ -50,6 +50,19 @@ public class ProjectAPI {
     }
 
 
+    @GetMapping("/filter")//todo: params to check actuality
+    public ResponseEntity<PagedDataDto> filter(@RequestParam(name = "hash", required = false) List<String> hash,
+                                               @RequestParam(name = "name", required = false) List<String> name,
+                                               @RequestParam(name = "location", required = false) List<String> location,
+                                               @RequestParam(name = "org", required = false) List<String> org,
+                                               @RequestParam(name = "mov", required = false) List<Integer> movement,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "3") int size){
+
+        PagedDataDto searchResult = projectService.filter(hash, name, location, org, movement, page, size);
+        return ResponseEntity.ok(searchResult);
+    }
+
     @GetMapping
     public ResponseEntity<List<ProjectDtoForMainList>> findAll(@RequestParam(name = "mov", required = false) List<Integer> mov,
                                                                @RequestParam(defaultValue = "0") int page,
@@ -58,23 +71,16 @@ public class ProjectAPI {
         return ResponseEntity.ok(projectService.findAll(mov, page, size));
     }
 
-
-    @GetMapping("/allQuant")
-    public ResponseEntity<Integer> findQuantityAllProjects(@RequestParam(name = "mov", required = false) List<Integer> mov) {
-        return ResponseEntity.ok(projectService.getQuantityAllProjectsWithMovement(mov));
-    }
-
-
     @GetMapping("/search")
     public ResponseEntity<List<IdContentDto>> search(@RequestParam(name = "q", required = true) String q) {
         List<IdContentDto> search = projectService.search(q);
         return ResponseEntity.ok(search);
     }
 
-    @PostMapping("/ids")
-    public ResponseEntity<List<IdContentDto>> getProjectsByIds(@Valid @RequestBody List<Integer> idList) {
-        return ResponseEntity.ok(projectService.findByIds(idList));
-    }
+//    @PostMapping("/ids")
+//    public ResponseEntity<List<IdContentDto>> getProjectsByIds(@Valid @RequestBody List<Integer> idList) {
+//        return ResponseEntity.ok(projectService.findByIds(idList));
+//    }
 
     @PostMapping("/symmids/{id}")
     public ResponseEntity<List<OneTypeConnectionDto>> getProjectsByIdsAndSymmetrically(@PathVariable Integer id) { // @Valid @RequestBody List<Integer> idList) {

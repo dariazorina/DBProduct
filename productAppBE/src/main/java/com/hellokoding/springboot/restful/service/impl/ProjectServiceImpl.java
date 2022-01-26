@@ -40,9 +40,9 @@ public class ProjectServiceImpl implements ProjectService {
         return all;
     }
 
-    public Integer getQuantityAllProjectsWithMovement(List<Integer> mov) {
-        return projectRepository.findAllWithMovement(mov).size();
-    }
+//    public Integer getQuantityAllProjectsWithMovement(List<Integer> mov) {
+//        return projectRepository.findAllWithMovement(mov).size();
+//    }
 
     public List<ProjectDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
 
@@ -191,20 +191,20 @@ public class ProjectServiceImpl implements ProjectService {
         return null;
     }
 
-    public List<IdContentDto> findByIds(List<Integer> idList) {
-
-//        List<Org> searchRes = new ArrayList<>();
-//        for (Integer id : idList) {
-//            Optional<Org> l = orgRepository.findById(id);
+//    public List<IdContentDto> findByIds(List<Integer> idList) {
 //
-//            if (l != null) {
-//                searchRes.add(l.get());
-//            }
-//        }
-//        return transformOriginToDto(searchRes);
-
-        return null;
-    }
+////        List<Org> searchRes = new ArrayList<>();
+////        for (Integer id : idList) {
+////            Optional<Org> l = orgRepository.findById(id);
+////
+////            if (l != null) {
+////                searchRes.add(l.get());
+////            }
+////        }
+////        return transformOriginToDto(searchRes);
+//
+//        return null;
+//    }
 
     public List<OneTypeConnectionDto> findByIdsAndSymmetrically(Integer itemId) {
 
@@ -739,6 +739,28 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRepository.save(project);
+    }
+
+
+    @Override
+    public PagedDataDto filter(List<String> hash, List<String> name, List<String> location, List<String> org, List<Integer> mov, Integer page, Integer size) {
+
+        List<ProjectDtoForMainList> dtoSearchList = new ArrayList<>();
+        Pageable paging = PageRequest.of(page, size);
+        Page<Project> pageTuts = null;
+
+
+        //to add filter body))
+        pageTuts = projectRepository.findAllWithMovements(paging, mov); //tmp
+
+        ProjectDtoForMainList proDto;
+        for (Project currPro : pageTuts) {
+            proDto = new ProjectDtoForMainList();
+            ProjectConverter.convertToProjectDtoForMainList(currPro, proDto, this);
+            dtoSearchList.add(proDto);
+        }
+        PagedDataDto pdd = new PagedDataDto(pageTuts.getTotalElements(), dtoSearchList);
+        return pdd;
     }
 
     @Override

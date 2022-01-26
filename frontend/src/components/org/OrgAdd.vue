@@ -1174,6 +1174,9 @@
             },
 
             formValidate() {
+
+                this.addStatus('add-name', (!this.orgNameTFValues[0]));
+
                 if (this.orgNameTFValues[0] != null) {
                     if (this.orgNameTFValues[0].length !== 0) {
                         this.addStatus('add-name', (!this.orgNameTFValues[0]));

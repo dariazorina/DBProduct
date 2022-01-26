@@ -15,6 +15,8 @@ import ArticleDelete from '@/components/article/ArticleDelete'
 import ArticleAdd from '@/components/article/ArticleAdd'
 
 import EventList from '@/components/event/EventList'
+import EventAdd from '@/components/event/EventAdd'
+import EventDetails from '@/components/event/EventDetails'
 
 import OrgList from '@/components/org/OrgList'
 import OrgAdd from '@/components/org/OrgAdd'
@@ -80,6 +82,9 @@ const router = new Router({
         {path: '/article/:article_id/delete', component: ArticleDelete, name: 'article-delete'},
 
         {path: '/event', component: EventList},
+        {path: '/event/add', component: EventAdd, name: 'event-add'},
+        {path: '/event/:event_id/details', component: EventDetails, name: 'event-details'},
+
 
         {path: '/country', component: CountryList},
         {path: '/country/add', component: CountryAdd, name: 'country-add'},

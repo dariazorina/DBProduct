@@ -53,7 +53,7 @@
             },
             allTypes: {
                 type: Array,
-                required: true
+                required: false
             },
         },
         methods: {

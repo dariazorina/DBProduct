@@ -262,17 +262,7 @@
                     tagList: [],
                     linkList: []
                 },
-                // orgLocationIds: [], //before request
-                // orgLocationEntities: [], //after request
-                // orgOrgIds: [], //before request
-                // orgOrgEntities: [], //after request
-                // orgPersonIds: [], //before request
-                // orgPersonEntities: [], //after request
-
-                // searchKey: '',
                 response: [],
-                // errors: [],
-                // showResponse: false,
 
                 currentProject: [],
                 selectedProject: null,
@@ -341,14 +331,16 @@
                 console.log("* number quantPerPage", (this.currentPageNumber + 1) * this.entriesQuantPerPage, this.currentPageNumber, this.entriesQuantPerPage);
                 if (((this.currentPageNumber + 1) * this.entriesQuantPerPage) < this.entriesQuantity) {
                     this.currentPageNumber++;
-                    this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                    this.filterAll();
+                    //this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
                 }
             },
 
             previousPageGo() {
                 if (this.currentPageNumber > 0) {
                     this.currentPageNumber--;
-                    this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+                    this.filterAll();
+                    // this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
                 }
             },
 
@@ -521,10 +513,19 @@
                 return true;
             },
 
+            // filterAll() {
+            //     apiProject.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
+            //         this.entries = r.data;
+            //         console.log("filter all =============", this.entries);
+            //     });
+            // },
+
+
             filterAll() {
-                apiProject.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), r => {
-                    this.entries = r.data;
-                    console.log("filter all =============", this.entries);
+                apiProject.filterAll(this.filterAllBodyCreation(), this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), this.currentPageNumber, this.entriesQuantPerPage, r => {
+                    this.entries = r.data.data;
+                    this.entriesQuantity = r.data.entitiesQuantity;
+                    console.log("filter all =============", this.entries, r.data);
                 });
             },
 
@@ -542,22 +543,25 @@
                 return result;
             },
 
-            getAllProjectsWithMov(page, size) {
-                apiProject.getAllProjects(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), page, size, response => {
-                    this.entries = response.data;
-                    console.log("PROJECTSSS", response.data, this.entries.length);
-                });
-            }
+            // getAllProjectsWithMov(page, size) {
+            //     apiProject.getAllProjects(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), page, size, response => {
+            //         this.entries = response.data;
+            //         console.log("PROJECTSSS", response.data, this.entries.length);
+            //     });
+            // }
         },
         mounted() {
             apiStatus.getAllStatuses(response => {
                 this.statusList = response.data;
 //                console.log("STATUS LIST", this.statusList);
             });
-            apiProject.getQuantAllEntities(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
-                this.entriesQuantity = response.data;
-            });
-            this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+            // apiProject.getQuantAllEntities(this.complexMovementCreation(JSON.parse(localStorage.getItem('movement'))), response => {
+            //     this.entriesQuantity = response.data;
+            //     console.log(")))))))))))))))))))))) allQuant=", this.entriesQuantity);
+            // });
+            // this.getAllProjectsWithMov(this.currentPageNumber, this.entriesQuantPerPage);
+
+            this.filterAll();
         },
         watch: {
             color: function () {   //calls when color picking is done
