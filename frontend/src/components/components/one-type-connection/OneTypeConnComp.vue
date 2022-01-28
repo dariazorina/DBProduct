@@ -83,10 +83,10 @@
             },
 
             removeItem(idToRemove) {
-                // console.log("------full list -- toRemove---------", this.itemsList);
+                //console.log("--ONE TYPE ----full list -- toRemove---------", this.itemsList, idToRemove);
                 for (let i = 0; i < this.itemsList.length; i++) {
-                    if (this.itemsList[i].id === idToRemove) {
-                        // console.log("------idtem To R e m o v e ---------", this.itemsList[i]);
+                    if (this.itemsList[i].itemId === idToRemove) {
+                        // console.log("----ONETYPE --idtem To R e m o v e ---------", this.itemsList[i]);
                         this.itemsList.splice(i, 1);
                     }
                 }

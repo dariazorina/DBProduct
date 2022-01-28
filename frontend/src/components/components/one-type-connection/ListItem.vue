@@ -8,7 +8,7 @@
                 <div v-if="isLinkMode"
                      style="padding-left: 20px; padding-top: 10px; margin-bottom: 0; background-color: transparent">
                     <a>
-                        <router-link :to="{name: 'article-details', params: {article_id: item.id}}" target="_blank">
+                        <router-link :to="{name: 'article-details', params: {article_id: item.itemId}}" target="_blank">
                             {{item.name}}
                         </router-link>
                     </a>
@@ -23,7 +23,7 @@
                                                margin-right: 0; margin-bottom: 0;
                                                padding: 0px;">
             <span class="close" style="background-color: transparent; padding-right: 10px"
-                  @click="$emit('remove', item.id)">&times;</span>
+                  @click="$emit('remove', item.itemId)">&times;</span>
 
                 <!--            <div class="form-row col-6"-->
             </div>
