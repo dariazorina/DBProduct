@@ -27,6 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final StatusRepository statusRepository;
     private final HashTagRepository hashTagRepository;
     private final LocationRepository locationRepository;
+    private final EventRepository eventRepository;
     private final IsourceRepository isourceRepository;
     private final PersonRepository personRepository;
     private final ArticleRepository articleRepository;
@@ -39,10 +40,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> all = projectRepository.findAll();
         return all;
     }
-
-//    public Integer getQuantityAllProjectsWithMovement(List<Integer> mov) {
-//        return projectRepository.findAllWithMovement(mov).size();
-//    }
 
     public List<ProjectDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
 
@@ -529,6 +526,37 @@ public class ProjectServiceImpl implements ProjectService {
             project.setOrgConnections(orgConnectionList);
         } else {
             project.getOrgConnections().addAll(orgConnectionList);
+        }
+
+        /////////////////////event CONNECTIONS///////////////////
+        if (project.getEventConnections() != null) {
+            project.getEventConnections().clear();
+            projectRepository.flush();
+        }
+
+        Integer eventId;
+        ProjectEventConnection eventProjectConnection;
+        List<ProjectEventConnection> eventProjectConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : projectDto.getEventList()) {
+
+            eventId = connectionDto.getItemId();
+            if (eventRepository.findById(eventId).isPresent()) {
+                eventProjectConnection = new ProjectEventConnection();
+                Event event = eventRepository.findById(eventId).get();
+
+                eventProjectConnection.setEvent(event);
+                eventProjectConnection.setProject(project);
+                eventProjectConnection.setConnection(connectionDto.getConnection());
+                eventProjectConnection.setComment(connectionDto.getComment());
+
+                eventProjectConnectionList.add(eventProjectConnection);
+            }
+        }
+
+        if (project.getEventConnections() == null) {
+            project.setEventConnections(eventProjectConnectionList);
+        } else {
+            project.getEventConnections().addAll(eventProjectConnectionList);
         }
 
         //////////////location

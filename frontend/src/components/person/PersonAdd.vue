@@ -348,11 +348,50 @@
                 <div class="col-3"
                      style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                     <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                        <label style="font-size: medium; font-weight: bold">Связанные события</label>
+                                                <v-autocomplete
+                                                        style="background-color: transparent"
+                                                        id="event-autocomplete"
+                                                        :items="eventItems"
+                                                        :loading="isLoadingEvent"
+                                                        :search-input.sync="eventSearch"
+                                                        color="blue"
+                                                        hide-no-data
+                                                        hide-selected
+
+                                                        v-model="selectedEvent"
+
+                                                        @change="addSearchedEntity(selectedEvent, person.eventList)"
+                                                        item-text="content"
+                                                        item-value="id"
+                                                        placeholder="Начните печатать, чтобы найти событие"
+                                                        prepend-icon="mdi-database-search"
+                                                        return-object
+                                                        :disabled="uploadMode"
+                                                ></v-autocomplete>
+                    </v-card-text>
+                </div>
+
+                <div v-if="person.eventList.length > 0" class="col-9"
+                     style="background-color: transparent; padding:0; margin: 0px">
+                    <ConnectionComponent :itemsList="person.eventList"
+                                         :isLinkMode="false"
+                                         :isSelectionMode="false"
+                                         :allTypes="connectionTypes"
+                                         style="background-color: transparent; padding:0px" class="col-12"/>
+                </div>
+            </div>
+
+
+            <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                <div class="col-3"
+                     style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                    <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
                         <label style="font-size: medium; font-weight: bold">Связанные ресурсы - <i>в
                             процессе</i></label>
                         <!--                        <v-autocomplete-->
                         <!--                                style="background-color: transparent"-->
-                        <!--                                id="author-autocomplete"-->
+                        <!--                                id="isource-autocomplete"-->
                         <!--                                :items="isourceItems"-->
                         <!--                                :loading="isLoadingIsource"-->
                         <!--                                :search-input.sync="isourceSearch"-->
@@ -706,17 +745,17 @@
 
 <script>
     import api from "./person-api";
-    import apiOrg from "./../org/org-api";
+    import apiOrg     from "./../org/org-api";
     import apiIsource from "./../isource/isource-api";
     import apiCountry from "./../country/country-api";
+    import apiArticle from "./../article/article-api";
+    import apiProject from "./../project/project-api";
+    import apiEvent   from "./../event/event-api";
 
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiStatus from "./../status-api";
-    import apiArticle from "./../article/article-api";
-    import apiProject from "./../project/project-api";
-
 
     import CKEditor from 'ckeditor4-vue';
     import ConnectionComponent from "../components/connection/ConnectionComponent";
@@ -727,7 +766,6 @@
 
     export default {
         components: {
-            // OccupationList,
             ConnectionComponent,
             ckeditor: CKEditor.component, // to use the component locally
             FileAttachment,
@@ -751,7 +789,7 @@
             isLoadingArticle: false,
             isLoadingProject: false,
             isLoadingIsource: false,
-            // isLoadingEvent: false,
+            isLoadingEvent: false,
 
             model: null,
             search: null,
@@ -772,7 +810,7 @@
             selectedPerson: [],
             selectedProject: [],
             selectedIsource: [],
-            // selectedEvent: [],
+            selectedEvent: [],
             selectedM: null,
             selectedBYear: null,
             selectedDYear: null,
@@ -787,6 +825,7 @@
 
             locationEntries: [],
             orgEntries: [],
+            eventEntries: [],
             personEntries: [],
             articleEntries: [],
             projectEntries: [],
@@ -811,7 +850,7 @@
             personSearch: null,
             projectSearch: null,
             isourceSearch: null,
-            // eventSearch: null,
+            eventSearch: null,
 
             statusList: [],
             personAddSurnameTFValues: [],
@@ -827,7 +866,7 @@
                 personList: [],
                 projectList: [],
                 isourceList: [],
-                // eventList: [],
+                eventList: [],
                 movementList: [],
                 snpList: []
             },
@@ -844,7 +883,6 @@
             addAdditionalMovementFlag: false,
             allMovements: [],
             allLanguages: [],
-            //currentUserMovement: '',
             checkedMovements: [],
             disableColorCheckBoxFlag: false,
 
@@ -954,7 +992,6 @@
                 apiAttachment.removeAttachment('person', this.person.id, file.id, file.name, r => {
                     console.log("result", r.data);
                     if (r.data === true) {
-
                         // this.uploadedFiles.find(x => x.priority === 0);
 
                         const index = this.uploadedFiles.indexOf(file);
@@ -988,7 +1025,7 @@
             },
 
             deletePhoto() {
-                console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+                // console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
                 this.avatar.image = null;
                 this.avatar.imageBase64 = null;
                 this.avatar.imageUrl = null;
@@ -1035,8 +1072,6 @@
                     if (this.originalPhoto !== this.avatar.imageBase64) {
                         this.photoWasUploaded = true;
                         console.log("-photoWasUploaded", this.photoWasUploaded);
-
-
                     }
                 };
             },
@@ -1052,7 +1087,7 @@
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
-                    if (list[i].id === obj.id) {
+                    if (list[i].itemId === obj.id) {
                         break;
                     }
                 }
@@ -1069,33 +1104,7 @@
                 }
             },
 
-            // finalConnectionListCreation(list, finalList) {
-            //     console.log("^^^^^^^^^^^^^^^finalConnectionListCreation^^^^^^^^^ ", list, finalList);
-            //     for (let i = 0; i < list.length; i++) {
-            //         let a = {
-            //             "itemId": list[i].id,
-            //             "name": list[i].name,
-            //             "connection": list[i].connection,
-            //             "comment": list[i].comment
-            //         };
-            //         // if (a.connection.length > 0) { //to avoid add empty connections (wasn't entered)
-            //         finalList.push(a);
-            //         // }
-            //     }
-            // },
-
             finalNameListCreation() {
-                // console.log("^^^^^^^^^^^^^^^finalNameListCreation^^^^^^^^^ ", list, finalList);
-                // for (let i = 0; i < list.length; i++) {
-                //     let a = {
-                //         "surname": list[i].surname,
-                //         "name": list[i].name,
-                //         "patronymic": list[i].patronymic,
-                //         "priority": list[i].priority
-                //     };
-                //     finalList.push(a);
-                // }
-
 
                 let connection = '';
                 this.person.snpList.splice(0);
@@ -1611,6 +1620,15 @@
                 }
             },
 
+            eventItems() {
+                if (this.eventEntries) {
+                    console.log("event items in", this.eventEntries);
+                    return this.eventEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
             orgItems() {
                 if (this.orgEntries) {      ///todo analyze why undefined (after selection in the search list)
                     // console.log("####################", this.orgEntries);
@@ -1887,6 +1905,28 @@
                             this.projectEntries = r;
                             console.log("**ПРОЕКТЫ**", this.projectEntries);
                             this.isLoadingProject = false;
+                        });
+                    }
+            },
+
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.person.eventList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedEvent = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingEvent) return;
+                        this.isLoadingEvent = true;
+
+                        //console.log("seracg org", val);
+
+                        apiEvent.searchEvent(val, r => {
+                            this.eventEntries = r;
+                            console.log("**EVENTS**", this.eventEntries);
+                            this.isLoadingEvent = false;
                         });
                     }
             },

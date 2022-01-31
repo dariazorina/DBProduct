@@ -28,7 +28,6 @@ public class Article implements Comparable<Article> {
     private List<Movement> movementList = new ArrayList<Movement>();
 
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id", nullable = false)
     private Language language;
@@ -85,6 +84,10 @@ public class Article implements Comparable<Article> {
     @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude
     private List<ProjectArticleConnection> projectConnections;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ArticleEventConnection> eventConnections;
 
     private String miscellany;
 

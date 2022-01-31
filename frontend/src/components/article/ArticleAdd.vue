@@ -317,6 +317,44 @@
                             <!--                                                 @update-item="updateItem"/>-->
                         </div>
                     </div>
+
+                    <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                        <div class="col-3"
+                             style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                            <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                                <label style="font-size: medium; font-weight: bold">Связанные события</label>
+                                <v-autocomplete
+                                        style="background-color: transparent"
+                                        id="event-autocomplete"
+                                        :items="eventItems"
+                                        :loading="isLoadingEvent"
+                                        :search-input.sync="eventSearch"
+                                        color="blue"
+                                        hide-no-data
+                                        hide-selected
+
+                                        v-model="selectedEvent"
+
+                                        @change="addSearchedEntity(selectedEvent, article.eventList)"
+                                        item-text="content"
+                                        item-value="id"
+                                        placeholder="Начните печатать, чтобы найти событие"
+                                        prepend-icon="mdi-database-search"
+                                        return-object
+                                        :disabled="uploadMode"
+                                ></v-autocomplete>
+                            </v-card-text>
+                        </div>
+
+                        <div v-if="article.eventList.length > 0" class="col-9"
+                             style="background-color: transparent; padding:0; margin: 0px">
+                            <ConnectionComponent :itemsList="article.eventList"
+                                                 :isLinkMode="false"
+                                                 :isSelectionMode="false"
+                                                 :allTypes="connectionTypes"
+                                                 style="background-color: transparent; padding:0px" class="col-12"/>
+                        </div>
+                    </div>
                 </form>
                 <form class="formCreation">
                     <div class="form-row align-items-md-start" style="background-color: transparent">
@@ -538,7 +576,7 @@
     import apiOrg from "./../org/org-api";
     import apiProject from "./../project/project-api";
     import apiLanguage from "./../language/language-api";
-    // import apiMovement from "./../movement/movement-api";
+    import apiEvent   from "./../event/event-api";
     import apiHashtag from "./../hashtag/hashtag-api";
     import apiMType from "./../mtype/mtype-api";
     import apiAttachment from "./../attachment-api";
@@ -583,10 +621,12 @@
             orgEntries: [],
             projectEntries: [],
             materialEntries: [],
+            eventEntries: [],
 
             isLoading: false,
             isLoadingLocation: false,
             isLoadingOrg: false,
+            isLoadingEvent: false,
             isLoadingProject: false,
             isLoadingMaterial: false,
 
@@ -595,6 +635,7 @@
             orgSearch: null,
             projectSearch: null,
             materialSearch: null,
+            eventSearch: null,
 
             searchHashtag: '',
             searchMType: '',
@@ -631,6 +672,7 @@
                 locationList: [],
                 hashtagList: [],
                 orgList: [],
+                eventList: [],
                 projectList: [],
                 materialList: [],
                 movementList: []
@@ -639,6 +681,7 @@
             selected: [],
             selectedLocation: [],
             selectedOrg: [],
+            selectedEvent: [],
             selectedProject: [],
             selectedMaterial: [],
 
@@ -671,7 +714,7 @@
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
-                    if (list[i].id === obj.id) {
+                    if (list[i].itemId === obj.id) {
                         break;
                     }
                 }
@@ -1364,6 +1407,15 @@
                 })
             },
 
+            eventItems() {
+                if (this.eventEntries) {
+                    console.log("event items in", this.eventEntries);
+                    return this.eventEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
             itemsOrg() {
                 //console.log("itemsOrg", this.orgEntries.map);
                 //console.log("itemsOrg", this.orgEntries);
@@ -1707,6 +1759,28 @@
                             this.projectEntries = r;  //returns OrgDto (id, name(connected from different Org fields in OrgServImpl))
                             console.log("**ПРОЕКТЫ**", this.projectEntries);
                             this.isLoadingProject = false;
+                        });
+                    }
+            },
+
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.article.eventList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedEvent = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingEvent) return;
+                        this.isLoadingEvent = true;
+
+                        //console.log("seracg org", val);
+
+                        apiEvent.searchEvent(val, r => {
+                            this.eventEntries = r;
+                            console.log("**EVENTS**", this.eventEntries);
+                            this.isLoadingEvent = false;
                         });
                     }
             },

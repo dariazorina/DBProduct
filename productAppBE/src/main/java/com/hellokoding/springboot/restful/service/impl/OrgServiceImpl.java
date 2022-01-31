@@ -29,6 +29,7 @@ public class OrgServiceImpl implements OrgService {
     private final LocationRepository locationRepository;
     private final IsourceRepository isourceRepository;
     private final PersonRepository personRepository;
+    private final EventRepository eventRepository;
     private final OrgTypeRepository orgTypeRepository;
     private final ArticleRepository articleRepository;
 
@@ -623,6 +624,37 @@ public class OrgServiceImpl implements OrgService {
             org.getLocationConnections().addAll(locationConnectionList);
         }
 
+
+        /////////////////////event CONNECTIONS///////////////////
+        if (org.getEventConnections() != null) {
+            org.getEventConnections().clear();
+            orgRepository.flush();
+        }
+
+        Integer eventId;
+        OrgEventConnection eventOrgConnection;
+        List<OrgEventConnection> eventOrgConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : orgDto.getEventList()) {
+
+            eventId = connectionDto.getItemId();
+            if (eventRepository.findById(eventId).isPresent()) {
+                eventOrgConnection = new OrgEventConnection();
+                Event event = eventRepository.findById(eventId).get();
+
+                eventOrgConnection.setEvent(event);
+                eventOrgConnection.setOrg(org);
+                eventOrgConnection.setConnection(connectionDto.getConnection());
+                eventOrgConnection.setComment(connectionDto.getComment());
+
+                eventOrgConnectionList.add(eventOrgConnection);
+            }
+        }
+
+        if (org.getEventConnections() == null) {
+            org.setEventConnections(eventOrgConnectionList);
+        } else {
+            org.getEventConnections().addAll(eventOrgConnectionList);
+        }
 
         /////////////////////PROJECT CONNECTIONS///////////////////
         if (org.getProjectConnections() != null) {

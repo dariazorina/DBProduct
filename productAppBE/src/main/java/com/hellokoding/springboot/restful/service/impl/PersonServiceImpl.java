@@ -56,9 +56,6 @@ public class PersonServiceImpl implements PersonService {
 //        return dtoAllPersonList;
 //    }
 
-//    public Integer getQuantityAllPersonsWithMovement(List<Integer> mov) {
-//        return personRepository.findAllWithMovement(mov).size();
-//    }
 
     //    public List<NewPersonDtoForMainList> findAll(List<Integer> mov, Integer page, Integer size) {
 //    public PagedDataDto findAll(List<Integer> mov, Integer page, Integer size) {
@@ -644,7 +641,7 @@ public class PersonServiceImpl implements PersonService {
         for (NameConnectionDto connectionDto : personDto.getProjectList()) {
 
             projectId = connectionDto.getItemId();
-            if (locationRepository.findById(projectId).isPresent()) {
+            if (projectRepository.findById(projectId).isPresent()) {
                 projectPersonConnection = new ProjectPersonConnection();
                 Project pro = projectRepository.findById(projectId).get();
 
@@ -661,6 +658,37 @@ public class PersonServiceImpl implements PersonService {
             person.setProjectConnections(projectPersonConnectionList);
         } else {
             person.getProjectConnections().addAll(projectPersonConnectionList);
+        }
+
+        /////////////////////event CONNECTIONS///////////////////
+        if (person.getEventConnections() != null) {
+            person.getEventConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer eventId;
+        PersonEventConnection eventPersonConnection;
+        List<PersonEventConnection> eventPersonConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : personDto.getEventList()) {
+
+            eventId = connectionDto.getItemId();
+            if (eventRepository.findById(eventId).isPresent()) {
+                eventPersonConnection = new PersonEventConnection();
+                Event event = eventRepository.findById(eventId).get();
+
+                eventPersonConnection.setEvent(event);
+                eventPersonConnection.setPerson(person);
+                eventPersonConnection.setConnection(connectionDto.getConnection());
+                eventPersonConnection.setComment(connectionDto.getComment());
+
+                eventPersonConnectionList.add(eventPersonConnection);
+            }
+        }
+
+        if (person.getEventConnections() == null) {
+            person.setEventConnections(eventPersonConnectionList);
+        } else {
+            person.getEventConnections().addAll(eventPersonConnectionList);
         }
 
 //        //isource

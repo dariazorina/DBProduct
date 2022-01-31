@@ -29,6 +29,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
     private List<UrlLink> linkList;
     private List<NameConnectionDto> personList;
     private List<NameConnectionDto> projectList;
+    private List<NameConnectionDto> eventList;
     private List<NameConnectionDto> locationList;
     private List<NameConnectionDto> orgList;
     private List<NameConnectionDto> materialList;
@@ -63,7 +64,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
                       String titleRus, String description, String text, String rowColor,
                       List<UrlLink> linkList, List<NameConnectionDto> personList, List<NameConnectionDto> locationList,
                       List<NameConnectionDto> projectList,
-                      List<NameConnectionDto> orgList, List<NameConnectionDto> materialList,
+                      List<NameConnectionDto> orgList, List<NameConnectionDto> materialList, List<NameConnectionDto> eventList,
                       List<String> hashtagList, String miscellany, MaterialType mtype) {
         this.id = id;
         this.movementList = movementList;
@@ -81,6 +82,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.personList = personList;
         this.projectList = projectList;
         this.locationList = locationList;
+        this.eventList = eventList;
         this.orgList = orgList;
         this.materialList = materialList;
         this.hashtagList = hashtagList;
@@ -165,6 +167,7 @@ public class ArticleDto implements Comparable<ArticleDto> {
         this.orgList = new ArrayList<>();
         this.materialList = new ArrayList<>();
         this.projectList = new ArrayList<>();
+        this.eventList = new ArrayList<>();
 
         NameConnectionDto personConnectionDto;
         String dtoName = "";
@@ -244,6 +247,19 @@ public class ArticleDto implements Comparable<ArticleDto> {
             projectConnectionDto.setComment(connection.getComment());
 
             this.projectList.add(projectConnectionDto);
+        }
+
+        NameConnectionDto eventConnectionDto;
+        for (ArticleEventConnection connection : article.getEventConnections()) {
+            eventConnectionDto = new NameConnectionDto();
+            Event event = connection.getEvent();
+
+            eventConnectionDto.setItemId(event.getId());
+            eventConnectionDto.setName(event.getTitle());
+            eventConnectionDto.setConnection(connection.getConnection());
+            eventConnectionDto.setComment(connection.getComment());
+
+            this.getEventList().add(eventConnectionDto);
         }
 
         NameConnectionDto orgConnectionDto;
@@ -413,6 +429,14 @@ public class ArticleDto implements Comparable<ArticleDto> {
 
     public void setProjectList(List<NameConnectionDto> projectList) {
         this.projectList = projectList;
+    }
+
+    public List<NameConnectionDto> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<NameConnectionDto> eventList) {
+        this.eventList = eventList;
     }
 
     public String getRowColor() {

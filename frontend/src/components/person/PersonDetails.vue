@@ -121,8 +121,11 @@
                         <div class="col-sm-10" style="text-align: left;">
                             <!--                            <div v-for="art in org.articleList">-->
                             <div v-for="art in person.articleList">
-                                <a><router-link :to="{name: 'article-details', params: {article_id: art.itemId}}" target="_blank">
-                                    {{createComplexNameByEntity(art)}}<br></router-link></a>
+                                <a>
+                                    <router-link :to="{name: 'article-details', params: {article_id: art.itemId}}"
+                                                 target="_blank">
+                                        {{createComplexNameByEntity(art)}}<br></router-link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -138,7 +141,7 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="cellTitle">
-                                <span class="float-left">Проекты</span></div>
+                                <span class="float-left">Связанные проекты</span></div>
                         </div>
                         <div class="col-sm-10"><span class="float-left">
                     <div v-for="pro in person.projectList"><a><router-link
@@ -153,16 +156,17 @@
                     <div class="row">
                         <div class="col-sm-2 back1">
                             <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                                <span class="float-left">События(?)</span></div>
+                                <span class="float-left">Связанные события</span></div>
                         </div>
                         <div class="col-sm-10 back1">
                     <span class="float-left">
-<!--                        <div v-for="org in articleOrgEntities"><a><router-link-->
-                        <!--                                :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">-->
-                        <!--                                 {{ createComplexOrgById(org.id)}}</router-link>-->
-                        <!--                            </a>-->
-                        <!--                        </div>-->
-                    </span>
+                        <div v-for="event in person.eventList"><a><router-link
+                                :to="{name: 'event-details', params: {event_id: event.itemId}}" target="_blank">
+                                 {{ createComplexNameByEntity(event)}}</router-link>
+                            </a>
+                        </div>
+
+                   </span>
                         </div>
                     </div>
 
@@ -367,7 +371,7 @@
             getSNPWithPriority(priority) {
                 let sss = '';// = this.person.snpList.find(x => x.priority === 1).surname;
 
-                if (this.person.snpList!==null) {
+                if (this.person.snpList !== null) {
                     for (let i = 0; i < this.person.snpList.length; i++) {
                         //console.log("SNPLIST i", this.person.snpList[i], i, this.person.snpList[i].priority);
 
@@ -412,8 +416,6 @@
         mounted() {
             this.className = "col-sm-2";
             this.getLoggedIn();
-
-
 
 
             api.findById(this.$route.params.person_id, r => {

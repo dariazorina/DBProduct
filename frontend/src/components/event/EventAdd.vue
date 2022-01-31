@@ -1073,7 +1073,7 @@
                 console.log("GET CHANGED EVENT", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
-                    if (list[i].id === obj.id) {
+                    if (list[i].itemId === obj.id) {
                         break;
                     }
                 }

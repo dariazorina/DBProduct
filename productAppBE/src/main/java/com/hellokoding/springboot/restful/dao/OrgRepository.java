@@ -78,10 +78,11 @@ public interface OrgRepository extends JpaRepository<Org, Integer> {
     @Query("select org " +
             "from Org org " +
             "join org.movementList orgML " +
-            "join org.nameList nmL where nmL.priority = 1" +
-            "and ((lower(nmL.abbr) like :name) " +
-            "or (lower(nmL.name)) like :name) " +
-            "and orgML.id in :movement group by org.id, nmL.name order by nmL.name asc")
+            "join org.nameList nmAllName " +
+            "join org.nameList nmPrior where nmPrior.priority = 1" +
+            "and ((lower(nmAllName.abbr) like :name) " +
+            "or (lower(nmAllName.name)) like :name) " +
+            "and orgML.id in :movement group by org.id, nmPrior.name order by nmPrior.name asc")
     Page<Org> findByName(Pageable paging, String name, List<Integer> movement);
 
 
@@ -108,6 +109,8 @@ public interface OrgRepository extends JpaRepository<Org, Integer> {
 
 
     ///////////////FILTER/////////////////
+//                "left join org.nameList nameL where nameL.priority = 1 " +
+
     @Query("select org " +
             "from Org as org " +
             "join org.movementList orgML " +
@@ -115,11 +118,12 @@ public interface OrgRepository extends JpaRepository<Org, Integer> {
             "left join orgH.assigned_hashtag assh " +
             "left join org.locationConnections orgLC " +
             "left join orgLC.location orgLoc " +
-            "left join org.nameList nameL where nameL.priority = 1 " +
+            "left join org.nameList nameAll " +
+            "left join org.nameList namePrior where namePrior.priority = 1 " +
             "and ((:location is null or lower(orgLoc.country) like :location or lower(orgLoc.region) like :location or lower (orgLoc.city) like :location or lower(orgLoc.address) like :location or lower(orgLoc.placement) like :location) " +
-            "and (:name is null or lower(nameL.name) like :name or lower(nameL.abbr) like :name) " +
+            "and (:name is null or lower(nameAll.name) like :name or lower(nameAll.abbr) like :name) " +
             "and (:hashTag is null or lower(assh.content) like :hashTag)) " +
-            "and orgML.id in :movement group by org.id, nameL.name order by nameL.name asc")
+            "and orgML.id in :movement group by org.id, namePrior.name order by namePrior.name asc")
     Page<Org> findByFilters(Pageable paging, String hashTag, String name, String location, List<Integer> movement);
 
 

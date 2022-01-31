@@ -52,6 +52,10 @@ public class Org implements Comparable<Org>{
     @ToString.Exclude
     private List<ProjectOrgConnection> projectConnections;
 
+    @OneToMany(mappedBy = "org", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrgEventConnection> eventConnections;
+
 
     @ManyToMany
     @JoinTable(

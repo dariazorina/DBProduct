@@ -264,6 +264,44 @@
                     <div class="col-3"
                          style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
                         <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                            <label style="font-size: medium; font-weight: bold">Связанные события</label>
+                            <v-autocomplete
+                                    style="background-color: transparent"
+                                    id="event-autocomplete"
+                                    :items="eventItems"
+                                    :loading="isLoadingEvent"
+                                    :search-input.sync="eventSearch"
+                                    color="blue"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedEvent"
+
+                                    @change="addSearchedEntity(selectedEvent, project.eventList)"
+                                    item-text="content"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти событие"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="project.eventList.length > 0" class="col-9"
+                         style="background-color: transparent; padding:0; margin: 0px">
+                        <ConnectionComponent :itemsList="project.eventList"
+                                             :isLinkMode="false"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"/>
+                    </div>
+                </div>
+
+                <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                        <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
                             <label style="font-size: medium; font-weight: bold">Связанные события - <i>в
                                 процессе</i></label>
                             <!--                        <v-autocomplete-->
@@ -526,11 +564,12 @@
 
 <script>
 
-    import api from "./project-api";
-    import apiMovement from "./../movement/movement-api";
     import router from "./../../router";
     import Vuetify from 'vuetify';
     import 'vuetify/dist/vuetify.min.css';
+
+    import apiEvent   from "./../event/event-api";
+    import api from "./project-api";
     import apiCountry from "./../country/country-api";
     import apiOrg from "./../org/org-api";
     import apiStatus from "./../status-api";
@@ -1072,7 +1111,7 @@
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
-                    if (list[i].id === obj.id) {
+                    if (list[i].itemId === obj.id) {
                         break;
                     }
                 }
@@ -1246,6 +1285,15 @@
                     console.log("project items in", this.projectEntries);
 
                     return this.projectEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
+            eventItems() {
+                if (this.eventEntries) {
+                    console.log("event items in", this.eventEntries);
+                    return this.eventEntries.map(entry => {
                         return Object.assign({}, entry)
                     })
                 }
@@ -1426,6 +1474,28 @@
                             this.projectEntries = r;  //returns projectDto (id, name(connected from different Project fields in projectServImpl))
                             console.log("****", this.projectEntries);
                             this.isLoadingProject = false;
+                        });
+                    }
+            },
+
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.project.eventList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedEvent = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingEvent) return;
+                        this.isLoadingEvent = true;
+
+                        //console.log("seracg org", val);
+
+                        apiEvent.searchEvent(val, r => {
+                            this.eventEntries = r;
+                            console.log("**EVENTS**", this.eventEntries);
+                            this.isLoadingEvent = false;
                         });
                     }
             },

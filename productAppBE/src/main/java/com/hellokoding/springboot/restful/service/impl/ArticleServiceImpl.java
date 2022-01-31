@@ -31,6 +31,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final PersonRepository personRepository;
     private final ProjectRepository projectRepository;
     private final OrgRepository orgRepository;
+    private final EventRepository eventRepository;
     private final MTypeRepository materialTypeRepository;
     private final ConnectionTypeRepository ctypeRepository;
     private final StatusRepository statusRepository;
@@ -284,6 +285,37 @@ public class ArticleServiceImpl implements ArticleService {
             article.setLocationConnections(locationConnectionList);
         } else {
             article.getLocationConnections().addAll(locationConnectionList);
+        }
+
+        /////////////////////event CONNECTIONS///////////////////
+        if (article.getEventConnections() != null) {
+            article.getEventConnections().clear();
+            personRepository.flush();
+        }
+
+        Integer eventId;
+        ArticleEventConnection eventArticleConnection;
+        List<ArticleEventConnection> eventArticleConnectionList = new ArrayList<>();
+        for (NameConnectionDto connectionDto : articleDto.getEventList()) {
+
+            eventId = connectionDto.getItemId();
+            if (eventRepository.findById(eventId).isPresent()) {
+                eventArticleConnection = new ArticleEventConnection();
+                Event event = eventRepository.findById(eventId).get();
+
+                eventArticleConnection.setEvent(event);
+                eventArticleConnection.setArticle(article);
+                eventArticleConnection.setConnection(connectionDto.getConnection());
+                eventArticleConnection.setComment(connectionDto.getComment());
+
+                eventArticleConnectionList.add(eventArticleConnection);
+            }
+        }
+
+        if (article.getEventConnections() == null) {
+            article.setEventConnections(eventArticleConnectionList);
+        } else {
+            article.getEventConnections().addAll(eventArticleConnectionList);
         }
 
         /////////////////////PROJECT CONNECTIONS///////////////////

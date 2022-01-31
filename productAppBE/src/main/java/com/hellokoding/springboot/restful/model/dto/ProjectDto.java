@@ -87,7 +87,7 @@ public class ProjectDto implements Comparable<ProjectDto> {
         this.setProjectList(new ArrayList<>());
         this.setLocationList(new ArrayList<>());
         this.setPersonList(new ArrayList<>());
-//        this.eventList = new ArrayList<>();
+        this.eventList = new ArrayList<>();
         this.setArticleList(new ArrayList<>());
 
 
@@ -232,6 +232,19 @@ public class ProjectDto implements Comparable<ProjectDto> {
             orgConnectionDto.setComment(connection.getComment());
 
             this.getOrgList().add(orgConnectionDto);
+        }
+
+        NameConnectionDto eventConnectionDto;
+        for (ProjectEventConnection connection : project.getEventConnections()) {
+            eventConnectionDto = new NameConnectionDto();
+            Event event = connection.getEvent();
+
+            eventConnectionDto.setItemId(event.getId());
+            eventConnectionDto.setName(event.getTitle());
+            eventConnectionDto.setConnection(connection.getConnection());
+            eventConnectionDto.setComment(connection.getComment());
+
+            this.getEventList().add(eventConnectionDto);
         }
 
 

@@ -136,7 +136,7 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="cellTitle">
-                                <span class="float-left">Проекты</span></div>
+                                <span class="float-left">Связанные проекты</span></div>
                         </div>
                         <div class="col-sm-10"><span class="float-left">
                     <div v-for="pro in org.projectList"><a><router-link
@@ -151,16 +151,14 @@
                     <div class="row">
                         <div class="col-sm-2 back1">
                             <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                                <span class="float-left">События(?)</span></div>
+                                <span class="float-left">Связанные события</span></div>
                         </div>
                         <div class="col-sm-10 back1">
                     <span class="float-left">
-<!--                        <div v-for="org in articleOrgEntities"><a><router-link-->
-                        <!--                                :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">-->
-                        <!--                                 {{ createComplexOrgById(org.id)}}</router-link>-->
-                        <!--                            </a>-->
-                        <!--                        </div>-->
-                    </span>
+                            <div v-for="event in org.eventList">
+                                <a><router-link :to="{name: 'event-details', params: {event_id: event.itemId}}" target="_blank">
+                                    {{createComplexNameByEntity(event)}}<br></router-link></a>
+                            </div>                    </span>
                         </div>
                     </div>
 

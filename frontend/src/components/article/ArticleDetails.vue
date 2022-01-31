@@ -79,7 +79,8 @@
                 </div>
 
                 <div class="col-sm-10" style="background-color:lavender;"><span class="float-left">
-                     <div v-for="author in article.personList"><a><router-link :to="{name: 'person-details', params: {person_id:author.itemId}}" target="_blank">
+                     <div v-for="author in article.personList"><a><router-link
+                             :to="{name: 'person-details', params: {person_id:author.itemId}}" target="_blank">
                          {{createComplexNameByEntity(author)}}</router-link></a>
                     </div>
                 </span>
@@ -101,12 +102,12 @@
             <div class="row">
                 <div class="col-sm-2" style="background-color:lavender;">
                     <div class="cellTitle">  <!--                <div class="ml-md-4"> instead-->
-                        <span class="float-left">Организации</span></div>
+                        <span class="float-left">Связанные организации</span></div>
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;">
                     <span class="float-left">
                         <div v-for="org in article.orgList"><a><router-link
-                              :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
+                                :to="{name: 'org-details', params: {org_id: org.itemId}}" target="_blank">
                                  {{ createComplexNameByEntity(org)}}</router-link>
                             </a>
                         </div>
@@ -117,7 +118,7 @@
             <div class="row">
                 <div class="col-sm-2">
                     <div class="cellTitle">
-                        <span class="float-left">Проекты</span></div>
+                        <span class="float-left">Связанные проекты</span></div>
                 </div>
                 <div class="col-sm-10"><span class="float-left">
                     <div v-for="pro in article.projectList"><a><router-link
@@ -136,12 +137,11 @@
                 </div>
                 <div class="col-sm-10" style="background-color:lavender;">
                     <span class="float-left">
-<!--                        <div v-for="org in articleOrgEntities"><a><router-link-->
-<!--                                :to="{name: 'org-details', params: {org_id: org.id}}" target="_blank">-->
-<!--                                 {{ createComplexOrgById(org.id)}}</router-link>-->
-<!--                            </a>-->
-<!--                        </div>-->
-                    </span>
+                            <div v-for="event in article.eventList">
+                                <a><router-link :to="{name: 'event-details', params: {event_id: event.itemId}}"
+                                                target="_blank">
+                                    {{createComplexNameByEntity(event)}}<br></router-link></a>
+                            </div>                       </span>
                 </div>
             </div>
 

@@ -256,13 +256,51 @@
                         </v-card-text>
                     </div>
 
-                    <div v-if="org.articleList.length>0" class="col-9"
+                    <div v-if="org.articleList.length > 0" class="col-9"
                          style="background-color: transparent; padding:0">
                         <ConnectionComponent :itemsList="org.articleList"
                                              :isLinkMode="true"
                                              :isSelectionMode="false"
                                              :allTypes="connectionTypes"
                                              style="background-color: transparent; padding:0" class="col-12"/>
+                    </div>
+                </div>
+
+                <div class="form-row col-12" style="padding: 0; margin: 0; background-color: transparent">
+                    <div class="col-3"
+                         style="background-color: transparent; padding-right: 0; padding-left: 0; margin: 0">
+                        <v-card-text style="background-color: transparent; padding: 10px 10px 10px 0">
+                            <label style="font-size: medium; font-weight: bold">Связанные события</label>
+                            <v-autocomplete
+                                    style="background-color: transparent"
+                                    id="event-autocomplete"
+                                    :items="eventItems"
+                                    :loading="isLoadingEvent"
+                                    :search-input.sync="eventSearch"
+                                    color="blue"
+                                    hide-no-data
+                                    hide-selected
+
+                                    v-model="selectedEvent"
+
+                                    @change="addSearchedEntity(selectedEvent, org.eventList)"
+                                    item-text="content"
+                                    item-value="id"
+                                    placeholder="Начните печатать, чтобы найти событие"
+                                    prepend-icon="mdi-database-search"
+                                    return-object
+                                    :disabled="uploadMode"
+                            ></v-autocomplete>
+                        </v-card-text>
+                    </div>
+
+                    <div v-if="org.eventList.length > 0" class="col-9"
+                         style="background-color: transparent; padding:0; margin: 0px">
+                        <ConnectionComponent :itemsList="org.eventList"
+                                             :isLinkMode="false"
+                                             :isSelectionMode="false"
+                                             :allTypes="connectionTypes"
+                                             style="background-color: transparent; padding:0px" class="col-12"/>
                     </div>
                 </div>
 
@@ -705,6 +743,7 @@
     import apiPerson from "./../person/person-api";
     import apiArticle from "./../article/article-api";
     import apiProject from "./../project/project-api";
+    import apiEvent from "./../event/event-api";
 
     import OneTypeConnComp from "../components/one-type-connection/OneTypeConnComp";
     import ConnectionComponent from "../components/connection/ConnectionComponent";
@@ -745,6 +784,7 @@
                 projectList: [],
                 orgList: [],
                 personList: [],
+                eventList: [],
                 nameList: [],
                 linkList: [],
                 hashtagList: []
@@ -780,6 +820,11 @@
             selectedLocation: [],
             locationEntries: [],
             locationSearch: null,
+
+            isLoadingEvent: false,
+            selectedEvent: [],
+            eventEntries: [],
+            eventSearch: null,
 
             linkAddTagOnKeys: [13, 9],
             hashAddTagOnKeys: [],
@@ -941,7 +986,7 @@
                 console.log("GET CHANGED ORG", obj, list);
                 let i = 0;
                 for (i = 0; i < list.length; i++) { //to exclude double values
-                    if (list[i].id === obj.id) {
+                    if (list[i].itemId === obj.id) {
                         break;
                     }
                 }
@@ -1516,6 +1561,15 @@
                 }
             },
 
+            eventItems() {
+                if (this.eventEntries) {
+                    console.log("event items in", this.eventEntries);
+                    return this.eventEntries.map(entry => {
+                        return Object.assign({}, entry)
+                    })
+                }
+            },
+
             orgItems() {
                 if (this.orgEntries) {
                     console.log("org items in", this.orgEntries);
@@ -1711,6 +1765,28 @@
                             this.projectEntries = r;
                             console.log("*№*№*№*", this.projectEntries);
                             this.isLoadingProject = false;
+                        });
+                    }
+            },
+
+            eventSearch(val) {
+                if (val !== null)
+                    if (val.length > 2) {
+                        if (typeof this.selectedEvent !== 'undefined') {
+                            if (this.org.eventList.length > 1)   //todo костылик) иначе удаляет впервые набранную строку поиска
+                                this.selectedEvent = "";
+                        }
+
+                        // Items have already been requested
+                        if (this.isLoadingEvent) return;
+                        this.isLoadingEvent = true;
+
+                        //console.log("seracg org", val);
+
+                        apiEvent.searchEvent(val, r => {
+                            this.eventEntries = r;
+                            console.log("**EVENTS**", this.eventEntries);
+                            this.isLoadingEvent = false;
                         });
                     }
             },

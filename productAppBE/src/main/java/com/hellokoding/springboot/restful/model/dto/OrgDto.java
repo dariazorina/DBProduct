@@ -29,6 +29,7 @@ public class OrgDto implements Comparable<OrgDto> {
     private List<NameConnectionDto> locationList;
     private List<NameConnectionDto> personList;
     private List<NameConnectionDto> projectList;
+    private List<NameConnectionDto> eventList;
     private List<NameConnectionDto> isourceList;
     private List<Movement> movementList;
 
@@ -38,7 +39,7 @@ public class OrgDto implements Comparable<OrgDto> {
     public OrgDto(Integer id, List<Movement> movementList, List<OrgNameDto> nameList, String description,
                   String miscellany, String rowColor, List<UrlLink> linkList, List<String> hashtagList,
                   List<OneTypeConnectionDto> orgList, List<NameConnectionDto> locationList, List<NameConnectionDto> projectList, List<NameConnectionDto> personList,
-                  List<NameConnectionDto> isourceList, List<NameConnectionDto> articleList, Integer fYear, Integer cYear, String status, OrgType type) {
+                  List<NameConnectionDto> isourceList, List<NameConnectionDto> articleList, List<NameConnectionDto> eventList, Integer fYear, Integer cYear, String status, OrgType type) {
         this.id = id;
         this.movementList = movementList;
         this.status = status;
@@ -49,6 +50,7 @@ public class OrgDto implements Comparable<OrgDto> {
         this.linkList = linkList;
         this.hashtagList = hashtagList;
         this.orgList = orgList;
+        this.eventList = eventList;
         this.articleList = articleList;
         this.locationList = locationList;
         this.isourceList = isourceList;
@@ -84,6 +86,7 @@ public class OrgDto implements Comparable<OrgDto> {
         this.setLocationList(new ArrayList<>());
         this.setPersonList(new ArrayList<>());
         this.setProjectList(new ArrayList<>());
+        this.setEventList(new ArrayList<>());
         this.setNameList(new ArrayList<>());
         this.setIsourceList(new ArrayList<>());
         this.setArticleList(new ArrayList<>());
@@ -187,6 +190,19 @@ public class OrgDto implements Comparable<OrgDto> {
             projectConnectionDto.setComment(connection.getComment());
 
             this.getProjectList().add(projectConnectionDto);
+        }
+
+        NameConnectionDto eventConnectionDto;
+        for (OrgEventConnection connection : org.getEventConnections()) {
+            eventConnectionDto = new NameConnectionDto();
+            Event event = connection.getEvent();
+
+            eventConnectionDto.setItemId(event.getId());
+            eventConnectionDto.setName(event.getTitle());
+            eventConnectionDto.setConnection(connection.getConnection());
+            eventConnectionDto.setComment(connection.getComment());
+
+            this.getEventList().add(eventConnectionDto);
         }
 
         OrgNameDto nameListDto;
@@ -382,6 +398,14 @@ public class OrgDto implements Comparable<OrgDto> {
 
     public void setClosureYear(Integer closureYear) {
         this.closureYear = closureYear;
+    }
+
+    public List<NameConnectionDto> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<NameConnectionDto> eventList) {
+        this.eventList = eventList;
     }
 
     public List<NameConnectionDto> getProjectList() {

@@ -7,7 +7,7 @@
                     <button type="button" class="btnXSmall btn-link" v-b-modal.modal1>Logout
                     </button>
                     <button type="button" class="btnXSmall btn-link" disabled>
-                        <i>1.27/28.01</i></button>
+                        <i>1.29/31.01</i></button>
                 </p>
 
                 <!-- Modal Component -->
@@ -17,7 +17,7 @@
                 <template v-if="!loginError">
                     <p class="pageLoginTitle">Please login to get access
                         <button type="button" class="btnXSmall btn-link" disabled>
-                            <i>1.27/28.01</i></button>
+                            <i>1.29/31.01</i></button>
                     </p>
                 </template>
                 <template v-else>

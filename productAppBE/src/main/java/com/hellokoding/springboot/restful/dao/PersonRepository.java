@@ -56,13 +56,14 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "left join pOrg.nameList nmL " +
             "left join p.locationConnections pLo " +
             "left join pLo.location pLoc " +
-            "left join p.snpList snpL where snpL.priority = 1" +
+            "left join p.snpList snpAllNames " +
+            "left join p.snpList snpPrior where snpPrior.priority = 1" +
             "and ((:org is null  or lower(nmL.name) like :org) " +
             "and (:location is null or lower(pLoc.country) like :location or lower(pLoc.region) like :location or lower(pLoc.city) like :location or lower(pLoc.address) like :location or lower(pLoc.placement) like :location) " +
-            "and (:surname is null or lower(snpL.surname) like :surname or lower(snpL.name) like :surname) " +
+            "and (:surname is null or lower(snpAllNames.surname) like :surname or lower(snpAllNames.name) like :surname) " +
             "and (:hashTag is null or assh.content like :hashTag)) " +
-            "and (pML.id in :movement) group by p.id, snpL.surname " +
-            "order by snpL.surname asc")
+            "and (pML.id in :movement) group by p.id, snpPrior.surname " +
+            "order by snpPrior.surname asc")
     Page<Person> findByFilters(Pageable pageable, String hashTag, String surname, String org, String location, List<Integer> movement);
 
     @Query("select p " +   //to remove duplicate if item has several hashtags start with search word
@@ -73,7 +74,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "join p.snpList snpL where snpL.priority = 1 " +
             "and h.assigned_hashtag = assh.id " +
             "and lower(assh.content) in :hashTag " +
-            "and pML.id in :movement group by p.id, snpL.surname order by snpL.surname asc")
+            "and pML.id in :movement group by p.id, snpL.surname order by snpL.surname desc")
     Page<Person> findByHash(Pageable pageable, List<String> hashTag, List<Integer> movement);
 
 //    @Query("select distinct p " +
@@ -89,11 +90,12 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     //there is no sense to order result by surname if search works for surname with prior = 0 too
     @Query("select p " +
             "from Person p " +
-            "join p.snpList snpL " +
+            "join p.snpList snpAllName " +
             "join p.movementList pML " +
-            "where ((lower(snpL.name) like :surname)" +
-            "or (lower(snpL.surname) like :surname)) " +
-            "and (pML.id in :movement) group by p.id, snpL.surname order by snpL.surname asc")
+            "join p.snpList snpPrior where snpPrior.priority = 1 " +
+            "and ((lower(snpAllName.name) like :surname)" +
+            "or (lower(snpAllName.surname) like :surname)) " +
+            "and (pML.id in :movement) group by p.id, snpPrior.surname order by snpPrior.surname asc")
     Page<Person> findBySurname(Pageable pageable, String surname, List<Integer> movement);
     //List<Person> findBySurname(String surname, List<Integer> movement);
 
