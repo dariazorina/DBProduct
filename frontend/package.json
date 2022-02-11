@@ -46,7 +46,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^26.6.3",
     "material-design-icons-iconfont": "^5.0.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "8.0.0",
     "vue-template-compiler": "2.6.10"
   },
