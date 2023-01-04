@@ -37,10 +37,10 @@
   "devDependencies": {
     "@mdi/font": "^4.9.95",
     "@mdi/js": "^4.9.95",
-    "@vue/cli-plugin-babel": "3.11.0",
+    "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-e2e-nightwatch": "^4.5.15",
-    "@vue/cli-plugin-unit-jest": "^4.5.15",
-    "@vue/cli-service": "^4.5.15",
+    "@vue/cli-plugin-unit-jest": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "@vue/test-utils": "1.0.0-beta.29",
     "ajv": "6.10.2",
     "babel-core": "7.0.0-bridge.0",
